@@ -3,10 +3,7 @@
 #'Taken from package openair
 #' @param dates vector of dates
 #' @export
-#' @keywords
-#' @seealso
 #' @return an integer reflecting the number of seconds in the time interval
-#' @alias
 #' @examples \dontrun{
 #'
 #'}

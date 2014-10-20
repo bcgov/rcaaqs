@@ -8,10 +8,7 @@
 #' @param  stn_id the column containing the station ids
 #' @param  stn_name the column containing the station names
 #' @export
-#' @keywords
-#' @seealso
 #' @return A dataframe with two columns: metric value and achievement status
-#' @alias
 #' @examples \dontrun{
 #'
 #'}

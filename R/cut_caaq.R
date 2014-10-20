@@ -5,10 +5,7 @@
 #' @param  metric What is the metric? Must be one of: \code{"o3", "pm2.5_annual", "pm2.5_daily"}
 #' @param  drop_na Should NA values be dropped, or retained as factor level "No Data" (default)?
 #' @export
-#' @keywords
-#' @seealso
 #' @return factor
-#' @alias
 #' @examples \dontrun{
 #'
 #'}

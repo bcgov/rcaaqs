@@ -6,10 +6,7 @@
 #' @param  interval The interval in the date sequence. If \code{NULL}, calculated automatically.
 #' @param  fill_cols Columns to fill with the value in the column (should be columns where value is same in every row, such as an ID.)
 #' @export
-#' @keywords
-#' @seealso
-#' @return
-#' @alias
+#' @return dataframe with filled in dates
 #' @examples \dontrun{
 #'
 #'}
