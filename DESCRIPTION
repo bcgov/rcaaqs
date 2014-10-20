@@ -1,0 +1,11 @@
+Package: bcairquality
+Type: Package
+Title: Tools for analysing BC airquality data
+Version: 0.1
+Date: 2014-10-20
+Author: Andy Teucher <andy.teucher@gov.bc.ca>
+Maintainer: Andy Teucher <andy.teucher@gov.bc.ca>
+Description: Analyze data according to CAAQS guidelines
+License: None
+Imports:
+    sp
