@@ -8,4 +8,5 @@ Maintainer: Andy Teucher <andy.teucher@gov.bc.ca>
 Description: Analyze data according to CAAQS guidelines
 License: None
 Imports:
-    sp
+    sp,
+    rgdal
