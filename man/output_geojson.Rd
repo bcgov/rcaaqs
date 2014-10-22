@@ -3,17 +3,17 @@
 \alias{output_geojson}
 \title{Output a spatial*DataFrame to geojson}
 \usage{
-output_geojson(spdf, outpath, outname)
+output_geojson(input, destpath = "~/", outfilename = "myfile")
 }
 \arguments{
-\item{spdf}{The SpatialDataFrame}
+\item{input}{The SpatialDataFrame}
 
-\item{outpath}{The output path}
+\item{destpath}{The output path}
 
-\item{outname}{The output filename}
+\item{outfilename}{The output filename}
 }
 \value{
-Nothing
+Nothing (writes file to specified location)
 }
 \description{
 Deals with a peculiarity of writeOGR where file has to be \code{".geojson"}, optionally preceeded by a path, but cannot have a filename preceeding the \code{".geojson"}.
