@@ -5,8 +5,8 @@
 #' @import sp
 #' @param  polys SpatialPolygonsDataFrame to summarise by
 #' @param  points SpatialPointsDataFrame to summarise
-#' @param  var Variable (column name) in \code{points} to summarise
 #' @param  fn The summary function with which to summarise point data in each polygon
+#' @param  ... Other arguments to fn
 #' @export
 #' @return A vector of the same length as the SpatialPolygonsDataFrame.
 #' @examples \dontrun{

@@ -12,7 +12,7 @@ poly_summary(polys, points, fn, ...)
 
 \item{fn}{The summary function with which to summarise point data in each polygon}
 
-\item{var}{Variable (column name) in \code{points} to summarise}
+\item{...}{Other arguments to fn}
 }
 \value{
 A vector of the same length as the SpatialPolygonsDataFrame.
