@@ -3,7 +3,8 @@
 \alias{date_fill}
 \title{Fill gaps in a date sequence}
 \usage{
-date_fill(df, date_col, interval = NULL, fill_cols = NULL)
+date_fill(df, date_col, interval = NULL, fill_cols = NULL,
+  add_ymd = FALSE)
 }
 \arguments{
 \item{df}{Dataframe}
@@ -13,6 +14,8 @@ date_fill(df, date_col, interval = NULL, fill_cols = NULL)
 \item{interval}{The interval in the date sequence. If \code{NULL}, calculated automatically.}
 
 \item{fill_cols}{Columns to fill with the value in the column (should be columns where value is same in every row, such as an ID.)}
+
+\item{add_ymd}{logical. Should the date be split into year, month, and day columns and added to the output?}
 }
 \value{
 dataframe with filled in dates
