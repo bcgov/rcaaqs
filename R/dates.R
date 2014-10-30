@@ -1,7 +1,16 @@
+#'Convert character date string from ENVISTA to POSIXct
+#'
+#' @param  dates vector of dates to convert
+#' @export
+#' @return dataframe with filled in dates
+format_date <- function(dates) {
+  as.POSIXct(dates, format = "%d%b%Y:%H:%M:%S", tz = "Etc/GMT-8")
+}
+
 #'Fill gaps in a date sequence
 #'
 #'Given a dataframe with one column as a date sequence, fill gaps in the dat sequence.
-#' @param df Dataframe
+#' @param  df Dataframe
 #' @param  date_col the column containing dates
 #' @param  interval The interval in the date sequence. If \code{NULL}, calculated automatically.
 #' @param  fill_cols Columns to fill with the value in the column (should be columns where value is same in every row, such as an ID.)
