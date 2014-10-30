@@ -2,6 +2,8 @@ SHELL = C:\windows\SYSTEM32\cmd.exe
 PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 
+all: docs check build install
+
 docs:
 	rm NAMESPACE
 	Rscript -e "library(devtools); library(methods); document('.'); check_doc('.')"
