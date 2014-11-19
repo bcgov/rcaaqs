@@ -9,5 +9,4 @@ Description: Analyze data according to CAAQS guidelines
 License: None
 Imports:
     sp,
-    rgdal,
     lubridate
