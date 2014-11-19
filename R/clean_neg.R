@@ -14,7 +14,7 @@ clean_neg <- function(x, type = c("pm25", "ozone", "so2", "nox")) {
   type <- tolower(type)
   type <- match.arg(type)
   cutoff <- switch(type, 
-                 NOx = -5, S02 = -5, ozone = -5, pm25 = -3.5)
+                 nox = -5, so2 = -5, ozone = -5, pm25 = -3.5)
   x[x <= cutoff] <- NA
   x[x < 0] <- 0
   x
