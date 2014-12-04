@@ -9,4 +9,6 @@ Description: Analyze data according to CAAQS guidelines
 License: None
 Imports:
     sp,
-    lubridate
+    lubridate,
+    dplyr,
+    lazyeval
