@@ -12,7 +12,7 @@
 #'}
 pm_avg_daily <- function(data, datecol, valcol) {
   ## if datecol is a datetime column, convert to date
-  data$newdate <- as.Date(data[,datecol])
+  data$date <- as.Date(data[[datecol]])
   
   ## capture the formulas for the summaries
   readings_formula <- interp(~length(na.omit(x)), x = as.name(valcol))
@@ -20,7 +20,7 @@ pm_avg_daily <- function(data, datecol, valcol) {
                                 NA_real_),
                         x = as.name(valcol))
   
-  group_by(data, newdate) %>%
+  group_by(data, date) %>%
     summarise_(n_readings = readings_formula,
                avg_24hr = avg_formula)
 }
@@ -41,4 +41,4 @@ pm_avg_daily <- function(data, datecol, valcol) {
 #     summarise_(n_readings = readings_formula,  
 #                avg_24hr = avg_formula)
 # }
-# PM_avg_daily(testpm, date, value)
+# PM_avg_daily(data, date, value)
