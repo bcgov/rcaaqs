@@ -5,6 +5,7 @@
 #' @param  valcol the name (as a character string) of the PM2.5 value column
 #' @import dplyr
 #' @import lazyeval
+#' @importFrom lubridate year
 #' @export
 #' @return data frame with the daily averages
 #' @examples \dontrun{
@@ -22,7 +23,8 @@ pm_avg_daily <- function(data, datecol, valcol) {
   
   group_by(data, date) %>%
     summarise_(n_readings = readings_formula,
-               avg_24hr = avg_formula)
+               avg_24hr = avg_formula) %>%
+    mutate(year = lubridate::year(date))
 }
 
 ## This should work but lazy(date) does weird stuff. See 
