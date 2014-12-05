@@ -3,7 +3,7 @@
 \alias{pm_avg_daily}
 \title{Calcualte the daily average PM2.5 reading, following CAAQS data completeness rules}
 \usage{
-pm_avg_daily(data, datecol, valcol)
+pm_avg_daily(data, datecol, valcol, ...)
 }
 \arguments{
 \item{data}{data frame with date and value}
@@ -11,9 +11,11 @@ pm_avg_daily(data, datecol, valcol)
 \item{datecol}{the name (as a character string) of the date column}
 
 \item{valcol}{the name (as a character string) of the PM2.5 value column}
+
+\item{...}{grouping variables, probably an id if using multiple sites}
 }
 \value{
-data frame with the daily averages
+data frame with the daily averages, can be input into \code{\link{pm_98_percentile}}
 }
 \description{
 Calcualte the daily average PM2.5 reading, following CAAQS data completeness rules
@@ -22,5 +24,8 @@ Calcualte the daily average PM2.5 reading, following CAAQS data completeness rul
 \dontrun{
 
 }
+}
+\seealso{
+\code{\link{pm_98_percentile}}
 }
 
