@@ -13,39 +13,23 @@
 #' @examples \dontrun{
 #' 
 #'}
-pm_98_percentile <- function(data, yearcol, valcol, idcol = NULL) {
+pm_98_percentile <- function(data, yearcol, valcol, ...) {
   data <- data[!is.na(data[[valcol]]),]
   
-  rank_and_slice <- function(data, yearcol, valcol, idcol) {
-    data <- group_by_(data, yearcol)
-    
-    N_formula <- interp(~length(x), x = as.name(valcol))
-    arrange_formula <- interp(~desc(x), x = as.name(valcol))
-    slice_formula <- interp(~ranks$rank[ranks[[yearcol]] == max(x)], 
-                            x = as.name(yearcol))
-    
-    ranks <- data %>%
-      summarise_(N = N_formula, 
-                 i = ~floor(N * 0.98), 
-                 rank = ~N - i)
-    
-    ans <- data %>%
-      arrange_(arrange_formula) %>%
-      slice_(slice_formula)
-    
-    ans 
+  dots <- list(..., yearcol)
+  
+  arrange_formula <- interp(~desc(x), x = as.name(valcol))
+  
+  cut_rank <- function(n) {
+    cuts <- c(1,50,100,150,200,250,300,350,366)
+    ret <- cut(n, cuts, include.lowest = TRUE, labels = 1:8, right = TRUE)
+    as.numeric(ret)
   }
   
-  if (!is.null(idcol)) {
-    out <- lapply(unique(data[[idcol]]), function(x) {
-      data <- data[data[[idcol]] == x,]
-      rank_and_slice(data = data, yearcol = yearcol, valcol = valcol)
-    })
-    out <- rbind_all(out) ## rbind_all soon to be deprecated, will need to use bind_rows
-  } else {
-    out <- rank_and_slice(data = data, yearcol = yearcol, valcol = valcol)
-  }
+  ans <- group_by_(data, .dots = dots) %>%
+    arrange_(arrange_formula) %>%
+    slice(cut_rank(n()))
   
-  out
+  ans
   
 }
