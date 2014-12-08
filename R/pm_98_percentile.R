@@ -6,7 +6,7 @@
 #' @param  data data frame
 #' @param  yearcol the name of the "year" column (as a character string)
 #' @param  valcol the name of the column with daily average PM2.5 values
-#' @param  idcol (optional) the name of the column containing station identifier (e.g., ems_id)
+#' @param  ... grouping variables, probably an id if using multiple sites
 #' @export
 #' @seealso \code{\link{pm_avg_daily}}
 #' @return  A data frame with 98th percentiles of daily averages, per year
