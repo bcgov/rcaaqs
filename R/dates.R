@@ -78,9 +78,10 @@ find_time_int <- function (dates) {
   len <- min(c(100, len))
   id <- which.max(table(diff(as.numeric(dates[order(dates[1:len])]))))
   seconds <- as.numeric(names(id))
-  if ("POSIXt" %in% class(dates)) 
+  if (inherits(dates, "POSIXt")){ 
     seconds <- paste(seconds, "sec")
-  if (class(dates)[1] == "Date") {
+  }
+  if (inherits(dates, "Date")) {
     seconds <- 3600 * 24
     seconds <- paste(seconds, "sec")
   }
