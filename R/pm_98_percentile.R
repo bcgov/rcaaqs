@@ -22,14 +22,21 @@ pm_98_percentile <- function(data, datecol, valcol, ...) {
   
   arrange_formula <- interp(~desc(x), x = as.name(valcol))
   
+  annual_formula <- interp(~percent_valid_days(x, q = "year"), 
+                           x = as.name(datecol))
+  
+  q1_formula <- interp(~percent_valid_days(x, q = "Q1"), x = as.name(datecol))
+  q2_formula <- interp(~percent_valid_days(x, q = "Q2"), x = as.name(datecol))
+  q3_formula <- interp(~percent_valid_days(x, q = "Q3"), x = as.name(datecol))
+  q4_formula <- interp(~percent_valid_days(x, q = "Q4"), x = as.name(datecol))
   
   ans <- group_by_(data, .dots = dots) %>%
     mutate_(n_days = ~n(),
-      percent_valid_annual = , 
-      percent_valid_q1 = , 
-      percent_valid_q2 = , 
-      percent_valid_q3 = , 
-      percent_valid_q4 = ) %>%
+      percent_valid_annual = annual_formula, 
+      percent_valid_q1 = q1_formula, 
+      percent_valid_q2 = q2_formula, 
+      percent_valid_q3 = q3_formula, 
+      percent_valid_q4 = q4_formula) %>%
     arrange_(arrange_formula) %>%
     slice(cut_rank(n()))
   
