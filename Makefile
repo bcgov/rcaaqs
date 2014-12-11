@@ -18,3 +18,6 @@ build:
 
 install:
 	Rscript -e "library(devtools); install('.')"
+
+test: install
+	Rscript -e "library(testthat); library(bcairquality); test_package('bcairquality')"
