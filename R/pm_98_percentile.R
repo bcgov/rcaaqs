@@ -22,11 +22,6 @@ pm_98_percentile <- function(data, datecol, valcol, ...) {
   
   arrange_formula <- interp(~desc(x), x = as.name(valcol))
   
-  cut_rank <- function(n) {
-    cuts <- c(1,50,100,150,200,250,300,350,366)
-    ret <- cut(n, cuts, include.lowest = TRUE, labels = 1:8, right = TRUE)
-    as.numeric(ret)
-  }
   
   ans <- group_by_(data, .dots = dots) %>%
     mutate_(n_days = ~n(),
@@ -40,6 +35,24 @@ pm_98_percentile <- function(data, datecol, valcol, ...) {
   
   ans
   
+}
+
+#' Return the rank that should be used to determine the 98th percentile given a
+#' number of valid days
+#' 
+#' @param n the number of valid days in a year
+#' @return  a number from 1 to 8
+#' @keywords internal
+#' @examples \dontrun{
+#' 
+#'}
+cut_rank <- function(n) {
+  if (n < 1) stop("n is less than 1")
+  if (n > 366) stop("n is greater than 366")
+  
+  cuts <- c(1,50,100,150,200,250,300,350,366)
+  ret <- cut(n, cuts, include.lowest = TRUE, labels = 1:8, right = TRUE)
+  as.numeric(ret)
 }
 
 
