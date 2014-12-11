@@ -7,9 +7,10 @@ Author: Andy Teucher <andy.teucher@gov.bc.ca>
 Maintainer: Andy Teucher <andy.teucher@gov.bc.ca>
 Description: Analyze data according to CAAQS guidelines
 License: None
-Imports: 
+Imports:
     sp,
     lubridate,
     dplyr,
     lazyeval
-Suggests: testthat
+Suggests:
+    testthat

@@ -3,12 +3,12 @@
 \alias{pm_98_percentile}
 \title{Calculate the annual 98th percentile of daily average PM2.5 values according to CAAQS standards}
 \usage{
-pm_98_percentile(data, yearcol, valcol, ...)
+pm_98_percentile(data, datecol, valcol, ...)
 }
 \arguments{
 \item{data}{data frame}
 
-\item{yearcol}{the name of the "year" column (as a character string)}
+\item{datecol}{the name of the "year" column (as a character string)}
 
 \item{valcol}{the name of the column with daily average PM2.5 values}
 

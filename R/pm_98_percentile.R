@@ -4,7 +4,7 @@
 #' @import dplyr
 #' @import lazyeval
 #' @param  data data frame
-#' @param  yearcol the name of the "year" column (as a character string)
+#' @param  datecol the name of the "year" column (as a character string)
 #' @param  valcol the name of the column with daily average PM2.5 values
 #' @param  ... grouping variables, probably an id if using multiple sites
 #' @export
@@ -63,7 +63,7 @@ cut_rank <- function(n) {
 
 #' Given a vector of dates (in a single year), calculate the percentage of days in a quarter
 #' 
-#' @param  date a vector of dates
+#' @param  dates a vector of dates
 #' @param  q the time period of interest, one of: "year","Q1","Q2","Q3","Q4"
 #' @param  tz the timezone the dates are in. Default Etc/GMT-8 with no Daylight savings
 #' @export
