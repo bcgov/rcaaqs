@@ -46,17 +46,26 @@ pm_98_percentile <- function(data, datecol, valcol, ...) {
 #' Given a vector of dates (in a single year), calculate the percentage of days in a quarter
 #' 
 #' @param  date a vecvtor of dates
+#' @param  q the time period of interest, one of: "year","Q1","Q2","Q3","Q4"
 #' @param  tz the timezone the dates are in. Default Etc/GMT-8 with no Daylight savings
-#' @param  q the quarter of interest
 #' @export
 #' @return  A percentage of days in the specified quarter that are in the supplied vector
 #' @examples \dontrun{
 #' 
 #'}
-percent_valid_days <- function(dates, tz = "Etc/GMT-8", q = c("year","Q1","Q2","Q3","Q4")) {
+percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), tz = "Etc/GMT-8") {
+  
+  if (!inherits(dates, "Date")) stop("dates is not a Date object.")
+  if (!tz %in% OlsonNames()) stop(tz, " is not a valid timezone.")
+  
   q = match.arg(q)
   
   dates <- na.omit(dates)
+  
+  if (any(duplicated(dates))) {
+    dates <- unique(dates)
+    warning("There were duplicate dates detected. Duplicates were discarded and calculation proceeded")
+  }
   
   year <- as.POSIXlt(dates[1])$year + 1900
   
