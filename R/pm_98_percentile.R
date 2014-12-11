@@ -16,7 +16,7 @@
 pm_98_percentile <- function(data, datecol, valcol, ...) {
   data <- data[!is.na(data[[valcol]]),]
   
-  data$year <- as.POSIXlt(data[[datecol]])$year + 1900
+  data$year <- as.integer(as.POSIXlt(data[[datecol]])$year + 1900)
   
   dots <- list(..., "year")
   
