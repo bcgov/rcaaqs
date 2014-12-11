@@ -20,25 +20,23 @@ pm_98_percentile <- function(data, datecol, valcol, ...) {
   
   dots <- list(..., "year")
   
-  arrange_formula <- interp(~desc(x), x = as.name(valcol))
-  
   annual_formula <- interp(~percent_valid_days(x, q = "year"), 
                            x = as.name(datecol))
-  
   q1_formula <- interp(~percent_valid_days(x, q = "Q1"), x = as.name(datecol))
   q2_formula <- interp(~percent_valid_days(x, q = "Q2"), x = as.name(datecol))
   q3_formula <- interp(~percent_valid_days(x, q = "Q3"), x = as.name(datecol))
   q4_formula <- interp(~percent_valid_days(x, q = "Q4"), x = as.name(datecol))
   
   ans <- group_by_(data, .dots = dots) %>%
-    mutate_(n_days = ~n(),
+    transmute_(n_days = ~n(),
       percent_valid_annual = annual_formula, 
       percent_valid_q1 = q1_formula, 
       percent_valid_q2 = q2_formula, 
       percent_valid_q3 = q3_formula, 
-      percent_valid_q4 = q4_formula) %>%
-    arrange_(arrange_formula) %>%
-    slice(cut_rank(n()))
+      percent_valid_q4 = q4_formula, 
+      ann_98_percentile = interp(~x, x = as.name(valcol))) %>%
+    arrange(desc(ann_98_percentile)) %>%
+    slice(cut_rank(n_days[1]))
   
   ans
   
@@ -65,7 +63,7 @@ cut_rank <- function(n) {
 
 #' Given a vector of dates (in a single year), calculate the percentage of days in a quarter
 #' 
-#' @param  date a vecvtor of dates
+#' @param  date a vector of dates
 #' @param  q the time period of interest, one of: "year","Q1","Q2","Q3","Q4"
 #' @param  tz the timezone the dates are in. Default Etc/GMT-8 with no Daylight savings
 #' @export
