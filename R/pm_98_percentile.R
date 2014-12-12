@@ -4,7 +4,7 @@
 #' @import dplyr
 #' @import lazyeval
 #' @param  data data frame
-#' @param  datecol the name of the "year" column (as a character string)
+#' @param  datecol the name of the "date" column (as a character string)
 #' @param  valcol the name of the column with daily average PM2.5 values
 #' @param  ... grouping variables, probably an id if using multiple sites
 #' @param  std the value of the PM2.5 standard (default 28). Must be named as 
