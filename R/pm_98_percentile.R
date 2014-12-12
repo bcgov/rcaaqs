@@ -36,7 +36,8 @@ pm_98_percentile <- function(data, datecol, valcol, ...) {
       percent_valid_q4 = q4_formula, 
       ann_98_percentile = interp(~x, x = as.name(valcol))) %>%
     arrange(desc(ann_98_percentile)) %>%
-    slice(cut_rank(n_days[1]))
+    slice(cut_rank(n_days[1])) %>%
+    ungroup()
   
   ans
   
@@ -110,4 +111,3 @@ percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), tz = "E
   
   ret
 }
-
