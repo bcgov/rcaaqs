@@ -1,3 +1,18 @@
+context("cut rank")
+
+test_that("cuts are correct", {
+  expect_error(cut_rank(-1))
+  expect_error(cut_rank(367))
+  expect_true(all.equal(cut_rank(1), cut_rank(50), 1))
+  expect_true(all.equal(cut_rank(51), cut_rank(100), 2))
+  expect_true(all.equal(cut_rank(101), cut_rank(150), 3))
+  expect_true(all.equal(cut_rank(151), cut_rank(200), 4))
+  expect_true(all.equal(cut_rank(201), cut_rank(250), 5))
+  expect_true(all.equal(cut_rank(251), cut_rank(300), 6))
+  expect_true(all.equal(cut_rank(301), cut_rank(350), 7))
+  expect_true(all.equal(cut_rank(351), cut_rank(366), 8))
+})
+
 context("Percent valid days")
 
 dates <- seq.Date(from = as.Date("2011-01-01"), to = as.Date("2011-12-31"), by = "days")
@@ -100,16 +115,58 @@ context("pm 98 percentile")
 
 one_year <- data.frame(dates, val = rnorm(length(dates), 20,5))
 
+dates2 <- seq.Date(from = as.Date("2012-01-01"), 
+                            to = as.Date("2012-12-31"), by = "days")
+mult_years <- data.frame(id = c(rep("a", length(dates)), rep("b", length(dates2))), 
+                         dates = c(dates, dates2), 
+                         val = rnorm(length(dates) + length(dates2), 20, 5), 
+                         stringsAsFactors = FALSE)
+
+test_one <- pm_98_percentile(one_year, datecol = "dates", valcol = "val")
+test_mult <- pm_98_percentile(mult_years, "dates", "val", "id")
+
 test_that("Is a data frame", {
   expect_is(pm_98_percentile(one_year, datecol = "dates", valcol = "val"), "data.frame")
 })
 
 test_that("Has the right column names and dimensions", {
-  test <- pm_98_percentile(one_year, datecol = "dates", valcol = "val")
   expected_names <- c("year", "n_days", "percent_valid_annual", 
                       "percent_valid_q1", "percent_valid_q2", 
                       "percent_valid_q3", "percent_valid_q4", 
                       "ann_98_percentile")
-  expect_equal(names(test), expected_names)
-  expect_equal(dim(test), c(1, 8))
+  expect_equal(names(test_one), expected_names)
+  expect_equal(dim(test_one), c(1, 8))
+  
+  # For multiple years:
+  expect_equal(names(test_mult), c("id", expected_names))
+  expect_equal(dim(test_mult), c(2, 9))
+})
+
+test_that("Columns are the right class", {
+  classes <- c("integer", "integer", "numeric", "numeric", "numeric", 
+               "numeric", "numeric", "numeric")
+  expect_equal(unname(sapply(test_one, class)), classes)
+  expect_equal(unname(sapply(test_mult, class)), c("character", classes))
+})
+
+test_that("Number of days is correct", {
+  expect_equal(test_one$n_days, 365)
+  expect_equal(test_mult$n_days, c(365, 366))
+  
+  one_year <- one_year[-c(23, 57, 182),] # Remove three days
+  test_one <- pm_98_percentile(one_year, "dates", "val")
+  
+  mult_years <- mult_years[-c(23, 57, 182, 400, 520, 600),] # Remove three days
+  test_mult <- pm_98_percentile(mult_years, "dates", "val", "id")
+  
+  expect_equal(test_one$n_days, 362)
+  expect_equal(test_mult$n_days, c(362, 363))
+})
+
+test_that("Percentages are <= 100 and >= 0", {
+  expect_less_than(max(as.matrix(test_one[,3:8])), 100.0001)
+  expect_more_than(min(as.matrix(test_one[,3:8])), -0.001)
+  
+  expect_less_than(max(as.matrix(test_mult[,4:9])), 100.0001)
+  expect_more_than(min(as.matrix(test_mult[,4:9])), -0.001)
 })
