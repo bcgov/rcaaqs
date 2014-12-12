@@ -7,13 +7,15 @@
 #' @param  datecol the name of the "year" column (as a character string)
 #' @param  valcol the name of the column with daily average PM2.5 values
 #' @param  ... grouping variables, probably an id if using multiple sites
+#' @param  std the value of the PM2.5 standard (default 28). Must be named as 
+#'              it comes after ...
 #' @export
 #' @seealso \code{\link{pm_avg_daily}}
 #' @return  A data frame with 98th percentiles of daily averages, per year
 #' @examples \dontrun{
 #' 
 #'}
-pm_98_percentile <- function(data, datecol, valcol, ...) {
+pm_98_percentile <- function(data, datecol, valcol, ..., std = 28) {
   data <- data[!is.na(data[[valcol]]),]
   
   data$year <- as.integer(as.POSIXlt(data[[datecol]])$year + 1900)
@@ -29,15 +31,21 @@ pm_98_percentile <- function(data, datecol, valcol, ...) {
   
   ans <- group_by_(data, .dots = dots) %>%
     transmute_(n_days = ~n(),
-      percent_valid_annual = annual_formula, 
-      percent_valid_q1 = q1_formula, 
-      percent_valid_q2 = q2_formula, 
-      percent_valid_q3 = q3_formula, 
-      percent_valid_q4 = q4_formula, 
-      ann_98_percentile = interp(~x, x = as.name(valcol))) %>%
+               percent_valid_annual = annual_formula, 
+               percent_valid_q1 = q1_formula, 
+               percent_valid_q2 = q2_formula, 
+               percent_valid_q3 = q3_formula, 
+               percent_valid_q4 = q4_formula, 
+               ann_98_percentile = interp(~x, x = as.name(valcol))) %>%
     arrange(desc(ann_98_percentile)) %>%
     slice(cut_rank(n_days[1])) %>%
-    ungroup()
+    ungroup() %>%
+    mutate(annual_valid = percent_valid_annual >= 75,
+           quarters_valid = all(percent_valid_q1 >= 60, 
+                                percent_valid_q2 >= 60, 
+                                percent_valid_q3 >= 60, 
+                                percent_valid_q4 >= 60), 
+           exceed = ann_98_percentile > std)
   
   ans
   
