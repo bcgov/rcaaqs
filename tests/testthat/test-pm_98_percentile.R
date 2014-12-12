@@ -97,11 +97,10 @@ test_that("Works with a full quarter missing", {
   expect_equal(percent_valid_days(dates, q = "Q4"), c(Q4 = 0))
 })
 
-test_that("Only accepts Date objects", {
+test_that("Only accepts date-type objects with time interval of one day", {
   posix <- seq.POSIXt(as.POSIXct("2012-01-01"), as.POSIXct("2012-12-31"), by = "hour")
   
   expect_error(percent_valid_days(posix, q = "year"))
-
 })
 
 test_that("Duplicated dates cause a warning", {
@@ -124,6 +123,13 @@ mult_years <- data.frame(id = c(rep("a", length(dates)), rep("b", length(dates2)
 
 test_one <- pm_98_percentile(one_year, datecol = "dates", valcol = "val")
 test_mult <- pm_98_percentile(mult_years, "dates", "val", "id")
+
+test_that("Only accepts date-type objects with time interval of one day", {
+  posix <- seq.POSIXt(as.POSIXct("2012-01-01"), as.POSIXct("2012-01-31"), by = "hour")
+  test <- data.frame(posix, val = rnorm(length(posix), 20,5))
+  
+  expect_error(pm_98_percentile(test, "posix", "val"))
+})
 
 test_that("Is a data frame", {
   expect_is(pm_98_percentile(one_year, datecol = "dates", valcol = "val"), "data.frame")

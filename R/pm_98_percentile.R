@@ -18,6 +18,11 @@
 pm_98_percentile <- function(data, datecol, valcol, ..., std = 28) {
   data <- data[!is.na(data[[valcol]]),]
   
+  if (!inherits(data[[datecol]], "Date")) {
+    time_interval <- find_time_int(data[[datecol]])
+    if (!grepl("86400", time_interval)) stop("Time interval of date column can't be less than one day")
+  }
+      
   data$year <- as.integer(as.POSIXlt(data[[datecol]])$year + 1900)
   
   dots <- list(..., "year")
@@ -82,7 +87,11 @@ cut_rank <- function(n) {
 #'}
 percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), tz = "Etc/GMT-8") {
   
-  if (!inherits(dates, "Date")) stop("dates is not a Date object.")
+  if (!inherits(dates, "Date")) {
+    time_interval <- find_time_int(dates)
+    if (!grepl("86400", time_interval)) stop("Time interval of date column can't be less than one day")
+  }
+  
   if (!tz %in% OlsonNames()) stop(tz, " is not a valid timezone.")
   
   q = match.arg(q)
