@@ -133,18 +133,19 @@ test_that("Has the right column names and dimensions", {
   expected_names <- c("year", "n_days", "percent_valid_annual", 
                       "percent_valid_q1", "percent_valid_q2", 
                       "percent_valid_q3", "percent_valid_q4", 
-                      "ann_98_percentile")
+                      "ann_98_percentile", "annual_valid", "quarters_valid", 
+                      "exceed")
   expect_equal(names(test_one), expected_names)
-  expect_equal(dim(test_one), c(1, 8))
+  expect_equal(dim(test_one), c(1, 11))
   
   # For multiple years:
   expect_equal(names(test_mult), c("id", expected_names))
-  expect_equal(dim(test_mult), c(2, 9))
+  expect_equal(dim(test_mult), c(2, 12))
 })
 
 test_that("Columns are the right class", {
   classes <- c("integer", "integer", "numeric", "numeric", "numeric", 
-               "numeric", "numeric", "numeric")
+               "numeric", "numeric", "numeric", "logical", "logical", "logical")
   expect_equal(unname(sapply(test_one, class)), classes)
   expect_equal(unname(sapply(test_mult, class)), c("character", classes))
 })
