@@ -171,9 +171,9 @@ test_that("Number of days is correct", {
 })
 
 test_that("Percentages are <= 100 and >= 0", {
-  expect_less_than(max(as.matrix(test_one[,3:8])), 100.0001)
-  expect_more_than(min(as.matrix(test_one[,3:8])), -0.001)
+  expect_less_than(max(as.matrix(test_one[,3:8])), 100 + 1e-10)
+  expect_more_than(min(as.matrix(test_one[,3:8])), -1e-10)
   
-  expect_less_than(max(as.matrix(test_mult[,4:9])), 100.0001)
-  expect_more_than(min(as.matrix(test_mult[,4:9])), -0.001)
+  expect_less_than(max(as.matrix(test_mult[,4:9])), 100 + 1e-10)
+  expect_more_than(min(as.matrix(test_mult[,4:9])), -1e-10)
 })
