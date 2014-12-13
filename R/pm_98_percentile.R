@@ -44,13 +44,14 @@ pm_98_percentile <- function(data, datecol, valcol, ..., std = 28) {
                ann_98_percentile = interp(~x, x = as.name(valcol))) %>%
     arrange(desc(ann_98_percentile)) %>%
     slice(cut_rank(n_days[1])) %>%
-    ungroup() %>%
     mutate(annual_valid = percent_valid_annual >= 75,
            quarters_valid = all(percent_valid_q1 >= 60, 
                                 percent_valid_q2 >= 60, 
                                 percent_valid_q3 >= 60, 
                                 percent_valid_q4 >= 60), 
-           exceed = ann_98_percentile > std)
+           exceed = ann_98_percentile > std) %>%
+    ungroup()
+  
   
   ans
   
