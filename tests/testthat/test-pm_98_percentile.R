@@ -114,6 +114,7 @@ context("pm 98 percentile")
 
 one_year <- data.frame(dates, val = rnorm(length(dates), 20,5))
 
+# Make a multi-year df
 dates2 <- seq.Date(from = as.Date("2012-01-01"), 
                             to = as.Date("2012-12-31"), by = "days")
 mult_years <- data.frame(id = c(rep("a", length(dates)), rep("b", length(dates2))), 
@@ -176,4 +177,11 @@ test_that("Percentages are <= 100 and >= 0", {
   
   expect_less_than(max(as.matrix(test_mult[,4:9])), 100 + 1e-10)
   expect_more_than(min(as.matrix(test_mult[,4:9])), -1e-10)
+})
+
+test_that("Valid annual works", {
+  mult_years <- mult_years[-sample(365, 365 * 0.26),]
+  res <- pm_98_percentile(mult_years, "dates", "val")
+  expect_false(res$annual_valid[1])
+  expect_true(res$annual_valid[2])
 })

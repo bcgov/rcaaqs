@@ -52,7 +52,6 @@ pm_98_percentile <- function(data, datecol, valcol, ..., std = 28) {
            exceed = ann_98_percentile > std) %>%
     ungroup()
   
-  
   ans
   
 }
