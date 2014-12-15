@@ -6,9 +6,11 @@
 #' @param  data data frame
 #' @param  datecol the name of the "date" column (as a character string)
 #' @param  valcol the name of the column with daily average PM2.5 values
-#' @param  ... grouping variables, probably an id if using multiple sites
+#' @param  ... grouping variables, probably an id if using multiple sites. Even 
+#'         if not using multiple sites, you shoud specfify the id column so that
+#'         it is retained.
 #' @param  std the value of the PM2.5 standard (default 28). Must be named as 
-#'              it comes after ...
+#'         it comes after grouping variables (...)
 #' @export
 #' @seealso \code{\link{pm_avg_daily}}
 #' @return  A data frame with 98th percentiles of daily averages, per year
@@ -27,29 +29,13 @@ pm_98_percentile <- function(data, datecol, valcol, ..., std = 28) {
   
   dots <- list(..., "year")
   
-  annual_formula <- interp(~percent_valid_days(x, q = "year"), 
-                           x = as.name(datecol))
-  q1_formula <- interp(~percent_valid_days(x, q = "Q1"), x = as.name(datecol))
-  q2_formula <- interp(~percent_valid_days(x, q = "Q2"), x = as.name(datecol))
-  q3_formula <- interp(~percent_valid_days(x, q = "Q3"), x = as.name(datecol))
-  q4_formula <- interp(~percent_valid_days(x, q = "Q4"), x = as.name(datecol))
-  
   ans <- group_by_(data, .dots = dots) %>%
-    transmute_(n_days = ~n(),
-               percent_valid_annual = annual_formula, 
-               percent_valid_q1 = q1_formula, 
-               percent_valid_q2 = q2_formula, 
-               percent_valid_q3 = q3_formula, 
-               percent_valid_q4 = q4_formula, 
-               ann_98_percentile = interp(~x, x = as.name(valcol))) %>%
+    transmute_(n_days = ~n(), 
+               rep_date = interp(~x, x = as.name(datecol)), 
+               ann_98_percentile = interp(~x, x = as.name(valcol)), 
+               exceed = ~ann_98_percentile > std) %>%
     arrange(desc(ann_98_percentile)) %>%
     slice(cut_rank(n_days[1])) %>%
-    mutate(annual_valid = percent_valid_annual >= 75,
-           quarters_valid = all(percent_valid_q1 >= 60, 
-                                percent_valid_q2 >= 60, 
-                                percent_valid_q3 >= 60, 
-                                percent_valid_q4 >= 60), 
-           exceed = ann_98_percentile > std) %>%
     ungroup()
   
   ans
