@@ -30,10 +30,10 @@ pm_98_percentile <- function(data, datecol, valcol, ..., std = 28) {
   dots <- list(..., "year")
   
   ans <- group_by_(data, .dots = dots) %>%
-    transmute_(n_days = ~n(), 
-               rep_date = interp(~x, x = as.name(datecol)), 
-               ann_98_percentile = interp(~x, x = as.name(valcol)), 
-               exceed = ~ann_98_percentile > std) %>%
+    transmute_(n_days            = ~n(),
+               rep_date          = interp(~x, x = as.name(datecol)),
+               ann_98_percentile = interp(~x, x = as.name(valcol)),
+               exceed            = ~ann_98_percentile > std) %>%
     arrange(desc(ann_98_percentile)) %>%
     slice(cut_rank(n_days[1])) %>%
     ungroup()
@@ -41,6 +41,7 @@ pm_98_percentile <- function(data, datecol, valcol, ..., std = 28) {
   ans
   
 }
+
 
 #' Return the rank that should be used to determine the 98th percentile given a
 #' number of valid days
@@ -59,7 +60,6 @@ cut_rank <- function(n) {
   ret <- cut(n, cuts, include.lowest = TRUE, labels = 1:8, right = TRUE)
   as.numeric(ret)
 }
-
 
 #' Given a vector of dates (in a single year), calculate the percentage of days in a quarter
 #' 
@@ -92,14 +92,14 @@ percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), tz = "E
   year <- as.POSIXlt(dates[1])$year + 1900
   
   q_lengths <- c(year = -difftime(paste0(year, "-01-01"), paste0(year, "-12-31"), 
-                                  tz = tz, units = "days"), 
-                 Q1 = -difftime(paste0(year, "-01-01"), paste0(year, "-03-31"), 
+                                  tz = tz, units = "days"),
+                 Q1   = -difftime(paste0(year, "-01-01"), paste0(year, "-03-31"), 
                                 tz = tz, units = "days"), 
-                 Q2 = -difftime(paste0(year, "-04-01"), paste0(year, "-06-30"), 
+                 Q2   = -difftime(paste0(year, "-04-01"), paste0(year, "-06-30"), 
                                 tz = tz, units = "days"), 
-                 Q3 = -difftime(paste0(year, "-07-01"), paste0(year, "-09-30"), 
+                 Q3   = -difftime(paste0(year, "-07-01"), paste0(year, "-09-30"), 
                                 tz = tz, units = "days"), 
-                 Q4 = -difftime(paste0(year, "-10-01"), paste0(year, "-12-31"), 
+                 Q4   = -difftime(paste0(year, "-10-01"), paste0(year, "-12-31"), 
                                 tz = tz, units = "days")) + 1
   
   q_length = q_lengths[q]
