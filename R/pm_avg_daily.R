@@ -29,7 +29,8 @@ pm_avg_daily <- function(data, datecol, valcol, ...) {
   group_by_(data, .dots = dots) %>%
     summarise_(n_readings = readings_formula,
                avg_24hr = avg_formula) %>%
-    mutate(year = lubridate::year(date))
+    mutate(year = lubridate::year(date)) %>% 
+    ungroup()
 }
 
 ## This should work but lazy(date) does weird stuff. See 
