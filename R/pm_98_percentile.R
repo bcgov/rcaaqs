@@ -53,6 +53,7 @@ pm_98_percentile <- function(data, datecol, valcol, ..., std = 28) {
 #' 
 #'}
 cut_rank <- function(n) {
+  if (!inherits(n, c("integer", "numeric"))) stop("n is not an integer/numeric")
   if (n < 1) stop("n is less than 1")
   if (n > 366) stop("n is greater than 366")
   
