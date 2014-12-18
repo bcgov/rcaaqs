@@ -18,6 +18,19 @@ context("Percent valid days")
 dates <- seq.Date(from = as.Date("2011-01-01"), to = as.Date("2011-12-31"), by = "days")
 ly_dates <- seq.Date(from = as.Date("2012-01-01"), to = as.Date("2012-12-31"), by = "days")
 
+test_that("Only accepts date-type objects with time interval of one day", {
+  posix <- seq.POSIXt(as.POSIXct("2012-01-01"), as.POSIXct("2012-12-31"), by = "hour")
+  
+  expect_error(percent_valid_days(posix, q = "year"))
+})
+
+test_that("Duplicated dates cause a warning", {
+  dates <- seq.Date(from = as.Date("2011-01-01"), to = as.Date("2011-12-31"), by = "days")
+  dates <- c(dates, dates)
+  
+  expect_warning(percent_valid_days(dates, q = "year"))
+})
+
 test_that("Works with a full time series", {
     
   expect_equal(percent_valid_days(dates, q = "year"), c(year = 100))
@@ -97,33 +110,23 @@ test_that("Works with a full quarter missing", {
   expect_equal(percent_valid_days(dates, q = "Q4"), c(Q4 = 0))
 })
 
-test_that("Only accepts date-type objects with time interval of one day", {
-  posix <- seq.POSIXt(as.POSIXct("2012-01-01"), as.POSIXct("2012-12-31"), by = "hour")
-  
-  expect_error(percent_valid_days(posix, q = "year"))
-})
-
-test_that("Duplicated dates cause a warning", {
-  dates <- seq.Date(from = as.Date("2011-01-01"), to = as.Date("2011-12-31"), by = "days")
-  dates <- c(dates, dates)
-  
-  expect_warning(percent_valid_days(dates, q = "year"))
-})
-
 context("pm 98 percentile")
 
-one_year <- data.frame(dates, val = rnorm(length(dates), 20,5))
+multi_id <- readRDS(system.file("tests","testthat","daily_averages.rds", 
+                                package = "bcairquality"))
+
+one_id <- multi_id[multi_id$id == "a",]
 
 # Make a multi-year df
-dates2 <- seq.Date(from = as.Date("2012-01-01"), 
-                            to = as.Date("2012-12-31"), by = "days")
-mult_years <- data.frame(id = c(rep("a", length(dates)), rep("b", length(dates2))), 
-                         dates = c(dates, dates2), 
-                         val = rnorm(length(dates) + length(dates2), 20, 5), 
-                         stringsAsFactors = FALSE)
+# dates2 <- seq.Date(from = as.Date("2012-01-01"), 
+#                             to = as.Date("2012-12-31"), by = "days")
+# mult_years <- data.frame(id = c(rep("a", length(dates)), rep("b", length(dates2))), 
+#                          dates = c(dates, dates2), 
+#                          val = rnorm(length(dates) + length(dates2), 20, 5), 
+#                          stringsAsFactors = FALSE)
 
-test_one <- pm_98_percentile(one_year, datecol = "dates", valcol = "val")
-test_mult <- pm_98_percentile(mult_years, "dates", "val", "id")
+test_one <- pm_98_percentile(one_id, datecol = "dates", valcol = "val")
+test_mult <- pm_98_percentile(multi_id, "dates", "val", "id")
 
 test_that("Only accepts date-type objects with time interval of one day", {
   posix <- seq.POSIXt(as.POSIXct("2012-01-01"), as.POSIXct("2012-01-31"), by = "hour")
@@ -133,55 +136,73 @@ test_that("Only accepts date-type objects with time interval of one day", {
 })
 
 test_that("Is a data frame", {
-  expect_is(pm_98_percentile(one_year, datecol = "dates", valcol = "val"), "data.frame")
+  expect_is(test_one, "data.frame")
+  expect_is(test_mult, "data.frame")
 })
 
 test_that("Has the right column names and dimensions", {
-  expected_names <- c("year", "n_days", "percent_valid_annual", 
-                      "percent_valid_q1", "percent_valid_q2", 
-                      "percent_valid_q3", "percent_valid_q4", 
-                      "ann_98_percentile", "annual_valid", "quarters_valid", 
-                      "exceed")
+  expected_names <- c("year", "n_days", "rep_date", "ann_98_percentile", "exceed")
   expect_equal(names(test_one), expected_names)
-  expect_equal(dim(test_one), c(1, 11))
+  expect_equal(dim(test_one), c(3, 5))
   
   # For multiple years:
   expect_equal(names(test_mult), c("id", expected_names))
-  expect_equal(dim(test_mult), c(2, 12))
+  expect_equal(dim(test_mult), c(6, 6))
 })
 
 test_that("Columns are the right class", {
-  classes <- c("integer", "integer", "numeric", "numeric", "numeric", 
-               "numeric", "numeric", "numeric", "logical", "logical", "logical")
+  classes <- c("integer", "integer", "Date", "numeric", "logical")
   expect_equal(unname(sapply(test_one, class)), classes)
   expect_equal(unname(sapply(test_mult, class)), c("character", classes))
 })
 
+test_that("Exceed works", {
+  expect_false(any(test_mult$exceed))
+  
+  set.seed(42)
+  multi_id$val <- rnorm(nrow(multi_id), 35, 1)
+  res <- pm_98_percentile(multi_id, "dates", "val", "id", std = 28)
+  expect_true(all(res$exceed))
+})
+
 test_that("Number of days is correct", {
-  expect_equal(test_one$n_days, 365)
-  expect_equal(test_mult$n_days, c(365, 366))
+  expect_equal(test_one$n_days, c(358L, 352L, 353L))
+  expect_equal(test_mult$n_days, c(358L, 352L, 353L, 363L, 240L, 164L))
+})
+
+context("pm_data_complete")
+
+test_one <- pm_data_complete(one_id, datecol = "dates", valcol = "val")
+test_mult <- pm_data_complete(multi_id, "dates", "val", "id")
+
+test_that("Only accepts date-type objects with time interval of one day", {
+  posix <- seq.POSIXt(as.POSIXct("2012-01-01"), as.POSIXct("2012-01-31"), by = "hour")
+  test <- data.frame(posix, val = rnorm(length(posix), 20,5))
   
-  one_year <- one_year[-c(23, 57, 182),] # Remove three days
-  test_one <- pm_98_percentile(one_year, "dates", "val")
-  
-  mult_years <- mult_years[-c(23, 57, 182, 400, 520, 600),] # Remove three days
-  test_mult <- pm_98_percentile(mult_years, "dates", "val", "id")
-  
-  expect_equal(test_one$n_days, 362)
-  expect_equal(test_mult$n_days, c(362, 363))
+  expect_error(pm_data_complete(test, "posix", "val"))
+})
+
+test_that("is a data frame", {
+  expect_is(test_one, "data.frame")
+  expect_is(test_mult, "data.frame")
+})
+
+test_that("Has correct column types and dimensions", {
+  expect_equal(dim(test_one), c(3, 9))
+  expect_equal(dim(test_mult), c(6, 10))
+})
+
+test_that("Number of days is correct", {
+  expect_equal(test_one$n_days, c(358L, 352L, 353L))
+  expect_equal(test_mult$n_days, c(358L, 352L, 353L, 363L, 240L, 164L))
 })
 
 test_that("Percentages are <= 100 and >= 0", {
-  expect_less_than(max(as.matrix(test_one[,3:8])), 100 + 1e-10)
-  expect_more_than(min(as.matrix(test_one[,3:8])), -1e-10)
+  expect_less_than(max(as.matrix(test_one[,3:7])), 100 + 1e-10)
+  expect_more_than(min(as.matrix(test_one[,3:7])), -1e-10)
   
-  expect_less_than(max(as.matrix(test_mult[,4:9])), 100 + 1e-10)
-  expect_more_than(min(as.matrix(test_mult[,4:9])), -1e-10)
+  expect_less_than(max(as.matrix(test_mult[,4:8])), 100 + 1e-10)
+  expect_more_than(min(as.matrix(test_mult[,4:8])), -1e-10)
 })
 
-test_that("Valid annual works", {
-  mult_years <- mult_years[-sample(365, 365 * 0.26),]
-  res <- pm_98_percentile(mult_years, "dates", "val")
-  expect_false(res$annual_valid[1])
-  expect_true(res$annual_valid[2])
-})
+
