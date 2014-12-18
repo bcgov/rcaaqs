@@ -40,15 +40,15 @@ pm_24hr_caaq <- function(data, yearcol, valcol, ..., year = "latest") {
   
   years <- seq(to = year, length.out = 3)
   
-  rows <- data[data[[yearcol]] %in% years,]
+  rows <- data[data[[yearcol]] %in% years & !is.na(data[[valcol]]),]
   
   if (length(vars) > 2) {
     dots <- list(...)
     rows <- group_by_(rows, .dots = dots)
   }
   
-  caaq_formula <- interp(~ifelse(x >=2, mean(y, na.rm = TRUE), NA_real_), 
-                         x = n_years, y = as.name(valcol))
+  caaq_formula <- interp(~ifelse(n_years >=2, round(mean(x), 1), NA_real_), 
+                         x = as.name(valcol))
   
   ret <- rows %>%
     summarise_(year         = ~max(year),
