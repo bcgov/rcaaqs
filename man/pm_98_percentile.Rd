@@ -2,7 +2,8 @@
 % Please edit documentation in R/pm_98_percentile.R
 \name{pm_98_percentile}
 \alias{pm_98_percentile}
-\title{Calculate the annual 98th percentile of daily average PM2.5 values according to CAAQS standards}
+\title{Calculate the annual 98th percentile of daily average PM2.5 values according
+to CAAQS standards}
 \usage{
 pm_98_percentile(data, datecol, valcol, ..., std = 28)
 }
@@ -13,12 +14,12 @@ pm_98_percentile(data, datecol, valcol, ..., std = 28)
 
 \item{valcol}{the name of the column with daily average PM2.5 values}
 
-\item{...}{grouping variables, probably an id if using multiple sites. Even
-if not using multiple sites, you shoud specfify the id column so that
-it is retained.}
+\item{...}{grouping variables in data, probably an id if using multiple
+sites. Even if not using multiple sites, you shoud specfify the id column so
+that it is retained in the output.}
 
-\item{std}{the value of the PM2.5 standard (default 28). Must be named as
-it comes after grouping variables (...)}
+\item{std}{the value of the PM2.5 standard (default 28). Must be named as it
+comes after grouping variables (...)}
 }
 \value{
 A data frame with 98th percentiles of daily averages, per year

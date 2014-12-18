@@ -1,19 +1,20 @@
-#' Calculate the annual 98th percentile of daily average PM2.5 values according to CAAQS standards
-#' 
-#' Designed to be used with the output from \code{\link{pm_avg_daily}}
-#' @import dplyr
-#' @import lazyeval
-#' @param  data data frame
-#' @param  datecol the name of the "date" column (as a character string)
-#' @param  valcol the name of the column with daily average PM2.5 values
-#' @param  ... grouping variables, probably an id if using multiple sites. Even 
-#'         if not using multiple sites, you shoud specfify the id column so that
-#'         it is retained.
-#' @param  std the value of the PM2.5 standard (default 28). Must be named as 
-#'         it comes after grouping variables (...)
-#' @export
-#' @seealso \code{\link{pm_avg_daily}}
-#' @return  A data frame with 98th percentiles of daily averages, per year
+#'Calculate the annual 98th percentile of daily average PM2.5 values according
+#'to CAAQS standards
+#'
+#'Designed to be used with the output from \code{\link{pm_avg_daily}}
+#'@import dplyr
+#'@import lazyeval
+#'@param  data data frame
+#'@param  datecol the name of the "date" column (as a character string)
+#'@param  valcol the name of the column with daily average PM2.5 values
+#'@param  ... grouping variables in data, probably an id if using multiple
+#'  sites. Even if not using multiple sites, you shoud specfify the id column so
+#'  that it is retained in the output.
+#'@param  std the value of the PM2.5 standard (default 28). Must be named as it 
+#'  comes after grouping variables (...)
+#'@export
+#'@seealso \code{\link{pm_avg_daily}}
+#'@return  A data frame with 98th percentiles of daily averages, per year
 #' @examples \dontrun{
 #' 
 #'}
