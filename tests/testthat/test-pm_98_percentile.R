@@ -1,8 +1,15 @@
 context("cut rank")
 
-test_that("cuts are correct", {
+test_that("only accepts numbers", {
+  expect_error(cut_rank("foo"))
+})
+
+test_that("only accepts valid range", {
   expect_error(cut_rank(-1))
   expect_error(cut_rank(367))
+})
+
+test_that("cuts are correct", {
   expect_true(all.equal(cut_rank(1), cut_rank(50), 1))
   expect_true(all.equal(cut_rank(51), cut_rank(100), 2))
   expect_true(all.equal(cut_rank(101), cut_rank(150), 3))
