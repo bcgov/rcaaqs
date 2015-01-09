@@ -35,7 +35,7 @@ date_fill <- function (df, date_col, interval = NULL, fill_cols = NULL, add_ymd 
   end.date <- max(dates, na.rm = TRUE)
   
   if (is.null(interval)) {
-    if (inherts(dates, "Date")) {
+    if (inherits(dates, "Date")) {
       interval <- "day"
     } else {
       interval <- find_time_int(dates)
