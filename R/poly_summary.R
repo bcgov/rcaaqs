@@ -33,5 +33,7 @@ poly_summary <- function(polys, points, fn, ...) {
                   return(ret)  
                 })
   
-  do.call("rbind", out)
+  out <- do.call("rbind", out)
+  out$poly_id <- rownames(out)
+  out
 }
