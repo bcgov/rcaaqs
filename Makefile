@@ -2,7 +2,7 @@ SHELL = C:\windows\SYSTEM32\cmd.exe
 PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 
-all: docs check build install
+all: docs check build test
 
 docs:
 	rm NAMESPACE
