@@ -22,16 +22,21 @@ pm_avg_daily <- function(data, datecol, valcol, ...) {
   # Capture grouping variables
   dots <- list(..., datecol)
   
+  get_year_from_date <- function(date) {
+    as.integer(as.POSIXlt(date)$year + 1900)
+  }
+  
   ## Capture the formulas for the summaries
   readings_formula <- interp(~length(na.omit(x)), x = as.name(valcol))
   avg_formula <- interp(~ifelse(n_readings >= 18, mean(x, na.rm = TRUE),
                                 NA_real_),
                         x = as.name(valcol))
+  year_formula <- interp(~get_year_from_date(x), x = as.name(datecol))
   
   group_by_(data, .dots = dots) %>%
     summarise_(n_readings = readings_formula,
-               avg_24hr = avg_formula) %>%
-    mutate(year = lubridate::year(date)) %>% 
+               avg_24hr   = avg_formula) %>%
+    mutate_(year = year_formula) %>% 
     ungroup()
 }
 
