@@ -15,10 +15,12 @@
 #'}
 pm_avg_daily <- function(data, datecol, valcol, ...) {
   ## if datecol is a datetime column, convert to date
-  data$date <- as.Date(data[[datecol]])
+  if (inherits(data[[datecol]], "POSIXt")) {
+    data[[datecol]] <- as.Date(data[[datecol]])
+  }
   
   # Capture grouping variables
-  dots <- list(..., "date")
+  dots <- list(..., datecol)
   
   ## Capture the formulas for the summaries
   readings_formula <- interp(~length(na.omit(x)), x = as.name(valcol))
