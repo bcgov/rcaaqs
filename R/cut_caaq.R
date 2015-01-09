@@ -51,8 +51,8 @@ cut_caaq <- function(x, metric, output = "labels", drop_na = FALSE) {
   } else if (output == "breaks_u") {
     labels <- c("Insufficient Data", 
                 paste0("\u2264 ", breaks[3], u_unit), 
-                paste0("\u003E ", breaks[3], u_unit, " & \u2264 ", breaks[4], u_unit), 
-                paste0("\u003E ", breaks[4], u_unit, " & \u2264 ", breaks[5], u_unit), 
+                paste0("\u003E ", breaks[3], u_unit, " \u0026 \u2264 ", breaks[4], u_unit), 
+                paste0("\u003E ", breaks[4], u_unit, " \u0026 \u2264 ", breaks[5], u_unit), 
                 paste0("\u003E ", breaks[5], u_unit))
   } else if (output == "breaks_h") {
     labels <- c("Insufficient Data", 
