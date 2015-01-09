@@ -2,7 +2,8 @@
 % Please edit documentation in R/pm_avg_daily.R
 \name{pm_avg_daily}
 \alias{pm_avg_daily}
-\title{Calcualte the daily average PM2.5 reading, following CAAQS data completeness rules}
+\title{Calcualte the daily average PM2.5 reading, following CAAQS data completeness
+rules}
 \usage{
 pm_avg_daily(data, datecol, valcol, ...)
 }
@@ -13,13 +14,17 @@ pm_avg_daily(data, datecol, valcol, ...)
 
 \item{valcol}{the name (as a character string) of the PM2.5 value column}
 
-\item{...}{grouping variables, probably an id if using multiple sites}
+\item{...}{grouping variables in data, probably an id if using multiple sites.
+Even if not using multiple sites, you shoud specfify the id column so that
+it is retained in the output.}
 }
 \value{
-data frame with the daily averages, can be input into \code{\link{pm_98_percentile}}
+data frame with the daily averages, can be input into
+       \code{\link{pm_98_percentile}}
 }
 \description{
-Calcualte the daily average PM2.5 reading, following CAAQS data completeness rules
+Calcualte the daily average PM2.5 reading, following CAAQS data completeness
+rules
 }
 \examples{
 \dontrun{
