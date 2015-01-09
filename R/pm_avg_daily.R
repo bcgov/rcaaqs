@@ -1,16 +1,19 @@
-#' Calcualte the daily average PM2.5 reading, following CAAQS data completeness rules
+#'Calcualte the daily average PM2.5 reading, following CAAQS data completeness
+#'rules
 #'
-#' @param data data frame with date and value
-#' @param datecol the name (as a character string) of the date column
-#' @param valcol the name (as a character string) of the PM2.5 value column
-#' @param ... grouping variables, probably an id if using multiple sites
-#' @import dplyr
-#' @import lazyeval
-#' @importFrom lubridate year
-#' @export
-#' @return data frame with the daily averages, can be input into \code{\link{pm_98_percentile}}
-#' @seealso \code{\link{pm_98_percentile}}
-#' @examples \dontrun{
+#'@param data data frame with date and value
+#'@param datecol the name (as a character string) of the date column
+#'@param valcol the name (as a character string) of the PM2.5 value column
+#'@param ... grouping variables in data, probably an id if using multiple sites.
+#'  Even if not using multiple sites, you shoud specfify the id column so that
+#'  it is retained in the output.
+#'@import dplyr
+#'@import lazyeval
+#'@export
+#'@return data frame with the daily averages, can be input into 
+#'        \code{\link{pm_98_percentile}}
+#'@seealso \code{\link{pm_98_percentile}}
+#'@examples \dontrun{
 #'
 #'}
 pm_avg_daily <- function(data, datecol, valcol, ...) {
