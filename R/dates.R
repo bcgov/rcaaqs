@@ -18,7 +18,10 @@ format_date <- function(dates) {
 #' @export
 #' @return dataframe with filled in dates
 #' @examples \dontrun{
-#'
+#' foo <- data.frame(Date = seq(as.Date("2008-01-01"), as.Date("2008-12-01"), by = "month"), 
+#'                   val = round(rnorm(12, 5, 2), 1), label = rep("a", 12))
+#' bar <- foo[-c(2,5,6,7,10),]
+#' date_fill(bar, "Date", interval = "1 month", fill_cols = "label")
 #'}
 date_fill <- function (df, date_col, interval = NULL, fill_cols = NULL, add_ymd = FALSE) {
   
@@ -28,6 +31,8 @@ date_fill <- function (df, date_col, interval = NULL, fill_cols = NULL, add_ymd 
     stop("Specified interval is not valid. See ?seq.Date and ", 
          "?seq.POSIXt for help, or let the function find it for you")
   }
+  
+  df <- df[order(df[[date_col]]),]
   
   dates <- as.data.frame(df)[,date_col]
   
@@ -45,7 +50,7 @@ date_fill <- function (df, date_col, interval = NULL, fill_cols = NULL, add_ymd 
   if (length(unique(diff(dates))) != 1L) {
     all.dates <- data.frame(date = seq(start.date, end.date, 
                                        by = interval))
-    out <- merge(df, all.dates, all = TRUE)
+    out <- merge(df, all.dates, by.x = date_col, by.y = "date", all = TRUE)
     
     if (!is.null(fill_cols)) {
       for (col in fill_cols) {
