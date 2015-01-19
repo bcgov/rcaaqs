@@ -1,4 +1,4 @@
-library(testthat)
-library(bcairquality)
+library("testthat")
+library("bcairquality")
 
 test_check("bcairquality")
