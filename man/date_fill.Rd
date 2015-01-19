@@ -26,7 +26,10 @@ Given a dataframe with one column as a date sequence, fill gaps in the dat seque
 }
 \examples{
 \dontrun{
-
+foo <- data.frame(Date = seq(as.Date("2008-01-01"), as.Date("2008-12-01"), by = "month"),
+                  val = round(rnorm(12, 5, 2), 1), label = rep("a", 12))
+bar <- foo[-c(2,5,6,7,10),]
+date_fill(bar, "Date", interval = "1 month", fill_cols = "label")
 }
 }
 

@@ -6,6 +6,7 @@ Date: 2014-10-20
 Author: Andy Teucher <andy.teucher@gov.bc.ca>
 Maintainer: Andy Teucher <andy.teucher@gov.bc.ca>
 Description: Analyze data according to CAAQS guidelines
+LazyData: true
 License: None
 Imports:
     sp,
@@ -13,4 +14,5 @@ Imports:
     dplyr,
     lazyeval
 Suggests:
-    testthat
+    rgdal
+    
