@@ -14,9 +14,11 @@ names(rd_map) <- tolower(names(rd_map))
 # Convert to NAD83 to make lat lines horizontal and long lines vertical
 rd_map <- spTransform(rd_map, CRS(nad_83))
 
+## Extract stikine and peace to use to create Northern Rockies
 stikine <- subset(rd_map, unit_name == "Stikine")
 peace <- subset(rd_map, unit_name == "Peace River")
 
+## Extract coords and make run-length encodings of them
 stikine_coords <- stikine@polygons[[1]]@Polygons[[1]]@coords
 
 stikine_long_rle <- rle(round(stikine_coords[,1], 3))
@@ -27,7 +29,7 @@ peace_coords <- peace@polygons[[1]]@Polygons[[1]]@coords
 peace_long_rle <- rle(round(peace_coords[,1], 3))
 peace_lat_rle <- rle(round(peace_coords[,2], 3))
 
-# Make southern boundary 
+# Make southern boundary (replicate northern boundary of peace, but in reverse order)
 n_rockies_s_bound <- peace_coords[nrow(peace_coords):(nrow(peace_coords)-(rev(peace_lat_rle[[1]])[1] - 1)), ]
 
 ## Make eastern boundary
@@ -39,10 +41,12 @@ n_rockies_e_bound <- matrix(c(rep(e_long_peace, 50),
                             , ncol = 2)
 
 ## Make western boundary
+## First a rough cut
 stikine_ne_bound <- stikine_coords[stikine_coords[,1] > -128 & 
                                      stikine_coords[,2] > n_lat_peace,]
 
-end_of_n_bound <- rle(round(stikine_ne_bound[,2], 3))[[1]][1]
+## Find the easternmost flat point of the northern boundary and trim the flat part off
+end_of_n_bound <- rle(round(stikine_ne_bound[, 2], 3))[[1]][1]
 n_rockies_w_bound <- stikine_ne_bound[end_of_n_bound:nrow(stikine_ne_bound),]
 
 # Reverse direction (clockwise)
@@ -65,11 +69,11 @@ n_rockies_n_bound <- matrix(c(seq(n_rockies_w_bound[nrow(n_rockies_w_bound), 1],
                                   e_long_peace, length.out = 60), 
                               rep(n_lat_stikine, 60)), ncol = 2)
 
-## Combine boundaries into one
+## Combine boundaries (points) into one matrix
 n_rockies_bound <- rbind(n_rockies_n_bound, n_rockies_e_bound, 
                          n_rockies_s_bound, n_rockies_w_bound)
 
-## Convert points -> Polygons -> SpatialPolygons -> SpatialPolygonsDataFrame
+## Convert points -> Ppolygon -> Polygons -> SpatialPolygons -> SpatialPolygonsDataFrame
 n_rockies_spPolyDF <- Polygon(n_rockies_bound, hole = FALSE) %>% 
   list() %>% 
   Polygons(ID = "28") %>%
