@@ -1,5 +1,6 @@
 library("sp")
 library("rgdal")
+library("magrittr")
 
 bc_albers <- "+proj=aea +lat_1=50 +lat_2=58.5 +lat_0=45 +lon_0=-126 +x_0=1000000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 nad_83 <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
@@ -67,14 +68,14 @@ n_rockies_bound <- rbind(n_rockies_n_bound, n_rockies_e_bound,
                          n_rockies_s_bound, n_rockies_w_bound)
 
 ## Convert points -> Polygons -> SpatialPolygons -> SpatialPolygonsDataFrame
-n_rockies_poly <- Polygons(list(Polygon(n_rockies_bound, hole = FALSE)), ID = "28")
-
-n_rockies_spPoly <- SpatialPolygons(list(n_rockies_poly), proj4string = CRS(proj4string(rd_map)))
-
-n_rockies_spPolyDF <- SpatialPolygonsDataFrame(n_rockies_spPoly, 
-                                               data.frame(unit_name = "Northern Rockies", 
-                                                          row.names = 28,
-                                                          stringsAsFactors = FALSE))
+n_rockies_spPolyDF <- Polygon(n_rockies_bound, hole = FALSE) %>% 
+  list() %>% 
+  Polygons(ID = "28") %>%
+  list() %>% 
+  SpatialPolygons(proj4string = CRS(proj4string(rd_map))) %>% 
+  SpatialPolygonsDataFrame(data = data.frame(unit_name = "Northern Rockies", 
+                                             row.names = 28,
+                                             stringsAsFactors = FALSE))
 
 ## Combine Northern Rockies SpatialPolygonsDataFrame with rd_map
 rd_map <- rbind(rd_map, n_rockies_spPolyDF)
@@ -88,13 +89,12 @@ rd_map@data$region_type <- ifelse(rd_map@data$unit_name == "Northern Rockies",
 ## Convert back to BC Albers
 rd_map <- spTransform(rd_map, CRS(bc_albers))
 
+## Plot to verify
 # library("ggplot2")
-# libaray("svgPanZoom")
-
-# newgg <- fortify(rd_map, region = "unit_name")
 # 
-# svgPanZoom(
-# ggplot(data = newgg, aes(x = long, y = lat, group = group)) + 
-#   geom_polygon(aes(fill = group)) + 
+# rd_gg <- fortify(rd_map, region = "unit_name")
+# 
+# ggplot(data = rd_gg, aes(x = long, y = lat, group = group)) + 
+#   geom_polygon(aes(fill = id)) + 
 #   geom_path(colour = "white")
-# )
+
