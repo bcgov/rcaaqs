@@ -19,7 +19,8 @@ peace <- subset(rd_map, unit_name == "Peace River")
 
 stikine_coords <- stikine@polygons[[1]]@Polygons[[1]]@coords
 
-n_lat_stikine <- rle(round(stikine_coords[,2], 3))[[2]][1]
+stikine_long_rle <- rle(round(stikine_coords[,1], 3))
+stikine_lat_rle <- rle(round(stikine_coords[,2], 3))
 
 peace_coords <- peace@polygons[[1]]@Polygons[[1]]@coords
 
@@ -30,6 +31,7 @@ peace_lat_rle <- rle(round(peace_coords[,2], 3))
 n_rockies_s_bound <- peace_coords[nrow(peace_coords):(nrow(peace_coords)-(rev(peace_lat_rle[[1]])[1] - 1)), ]
 
 ## Make eastern boundary
+n_lat_stikine <- stikine_lat_rle[[2]][1]
 e_long_peace <- peace_long_rle[[2]][1]
 n_lat_peace <- peace_lat_rle[[2]][length(peace_lat_rle[[2]])]
 n_rockies_e_bound <- matrix(c(rep(e_long_peace, 50), 
