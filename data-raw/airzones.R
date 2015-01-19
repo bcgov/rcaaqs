@@ -9,4 +9,4 @@ airzones <- readOGR(dsn = "data-raw/airzones", layer = "fixed-Polygon", stringsA
 
 airzones <- spTransform(airzones, CRSobj = CRS(bc_albers))
 
-use_data(airzones, pkg = as.package("."), overwrite = TRUE, compress = "xz")
+devtools::use_data(airzones, pkg = devtools::as.package("."), overwrite = TRUE, compress = "xz")
