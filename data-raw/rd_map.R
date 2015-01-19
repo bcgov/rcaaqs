@@ -104,3 +104,4 @@ rd_map <- spTransform(rd_map, CRS(bc_albers))
 #   geom_polygon(aes(fill = id)) + 
 #   geom_path(colour = "white")
 
+use_data(rd_map, pkg = as.package("."), overwrite = TRUE, compress = "xz")
