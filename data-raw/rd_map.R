@@ -9,14 +9,14 @@ unzip("data-raw/regional_districts_ceei.zip", exdir = "data-raw/rd")
 
 rd_map <- readOGR(dsn = "data-raw/rd/C_PIT_07RD", layer = "C_PIT_07RD_polygon", stringsAsFactors = FALSE)
 rd_map <- rd_map["UNIT_NAME"]
-names(rd_map) <- tolower(names(rd_map))
+names(rd_map) <- "region_name"
 
 # Convert to NAD83 to make lat lines horizontal and long lines vertical
 rd_map <- spTransform(rd_map, CRS(nad_83))
 
 ## Extract stikine and peace to use to create Northern Rockies
-stikine <- subset(rd_map, unit_name == "Stikine")
-peace <- subset(rd_map, unit_name == "Peace River")
+stikine <- subset(rd_map, region_name == "Stikine")
+peace <- subset(rd_map, region_name == "Peace River")
 
 ## Extract coords and make run-length encodings of them
 stikine_coords <- stikine@polygons[[1]]@Polygons[[1]]@coords
@@ -79,7 +79,7 @@ n_rockies_spPolyDF <- Polygon(n_rockies_bound, hole = FALSE) %>%
   Polygons(ID = "28") %>%
   list() %>% 
   SpatialPolygons(proj4string = CRS(proj4string(rd_map))) %>% 
-  SpatialPolygonsDataFrame(data = data.frame(unit_name = "Northern Rockies", 
+  SpatialPolygonsDataFrame(data = data.frame(region_name = "Northern Rockies", 
                                              row.names = 28,
                                              stringsAsFactors = FALSE))
 
@@ -87,9 +87,9 @@ n_rockies_spPolyDF <- Polygon(n_rockies_bound, hole = FALSE) %>%
 rd_map <- rbind(rd_map, n_rockies_spPolyDF)
 
 ## Differentiate RD types
-rd_map@data$region_type <- ifelse(rd_map@data$unit_name == "Northern Rockies", 
+rd_map@data$region_type <- ifelse(rd_map@data$region_name == "Northern Rockies", 
                                   "Regional Municipality", 
-                                  ifelse(rd_map@data$unit_name == "Stikine", 
+                                  ifelse(rd_map@data$region_name == "Stikine", 
                                          "Unincorporated Area", "Regional District"))
 
 ## Convert back to BC Albers
@@ -98,7 +98,7 @@ rd_map <- spTransform(rd_map, CRS(bc_albers))
 ## Plot to verify
 # library("ggplot2")
 # 
-# rd_gg <- fortify(rd_map, region = "unit_name")
+# rd_gg <- fortify(rd_map, region = "region_name")
 # 
 # ggplot(data = rd_gg, aes(x = long, y = lat, group = group)) + 
 #   geom_polygon(aes(fill = id)) + 
