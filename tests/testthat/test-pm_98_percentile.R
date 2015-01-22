@@ -117,7 +117,7 @@ test_that("Works with a full quarter missing", {
   expect_equal(percent_valid_days(dates, q = "Q4"), c(Q4 = 0))
 })
 
-context("pm 98 percentile")
+context("pm 98 percentile without completeness")
 
 multi_id <- readRDS(system.file("tests","testthat","daily_averages.rds", 
                                 package = "bcairquality"))
@@ -132,14 +132,16 @@ one_id <- multi_id[multi_id$id == "a",]
 #                          val = rnorm(length(dates) + length(dates2), 20, 5), 
 #                          stringsAsFactors = FALSE)
 
-test_one <- pm_98_percentile(one_id, datecol = "dates", valcol = "val")
-test_mult <- pm_98_percentile(multi_id, "dates", "val", "id")
+test_one <- pm_98_percentile(one_id, datecol = "dates", valcol = "val", 
+                             completeness = FALSE)
+test_mult <- pm_98_percentile(multi_id, datecol = "dates", valcol = "val", "id", 
+                              completeness = FALSE)
 
 test_that("Only accepts date-type objects with time interval of one day", {
   posix <- seq.POSIXt(as.POSIXct("2012-01-01"), as.POSIXct("2012-01-31"), by = "hour")
   test <- data.frame(posix, val = rnorm(length(posix), 20,5))
   
-  expect_error(pm_98_percentile(test, "posix", "val"))
+  expect_error(pm_98_percentile(test, "posix", "val", completeness = FALSE))
 })
 
 test_that("Is a data frame", {
@@ -168,7 +170,8 @@ test_that("Exceed works", {
   
   set.seed(42)
   multi_id$val <- rnorm(nrow(multi_id), 35, 1)
-  res <- pm_98_percentile(multi_id, "dates", "val", "id", std = 28)
+  res <- pm_98_percentile(multi_id, datecol = "dates", valcol = "val", "id", 
+                          std = 28, completeness = FALSE)
   expect_true(all(res$exceed))
 })
 
