@@ -1,5 +1,5 @@
 context("pm 24hr caaq")
-annual_values <- readRDS(system.file("tests","testthat","annual_98_percentiles.rds", 
+annual_values <- readRDS(system.file("tests","annual_98_percentiles.rds", 
                                      package = "bcairquality"))
 
 annual_values_one_id <- annual_values[annual_values$id == "a",]
