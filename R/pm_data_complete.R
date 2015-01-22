@@ -4,7 +4,7 @@
 #' Designed to be used with the output from \code{\link{pm_avg_daily}}
 #' @import dplyr
 #' @import lazyeval
-#' @param  data data frame
+#' @param  data data frame (likely the result of running \code{\link{pm_avg_daily}})
 #' @param  datecol the name of the "date" column (as a character string)
 #' @param  valcol the name of the column with daily average PM2.5 values
 #' @param  ... grouping variables, probably an id if using multiple sites. Even 
