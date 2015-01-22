@@ -1,7 +1,6 @@
 context("pm average daily")
 
-hourly_data <- readRDS(system.file("tests", "hourly.rds", 
-                                   package = "bcairquality"))
+hourly_data <- readRDS("hourly.rds")
 
 test_that("returns a data frame", {
   ret <- pm_avg_daily(hourly_data, "date", "val", "id")

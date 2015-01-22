@@ -119,8 +119,7 @@ test_that("Works with a full quarter missing", {
 
 context("pm 98 percentile without completeness")
 
-multi_id <- readRDS(system.file("tests", "daily_averages.rds", 
-                                package = "bcairquality"))
+multi_id <- readRDS("daily_averages.rds")
 
 one_id <- multi_id[multi_id$id == "a",]
 
