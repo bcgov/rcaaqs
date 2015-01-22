@@ -41,18 +41,19 @@ pm_data_complete <- function(data, datecol, valcol, ..., year_valid = 75, q_vali
   q3_formula <- interp(~percent_valid_days(x, q = "Q3"), x = as.name(datecol))
   q4_formula <- interp(~percent_valid_days(x, q = "Q4"), x = as.name(datecol))
   
-  data %>%
-    group_by_(.dots = dots) %>%
-    summarise_(n_days = ~n(),
-               percent_valid_annual = annual_formula, 
-               percent_valid_q1 = q1_formula, 
-               percent_valid_q2 = q2_formula, 
-               percent_valid_q3 = q3_formula, 
-               percent_valid_q4 = q4_formula) %>%
-    rowwise() %>%
-    mutate(annual_valid = percent_valid_annual >= year_valid,
-           quarters_valid = all(c(percent_valid_q1, percent_valid_q2, 
-                                  percent_valid_q3, percent_valid_q4) >= q_valid))
+  res <- group_by_(data, .dots = dots)
+  res <- summarise_(res, n_days = ~n(),
+                    percent_valid_annual = annual_formula, 
+                    percent_valid_q1 = q1_formula, 
+                    percent_valid_q2 = q2_formula, 
+                    percent_valid_q3 = q3_formula, 
+                    percent_valid_q4 = q4_formula)
+  res <- rowwise(res)
+  res <- mutate_(res, annual_valid = ~percent_valid_annual >= year_valid,
+                 quarters_valid = ~all(c(percent_valid_q1, percent_valid_q2, 
+                                         percent_valid_q3, percent_valid_q4) >= q_valid))
+  ret <- ungroup(res)
+  ret
 }
 
 #' Given a vector of dates (in a single year), calculate the percentage of days in a quarter

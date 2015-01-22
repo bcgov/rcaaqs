@@ -1,7 +1,8 @@
 #' Calculate the annual 98th percentile of daily average PM2.5 values according 
 #' to CAAQS standards
 #' 
-#' Designed to be used with the output from \code{\link{pm_avg_daily}}
+#' Also computes the data completeness criteria (optional). Designed to be used
+#' with the output from \code{\link{pm_avg_daily}}.
 #' @import dplyr
 #' @import lazyeval
 #' @param  data data frame
@@ -12,13 +13,13 @@
 #'   so that it is retained in the output.
 #' @param  std the value of the PM2.5 standard (default 28). Must be named as it
 #'   comes after grouping variables (...)
-#' @param completeness Should the completeness criteria be calculated (default
+#' @param completeness Should the completeness criteria be calculated (default 
 #'   TRUE)
 #' @param  year_valid  The percentage of valid days required in a year (default 
 #'   75). Must be named as it comes after grouping variables (...). Only 
 #'   required if calculating the completeness criteria.
 #' @param  q_valid  The percentage of valid days required in each quarter 
-#'   (default 60). Must be named as it comes after grouping variables (...).
+#'   (default 60). Must be named as it comes after grouping variables (...). 
 #'   Only required if calculating the completeness criteria.
 #' @export
 #' @seealso \code{\link{pm_avg_daily}}
@@ -39,14 +40,14 @@ pm_98_percentile <- function(data, datecol, valcol, ..., std = 28,
   
   dots <- list(..., "year")
   
-  ans <- group_by_(data, .dots = dots) %>%
-    transmute_(n_days            = ~n(),
-               rep_date          = interp(~x, x = as.name(datecol)),
-               ann_98_percentile = interp(~x, x = as.name(valcol)),
-               exceed            = ~ann_98_percentile > std) %>%
-    arrange(desc(ann_98_percentile)) %>%
-    slice(cut_rank(n_days[1])) %>%
-    ungroup()
+  ans <- group_by_(data, .dots = dots)
+  ans <- transmute_(ans, n_days       = ~n(),
+                    rep_date          = interp(~x, x = as.name(datecol)),
+                    ann_98_percentile = interp(~x, x = as.name(valcol)),
+                    exceed            = ~ann_98_percentile > std)
+  ans <- arrange_(ans, ~desc(ann_98_percentile))
+  ans <- slice_(ans, ~cut_rank(n_days[1]))
+  ans <- ungroup(ans)
   
   if (completeness) {
     comp <- pm_data_complete(data = data, datecol = datecol, valcol = valcol, 
@@ -55,6 +56,7 @@ pm_98_percentile <- function(data, datecol, valcol, ..., std = 28,
     comp <- comp[,-which(names(comp) == "n_days")]
     
     ans <- merge(ans, comp, by = unlist(dots))
+    ans$use_but_incomplete <- ans[["exceed"]] & !ans[["quarters_valid"]]
   }
   
   ans
