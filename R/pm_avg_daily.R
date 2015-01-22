@@ -36,11 +36,12 @@ pm_avg_daily <- function(data, datecol, valcol, ...) {
                         x = as.name(valcol))
   year_formula <- interp(~get_year_from_date(x), x = as.name(datecol))
   
-  group_by_(data, .dots = dots) %>%
-    summarise_(n_readings = readings_formula,
-               avg_24hr   = avg_formula) %>%
-    mutate_(year = year_formula) %>% 
-    ungroup()
+  res <- group_by_(data, .dots = dots)
+  res <- summarise_(res, n_readings = readings_formula,
+                    avg_24hr        = avg_formula)
+  res <- mutate_(res, year = year_formula)
+  ret <- ungroup(res)
+  ret
 }
 
 ## This should work but lazy(date) does weird stuff. See 
@@ -55,8 +56,8 @@ pm_avg_daily <- function(data, datecol, valcol, ...) {
 #                                 NA_real_), 
 #                         x = valcol)
 #   
-#   group_by_(data, group_formula) %>%
-#     summarise_(n_readings = readings_formula,  
+#   res <- group_by_(data, group_formula)
+#     ret <- summarise_(res, n_readings = readings_formula,  
 #                avg_24hr = avg_formula)
 # }
 # PM_avg_daily(data, date, value)

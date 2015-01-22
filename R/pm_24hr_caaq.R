@@ -51,10 +51,9 @@ pm_24hr_caaq <- function(data, yearcol, valcol, ..., year = "latest") {
   caaq_formula <- interp(~ifelse(n_years >=2, round(mean(x), 1), NA_real_), 
                          x = as.name(valcol))
   
-  ret <- rows %>%
-    summarise_(year         = ~max(year),
-               n_years      = ~n(),
-               pm_24hr_caaq = caaq_formula)
+  ret <- summarise_(rows, year   = ~max(year),
+                    n_years      = ~n(),
+                    pm_24hr_caaq = caaq_formula)
   ret
   
 }
