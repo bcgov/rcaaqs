@@ -8,11 +8,13 @@ Maintainer: Andy Teucher <andy.teucher@gov.bc.ca>
 Description: Analyze data according to CAAQS guidelines
 LazyData: true
 License: None
+Depends:
+    R (>= 3.1.2)
 Imports:
     sp,
     lubridate,
     dplyr,
     lazyeval
 Suggests:
-    rgdal
-    
+    rgdal,
+    testthat
