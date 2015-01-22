@@ -8,7 +8,7 @@ quarter for each year in a dataset.}
 pm_data_complete(data, datecol, valcol, ..., year_valid = 75, q_valid = 60)
 }
 \arguments{
-\item{data}{data frame}
+\item{data}{data frame (likely the result of running \code{\link{pm_avg_daily}})}
 
 \item{datecol}{the name of the "date" column (as a character string)}
 
