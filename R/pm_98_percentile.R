@@ -56,7 +56,9 @@ pm_98_percentile <- function(data, datecol, valcol, ..., std = 28,
     comp <- select_(comp, ~ -n_days)
     
     ans <- merge(ans, comp, by = unlist(dots))
-    ans$use_but_incomplete <- ans[["exceed"]] & !ans[["quarters_valid"]]
+    ans <- mutate_(ans, 
+                   use_but_incomplete = ~ exceed & annual_valid & !quarters_valid, 
+                   use = ~ (annual_valid & quarters_valid) | use_but_incomplete)
   }
   
   ans
