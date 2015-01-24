@@ -34,6 +34,7 @@ pm_avg_daily <- function(data, datecol, valcol, ...) {
   avg_formula <- interp(~ifelse(n_readings >= 18, mean(x, na.rm = TRUE),
                                 NA_real_),
                         x = as.name(valcol))
+  
   year_formula <- interp(~get_year_from_date(x), x = as.name(datecol))
   
   res <- group_by_(data, .dots = dots)
