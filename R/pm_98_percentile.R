@@ -41,10 +41,10 @@ pm_98_percentile <- function(data, datecol, valcol, ..., std = 28,
   dots <- list(..., "year")
   
   ans <- group_by_(data, .dots = dots)
-  ans <- transmute_(ans, n_days       = ~n(),
-                    rep_date          = interp(~x, x = as.name(datecol)),
-                    ann_98_percentile = interp(~x, x = as.name(valcol)),
-                    exceed            = ~ann_98_percentile > std)
+  ans <- transmute_(ans, n_days       = ~ n(),
+                    rep_date          = datecol,
+                    ann_98_percentile = valcol,
+                    exceed            = ~ ann_98_percentile > std)
   ans <- arrange_(ans, ~desc(ann_98_percentile))
   ans <- slice_(ans, ~cut_rank(n_days[1]))
   ans <- ungroup(ans)
@@ -53,7 +53,7 @@ pm_98_percentile <- function(data, datecol, valcol, ..., std = 28,
     comp <- pm_data_complete(data = data, datecol = datecol, valcol = valcol, 
                              ..., year_valid = year_valid, q_valid = q_valid)
     comp <- ungroup(comp)
-    comp <- comp[,-which(names(comp) == "n_days")]
+    comp <- select_(comp, ~ -n_days)
     
     ans <- merge(ans, comp, by = unlist(dots))
     ans$use_but_incomplete <- ans[["exceed"]] & !ans[["quarters_valid"]]
