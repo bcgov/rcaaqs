@@ -44,7 +44,10 @@ pm_24hr_caaq <- function(data, yearcol, valcol, flag, ..., year = "latest") {
   
   rows <- data[data[[yearcol]] %in% years & !is.na(data[[valcol]]),]
   
-  if (length(vars) > 2) {
+  if (missing(...)) {
+    if (any(duplicated(rows[[yearcol]]))) stop("duplicate values in ", yearcol, 
+                                             " but no grouping variable(s) specified")
+  } else {
     dots <- list(...)
     rows <- group_by_(rows, .dots = dots)
   }
@@ -52,7 +55,10 @@ pm_24hr_caaq <- function(data, yearcol, valcol, flag, ..., year = "latest") {
   caaq_formula <- interp(~ifelse(n_years >=2, round(mean(x), 1), NA_real_), 
                          x = as.name(valcol))
   
-  ret <- summarise_(rows, year   = ~max(year),
+  ret <- summarise_(rows, 
+                    caaq_year    = year,
+                    min_year     = interp(~min(x), x = as.name(yearcol)),
+                    max_year     = interp(~max(x), x = as.name(yearcol)),
                     n_years      = ~n(),
                     pm_24hr_caaq = caaq_formula, 
                     based_on_incomplete = interp(~any(x), x = as.name(flag)))
