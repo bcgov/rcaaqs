@@ -35,4 +35,4 @@
 #'   \item{colour}{The colour of the category (in hexadecimal code)}
 #'   
 #' }
-"caaqs_levels""
+"caaqs_levels"
