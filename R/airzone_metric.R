@@ -25,7 +25,7 @@ airzone_metric <- function(df, n, avg, stn_id, stn_name, std) {
   } else {
     maxn <- max(df[,n], na.rm = TRUE)
     
-    df <- df[df[,n] == maxn,]
+    df <- df[df[,n] == maxn, , drop = FALSE]
     
     i <- which.max(df[df[,n] == maxn,avg])
     
