@@ -14,7 +14,7 @@
 #'}
 cut_caaq <- function(x, parameter, output = "labels", drop_na = FALSE) {
   
-  caaqs_levels <- get_levels(parameter)
+  l <- mgmt_levels(parameter)
 
   if (!output %in% c("labels", "breaks_h", "breaks_u", "colour", "color")) {
     stop(output, " is not a valid input for output. It must be either 'labels',", 
@@ -59,7 +59,7 @@ cut_caaq <- function(x, parameter, output = "labels", drop_na = FALSE) {
 #' @examples \dontrun{
 #' get_levels("o3") 
 #'}
-get_levels <- function(parameter = "all") {
+mgmt_levels <- function(parameter = "all") {
   
   caaqs_levels <- caaqs_levels
   
