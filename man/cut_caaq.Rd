@@ -4,15 +4,16 @@
 \alias{cut_caaq}
 \title{Bin a vector of air quaility readings into CAAQS management levels}
 \usage{
-cut_caaq(x, metric, output = "labels", drop_na = FALSE)
+cut_caaq(x, parameter, output = "labels", drop_na = FALSE)
 }
 \arguments{
 \item{x}{vector of air quality readings (pollutant concentrations)}
 
-\item{metric}{What is the metric? Must be one of: \code{"o3", "pm2.5_annual", "pm2.5_daily"}}
+\item{parameter}{What is the parameter? Must be one of: \code{"o3", "pm2.5_annual", "pm2.5_daily"}}
 
 \item{output}{should the function output labels (\code{"labels"}; default
-or break values in unicode (\code{"breaks_u"}) or break values in html (\code{"breaks_h"})?}
+or break values in unicode (\code{"breaks_u"}) or break values in html (\code{"breaks_h"}),
+or colour values (\code{"colour"} or \code{"color"})?}
 
 \item{drop_na}{Should NA values be dropped, or retained as factor level "Insufficient Data" (default)?}
 }
