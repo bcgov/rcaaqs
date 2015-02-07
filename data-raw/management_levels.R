@@ -61,8 +61,8 @@ val_labels_html <- c(paste0("&leq; ", lower_breaks[2], units_html[1]),
 
 colour <- rep(c("#A6D96A", "#FEE08B", "#F46D43", "#A50026"), 3)
 
-caaqs_levels <- data.frame(parameter, labels, lower_breaks, upper_breaks, 
+management_levels <- data.frame(parameter, labels, lower_breaks, upper_breaks, 
                            units_html, units_unicode, val_labels_html, 
                            val_labels_unicode, colour)
 
-devtools::use_data(caaqs_levels, pkg = ".", overwrite = TRUE)
+devtools::use_data(management_levels, pkg = ".", overwrite = TRUE)

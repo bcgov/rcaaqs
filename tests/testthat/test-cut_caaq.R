@@ -1,9 +1,9 @@
-context("cut_caaq")
+context("cut_management")
 
 o3_vec <- c(0, 40, 50, 50.01, 56, 56.01, 63, 63.01, 80, NA)
 
 test_that("returns a factor", {
-  res <- cut_caaq(o3_vec, "o3")
+  res <- cut_management(o3_vec, "o3")
   expect_is(res, "factor")
 })
 
@@ -13,10 +13,10 @@ test_that("breaks are correct for o3: category", {
                 rep("Actions for Preventing CAAQS Exceedance", 2), 
                 rep("Actions for Achieving Air Zone CAAQS", 2))
   
-  res <- cut_caaq(o3_vec, "o3", drop_na = TRUE)
+  res <- cut_management(o3_vec, "o3", drop_na = TRUE)
   expect_equal(as.character(res), c(expected, NA))
   
-  res <- cut_caaq(o3_vec, "o3", drop_na = FALSE)
+  res <- cut_management(o3_vec, "o3", drop_na = FALSE)
   expect_equal(as.character(res), c(expected, "Insufficient Data"))
 })
 
@@ -26,10 +26,10 @@ test_that("breaks are correct for o3: value labels (html)", {
                 rep("&gt; 56ppb &amp; &leq; 63ppb", 2), 
                 rep("&gt; 63ppb", 2))
   
-  res <- cut_caaq(o3_vec, "o3", output = "breaks_h", drop_na = TRUE)
+  res <- cut_management(o3_vec, "o3", output = "breaks_h", drop_na = TRUE)
   expect_equal(as.character(res), c(expected, NA))
   
-  res <- cut_caaq(o3_vec, "o3", output = "breaks_h", drop_na = FALSE)
+  res <- cut_management(o3_vec, "o3", output = "breaks_h", drop_na = FALSE)
   expect_equal(as.character(res), c(expected, "Insufficient Data"))
 })
 
@@ -39,10 +39,10 @@ test_that("breaks are correct for o3: value labels (unicode)", {
                 rep("\u003E 56ppb \u0026 \u2264 63ppb", 2), 
                 rep("\u003E 63ppb", 2))
   
-  res <- cut_caaq(o3_vec, "o3", output = "breaks_u", drop_na = TRUE)
+  res <- cut_management(o3_vec, "o3", output = "breaks_u", drop_na = TRUE)
   expect_equal(as.character(res), c(expected, NA))
   
-  res <- cut_caaq(o3_vec, "o3", output = "breaks_u", drop_na = FALSE)
+  res <- cut_management(o3_vec, "o3", output = "breaks_u", drop_na = FALSE)
   expect_equal(as.character(res), c(expected, "Insufficient Data"))
 })
 
@@ -52,9 +52,9 @@ test_that("breaks are correct for o3: colour", {
                 rep("#F46D43", 2), 
                 rep("#A50026", 2))
   
-  res <- cut_caaq(o3_vec, "o3", output = "colour", drop_na = TRUE)
+  res <- cut_management(o3_vec, "o3", output = "colour", drop_na = TRUE)
   expect_equal(as.character(res), c(expected, NA))
   
-  res <- cut_caaq(o3_vec, "o3", output = "colour", drop_na = FALSE)
+  res <- cut_management(o3_vec, "o3", output = "colour", drop_na = FALSE)
   expect_equal(as.character(res), c(expected, "#CCCCCC"))
 })
