@@ -7,7 +7,7 @@
 format_date(dates)
 }
 \arguments{
-\item{dates}{vector of dates to convert}
+\item{dates}{vector of dates to convert. Dates must be in the format "ddMonYYYY:HH:MM:SS"}
 }
 \value{
 dataframe with filled in dates
