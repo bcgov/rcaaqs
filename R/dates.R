@@ -1,26 +1,12 @@
 #'Convert character date string from ENVISTA to POSIXct
 #'
 #' @importFrom lubridate fast_strptime
-#' @param  dates vector of dates to convert. Dates must be in the format "ddMonYYYY:HH:MM:SS"
+#' @param  dates vector of dates to convert as characters.
+#' @param format the format of the character dates (default %Y-%m-%d %H:%M:%S)
 #' @export
 #' @return dataframe with filled in dates
-format_date <- function(dates) {
-  
-  if (!all(grepl("^\\d{2}[A-Z]{3}\\d{4}:\\d{2}:\\d{2}:\\d{2}$", dates[1:20]))) {
-    stop("Unexpected string pattern in dates")
-  }
-  
-  month_vec <- c("JAN" = "01", "FEB" = "02", "MAR" = "03", "APR" = "04", 
-                 "MAY" = "05", "JUN" = "06", "JUL" = "07", "AUG" = "08", 
-                 "SEP" = "09", "OCT" = "10", "NOV" = "11", "DEC" = "12")
-  
-  x <- character(length(dates))
-  for (m in names(month_vec)) {
-    pos <- grepl(m, dates)
-    x[pos] <- gsub(m, month_vec[m], dates[pos])
-  }
-  
-  lubridate::fast_strptime(x, format = "%d%m%Y:%H:%M:%S", tz = "Etc/GMT+8") + 28800
+format_date <- function(dates, format="%Y-%m-%d %H:%M:%S") {
+  lubridate::fast_strptime(dates, format = format, tz = "Etc/GMT+8") + 28800
 }
 
 #'Fill gaps in a date sequence

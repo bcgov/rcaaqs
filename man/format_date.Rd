@@ -4,10 +4,12 @@
 \alias{format_date}
 \title{Convert character date string from ENVISTA to POSIXct}
 \usage{
-format_date(dates)
+format_date(dates, format = "\%Y-\%m-\%d \%H:\%M:\%S")
 }
 \arguments{
-\item{dates}{vector of dates to convert. Dates must be in the format "ddMonYYYY:HH:MM:SS"}
+\item{dates}{vector of dates to convert as characters.}
+
+\item{format}{the format of the character dates (default %Y-%m-%d %H:%M:%S)}
 }
 \value{
 dataframe with filled in dates
