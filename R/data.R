@@ -18,6 +18,7 @@
 #' \describe{
 #' \item{Airzone}{The name of the airzone}
 #' }
+#' @source \url{http://catalogue.data.gov.bc.ca/dataset/british-columbia-air-zones}
 "airzone_map"
 
 #' CAAQS Management levels for air pollutaionts
@@ -35,7 +36,7 @@
 #'   \item{colour}{The colour of the category (in hexadecimal code)}
 #'   
 #' }
-"caaqs_levels"
+"management_levels"
 
 #' CAAQS Achievement levels for air pollutaionts
 #'
