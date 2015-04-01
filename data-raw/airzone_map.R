@@ -3,19 +3,14 @@ library("rgdal")
 
 bc_albers <- "+proj=aea +lat_1=50 +lat_2=58.5 +lat_0=45 +lon_0=-126 +x_0=1000000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 
-unzip("data-raw/airzones.zip", exdir = "data-raw")
+airzones_databc <- "http://catalogue.data.gov.bc.ca/dataset/e8eeefc4-2826-47bc-8430-85703d328516/resource/4cea4b22-36a3-4ea7-9346-7e872e747076/download/bcairzonesalbersshp.zip"
+airzones_zip <- "data-raw/airzones.zip"
 
-airzone_map <- readOGR(dsn = "data-raw/airzones", layer = "fixed-Polygon", stringsAsFactors = FALSE)
+download.file(airzones_databc, airzones_zip)
 
-airzone_name_lu <- data.frame(FID = c(0,1,2,3,4,5,6), 
-                              Airzone = c("Northeast", "Northwest", 
-                                          "Southern Interior", 
-                                          "Lower Fraser Valley", 
-                                          "Central Interior", 
-                                          "Coastal", "Georgia Strait"), 
-                              stringsAsFactors = FALSE)
+unzip(airzones_zip, exdir = "data-raw/airzones")
 
-airzone_map <- merge(airzone_map, airzone_name_lu, by = "FID")
+airzone_map <- readOGR(dsn = "data-raw/airzones", layer = "bc_air_zones", stringsAsFactors = FALSE)
 
 airzone_map <- spTransform(airzone_map, CRSobj = CRS(bc_albers))
 
