@@ -98,17 +98,17 @@ find_time_int <- function(dates) {
 
 #'Add a year, month, and day column to a dataframe based on a date column
 #'
-#' @importFrom lubridate year month day floor_date
 #' @param df dataframe
 #' @param datecol the column in df that contains the dates as a character string
 #' @param outnames the names for the new columns in order of year, month, day 
-#'        (defaults to "year", "month", "day")
+#'                 (defaults to "year", "month", "day")
+#' @param tz the timezone
 #' @export
 #' @return a dataframe with the new columns added
 #' @examples \dontrun{
 #'
 #'}
-add_ymd <- function(df, datecol, outnames = NULL) {
+add_ymd <- function(df, datecol, tz = "Etc/GMT+8", outnames = NULL) {
   if (is.null(outnames)) outnames <- c("year", "month", "day")
   int <- intersect(outnames, names(df))
   if (length(int) > 0) {
@@ -122,8 +122,9 @@ add_ymd <- function(df, datecol, outnames = NULL) {
     if (tolower(overwrite) == "n") stop("Exiting function on user request")
   }
 
-  df[,outnames[1]] <- year(floor_date(df[,datecol], "year"))
-  df[,outnames[2]] <- month(floor_date(df[,datecol], "month"))
-  df[,outnames[3]] <- day(floor_date(df[,datecol], "day"))
+  dateslt <- as.POSIXlt(df[, datecol], tz = tz)
+  df[,outnames[1]] <- dateslt$year + 1900
+  df[,outnames[2]] <- dateslt$mon + 1
+  df[,outnames[3]] <- dateslt$mday
   df
 }

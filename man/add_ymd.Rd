@@ -4,12 +4,14 @@
 \alias{add_ymd}
 \title{Add a year, month, and day column to a dataframe based on a date column}
 \usage{
-add_ymd(df, datecol, outnames = NULL)
+add_ymd(df, datecol, tz = "Etc/GMT+8", outnames = NULL)
 }
 \arguments{
 \item{df}{dataframe}
 
 \item{datecol}{the column in df that contains the dates as a character string}
+
+\item{tz}{the timezone}
 
 \item{outnames}{the names for the new columns in order of year, month, day
 (defaults to "year", "month", "day")}
