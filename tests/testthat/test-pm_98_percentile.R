@@ -133,7 +133,7 @@ one_id <- multi_id[multi_id$id == "a",]
 
 test_one <- pm_98_percentile(one_id, datecol = "dates", valcol = "val", 
                              completeness = FALSE)
-test_mult <- pm_98_percentile(multi_id, datecol = "dates", valcol = "val", "id", 
+test_mult <- pm_98_percentile(multi_id, datecol = "dates", valcol = "val", by = "id", 
                               completeness = FALSE)
 
 test_that("Only accepts date-type objects with time interval of one day", {
@@ -169,7 +169,7 @@ test_that("Exceed works", {
   
   set.seed(42)
   multi_id$val <- rnorm(nrow(multi_id), 35, 1)
-  res <- pm_98_percentile(multi_id, datecol = "dates", valcol = "val", "id", 
+  res <- pm_98_percentile(multi_id, datecol = "dates", valcol = "val", by = "id", 
                           std = 28, completeness = FALSE)
   expect_true(all(res$exceed))
 })
@@ -182,7 +182,7 @@ test_that("Number of days is correct", {
 context("pm_data_complete")
 
 test_one <- pm_data_complete(one_id, datecol = "dates", valcol = "val")
-test_mult <- pm_data_complete(multi_id, "dates", "val", "id")
+test_mult <- pm_data_complete(multi_id, "dates", "val", by = "id")
 
 test_that("Only accepts date-type objects with time interval of one day", {
   posix <- seq.POSIXt(as.POSIXct("2012-01-01"), as.POSIXct("2012-01-31"), by = "hour")

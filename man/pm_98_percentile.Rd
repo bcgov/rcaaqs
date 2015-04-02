@@ -5,8 +5,8 @@
 \title{Calculate the annual 98th percentile of daily average PM2.5 values according
 to CAAQS standards}
 \usage{
-pm_98_percentile(data, datecol, valcol, ..., std = 28, completeness = TRUE,
-  year_valid = 75, q_valid = 60)
+pm_98_percentile(data, datecol, valcol, by = NULL, std = 28,
+  completeness = TRUE, year_valid = 75, q_valid = 60)
 }
 \arguments{
 \item{data}{data frame}
@@ -15,23 +15,20 @@ pm_98_percentile(data, datecol, valcol, ..., std = 28, completeness = TRUE,
 
 \item{valcol}{the name of the column with daily average PM2.5 values}
 
-\item{...}{grouping variables in data, probably an id if using multiple
+\item{by}{character vector of grouping variables in data, probably an id if using multiple
 sites. Even if not using multiple sites, you shoud specfify the id column
 so that it is retained in the output.}
 
-\item{std}{the value of the PM2.5 standard (default 28). Must be named as it
-comes after grouping variables (...)}
+\item{std}{the value of the PM2.5 standard (default 28).}
 
 \item{completeness}{Should the completeness criteria be calculated (default
 TRUE)}
 
 \item{year_valid}{The percentage of valid days required in a year (default
-75). Must be named as it comes after grouping variables (...). Only
-required if calculating the completeness criteria.}
+75). Only required if calculating the completeness criteria.}
 
 \item{q_valid}{The percentage of valid days required in each quarter
-(default 60). Must be named as it comes after grouping variables (...).
-Only required if calculating the completeness criteria.}
+(default 60). Only required if calculating the completeness criteria.}
 }
 \value{
 A data frame with 98th percentiles of daily averages, per year

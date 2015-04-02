@@ -5,7 +5,7 @@
 \title{Calcualte the daily average PM2.5 reading, following CAAQS data completeness
 rules}
 \usage{
-pm_avg_daily(data, datecol, valcol, ...)
+pm_avg_daily(data, datecol, valcol, by = NULL)
 }
 \arguments{
 \item{data}{data frame with date and value}
@@ -14,7 +14,7 @@ pm_avg_daily(data, datecol, valcol, ...)
 
 \item{valcol}{the name (as a character string) of the PM2.5 value column}
 
-\item{...}{grouping variables in data, probably an id if using multiple sites.
+\item{by}{character vector of grouping variables in data, probably an id if using multiple sites.
 Even if not using multiple sites, you shoud specfify the id column so that
 it is retained in the output.}
 }

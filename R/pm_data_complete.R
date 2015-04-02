@@ -7,13 +7,11 @@
 #' @param  data data frame (likely the result of running \code{\link{pm_avg_daily}})
 #' @param  datecol the name of the "date" column (as a character string)
 #' @param  valcol the name of the column with daily average PM2.5 values
-#' @param  ... grouping variables, probably an id if using multiple sites. Even 
+#' @param  by character vector of  grouping variables, probably an id if using multiple sites. Even 
 #'             if not using multiple sites, you shoud specfify the id column so 
 #'             that it is retained.
-#' @param  year_valid  The percentage of valid days required in a year (default 75). 
-#'                     Must be named as it comes after grouping variables (...)
-#' @param  q_valid  The percentage of valid days required in each quarter (default 60). 
-#'                  Must be named as it comes after grouping variables (...)
+#' @param  year_valid  The percentage of valid days required in a year (default 75).
+#' @param  q_valid  The percentage of valid days required in each quarter (default 60).
 #' @export
 #' @seealso \code{\link{pm_avg_daily}}
 #' @return A data frame with percentage of days with readings annually, as well 
@@ -22,8 +20,8 @@
 #' @examples \dontrun{
 #' 
 #'}
-pm_data_complete <- function(data, datecol, valcol, ..., year_valid = 75, q_valid = 60) {
-  data <- data[!is.na(data[[valcol]]),]
+pm_data_complete <- function(data, datecol, valcol, by = NULL, year_valid = 75, q_valid = 60) {
+  data <- data[!is.na(data[[valcol]]), ]
   
   if (!inherits(data[[datecol]], "Date")) {
     time_interval <- find_time_int(data[[datecol]])
@@ -32,7 +30,7 @@ pm_data_complete <- function(data, datecol, valcol, ..., year_valid = 75, q_vali
   
   data$year <- as.integer(as.POSIXlt(data[[datecol]])$year + 1900)
   
-  dots <- list(..., "year")
+  by <- c(by, "year")
   
   annual_formula <- interp(~percent_valid_days(x, q = "year"), 
                            x = as.name(datecol))
@@ -41,7 +39,7 @@ pm_data_complete <- function(data, datecol, valcol, ..., year_valid = 75, q_vali
   q3_formula <- interp(~percent_valid_days(x, q = "Q3"), x = as.name(datecol))
   q4_formula <- interp(~percent_valid_days(x, q = "Q4"), x = as.name(datecol))
   
-  res <- group_by_(data, .dots = dots)
+  res <- group_by_(data, .dots = by)
   res <- summarise_(res, n_days = ~n(),
                     percent_valid_annual = annual_formula, 
                     percent_valid_q1 = q1_formula, 

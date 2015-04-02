@@ -8,28 +8,25 @@
 #' @param  data data frame
 #' @param  datecol the name of the "date" column (as a character string)
 #' @param  valcol the name of the column with daily average PM2.5 values
-#' @param  ... grouping variables in data, probably an id if using multiple 
+#' @param  by character vector of grouping variables in data, probably an id if using multiple 
 #'   sites. Even if not using multiple sites, you shoud specfify the id column 
 #'   so that it is retained in the output.
-#' @param  std the value of the PM2.5 standard (default 28). Must be named as it
-#'   comes after grouping variables (...)
+#' @param  std the value of the PM2.5 standard (default 28).
 #' @param completeness Should the completeness criteria be calculated (default 
 #'   TRUE)
 #' @param  year_valid  The percentage of valid days required in a year (default 
-#'   75). Must be named as it comes after grouping variables (...). Only 
-#'   required if calculating the completeness criteria.
+#'   75). Only required if calculating the completeness criteria.
 #' @param  q_valid  The percentage of valid days required in each quarter 
-#'   (default 60). Must be named as it comes after grouping variables (...). 
-#'   Only required if calculating the completeness criteria.
+#'   (default 60). Only required if calculating the completeness criteria.
 #' @export
 #' @seealso \code{\link{pm_avg_daily}}
 #' @return  A data frame with 98th percentiles of daily averages, per year
 #' @examples \dontrun{
 #' 
 #' }
-pm_98_percentile <- function(data, datecol, valcol, ..., std = 28, 
+pm_98_percentile <- function(data, datecol, valcol, by = NULL, std = 28, 
                              completeness = TRUE, year_valid = 75, q_valid = 60) {
-  data <- data[!is.na(data[[valcol]]),]
+  data <- data[!is.na(data[[valcol]]), ]
   
   if (!inherits(data[[datecol]], "Date")) {
     time_interval <- find_time_int(data[[datecol]])
@@ -38,9 +35,9 @@ pm_98_percentile <- function(data, datecol, valcol, ..., std = 28,
       
   data$year <- as.integer(as.POSIXlt(data[[datecol]])$year + 1900)
   
-  dots <- list(..., "year")
+  by <- c(by, "year")
   
-  ans <- group_by_(data, .dots = dots)
+  ans <- group_by_(data, .dots = by)
   ans <- transmute_(ans, n_days       = ~ n(),
                     rep_date          = datecol,
                     ann_98_percentile = valcol,
@@ -51,11 +48,11 @@ pm_98_percentile <- function(data, datecol, valcol, ..., std = 28,
   
   if (completeness) {
     comp <- pm_data_complete(data = data, datecol = datecol, valcol = valcol, 
-                             ..., year_valid = year_valid, q_valid = q_valid)
+                             by = by, year_valid = year_valid, q_valid = q_valid)
     comp <- ungroup(comp)
     comp <- select_(comp, ~ -n_days)
     
-    ans <- merge(ans, comp, by = unlist(dots))
+    ans <- merge(ans, comp, by = by)
     ans <- mutate_(ans, 
                    use_but_incomplete = ~ exceed & annual_valid & !quarters_valid, 
                    use = ~ (annual_valid & quarters_valid) | use_but_incomplete)

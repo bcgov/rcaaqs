@@ -4,7 +4,7 @@
 #'@param data data frame with date and value
 #'@param datecol the name (as a character string) of the date column
 #'@param valcol the name (as a character string) of the PM2.5 value column
-#'@param ... grouping variables in data, probably an id if using multiple sites.
+#'@param by character vector of grouping variables in data, probably an id if using multiple sites.
 #'  Even if not using multiple sites, you shoud specfify the id column so that
 #'  it is retained in the output.
 #'@import dplyr
@@ -16,14 +16,14 @@
 #'@examples \dontrun{
 #'
 #'}
-pm_avg_daily <- function(data, datecol, valcol, ...) {
+pm_avg_daily <- function(data, datecol, valcol, by = NULL) {
   ## if datecol is a datetime column, convert to date
   if (inherits(data[[datecol]], "POSIXt")) {
     data[[datecol]] <- as.Date(data[[datecol]])
   }
   
   # Capture grouping variables
-  dots <- list(..., datecol)
+  by <- c(by, datecol)
   
   get_year_from_date <- function(date) {
     as.integer(as.POSIXlt(date)$year + 1900)
@@ -37,7 +37,7 @@ pm_avg_daily <- function(data, datecol, valcol, ...) {
   
   year_formula <- interp(~get_year_from_date(x), x = as.name(datecol))
   
-  res <- group_by_(data, .dots = dots)
+  res <- group_by_(data, .dots = by)
   res <- summarise_(res, n_readings = readings_formula,
                     avg_24hr        = avg_formula)
   res <- mutate_(res, year = year_formula)

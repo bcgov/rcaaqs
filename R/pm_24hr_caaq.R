@@ -9,7 +9,7 @@
 #'@param  valcol name of the column containing annual 98th percentile values
 #'@param flag name of the column containing a flag (\code{TRUE/FALSE}) if the
 #'  value in the given year is based on incomplete data (but is still ok to use).
-#'@param  ... grouping variables in data, probably an id if using multiple 
+#'@param  by character vector of grouping variables in data, probably an id if using multiple 
 #'  sites. Even if not using multiple sites, you shoud specfify the id column so
 #'  that it is retained in the output.
 #'@param  year The year to calculate the metric for (this will be the latest of 
@@ -22,14 +22,14 @@
 #' @examples \dontrun{
 #' 
 #'}
-pm_24hr_caaq <- function(data, yearcol, valcol, flag, ..., year = "latest") {
-  vars <- list(yearcol, valcol, flag, ...)
+pm_24hr_caaq <- function(data, yearcol, valcol, flag, by = NULL, year = "latest") {
+  vars <- c(yearcol, valcol, flag, by)
   
   for (var in vars) {
     if (!var %in% names(data)) stop(var, " is not a column in data")
   }
   
-  if (inherits(year, c("integer","numeric"))) {
+  if (inherits(year, c("integer", "numeric"))) {
     if (!year %in% data[[yearcol]]) stop(year, " does not exist in data")
   } else if (year == "latest") {
     year <- max(data[[yearcol]])
@@ -42,14 +42,13 @@ pm_24hr_caaq <- function(data, yearcol, valcol, flag, ..., year = "latest") {
   
   years <- seq(to = year, length.out = 3)
   
-  rows <- data[data[[yearcol]] %in% years & !is.na(data[[valcol]]),]
+  rows <- data[data[[yearcol]] %in% years & !is.na(data[[valcol]]), , drop = FALSE]
   
-  if (missing(...)) {
+  if (is.null(by)) {
     if (any(duplicated(rows[[yearcol]]))) stop("duplicate values in ", yearcol, 
-                                             " but no grouping variable(s) specified")
+                                               " but no grouping variable(s) specified")
   } else {
-    dots <- list(...)
-    rows <- group_by_(rows, .dots = dots)
+    rows <- group_by_(rows, .dots = by)
   }
   
   caaq_formula <- interp(~ifelse(n_years >=2, round(mean(x), 1), NA_real_), 

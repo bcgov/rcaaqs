@@ -5,7 +5,8 @@
 \title{Calculates the percentage of days with readings annually, as well as for each
 quarter for each year in a dataset.}
 \usage{
-pm_data_complete(data, datecol, valcol, ..., year_valid = 75, q_valid = 60)
+pm_data_complete(data, datecol, valcol, by = NULL, year_valid = 75,
+  q_valid = 60)
 }
 \arguments{
 \item{data}{data frame (likely the result of running \code{\link{pm_avg_daily}})}
@@ -14,15 +15,13 @@ pm_data_complete(data, datecol, valcol, ..., year_valid = 75, q_valid = 60)
 
 \item{valcol}{the name of the column with daily average PM2.5 values}
 
-\item{...}{grouping variables, probably an id if using multiple sites. Even
+\item{by}{character vector of  grouping variables, probably an id if using multiple sites. Even
 if not using multiple sites, you shoud specfify the id column so
 that it is retained.}
 
-\item{year_valid}{The percentage of valid days required in a year (default 75).
-Must be named as it comes after grouping variables (...)}
+\item{year_valid}{The percentage of valid days required in a year (default 75).}
 
-\item{q_valid}{The percentage of valid days required in each quarter (default 60).
-Must be named as it comes after grouping variables (...)}
+\item{q_valid}{The percentage of valid days required in each quarter (default 60).}
 }
 \value{
 A data frame with percentage of days with readings annually, as well
