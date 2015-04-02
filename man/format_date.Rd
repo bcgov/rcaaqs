@@ -2,19 +2,19 @@
 % Please edit documentation in R/dates.R
 \name{format_date}
 \alias{format_date}
-\title{Convert character date string from ENVISTA to POSIXct}
+\title{Convert character date string from Raw air data to POSIXct}
 \usage{
 format_date(dates, format = "\%Y-\%m-\%d \%H:\%M:\%S")
 }
 \arguments{
 \item{dates}{vector of dates to convert as characters.}
 
-\item{format}{the format of the character dates (default %Y-%m-%d %H:%M:%S)}
+\item{format}{the format of the character dates}
 }
 \value{
 dataframe with filled in dates
 }
 \description{
-Convert character date string from ENVISTA to POSIXct
+Likely data downloaded from DataBC
 }
 

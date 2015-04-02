@@ -1,8 +1,9 @@
-#'Convert character date string from ENVISTA to POSIXct
+#'Convert character date string from Raw air data to POSIXct
 #'
+#' Likely data downloaded from DataBC
 #' @importFrom lubridate fast_strptime
 #' @param  dates vector of dates to convert as characters.
-#' @param format the format of the character dates (default %Y-%m-%d %H:%M:%S)
+#' @param format the format of the character dates
 #' @export
 #' @return dataframe with filled in dates
 format_date <- function(dates, format="%Y-%m-%d %H:%M:%S") {
