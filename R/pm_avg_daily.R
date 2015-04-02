@@ -31,7 +31,8 @@ pm_avg_daily <- function(data, datecol, valcol, by = NULL) {
   
   ## Capture the formulas for the summaries
   readings_formula <- interp(~length(na.omit(x)), x = as.name(valcol))
-  avg_formula <- interp(~ifelse(n_readings >= 18, mean(x, na.rm = TRUE),
+  avg_formula <- interp(~ifelse(n_readings >= 18, 
+                                round(mean(x, na.rm = TRUE), 1),
                                 NA_real_),
                         x = as.name(valcol))
   

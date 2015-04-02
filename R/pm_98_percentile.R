@@ -21,9 +21,7 @@
 #' @export
 #' @seealso \code{\link{pm_avg_daily}}
 #' @return  A data frame with 98th percentiles of daily averages, per year
-#' @examples \dontrun{
-#' 
-#' }
+
 pm_98_percentile <- function(data, datecol, valcol, by = NULL, std = 28, 
                              completeness = TRUE, year_valid = 75, q_valid = 60) {
   data <- data[!is.na(data[[valcol]]), ]
