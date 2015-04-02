@@ -31,7 +31,7 @@ pm_98_percentile <- function(data, datecol, valcol, by = NULL, std = 28,
     if (!grepl("86400", time_interval)) stop("Time interval of date column can't be less than one day")
   }
       
-  data$year <- as.integer(as.POSIXlt(data[[datecol]])$year + 1900)
+  data$year <- as.integer(as.POSIXlt(data[[datecol]], tz = "Etc/GMT+8")$year + 1900)
   
   by <- c(by, "year")
   

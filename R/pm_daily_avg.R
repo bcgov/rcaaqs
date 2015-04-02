@@ -19,14 +19,14 @@
 pm_daily_avg <- function(data, datecol, valcol, by = NULL) {
   ## if datecol is a datetime column, convert to date
   if (inherits(data[[datecol]], "POSIXt")) {
-    data[[datecol]] <- as.Date(data[[datecol]])
+    data[[datecol]] <- as.Date(data[[datecol]], tz = "Etc/GMT+8")
   }
   
   # Capture grouping variables
   by <- c(by, datecol)
   
   get_year_from_date <- function(date) {
-    as.integer(as.POSIXlt(date)$year + 1900)
+    as.integer(as.POSIXlt(date, tz = "Etc/GMT+8")$year + 1900)
   }
   
   ## Capture the formulas for the summaries
