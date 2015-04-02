@@ -8,6 +8,9 @@
 \describe{
 \item{Airzone}{The name of the airzone}
 }}
+\source{
+\url{http://catalogue.data.gov.bc.ca/dataset/british-columbia-air-zones}
+}
 \usage{
 airzone_map
 }
