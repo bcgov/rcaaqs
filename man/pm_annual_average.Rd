@@ -36,6 +36,6 @@ Calculate the annual average pm2.5 concentration,
 optionally with completeness criteria
 }
 \seealso{
-\code{\link{pm_avg_daily}}
+\code{\link{pm_daily_avg}}
 }
 

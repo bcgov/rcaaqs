@@ -9,7 +9,7 @@ pm_data_complete(data, datecol, valcol, by = NULL, year_valid = 75,
   q_valid = 60)
 }
 \arguments{
-\item{data}{data frame (likely the result of running \code{\link{pm_avg_daily}})}
+\item{data}{data frame (likely the result of running \code{\link{pm_daily_avg}})}
 
 \item{datecol}{the name of the "date" column (as a character string)}
 
@@ -29,7 +29,7 @@ A data frame with percentage of days with readings annually, as well
         quarterly requirements are met
 }
 \description{
-Designed to be used with the output from \code{\link{pm_avg_daily}}
+Designed to be used with the output from \code{\link{pm_daily_avg}}
 }
 \examples{
 \dontrun{
@@ -37,6 +37,6 @@ Designed to be used with the output from \code{\link{pm_avg_daily}}
 }
 }
 \seealso{
-\code{\link{pm_avg_daily}}
+\code{\link{pm_daily_avg}}
 }
 

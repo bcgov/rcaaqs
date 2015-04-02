@@ -1,10 +1,10 @@
 #' Calculates the percentage of days with readings annually, as well as for each
 #' quarter for each year in a dataset.
 #' 
-#' Designed to be used with the output from \code{\link{pm_avg_daily}}
+#' Designed to be used with the output from \code{\link{pm_daily_avg}}
 #' @import dplyr
 #' @import lazyeval
-#' @param  data data frame (likely the result of running \code{\link{pm_avg_daily}})
+#' @param  data data frame (likely the result of running \code{\link{pm_daily_avg}})
 #' @param  datecol the name of the "date" column (as a character string)
 #' @param  valcol the name of the column with daily average PM2.5 values
 #' @param  by character vector of  grouping variables, probably an id if using multiple sites. Even 
@@ -13,7 +13,7 @@
 #' @param  year_valid  The percentage of valid days required in a year (default 75).
 #' @param  q_valid  The percentage of valid days required in each quarter (default 60).
 #' @export
-#' @seealso \code{\link{pm_avg_daily}}
+#' @seealso \code{\link{pm_daily_avg}}
 #' @return A data frame with percentage of days with readings annually, as well 
 #'         as one for each quarter. Also includes whether or not the annual and 
 #'         quarterly requirements are met

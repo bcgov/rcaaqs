@@ -35,9 +35,9 @@ A data frame with 98th percentiles of daily averages, per year
 }
 \description{
 Also computes the data completeness criteria (optional). Designed to be used
-with the output from \code{\link{pm_avg_daily}}.
+with the output from \code{\link{pm_daily_avg}}.
 }
 \seealso{
-\code{\link{pm_avg_daily}}
+\code{\link{pm_daily_avg}}
 }
 

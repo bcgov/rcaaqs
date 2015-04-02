@@ -17,7 +17,7 @@
 #'   (default 60). Only required if calculating the completeness criteria.
 #'
 #' @return a data frame with annual average values per year
-#' @seealso \code{\link{pm_avg_daily}}
+#' @seealso \code{\link{pm_daily_avg}}
 #' @export
 
 pm_annual_average <- function(data, datecol, valcol, by = NULL, completeness = TRUE, 

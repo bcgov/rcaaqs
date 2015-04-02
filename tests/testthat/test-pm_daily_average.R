@@ -3,13 +3,13 @@ context("pm average daily")
 hourly_data <- readRDS("hourly.rds")
 
 test_that("returns a data frame", {
-  ret <- pm_avg_daily(hourly_data, "date", "val", "id")
+  ret <- pm_daily_avg(hourly_data, "date", "val", "id")
   
   expect_is(ret, "data.frame")
 })
 
 test_that("has correct dimensions", {
-  ret <- pm_avg_daily(hourly_data, "date", "val", "id")
+  ret <- pm_daily_avg(hourly_data, "date", "val", "id")
   
   nrows <- length(unique(as.Date(hourly_data$date[hourly_data$id == "a"]))) + 
   length(unique(as.Date(hourly_data$date[hourly_data$id == "b"])))
@@ -18,7 +18,7 @@ test_that("has correct dimensions", {
 })
 
 test_that("has correct classes", {
-  ret <- pm_avg_daily(hourly_data, "date", "val", "id")
+  ret <- pm_daily_avg(hourly_data, "date", "val", "id")
   
   expect_is(ret$id, "character")
   expect_is(ret$date, "Date")

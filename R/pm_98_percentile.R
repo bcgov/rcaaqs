@@ -2,7 +2,7 @@
 #' to CAAQS standards
 #' 
 #' Also computes the data completeness criteria (optional). Designed to be used
-#' with the output from \code{\link{pm_avg_daily}}.
+#' with the output from \code{\link{pm_daily_avg}}.
 #' @import dplyr
 #' @import lazyeval
 #' @param  data data frame
@@ -19,7 +19,7 @@
 #' @param  q_valid  The percentage of valid days required in each quarter 
 #'   (default 60). Only required if calculating the completeness criteria.
 #' @export
-#' @seealso \code{\link{pm_avg_daily}}
+#' @seealso \code{\link{pm_daily_avg}}
 #' @return  A data frame with 98th percentiles of daily averages, per year
 
 pm_98_percentile <- function(data, datecol, valcol, by = NULL, std = 28, 
