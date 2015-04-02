@@ -26,7 +26,7 @@ format_date <- function(dates, format="%Y-%m-%d %H:%M:%S") {
 #' bar <- foo[-c(2,5,6,7,10),]
 #' date_fill(bar, "Date", interval = "1 month", fill_cols = "label")
 #'}
-date_fill <- function (df, date_col, interval = NULL, fill_cols = NULL, add_ymd = FALSE) {
+date_fill <- function(df, date_col, interval = NULL, fill_cols = NULL, add_ymd = FALSE) {
   
   if (!is.null(interval) && 
         (!is.numeric(interval) && 
@@ -35,7 +35,7 @@ date_fill <- function (df, date_col, interval = NULL, fill_cols = NULL, add_ymd 
          "?seq.POSIXt for help, or let the function find it for you")
   }
   
-  df <- df[order(df[[date_col]]),]
+  df <- df[order(df[[date_col]]), ]
   
   dates <- as.data.frame(df)[,date_col]
   
@@ -57,7 +57,7 @@ date_fill <- function (df, date_col, interval = NULL, fill_cols = NULL, add_ymd 
     
     if (!is.null(fill_cols)) {
       for (col in fill_cols) {
-        fill_name <- out[1,col]
+        fill_name <- out[1, col]
         out[,col] <- fill_name
       }
     }
@@ -80,13 +80,13 @@ date_fill <- function (df, date_col, interval = NULL, fill_cols = NULL, add_ymd 
 #' @examples \dontrun{
 #'
 #'}
-find_time_int <- function (dates) {
+find_time_int <- function(dates) {
   dates <- unique(dates)
   len <- length(dates)
   len <- min(c(100, len))
   id <- which.max(table(diff(as.numeric(dates[order(dates[1:len])]))))
   seconds <- as.numeric(names(id))
-  if (inherits(dates, "POSIXt")){ 
+  if (inherits(dates, "POSIXt")) { 
     seconds <- paste(seconds, "sec")
   }
   if (inherits(dates, "Date")) {
