@@ -16,7 +16,7 @@
 #'@examples \dontrun{
 #'
 #'}
-pm_avg_daily <- function(data, datecol, valcol, by = NULL) {
+pm_daily_avg <- function(data, datecol, valcol, by = NULL) {
   ## if datecol is a datetime column, convert to date
   if (inherits(data[[datecol]], "POSIXt")) {
     data[[datecol]] <- as.Date(data[[datecol]])
