@@ -1,4 +1,4 @@
-SHELL = C:\windows\SYSTEM32\cmd.exe
+
 PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 
@@ -14,7 +14,7 @@ check:
 build:
 	Rscript -e "library('devtools'); build('.', binary=TRUE)"
 	cp ../$(PKGNAME)_$(PKGVERS).zip ../$(PKGNAME)_$(PKGVERS).tar.gz \
-	"I:/SPD/Science Policy & Economics/State of Environment/_dev/packages/"
+	"/d/_dev/packages/"
 
 install:
 	Rscript -e "library('devtools'); install('.')"
