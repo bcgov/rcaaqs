@@ -51,7 +51,7 @@ pm_24hr_caaq <- function(data, yearcol, valcol, flag, by = NULL, year = "latest"
     rows <- group_by_(rows, .dots = by)
   }
   
-  caaq_formula <- interp(~ifelse(n_years >=2, round(mean(x), 1), NA_real_), 
+  caaq_formula <- interp(~ifelse(n_years >=2, round(mean(x), 0), NA_real_), 
                          x = as.name(valcol))
   
   ret <- summarise_(rows, 
