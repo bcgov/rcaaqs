@@ -36,12 +36,13 @@ pm_98_percentile <- function(data, datecol, valcol, by = NULL, std = 28,
   by <- c(by, "year")
   
   ans <- group_by_(data, .dots = by)
-  ans <- transmute_(ans, n_days       = ~ n(),
+  ans <- transmute_(ans, 
+                    n_days       = ~ n(),
                     rep_date          = datecol,
                     ann_98_percentile = valcol,
                     exceed            = ~ ann_98_percentile > std)
   ans <- arrange_(ans, ~desc(ann_98_percentile))
-  ans <- slice_(ans, ~cut_rank(n_days[1]))
+  ans <- slice_(ans, ~n_tile(n_days[1], 0.98))
   ans <- ungroup(ans)
   
   if (completeness) {
@@ -69,12 +70,15 @@ pm_98_percentile <- function(data, datecol, valcol, by = NULL, std = 28,
 #' @examples \dontrun{
 #' 
 #'}
-cut_rank <- function(n) {
+n_tile <- function(n, tile = 0.98) {
   if (!inherits(n, c("integer", "numeric"))) stop("n is not an integer/numeric")
   if (n < 1) stop("n is less than 1")
   if (n > 366) stop("n is greater than 366")
+  if (!(tile <= 1 && tile >=0)) stop("tile should be between 0 and 1")
+
+  i.d <- tile * n
+  i <- floor(i.d)
   
-  cuts <- c(1,50,100,150,200,250,300,350,366)
-  ret <- cut(n, cuts, include.lowest = TRUE, labels = 1:8, right = TRUE)
-  as.numeric(ret)
+  ret <- n - i
+  as.integer(ret)
 }

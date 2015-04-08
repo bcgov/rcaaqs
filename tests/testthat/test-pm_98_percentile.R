@@ -1,23 +1,23 @@
 context("cut rank")
 
 test_that("only accepts numbers", {
-  expect_error(cut_rank("foo"))
+  expect_error(n_tile("foo"))
 })
 
 test_that("only accepts valid range", {
-  expect_error(cut_rank(-1))
-  expect_error(cut_rank(367))
+  expect_error(n_tile(-1))
+  expect_error(n_tile(367))
 })
 
 test_that("cuts are correct", {
-  expect_true(all.equal(cut_rank(1), cut_rank(50), 1))
-  expect_true(all.equal(cut_rank(51), cut_rank(100), 2))
-  expect_true(all.equal(cut_rank(101), cut_rank(150), 3))
-  expect_true(all.equal(cut_rank(151), cut_rank(200), 4))
-  expect_true(all.equal(cut_rank(201), cut_rank(250), 5))
-  expect_true(all.equal(cut_rank(251), cut_rank(300), 6))
-  expect_true(all.equal(cut_rank(301), cut_rank(350), 7))
-  expect_true(all.equal(cut_rank(351), cut_rank(366), 8))
+  expect_true(all.equal(n_tile(1), n_tile(50), 1))
+  expect_true(all.equal(n_tile(51), n_tile(100), 2))
+  expect_true(all.equal(n_tile(101), n_tile(150), 3))
+  expect_true(all.equal(n_tile(151), n_tile(200), 4))
+  expect_true(all.equal(n_tile(201), n_tile(250), 5))
+  expect_true(all.equal(n_tile(251), n_tile(300), 6))
+  expect_true(all.equal(n_tile(301), n_tile(350), 7))
+  expect_true(all.equal(n_tile(351), n_tile(366), 8))
 })
 
 context("Percent valid days")
