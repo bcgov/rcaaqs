@@ -61,24 +61,45 @@ pm_98_percentile <- function(data, datecol, valcol, by = NULL, std = 28,
   
 }
 
-#' Return the rank that should be used to determine the 98th percentile given a
+#' Return the rank that should be used to determine the 98th percentile given a 
 #' number of valid days
 #' 
-#' @param n the number of valid days in a year
-#' @return  a number from 1 to 8
-#' @keywords internal
-#' @examples \dontrun{
+#' Wraps \code{\link[stats]{quantile}} but with different defaults, adds another
+#' \code{type}, "caaqs", where the percentile (default 0.98) is calculated 
+#' according to the caaqs methods.
+#' @param x numeric vector whose sample quantiles are wanted.
+#' @param probs numeric vector of probablities with values in \eqn{[0,1]}. 
+#'   Default \code{0.98}
+#' @param na.rm logical; if true, any \code{NA} and \code{NaN}'s are removed 
+#'   from \code{x} before the quantiles are computed. Default \code{FALSE}
+#' @param names logical; if true, the result has a names attribute. Set to FALSE
+#'   for speedup with many probs. Default \code{FALSE}
+#' @param type \code{"caaqs"} (default) or an integer between 1 and 9 selecting one of the
+#'   nine base quantile algorithms be used. See \code{\link[stats]{quantile}} for details
+#'   
+#' @return A vector of \code{length(probs)}; if \code{names = TRUE}, it has a \code{names} attribute
+#' @seealso \code{\link[stats]{quantile}}
+#' @export
 #' 
-#'}
-n_tile <- function(n, tile = 0.98) {
-  if (!inherits(n, c("integer", "numeric"))) stop("n is not an integer/numeric")
-  if (n < 1) stop("n is less than 1")
-  if (n > 366) stop("n is greater than 366")
-  if (!(tile <= 1 && tile >=0)) stop("tile should be between 0 and 1")
-
-  i.d <- tile * n
-  i <- floor(i.d)
+quantile2 <- function(x, probs = 0.98, na.rm = FALSE, names = FALSE, type = "caaqs") {
+  if (!inherits(x, c("integer", "numeric"))) stop("x is not numeric")
+  if (!all(probs <= 1 & probs >= 0)) stop("probs should be between 0 and 1")
+  if (!(type == "caaqs" || type %in% 1:9)) stop("type needs to be either 'caaqs' or 1:9")
   
-  ret <- n - i
-  as.integer(ret)
+  if (type == "caaqs") {
+    if (na.rm) {
+      x <- x[!is.na(x)]
+    } else if (anyNA(x)) {
+       stop("missing values and NaN's not allowed if 'na.rm' is FALSE")
+    }
+    x <- sort(x, decreasing = TRUE)
+    n <- length(x)
+    i.d <- probs * n
+    i <- floor(i.d)
+    ret <- x[n - i]
+    if (names) names(ret) <- paste0(probs * 100, "%")
+  } else {
+    ret <- quantile(x = x, probs = probs, na.rm = na.rm, names = names, type = type)
+  }
+  ret
 }
