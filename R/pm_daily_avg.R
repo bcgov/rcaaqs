@@ -25,10 +25,6 @@ pm_daily_avg <- function(data, datecol, valcol, by = NULL) {
   # Capture grouping variables
   by <- c(by, datecol)
   
-  get_year_from_date <- function(date) {
-    as.integer(as.POSIXlt(date, tz = "Etc/GMT+8")$year + 1900)
-  }
-  
   ## Capture the formulas for the summaries
   readings_formula <- interp(~length(na.omit(x)), x = as.name(valcol))
   avg_formula <- interp(~ifelse(n_readings >= 18, 

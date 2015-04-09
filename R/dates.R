@@ -128,3 +128,7 @@ add_ymd <- function(df, datecol, tz = "Etc/GMT+8", outnames = NULL) {
   df[,outnames[3]] <- dateslt$mday
   df
 }
+
+get_year_from_date <- function(date, tz = "Etc/GMT+8") {
+  as.integer(as.POSIXlt(date, tz = tz)$year + 1900)
+}

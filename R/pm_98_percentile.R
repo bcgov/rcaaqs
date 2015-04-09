@@ -32,17 +32,17 @@ pm_98_percentile <- function(data, datecol, valcol, by = NULL, std = 28,
     if (!grepl("86400", time_interval)) stop("Time interval of date column can't be less than one day")
   }
       
-  data$year <- as.integer(as.POSIXlt(data[[datecol]], tz = "Etc/GMT+8")$year + 1900)
+  data$year <- get_year_from_date(data[[datecol]])
   
   by <- c(by, "year")
   
   ans <- group_by_(data, .dots = by)
   ans <- summarise_(ans, 
-                    n_days       = ~ n(),
+                    n_days = ~ n(),
                     ann_98_percentile = interp(~quantile2(x, type = y), 
                                                x = as.name(valcol), 
                                                y = type),
-                    exceed            = ~ ann_98_percentile > std)
+                    exceed = ~ ann_98_percentile > std)
   ans <- ungroup(ans)
   
   if (completeness) {

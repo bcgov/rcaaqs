@@ -29,7 +29,7 @@ pm_annual_average <- function(data, datecol, valcol, by = NULL, completeness = T
     if (!grepl("86400", time_interval)) stop("Time interval of date column can't be less than one day")
   }
   
-  data$year <- as.integer(as.POSIXlt(data[[datecol]])$year + 1900)
+  data$year <- get_year_from_date(data[[datecol]])
   
   by <- c(by, "year")
   

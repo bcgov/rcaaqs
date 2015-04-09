@@ -28,7 +28,7 @@ pm_data_complete <- function(data, datecol, valcol, by = NULL, year_valid = 75, 
     if (!grepl("86400", time_interval)) stop("Time interval of date column can't be less than one day")
   }
   
-  data$year <- as.integer(as.POSIXlt(data[[datecol]])$year + 1900)
+  data$year <- get_year_from_date(data[[datecol]])
   
   by <- c(by, "year")
   
@@ -82,7 +82,7 @@ percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), tz = "E
     warning("There were duplicate dates detected. Duplicates were discarded and calculation proceeded")
   }
   
-  year <- as.POSIXlt(dates[1])$year + 1900
+  year <- get_year_from_date(dates[1])
   
   q_lengths <- c(year = -difftime(paste0(year, "-01-01"), paste0(year, "-12-31"), 
                                   tz = tz, units = "days"),
