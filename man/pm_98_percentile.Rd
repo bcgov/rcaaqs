@@ -6,7 +6,7 @@
 to CAAQS standards}
 \usage{
 pm_98_percentile(data, datecol, valcol, by = NULL, std = 28,
-  completeness = TRUE, year_valid = 75, q_valid = 60)
+  completeness = TRUE, year_valid = 75, q_valid = 60, type = "caaqs")
 }
 \arguments{
 \item{data}{data frame}
@@ -29,6 +29,8 @@ TRUE)}
 
 \item{q_valid}{The percentage of valid days required in each quarter
 (default 60). Only required if calculating the completeness criteria.}
+
+\item{type}{type of 98th percentile calculation to use. Default "caaqs"}
 }
 \value{
 A data frame with 98th percentiles of daily averages, per year
@@ -38,6 +40,6 @@ Also computes the data completeness criteria (optional). Designed to be used
 with the output from \code{\link{pm_daily_avg}}.
 }
 \seealso{
-\code{\link{pm_daily_avg}}
+\code{\link{pm_daily_avg}}, \code{\link{quantile2}}
 }
 
