@@ -18,12 +18,13 @@
 #'   75). Only required if calculating the completeness criteria.
 #' @param  q_valid  The percentage of valid days required in each quarter 
 #'   (default 60). Only required if calculating the completeness criteria.
+#' @param type type of 98th percentile calculation to use. Default "caaqs"
 #' @export
-#' @seealso \code{\link{pm_daily_avg}}
+#' @seealso \code{\link{pm_daily_avg}}, \code{\link{quantile2}}
 #' @return  A data frame with 98th percentiles of daily averages, per year
 
 pm_98_percentile <- function(data, datecol, valcol, by = NULL, std = 28, 
-                             completeness = TRUE, year_valid = 75, q_valid = 60) {
+                             completeness = TRUE, year_valid = 75, q_valid = 60, type = "caaqs") {
   data <- data[!is.na(data[[valcol]]), ]
   
   if (!inherits(data[[datecol]], "Date")) {
@@ -36,13 +37,12 @@ pm_98_percentile <- function(data, datecol, valcol, by = NULL, std = 28,
   by <- c(by, "year")
   
   ans <- group_by_(data, .dots = by)
-  ans <- transmute_(ans, 
+  ans <- summarise_(ans, 
                     n_days       = ~ n(),
-                    rep_date          = datecol,
-                    ann_98_percentile = valcol,
+                    ann_98_percentile = interp(~quantile2(x, type = y), 
+                                               x = as.name(valcol), 
+                                               y = type),
                     exceed            = ~ ann_98_percentile > std)
-  ans <- arrange_(ans, ~desc(ann_98_percentile))
-  ans <- slice_(ans, ~n_tile(n_days[1], 0.98))
   ans <- ungroup(ans)
   
   if (completeness) {
