@@ -190,17 +190,17 @@ test_that("Is a data frame", {
 })
 
 test_that("Has the right column names and dimensions", {
-  expected_names <- c("year", "n_days", "rep_date", "ann_98_percentile", "exceed")
+  expected_names <- c("year", "n_days", "ann_98_percentile", "exceed")
   expect_equal(names(test_one), expected_names)
-  expect_equal(dim(test_one), c(3, 5))
+  expect_equal(dim(test_one), c(3, 4))
   
   # For multiple years:
   expect_equal(names(test_mult), c("id", expected_names))
-  expect_equal(dim(test_mult), c(6, 6))
+  expect_equal(dim(test_mult), c(6, 5))
 })
 
 test_that("Columns are the right class", {
-  classes <- c("integer", "integer", "Date", "numeric", "logical")
+  classes <- c("integer", "integer", "numeric", "logical")
   expect_equal(unname(sapply(test_one, class)), classes)
   expect_equal(unname(sapply(test_mult, class)), c("character", classes))
 })
