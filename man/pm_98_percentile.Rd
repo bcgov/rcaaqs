@@ -5,19 +5,22 @@
 \title{Calculate the annual 98th percentile of daily average PM2.5 values according
 to CAAQS standards}
 \usage{
-pm_98_percentile(data, datecol, valcol, by = NULL, std = 28,
-  completeness = TRUE, year_valid = 75, q_valid = 60, type = "caaqs")
+pm_98_percentile(data, date = "date", val = "avg_24hr", by = NULL,
+  std = 28, completeness = TRUE, year_valid = 75, q_valid = 60,
+  type = "caaqs")
 }
 \arguments{
 \item{data}{data frame}
 
-\item{datecol}{the name of the "date" column (as a character string)}
+\item{date}{the name of the "date" column (as a character string).
+Default \code{"date"}}
 
-\item{valcol}{the name of the column with daily average PM2.5 values}
+\item{val}{the name of the column with daily average PM2.5 values.
+Default \code{"avg_24hr"}.}
 
-\item{by}{character vector of grouping variables in data, probably an id if using multiple
-sites. Even if not using multiple sites, you shoud specfify the id column
-so that it is retained in the output.}
+\item{by}{character vector of grouping variables in data, probably an id if
+using multiple sites. Even if not using multiple sites, you shoud specfify
+the id column so that it is retained in the output.}
 
 \item{std}{the value of the PM2.5 standard (default 28).}
 

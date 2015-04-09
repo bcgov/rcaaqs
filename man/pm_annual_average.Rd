@@ -5,15 +5,15 @@
 \title{Calculate the annual average pm2.5 concentration,
 optionally with completeness criteria}
 \usage{
-pm_annual_average(data, datecol, valcol, by = NULL, completeness = TRUE,
-  year_valid = 75, q_valid = 60)
+pm_annual_average(data, date = "date", val = "avg_24hr", by = NULL,
+  completeness = TRUE, year_valid = 75, q_valid = 60)
 }
 \arguments{
 \item{data}{data frame}
 
-\item{datecol}{the name of the "date" column (as a character string)}
+\item{date}{the name of the "date" column (as a character string)}
 
-\item{valcol}{the name of the column with daily average PM2.5 values}
+\item{val}{the name of the column with daily average PM2.5 values}
 
 \item{by}{character vector of grouping variables in data, probably an id if using multiple
 sites. Even if not using multiple sites, you shoud specfify the id column

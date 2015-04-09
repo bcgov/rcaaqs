@@ -5,8 +5,8 @@
 #' @import dplyr
 #' @import lazyeval
 #' @param  data data frame (likely the result of running \code{\link{pm_daily_avg}})
-#' @param  datecol the name of the "date" column (as a character string)
-#' @param  valcol the name of the column with daily average PM2.5 values
+#' @param  date the name of the "date" column (as a character string). Default \code{"date"}
+#' @param  val the name of the column with daily average PM2.5 values. Default \code{"avg_24hr}
 #' @param  by character vector of  grouping variables, probably an id if using multiple sites. Even 
 #'             if not using multiple sites, you shoud specfify the id column so 
 #'             that it is retained.
@@ -20,24 +20,25 @@
 #' @examples \dontrun{
 #' 
 #'}
-pm_data_complete <- function(data, datecol, valcol, by = NULL, year_valid = 75, q_valid = 60) {
-  data <- data[!is.na(data[[valcol]]), ]
+pm_data_complete <- function(data, date = "date", val = "avg_24hr", by = NULL, 
+                             year_valid = 75, q_valid = 60) {
+  data <- data[!is.na(data[[val]]), ]
   
-  if (!inherits(data[[datecol]], "Date")) {
-    time_interval <- find_time_int(data[[datecol]])
+  if (!inherits(data[[date]], "Date")) {
+    time_interval <- find_time_int(data[[date]])
     if (!grepl("86400", time_interval)) stop("Time interval of date column can't be less than one day")
   }
   
-  data$year <- get_year_from_date(data[[datecol]])
+  data$year <- get_year_from_date(data[[date]])
   
   by <- c(by, "year")
   
   annual_formula <- interp(~percent_valid_days(x, q = "year"), 
-                           x = as.name(datecol))
-  q1_formula <- interp(~percent_valid_days(x, q = "Q1"), x = as.name(datecol))
-  q2_formula <- interp(~percent_valid_days(x, q = "Q2"), x = as.name(datecol))
-  q3_formula <- interp(~percent_valid_days(x, q = "Q3"), x = as.name(datecol))
-  q4_formula <- interp(~percent_valid_days(x, q = "Q4"), x = as.name(datecol))
+                           x = as.name(date))
+  q1_formula <- interp(~percent_valid_days(x, q = "Q1"), x = as.name(date))
+  q2_formula <- interp(~percent_valid_days(x, q = "Q2"), x = as.name(date))
+  q3_formula <- interp(~percent_valid_days(x, q = "Q3"), x = as.name(date))
+  q4_formula <- interp(~percent_valid_days(x, q = "Q4"), x = as.name(date))
   
   res <- group_by_(data, .dots = by)
   res <- summarise_(res, n_days = ~n(),

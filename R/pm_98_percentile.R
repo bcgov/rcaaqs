@@ -1,16 +1,18 @@
 #' Calculate the annual 98th percentile of daily average PM2.5 values according 
 #' to CAAQS standards
 #' 
-#' Also computes the data completeness criteria (optional). Designed to be used
+#' Also computes the data completeness criteria (optional). Designed to be used 
 #' with the output from \code{\link{pm_daily_avg}}.
 #' @import dplyr
 #' @import lazyeval
 #' @param  data data frame
-#' @param  datecol the name of the "date" column (as a character string)
-#' @param  valcol the name of the column with daily average PM2.5 values
-#' @param  by character vector of grouping variables in data, probably an id if using multiple 
-#'   sites. Even if not using multiple sites, you shoud specfify the id column 
-#'   so that it is retained in the output.
+#' @param  date the name of the "date" column (as a character string).
+#'   Default \code{"date"}
+#' @param  val the name of the column with daily average PM2.5 values.
+#'   Default \code{"avg_24hr"}.
+#' @param  by character vector of grouping variables in data, probably an id if
+#'   using multiple sites. Even if not using multiple sites, you shoud specfify
+#'   the id column so that it is retained in the output.
 #' @param  std the value of the PM2.5 standard (default 28).
 #' @param completeness Should the completeness criteria be calculated (default 
 #'   TRUE)
@@ -23,16 +25,16 @@
 #' @seealso \code{\link{pm_daily_avg}}, \code{\link{quantile2}}
 #' @return  A data frame with 98th percentiles of daily averages, per year
 
-pm_98_percentile <- function(data, datecol, valcol, by = NULL, std = 28, 
+pm_98_percentile <- function(data, date = "date", val = "avg_24hr", by = NULL, std = 28, 
                              completeness = TRUE, year_valid = 75, q_valid = 60, type = "caaqs") {
-  data <- data[!is.na(data[[valcol]]), ]
+  data <- data[!is.na(data[[val]]), ]
   
-  if (!inherits(data[[datecol]], "Date")) {
-    time_interval <- find_time_int(data[[datecol]])
+  if (!inherits(data[[date]], "Date")) {
+    time_interval <- find_time_int(data[[date]])
     if (!grepl("86400", time_interval)) stop("Time interval of date column can't be less than one day")
   }
       
-  data$year <- get_year_from_date(data[[datecol]])
+  data$year <- get_year_from_date(data[[date]])
   
   by <- c(by, "year")
   
@@ -40,13 +42,13 @@ pm_98_percentile <- function(data, datecol, valcol, by = NULL, std = 28,
   ans <- summarise_(ans, 
                     n_days = ~ n(),
                     ann_98_percentile = interp(~quantile2(x, type = y), 
-                                               x = as.name(valcol), 
+                                               x = as.name(val), 
                                                y = type),
                     exceed = ~ ann_98_percentile > std)
   ans <- ungroup(ans)
   
   if (completeness) {
-    comp <- pm_data_complete(data = data, datecol = datecol, valcol = valcol, 
+    comp <- pm_data_complete(data = data, date = date, val = val, 
                              by = by, year_valid = year_valid, q_valid = q_valid)
     comp <- ungroup(comp)
     comp <- select_(comp, ~ -n_days)

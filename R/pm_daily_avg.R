@@ -2,8 +2,8 @@
 #'rules
 #'
 #'@param data data frame with date and value
-#'@param datecol the name (as a character string) of the date column
-#'@param valcol the name (as a character string) of the PM2.5 value column
+#'@param dt the name (as a character string) of the date-time column. default \code{"date_time"}
+#'@param val the name (as a character string) of the PM2.5 value column. default \code{"value"}
 #'@param by character vector of grouping variables in data, probably an id if using multiple sites.
 #'  Even if not using multiple sites, you shoud specfify the id column so that
 #'  it is retained in the output.
@@ -13,46 +13,46 @@
 #'@return data frame with the daily averages, can be input into 
 #'        \code{\link{pm_98_percentile}}
 #'@seealso \code{\link{pm_98_percentile}}
-#'@examples \dontrun{
 #'
-#'}
-pm_daily_avg <- function(data, datecol, valcol, by = NULL) {
-  ## if datecol is a datetime column, convert to date
-  if (inherits(data[[datecol]], "POSIXt")) {
-    data[[datecol]] <- as.Date(data[[datecol]], tz = "Etc/GMT+8")
+pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL) {
+  ## if dt is a datetime column, convert to date
+  if (inherits(data[[dt]], "POSIXt")) {
+    data[[dt]] <- as.Date(data[[dt]], tz = "Etc/GMT+8")
   }
   
   # Capture grouping variables
-  by <- c(by, datecol)
+  by <- c(by, dt)
   
   ## Capture the formulas for the summaries
-  readings_formula <- interp(~length(na.omit(x)), x = as.name(valcol))
+  readings_formula <- interp(~length(na.omit(x)), x = as.name(val))
   avg_formula <- interp(~ifelse(n_readings >= 18, 
                                 round(mean(x, na.rm = TRUE), 1),
                                 NA_real_),
-                        x = as.name(valcol))
+                        x = as.name(val))
   
-  year_formula <- interp(~get_year_from_date(x), x = as.name(datecol))
+  year_formula <- interp(~get_year_from_date(x), x = as.name(dt))
   
   res <- group_by_(data, .dots = by)
-  res <- summarise_(res, n_readings = readings_formula,
-                    avg_24hr        = avg_formula)
+  res <- summarise_(res, 
+                    n_readings = readings_formula,
+                    avg_24hr = avg_formula)
   res <- mutate_(res, year = year_formula)
   ret <- ungroup(res)
+  names(ret)[names(ret) == dt] <- "date"
   ret
 }
 
 ## This should work but lazy(date) does weird stuff. See 
 ## https://github.com/hadley/lazyeval/issues/18
-# PM_avg_daily <- function(data, datecol, valcol) {
+# PM_avg_daily <- function(data, datecol, val) {
 #   datecol <- lazy(datecol)
 #   group_formula <- interp(~as.Date(x), x = datecol)
 #   
-#   valcol <- lazy(valcol)
-#   readings_formula <- interp(~length(na.omit(x)), x = valcol)
+#   val <- lazy(val)
+#   readings_formula <- interp(~length(na.omit(x)), x = val)
 #   avg_formula <- interp(~ifelse(n_readings >= 18, mean(x, na.rm = TRUE), 
 #                                 NA_real_), 
-#                         x = valcol)
+#                         x = val)
 #   
 #   res <- group_by_(data, group_formula)
 #     ret <- summarise_(res, n_readings = readings_formula,  

@@ -5,14 +5,14 @@
 \title{Calcualte the daily average PM2.5 reading, following CAAQS data completeness
 rules}
 \usage{
-pm_daily_avg(data, datecol, valcol, by = NULL)
+pm_daily_avg(data, dt = "date_time", val = "value", by = NULL)
 }
 \arguments{
 \item{data}{data frame with date and value}
 
-\item{datecol}{the name (as a character string) of the date column}
+\item{dt}{the name (as a character string) of the date-time column. default \code{"date_time"}}
 
-\item{valcol}{the name (as a character string) of the PM2.5 value column}
+\item{val}{the name (as a character string) of the PM2.5 value column. default \code{"value"}}
 
 \item{by}{character vector of grouping variables in data, probably an id if using multiple sites.
 Even if not using multiple sites, you shoud specfify the id column so that
@@ -25,11 +25,6 @@ data frame with the daily averages, can be input into
 \description{
 Calcualte the daily average PM2.5 reading, following CAAQS data completeness
 rules
-}
-\examples{
-\dontrun{
-
-}
 }
 \seealso{
 \code{\link{pm_98_percentile}}
