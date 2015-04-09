@@ -50,6 +50,6 @@ pm_annual_caaq <- function(data, yearcol, valcol, by = NULL, year = "latest") {
                     min_year     = interp(~min(x), x = as.name(yearcol)),
                     max_year     = interp(~max(x), x = as.name(yearcol)),
                     n_years      = ~n(),
-                    pm_annual_caaq = caaq_formula)
+                    pm_annual_metric = caaq_formula)
   ret
 }
