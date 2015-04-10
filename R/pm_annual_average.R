@@ -1,21 +1,21 @@
-#' Calculate the annual average pm2.5 concentration, 
-#' optionally with completeness criteria
-#'
+#' Calculate the annual average pm2.5 concentration, optionally with
+#' completeness criteria
+#' 
 #' @import dplyr
 #' @import lazyeval
 #' @param  data data frame
 #' @param  date the name of the "date" column (as a character string)
 #' @param  val the name of the column with daily average PM2.5 values
-#' @param  by character vector of grouping variables in data, probably an id if using multiple 
-#'   sites. Even if not using multiple sites, you shoud specfify the id column 
-#'   so that it is retained in the output.
+#' @param  by character vector of grouping variables in data, probably an id if
+#'   using multiple sites. Even if not using multiple sites, you shoud specfify
+#'   the id column so that it is retained in the output.
 #' @param completeness Should the completeness criteria be calculated (default 
 #'   TRUE)
 #' @param  year_valid  The percentage of valid days required in a year (default 
 #'   75). Only required if calculating the completeness criteria.
 #' @param  q_valid  The percentage of valid days required in each quarter 
 #'   (default 60). Only required if calculating the completeness criteria.
-#'
+#'   
 #' @return a data frame with annual average values per year
 #' @seealso \code{\link{pm_daily_avg}}
 #' @export

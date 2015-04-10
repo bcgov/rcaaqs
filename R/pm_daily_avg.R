@@ -1,19 +1,21 @@
-#'Calcualte the daily average PM2.5 reading, following CAAQS data completeness
+#'Calcualte the daily average PM2.5 reading, following CAAQS data completeness 
 #'rules
 #'
 #'@param data data frame with date and value
-#'@param dt the name (as a character string) of the date-time column. default \code{"date_time"}
-#'@param val the name (as a character string) of the PM2.5 value column. default \code{"value"}
-#'@param by character vector of grouping variables in data, probably an id if using multiple sites.
-#'  Even if not using multiple sites, you shoud specfify the id column so that
-#'  it is retained in the output.
+#'@param dt the name (as a character string) of the date-time column. Default
+#'  \code{"date_time"}
+#'@param val the name (as a character string) of the PM2.5 value column. Default
+#'  \code{"value"}
+#'@param by character vector of grouping variables in data, probably an id if
+#'  using multiple sites. Even if not using multiple sites, you shoud specfify
+#'  the id column so that it is retained in the output.
 #'@import dplyr
 #'@import lazyeval
 #'@export
 #'@return data frame with the daily averages, can be input into 
-#'        \code{\link{pm_98_percentile}}
+#'  \code{\link{pm_98_percentile}}
 #'@seealso \code{\link{pm_98_percentile}}
-#'
+#'  
 pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL) {
   ## if dt is a datetime column, convert to date
   if (inherits(data[[dt]], "POSIXt")) {

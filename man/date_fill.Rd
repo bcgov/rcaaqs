@@ -12,17 +12,21 @@ date_fill(df, date_col, interval = NULL, fill_cols = NULL,
 
 \item{date_col}{the column containing dates}
 
-\item{interval}{The interval in the date sequence. If \code{NULL}, calculated automatically.}
+\item{interval}{The interval in the date sequence. If \code{NULL}, calculated
+automatically.}
 
-\item{fill_cols}{Columns to fill with the value in the column (should be columns where value is same in every row, such as an ID.)}
+\item{fill_cols}{Columns to fill with the value in the column (should be
+columns where value is same in every row, such as an ID.)}
 
-\item{add_ymd}{logical. Should the date be split into year, month, and day columns and added to the output?}
+\item{add_ymd}{logical. Should the date be split into year, month, and day
+columns and added to the output?}
 }
 \value{
 dataframe with filled in dates
 }
 \description{
-Given a dataframe with one column as a date sequence, fill gaps in the dat sequence.
+Given a dataframe with one column as a date sequence, fill gaps in the dat
+sequence.
 }
 \examples{
 \dontrun{

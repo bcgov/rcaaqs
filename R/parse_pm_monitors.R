@@ -28,10 +28,12 @@ parse_pm_monitors <- function(...) {
 }
 
 
-#' Test whether a given record is from a certain PM monitor by searching across columns that might encode the information
-#'
+#' Test whether a given record is from a certain PM monitor by searching across
+#' columns that might encode the information
+#' 
 #' Internal function called by parse_pm_monitors
-#' @param ... vector (probably column in a data frame) that may have monitor type information in it
+#' @param ... vector (probably column in a data frame) that may have monitor
+#'   type information in it
 #' @keywords internal
 #' @return character vector
 pm_monitor_type <- function(col) {

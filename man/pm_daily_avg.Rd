@@ -10,17 +10,19 @@ pm_daily_avg(data, dt = "date_time", val = "value", by = NULL)
 \arguments{
 \item{data}{data frame with date and value}
 
-\item{dt}{the name (as a character string) of the date-time column. default \code{"date_time"}}
+\item{dt}{the name (as a character string) of the date-time column. Default
+\code{"date_time"}}
 
-\item{val}{the name (as a character string) of the PM2.5 value column. default \code{"value"}}
+\item{val}{the name (as a character string) of the PM2.5 value column. Default
+\code{"value"}}
 
-\item{by}{character vector of grouping variables in data, probably an id if using multiple sites.
-Even if not using multiple sites, you shoud specfify the id column so that
-it is retained in the output.}
+\item{by}{character vector of grouping variables in data, probably an id if
+using multiple sites. Even if not using multiple sites, you shoud specfify
+the id column so that it is retained in the output.}
 }
 \value{
 data frame with the daily averages, can be input into
-       \code{\link{pm_98_percentile}}
+ \code{\link{pm_98_percentile}}
 }
 \description{
 Calcualte the daily average PM2.5 reading, following CAAQS data completeness

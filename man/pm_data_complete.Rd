@@ -5,28 +5,33 @@
 \title{Calculates the percentage of days with readings annually, as well as for each
 quarter for each year in a dataset.}
 \usage{
-pm_data_complete(data, datecol, valcol, by = NULL, year_valid = 75,
-  q_valid = 60)
+pm_data_complete(data, date = "date", val = "avg_24hr", by = NULL,
+  year_valid = 75, q_valid = 60)
 }
 \arguments{
-\item{data}{data frame (likely the result of running \code{\link{pm_daily_avg}})}
+\item{data}{data frame (likely the result of running
+\code{\link{pm_daily_avg}})}
 
-\item{datecol}{the name of the "date" column (as a character string)}
+\item{date}{the name of the "date" column (as a character string). Default
+\code{"date"}}
 
-\item{valcol}{the name of the column with daily average PM2.5 values}
+\item{val}{the name of the column with daily average PM2.5 values. Default
+\code{"avg_24hr"}}
 
-\item{by}{character vector of  grouping variables, probably an id if using multiple sites. Even
-if not using multiple sites, you shoud specfify the id column so
-that it is retained.}
+\item{by}{character vector of  grouping variables, probably an id if using
+multiple sites. Even if not using multiple sites, you shoud specfify the id
+column so that it is retained.}
 
-\item{year_valid}{The percentage of valid days required in a year (default 75).}
+\item{year_valid}{The percentage of valid days required in a year (default
+75).}
 
-\item{q_valid}{The percentage of valid days required in each quarter (default 60).}
+\item{q_valid}{The percentage of valid days required in each quarter
+(default 60).}
 }
 \value{
 A data frame with percentage of days with readings annually, as well
-        as one for each quarter. Also includes whether or not the annual and
-        quarterly requirements are met
+ as one for each quarter. Also includes whether or not the annual and
+ quarterly requirements are met
 }
 \description{
 Designed to be used with the output from \code{\link{pm_daily_avg}}

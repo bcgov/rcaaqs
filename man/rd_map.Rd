@@ -5,10 +5,9 @@
 \alias{rd_map}
 \title{Borders of British Columbia Regional Districts}
 \format{A SpatialPolgonsDataFrame with 29 polygons and 2 variables:
-\describe{
-\item{region_name}{The name of the region}
-\item{region_type}{The type of region (Regional District, Regional Municipality, or Unincorporated Area)}
-}}
+  \describe{ \item{region_name}{The name of the region}
+  \item{region_type}{The type of region (Regional District, Regional
+  Municipality, or Unincorporated Area)} }}
 \source{
 \url{http://catalogue.data.gov.bc.ca/dataset/ceei-primary-indicators-total-2007-regional-districts}
 }

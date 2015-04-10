@@ -2,8 +2,8 @@
 % Please edit documentation in R/pm_annual_average.R
 \name{pm_annual_average}
 \alias{pm_annual_average}
-\title{Calculate the annual average pm2.5 concentration,
-optionally with completeness criteria}
+\title{Calculate the annual average pm2.5 concentration, optionally with
+completeness criteria}
 \usage{
 pm_annual_average(data, date = "date", val = "avg_24hr", by = NULL,
   completeness = TRUE, year_valid = 75, q_valid = 60)
@@ -15,9 +15,9 @@ pm_annual_average(data, date = "date", val = "avg_24hr", by = NULL,
 
 \item{val}{the name of the column with daily average PM2.5 values}
 
-\item{by}{character vector of grouping variables in data, probably an id if using multiple
-sites. Even if not using multiple sites, you shoud specfify the id column
-so that it is retained in the output.}
+\item{by}{character vector of grouping variables in data, probably an id if
+using multiple sites. Even if not using multiple sites, you shoud specfify
+the id column so that it is retained in the output.}
 
 \item{completeness}{Should the completeness criteria be calculated (default
 TRUE)}
@@ -32,8 +32,8 @@ TRUE)}
 a data frame with annual average values per year
 }
 \description{
-Calculate the annual average pm2.5 concentration,
-optionally with completeness criteria
+Calculate the annual average pm2.5 concentration, optionally with
+completeness criteria
 }
 \seealso{
 \code{\link{pm_daily_avg}}

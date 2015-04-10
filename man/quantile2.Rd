@@ -19,11 +19,13 @@ from \code{x} before the quantiles are computed. Default \code{FALSE}}
 \item{names}{logical; if true, the result has a names attribute. Set to FALSE
 for speedup with many probs. Default \code{FALSE}}
 
-\item{type}{\code{"caaqs"} (default) or an integer between 1 and 9 selecting one of the
-  nine base quantile algorithms be used. See \code{\link[stats]{quantile}} for details}
+\item{type}{\code{"caaqs"} (default) or an integer between 1 and 9 selecting
+  one of the nine base quantile algorithms be used. See
+  \code{\link[stats]{quantile}} for details}
 }
 \value{
-A vector of \code{length(probs)}; if \code{names = TRUE}, it has a \code{names} attribute
+A vector of \code{length(probs)}; if \code{names = TRUE}, it has a
+  \code{names} attribute
 }
 \description{
 Wraps \code{\link[stats]{quantile}} but with different defaults, adds another

@@ -2,12 +2,14 @@
 % Please edit documentation in R/parse_pm_monitors.R
 \name{pm_monitor_type}
 \alias{pm_monitor_type}
-\title{Test whether a given record is from a certain PM monitor by searching across columns that might encode the information}
+\title{Test whether a given record is from a certain PM monitor by searching across
+columns that might encode the information}
 \usage{
 pm_monitor_type(col)
 }
 \arguments{
-\item{...}{vector (probably column in a data frame) that may have monitor type information in it}
+\item{...}{vector (probably column in a data frame) that may have monitor
+type information in it}
 }
 \value{
 character vector

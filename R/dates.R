@@ -12,14 +12,18 @@ format_date <- function(dates, format="%Y-%m-%d %H:%M:%S") {
 
 #'Fill gaps in a date sequence
 #'
-#'Given a dataframe with one column as a date sequence, fill gaps in the dat sequence.
-#' @param  df Dataframe
-#' @param  date_col the column containing dates
-#' @param  interval The interval in the date sequence. If \code{NULL}, calculated automatically.
-#' @param  fill_cols Columns to fill with the value in the column (should be columns where value is same in every row, such as an ID.)
-#' @param  add_ymd logical. Should the date be split into year, month, and day columns and added to the output?
-#' @export
-#' @return dataframe with filled in dates
+#'Given a dataframe with one column as a date sequence, fill gaps in the dat
+#'sequence.
+#'@param  df Dataframe
+#'@param  date_col the column containing dates
+#'@param  interval The interval in the date sequence. If \code{NULL}, calculated
+#'  automatically.
+#'@param  fill_cols Columns to fill with the value in the column (should be
+#'  columns where value is same in every row, such as an ID.)
+#'@param  add_ymd logical. Should the date be split into year, month, and day
+#'  columns and added to the output?
+#'@export
+#'@return dataframe with filled in dates
 #' @examples \dontrun{
 #' foo <- data.frame(Date = seq(as.Date("2008-01-01"), as.Date("2008-12-01"), by = "month"), 
 #'                   val = round(rnorm(12, 5, 2), 1), label = rep("a", 12))

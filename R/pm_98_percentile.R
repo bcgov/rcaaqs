@@ -76,10 +76,12 @@ pm_98_percentile <- function(data, date = "date", val = "avg_24hr", by = NULL, s
 #'   from \code{x} before the quantiles are computed. Default \code{FALSE}
 #' @param names logical; if true, the result has a names attribute. Set to FALSE
 #'   for speedup with many probs. Default \code{FALSE}
-#' @param type \code{"caaqs"} (default) or an integer between 1 and 9 selecting one of the
-#'   nine base quantile algorithms be used. See \code{\link[stats]{quantile}} for details
+#' @param type \code{"caaqs"} (default) or an integer between 1 and 9 selecting
+#'   one of the nine base quantile algorithms be used. See
+#'   \code{\link[stats]{quantile}} for details
 #'   
-#' @return A vector of \code{length(probs)}; if \code{names = TRUE}, it has a \code{names} attribute
+#' @return A vector of \code{length(probs)}; if \code{names = TRUE}, it has a
+#'   \code{names} attribute
 #' @seealso \code{\link[stats]{quantile}}
 #' @export
 #' 

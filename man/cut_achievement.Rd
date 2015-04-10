@@ -9,13 +9,15 @@ cut_achievement(x, parameter, output = "labels", drop_na = FALSE)
 \arguments{
 \item{x}{vector of air quality readings (pollutant concentrations)}
 
-\item{parameter}{What is the parameter? Must be one of: \code{"o3", "pm2.5_annual", "pm2.5_daily"}}
+\item{parameter}{What is the parameter? Must be one of: \code{"o3",
+"pm2.5_annual", "pm2.5_daily"}}
 
-\item{output}{should the function output labels (\code{"labels"}; default
-or break values in unicode (\code{"breaks_u"}) or break values in html (\code{"breaks_h"}),
-or colour values (\code{"colour"} or \code{"color"})?}
+\item{output}{should the function output labels (\code{"labels"}; default or
+break values in unicode (\code{"breaks_u"}) or break values in html
+(\code{"breaks_h"}), or colour values (\code{"colour"} or \code{"color"})?}
 
-\item{drop_na}{Should NA values be dropped, or retained as factor level "Insufficient Data" (default)?}
+\item{drop_na}{Should NA values be dropped, or retained as factor level
+"Insufficient Data" (default)?}
 }
 \value{
 factor

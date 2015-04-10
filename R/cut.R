@@ -1,14 +1,16 @@
-#' Bin a vector of air quaility readings into CAAQS management levels
+#'Bin a vector of air quaility readings into CAAQS management levels
 #'
-#' Can be used for Ozone, PM2.5 (daily or annual)
-#' @param x vector of air quality readings (pollutant concentrations)
-#' @param  parameter What is the parameter? Must be one of: \code{"o3", "pm2.5_annual", "pm2.5_daily"}
-#' @param  output should the function output labels (\code{"labels"}; default
-#'  or break values in unicode (\code{"breaks_u"}) or break values in html (\code{"breaks_h"}), 
-#'  or colour values (\code{"colour"} or \code{"color"})?
-#' @param  drop_na Should NA values be dropped, or retained as factor level "Insufficient Data" (default)?
-#' @export
-#' @return factor
+#'Can be used for Ozone, PM2.5 (daily or annual)
+#'@param x vector of air quality readings (pollutant concentrations)
+#'@param  parameter What is the parameter? Must be one of: \code{"o3",
+#'  "pm2.5_annual", "pm2.5_daily"}
+#'@param  output should the function output labels (\code{"labels"}; default or
+#'  break values in unicode (\code{"breaks_u"}) or break values in html
+#'  (\code{"breaks_h"}), or colour values (\code{"colour"} or \code{"color"})?
+#'@param  drop_na Should NA values be dropped, or retained as factor level
+#'  "Insufficient Data" (default)?
+#'@export
+#'@return factor
 #' @examples \dontrun{
 #'
 #'}
@@ -17,17 +19,19 @@ cut_management <- function(x, parameter, output = "labels", drop_na = FALSE) {
            drop_na = drop_na)
 }
 
-#' Bin a vector of air quaility readings into CAAQS achievement levels
-#' 
-#' Can be used for Ozone, PM2.5 (daily or annual)
-#' @param x vector of air quality readings (pollutant concentrations)
-#' @param  parameter What is the parameter? Must be one of: \code{"o3", "pm2.5_annual", "pm2.5_daily"}
-#' @param  output should the function output labels (\code{"labels"}; default
-#'  or break values in unicode (\code{"breaks_u"}) or break values in html (\code{"breaks_h"}), 
-#'  or colour values (\code{"colour"} or \code{"color"})?
-#' @param  drop_na Should NA values be dropped, or retained as factor level "Insufficient Data" (default)?
-#' @export
-#' @return factor
+#'Bin a vector of air quaility readings into CAAQS achievement levels
+#'
+#'Can be used for Ozone, PM2.5 (daily or annual)
+#'@param x vector of air quality readings (pollutant concentrations)
+#'@param  parameter What is the parameter? Must be one of: \code{"o3",
+#'  "pm2.5_annual", "pm2.5_daily"}
+#'@param  output should the function output labels (\code{"labels"}; default or
+#'  break values in unicode (\code{"breaks_u"}) or break values in html
+#'  (\code{"breaks_h"}), or colour values (\code{"colour"} or \code{"color"})?
+#'@param  drop_na Should NA values be dropped, or retained as factor level
+#'  "Insufficient Data" (default)?
+#'@export
+#'@return factor
 #' @examples \dontrun{
 #'
 #'}
