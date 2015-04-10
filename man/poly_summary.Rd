@@ -2,7 +2,7 @@
 % Please edit documentation in R/poly_summary.R
 \name{poly_summary}
 \alias{poly_summary}
-\title{A function to count the number of unique occurrences of a variable within a polygon}
+\title{A function to summarise occurrences of a variable within a polygon}
 \usage{
 poly_summary(polys, points, fn, ...)
 }
@@ -16,14 +16,9 @@ poly_summary(polys, points, fn, ...)
 \item{...}{Other arguments to fn}
 }
 \value{
-A vector of the same length as the SpatialPolygonsDataFrame.
+A data frame with the same number of rows as the SpatialPolygonsDataFrame.
 }
 \description{
-<full description of function>
-}
-\examples{
-\dontrun{
-
-}
+A function to summarise occurrences of a variable within a polygon
 }
 

@@ -20,9 +20,4 @@ A percentage of days in the specified quarter that are in the supplied vector
 \description{
 Given a vector of dates (in a single year), calculate the percentage of days in a quarter
 }
-\examples{
-\dontrun{
-
-}
-}
 

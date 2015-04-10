@@ -25,9 +25,4 @@ factor
 \description{
 Can be used for Ozone, PM2.5 (daily or annual)
 }
-\examples{
-\dontrun{
-
-}
-}
 

@@ -35,11 +35,6 @@ a data frame, with year, the value, and the number of years the value
 \description{
 Flags if based on only two years.
 }
-\examples{
-\dontrun{
-
-}
-}
 \seealso{
 \code{\link{pm_98_percentile}}
 }

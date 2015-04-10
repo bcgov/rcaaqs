@@ -36,11 +36,6 @@ A data frame with percentage of days with readings annually, as well
 \description{
 Designed to be used with the output from \code{\link{pm_daily_avg}}
 }
-\examples{
-\dontrun{
-
-}
-}
 \seealso{
 \code{\link{pm_daily_avg}}
 }

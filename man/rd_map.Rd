@@ -17,7 +17,7 @@ rd_map
 \description{
 Borders were taken from the Community Energy Emissions Inventory shapefile
 available from the source below. Northern Rockies Regional Municipality was
-added, as it was not available in the original source file.
+added manually, as it was not available in the original source file.
 }
 \keyword{datasets}
 
