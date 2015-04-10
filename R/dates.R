@@ -14,16 +14,17 @@ format_date <- function(dates, format="%Y-%m-%d %H:%M:%S") {
 #'
 #'Given a dataframe with one column as a date sequence, fill gaps in the dat
 #'sequence.
-#'@param  df Dataframe
-#'@param  date_col the column containing dates
-#'@param  interval The interval in the date sequence. If \code{NULL}, calculated
+#' @import openair
+#' @param  df Dataframe
+#' @param  date_col the column containing dates
+#' @param  interval The interval in the date sequence. If \code{NULL}, calculated
 #'  automatically.
-#'@param  fill_cols Columns to fill with the value in the column (should be
+#' @param  fill_cols Columns to fill with the value in the column (should be
 #'  columns where value is same in every row, such as an ID.)
-#'@param  add_ymd logical. Should the date be split into year, month, and day
+#' @param  add_ymd logical. Should the date be split into year, month, and day
 #'  columns and added to the output?
-#'@export
-#'@return dataframe with filled in dates
+#' @export
+# '@return dataframe with filled in dates
 #' @examples \dontrun{
 #' foo <- data.frame(Date = seq(as.Date("2008-01-01"), as.Date("2008-12-01"), by = "month"), 
 #'                   val = round(rnorm(12, 5, 2), 1), label = rep("a", 12))
@@ -41,23 +42,25 @@ date_fill <- function(df, date_col, interval = NULL, fill_cols = NULL, add_ymd =
   
   df <- df[order(df[[date_col]]), ]
   
-  dates <- as.data.frame(df)[,date_col]
+  dates <- df[[date_col]]
   
-  start.date <- min(dates, na.rm = TRUE)
-  end.date <- max(dates, na.rm = TRUE)
-  
-  if (is.null(interval)) {
-    if (inherits(dates, "Date")) {
-      interval <- "day"
-    } else {
-      interval <- find_time_int(dates)
-    }
+  ## Function to check for non-uniform intervals
+  diff_ints <- function(d) {
+    ddiff <- as.numeric(diff(d))
+    maxdiff <- abs(max(ddiff, na.rm = TRUE) - min(ddiff, na.rm = TRUE))
+    maxdiff > 0 
   }
   
-  if (length(unique(diff(dates))) != 1L) {
-    all.dates <- data.frame(date = seq(start.date, end.date, 
-                                       by = interval))
-    out <- merge(df, all.dates, by.x = date_col, by.y = "date", all = TRUE)
+  if (diff_ints(dates)) {
+    sdate <- min(dates, na.rm = TRUE)
+    edate <- max(dates, na.rm = TRUE)
+    
+    if (is.null(interval)) {
+      interval <- openair:::find.time.interval(dates)
+    }
+    
+    full_dates <- data.frame(date = seq(sdate, edate, by = interval))
+    out <- merge(df, full_dates, by.x = date_col, by.y = "date", all = TRUE)
     
     if (!is.null(fill_cols)) {
       for (col in fill_cols) {
@@ -73,31 +76,6 @@ date_fill <- function(df, date_col, interval = NULL, fill_cols = NULL, add_ymd =
   if (add_ymd) out <- add_ymd(out, "date")
   
   out
-}
-
-#'Find time interval in a date sequence
-#'
-#'Taken from package openair
-#' @param dates vector of dates
-#' @export
-#' @return an integer reflecting the number of seconds in the time interval
-#' @examples \dontrun{
-#'
-#'}
-find_time_int <- function(dates) {
-  dates <- unique(dates)
-  len <- length(dates)
-  len <- min(c(100, len))
-  id <- which.max(table(diff(as.numeric(dates[order(dates[1:len])]))))
-  seconds <- as.numeric(names(id))
-  if (inherits(dates, "POSIXt")) { 
-    seconds <- paste(seconds, "sec")
-  }
-  if (inherits(dates, "Date")) {
-    seconds <- 3600 * 24
-    seconds <- paste(seconds, "sec")
-  }
-  seconds
 }
 
 #'Add a year, month, and day column to a dataframe based on a date column
