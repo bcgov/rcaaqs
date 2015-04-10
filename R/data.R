@@ -2,7 +2,7 @@
 #' 
 #' Borders were taken from the Community Energy Emissions Inventory shapefile 
 #' available from the source below. Northern Rockies Regional Municipality was 
-#' added, as it was not available in the original source file.
+#' added manually, as it was not available in the original source file.
 #' 
 #' @format A SpatialPolgonsDataFrame with 29 polygons and 2 variables: 
 #'   \describe{ \item{region_name}{The name of the region} 

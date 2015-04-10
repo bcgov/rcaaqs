@@ -5,21 +5,21 @@ labels <- rep(c("Actions for Keeping Clean Areas Clean",
                 "Actions for Preventing CAAQS Exceedance", 
                 "Actions for Achieving Air Zone CAAQS"), 3)
 
-lower_breaks <- c(0, 50, 56, 63, 
-                  0, 4.0, 6.4, 10.0, 
-                  0, 10, 19, 28)
+lower_breaks <- c(0, 50, 56, 63, # Ozone
+                  0, 4.0, 6.4, 10.0, # PM2.5 Annual
+                  0, 10, 19, 28) # PM2.5 24hr
 
-upper_breaks <- c(50, 56, 63, Inf,
-                  4.0, 6.4, 10.0, Inf,
-                  10, 19, 28, Inf)
+upper_breaks <- c(50, 56, 63, Inf,  # Ozone
+                  4.0, 6.4, 10.0, Inf, # PM2.5 Annual
+                  10, 19, 28, Inf) # PM2.5 24hr
 
-units_unicode <- c(rep("ppb", 4), 
-                   rep("\u03BCg/m\u00B3", 4), 
-                   rep("\u03BCg/m\u00B3", 4))
+units_unicode <- c(rep("ppb", 4), # Ozone
+                   rep("\u03BCg/m\u00B3", 4), # PM2.5 Annual
+                   rep("\u03BCg/m\u00B3", 4))# PM2.5 24hr
 
-units_html <- c(rep("ppb", 4), 
-                rep("&mu;g/m&sup3;", 4), 
-                rep("&mu;g/m&sup3;", 4))
+units_html <- c(rep("ppb", 4),# Ozone 
+                rep("&mu;g/m&sup3;", 4),# PM2.5 Annual 
+                rep("&mu;g/m&sup3;", 4))# PM2.5 24hr
 
 val_labels_unicode <- c(paste0("\u2264 ", lower_breaks[2], units_unicode[1]), 
                         paste0("\u003E ", lower_breaks[2], units_unicode[1], 
