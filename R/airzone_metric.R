@@ -21,9 +21,7 @@
 #' @param  stn_name the column containing the station names
 #' @export
 #' @return A dataframe with two columns: metric value and achievement status
-#' @examples \dontrun{
-#'
-#'}
+
 airzone_metric <- function(df, n, avg, stn_id, stn_name, std) {
   
   lvls <- c("Achieved", "Not Achieved", "Insufficient Data")

@@ -99,9 +99,7 @@ date_fill <- function(df, date_col, interval = NULL, fill_cols = NULL, add_ymd =
 #' @param tz the timezone
 #' @export
 #' @return a dataframe with the new columns added
-#' @examples \dontrun{
-#'
-#'}
+
 add_ymd <- function(df, datecol, tz = "Etc/GMT+8", outnames = NULL) {
   if (is.null(outnames)) outnames <- c("year", "month", "day")
   int <- intersect(outnames, names(df))

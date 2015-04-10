@@ -23,9 +23,7 @@
 #'  \eqn{\le} -5 with \code{NA} and values between -5 and 0 with 0. For type =
 #'  "pm25", replaces values \eqn{\le} -3.5 with \code{NA} and values between
 #'  -3.5 and 0 with 0.
-#' @examples \dontrun{
-#'
-#'}
+
 clean_neg <- function(x, type = c("pm25", "ozone", "so2", "nox")) {
   type <- tolower(type)
   type <- match.arg(type)

@@ -35,9 +35,7 @@
 #'@return A data frame with percentage of days with readings annually, as well 
 #'  as one for each quarter. Also includes whether or not the annual and 
 #'  quarterly requirements are met
-#' @examples \dontrun{
-#' 
-#'}
+
 pm_data_complete <- function(data, date = "date", val = "avg_24hr", by = NULL, 
                              year_valid = 75, q_valid = 60) {
   data <- data[!is.na(data[[val]]), ]
@@ -80,9 +78,7 @@ pm_data_complete <- function(data, date = "date", val = "avg_24hr", by = NULL,
 #' @param  tz the timezone the dates are in. Default Etc/GMT-8 with no Daylight savings
 #' @export
 #' @return  A percentage of days in the specified quarter that are in the supplied vector
-#' @examples \dontrun{
 #' 
-#'}
 percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), tz = "Etc/GMT-8") {
   
   if (!inherits(dates, "Date")) {

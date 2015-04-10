@@ -19,9 +19,7 @@
 #' @param  ... Other arguments to fn
 #' @export
 #' @return A data frame with the same number of rows as the SpatialPolygonsDataFrame.
-#' @examples \dontrun{
-#'
-#'}
+
 poly_summary <- function(polys, points, fn, ...) {
   
   if (!class(points) == "SpatialPointsDataFrame") {

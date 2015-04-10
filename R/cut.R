@@ -23,9 +23,7 @@
 #'  "Insufficient Data" (default)?
 #'@export
 #'@return factor
-#' @examples \dontrun{
-#'
-#'}
+
 cut_management <- function(x, parameter, output = "labels", drop_na = FALSE) {
   cut_caaq(type = "management", x=x, parameter = parameter, output = output, 
            drop_na = drop_na)
@@ -44,9 +42,7 @@ cut_management <- function(x, parameter, output = "labels", drop_na = FALSE) {
 #'  "Insufficient Data" (default)?
 #'@export
 #'@return factor
-#' @examples \dontrun{
-#'
-#'}
+
 cut_achievement <- function(x, parameter, output = "labels", drop_na = FALSE) {
   cut_caaq(type = "achievement", x=x, parameter = parameter, output = output, 
            drop_na = drop_na)
@@ -85,9 +81,9 @@ cut_caaq <- function(type, x, parameter, output, drop_na) {
 get_levels <- function(type, parameter = "all") {
   
   if (type == "achievement") {
-    levels <- achievement_levels
+    levels <- rcaaqs::achievement_levels
   } else if (type == "management") {
-    levels <- management_levels
+    levels <- rcaaqs::management_levels
   } else {
     stop("type must be one of achievement or management")
   }

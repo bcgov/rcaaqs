@@ -33,9 +33,7 @@
 #'@seealso \code{\link{pm_98_percentile}}
 #'@return a data frame, with year, the value, and the number of years the value 
 #'  is based on
-#' @examples \dontrun{
-#' 
-#'}
+
 pm_24hr_caaq <- function(data, year = "year", val = "ann_98_percentile", 
                          flag = "use_but_incomplete", by = NULL, cyear = "latest") {
   vars <- c(year, val, flag, by)
