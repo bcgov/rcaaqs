@@ -16,6 +16,7 @@
 #'Designed to be used with the output from \code{\link{pm_daily_avg}}
 #'@import dplyr
 #'@import lazyeval
+#'@import openair
 #'@param  data data frame (likely the result of running
 #'  \code{\link{pm_daily_avg}})
 #'@param  date the name of the "date" column (as a character string). Default
@@ -42,7 +43,7 @@ pm_data_complete <- function(data, date = "date", val = "avg_24hr", by = NULL,
   data <- data[!is.na(data[[val]]), ]
   
   if (!inherits(data[[date]], "Date")) {
-    time_interval <- find_time_int(data[[date]])
+    time_interval <- openair:::find.time.interval(data[[date]])
     if (!grepl("86400", time_interval)) stop("Time interval of date column can't be less than one day")
   }
   
@@ -85,7 +86,7 @@ pm_data_complete <- function(data, date = "date", val = "avg_24hr", by = NULL,
 percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), tz = "Etc/GMT-8") {
   
   if (!inherits(dates, "Date")) {
-    time_interval <- find_time_int(dates)
+    time_interval <- openair:::find.time.interval(dates)
     if (!grepl("86400", time_interval)) stop("Time interval of date column can't be less than one day")
   }
   
