@@ -3,11 +3,12 @@ Type: Package
 Title: Tools for analysing airquality data
 Version: 0.1
 Date: 2014-10-20
-Author: Andy Teucher <andy.teucher@gov.bc.ca>
-Maintainer: Andy Teucher <andy.teucher@gov.bc.ca>
+Authors@R: c(person("Andy", "Teucher", role = c("aut", "cre"), 
+                    email = "andy.teucher@gov.bc.ca"))
 Description: Analyze air quality data according to Canadian Ambient Air Quality Standars (CAAQS) guidelines
 LazyData: true
 License: Apache License (== 2.0) | file LICENSE
+Copyright: Copyright (C) 2015 Province of British Columbia
 Depends:
     R (>= 3.1.2)
 Imports:
