@@ -12,9 +12,9 @@ check:
 	Rscript -e "library('devtools'); library('methods'); check('.')"
 
 build:
-	Rscript -e "library('devtools'); build('.', binary=TRUE)"
-	cp ../$(PKGNAME)_$(PKGVERS).zip ../$(PKGNAME)_$(PKGVERS).tar.gz \
-	"/d/_dev/packages/"
+	Rscript -e "library('devtools'); build('.'); build('.', binary=TRUE)"
+	cp ../$(PKGNAME)_$(PKGVERS).zip /d/packages/
+	cp ../$(PKGNAME)_$(PKGVERS).tar.gz /d/packages/
 
 install:
 	Rscript -e "library('devtools'); install('.')"
