@@ -1,6 +1,4 @@
-#' A function to count the number of unique occurrences of a variable within a polygon
-#'
-#' <full description of function>
+#' A function to summarise occurrences of a variable within a polygon
 #'
 #' @import sp
 #' @param  polys SpatialPolygonsDataFrame to summarise by
@@ -8,7 +6,7 @@
 #' @param  fn The summary function with which to summarise point data in each polygon
 #' @param  ... Other arguments to fn
 #' @export
-#' @return A vector of the same length as the SpatialPolygonsDataFrame.
+#' @return A data frame with the same number of rows as the SpatialPolygonsDataFrame.
 #' @examples \dontrun{
 #'
 #'}
