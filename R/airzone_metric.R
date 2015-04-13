@@ -10,43 +10,55 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-#' Calculate the airzone metric and achievement status
+#'Calculate the airzone metric
 #'
 #'<full description>
-#' @param df The dataframe
-#' @param  n The column containing the number of years each 3yr avg is based on
-#' @param  avg The column containing the 3 yr averages
-#' @param  std the standard (e.g. 63 for ozone)
-#' @param  stn_id the column containing the station ids
-#' @param  stn_name the column containing the station names
-#' @export
-#' @return A dataframe with two columns: metric value and achievement status
+#'@import dplyr
+#'@import lazyeval
+#'@param df The dataframe
+#'@param n_years The column containing the number of years each 3yr avg is based
+#'  on
+#'@param az Airzone column
+#'@param  val the column containing the the metric for individual stations
+#'@param keep columns in the input df that you would like to retain in the
+#'  output data frame. You can make it a named vector to rename the column in
+#'  the output. Use the form \code{keep = c(new_name = "existing_name")}. This
+#'  can also be used to rename any of the columns specified by n_years, az, or
+#'  val.
+#'@export
+#'@return A dataframe with two columns: metric value and achievement status
 
-airzone_metric <- function(df, n, avg, stn_id, stn_name, std) {
+airzone_metric <- function(df, n_years = "n_years", az = "Airzone", val, keep = NULL) {
+  if (!is.data.frame(df)) stop("df must be a data frame")
+  if (!n_years %in% names(df)) stop("n_years is not a column in ", df)
+  if (!is.numeric(df[[n_years]])) stop("n_years must be numeric or integer")
+  if (!val %in% names(df)) stop("val is not a column in ", df)
+  if (!is.numeric(df[[val]])) stop("val must be numeric")
+
+  # set val column to NA if n_years < 3
+  df <- group_by_(df, az)
+  df <- do_(df, ~parse_incomplete(., n_years, val))
+  df <- slice_(df, interp(~which.max(x), x = as.name(val)))
   
-  lvls <- c("Achieved", "Not Achieved", "Insufficient Data")
+  df <- df[,c(az, n_years, val, setdiff(keep, c(az, n_years, val)))]
   
-  if (all(is.na(df[,avg]))) {
-    maxn <- NA
-    caaq_metric <- NA
-    caaq_status <- factor("Insufficient Data", levels = lvls)
-    rep_station_id <- NA
-    rep_station_name <- NA
-  } else {
-    maxn <- max(df[,n], na.rm = TRUE)
-    
-    df <- df[df[,n] == maxn, , drop = FALSE]
-    
-    i <- which.max(df[df[,n] == maxn,avg])
-    
-    caaq_metric <- df[i,avg]
-    caaq_status <- factor(ifelse(caaq_metric <= std, lvls[1], lvls[2]), 
-                          levels = lvls)
-    rep_station_id <- df[i,stn_id]
-    rep_station_name <- df[i,stn_name]
+  # Rename keep columns if asked to
+  if (!is.null(names(keep))) {
+    for (k in keep) {
+      n <- names(keep)[keep == k]
+      if (nchar(n) > 0) {
+        names(df)[names(df) == k] <- n
+      }
+    }
   }
-  
-  data.frame(nyears = maxn, caaq_metric, caaq_status, 
-             rep_station_id, rep_station_name, stringsAsFactors = FALSE)
-  
+  df
+}
+
+parse_incomplete <- function(df, n_years, val) {
+  if (all(df[[n_years]] < 3)) {
+    df <- df
+  } else {
+    df[df[[n_years]] < 3, val] <- NA
+  }
+  df
 }

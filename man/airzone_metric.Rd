@@ -2,22 +2,25 @@
 % Please edit documentation in R/airzone_metric.R
 \name{airzone_metric}
 \alias{airzone_metric}
-\title{Calculate the airzone metric and achievement status}
+\title{Calculate the airzone metric}
 \usage{
-airzone_metric(df, n, avg, stn_id, stn_name, std)
+airzone_metric(df, n_years = "n_years", az = "Airzone", val, keep = NULL)
 }
 \arguments{
 \item{df}{The dataframe}
 
-\item{n}{The column containing the number of years each 3yr avg is based on}
+\item{n_years}{The column containing the number of years each 3yr avg is based
+on}
 
-\item{avg}{The column containing the 3 yr averages}
+\item{az}{Airzone column}
 
-\item{stn_id}{the column containing the station ids}
+\item{val}{the column containing the the metric for individual stations}
 
-\item{stn_name}{the column containing the station names}
-
-\item{std}{the standard (e.g. 63 for ozone)}
+\item{keep}{columns in the input df that you would like to retain in the
+output data frame. You can make it a named vector to rename the column in
+the output. Use the form \code{keep = c(new_name = "existing_name")}. This
+can also be used to rename any of the columns specified by n_years, az, or
+val.}
 }
 \value{
 A dataframe with two columns: metric value and achievement status
