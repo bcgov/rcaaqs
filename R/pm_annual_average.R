@@ -32,8 +32,8 @@
 #' @seealso \code{\link{pm_daily_avg}}
 #' @export
 
-pm_annual_average <- function(data, date = "date", val = "avg_24hr", by = NULL, 
-                              completeness = TRUE, year_valid = 75, q_valid = 60) {
+pm_annual_average <- function(data, date = "date", val = "avg_24hr", nr = "n_readings", 
+                              by = NULL, daily_valid = 18) {
   data <- data[!is.na(data[[val]]) & data[[nr]] >= 18, ]
   
   if (!inherits(data[[date]], "Date")) {
@@ -52,16 +52,6 @@ pm_annual_average <- function(data, date = "date", val = "avg_24hr", by = NULL,
                     n_days = ~ n(),
                     ann_avg = avg_formula)
   
-  if (completeness) {
-    comp <- pm_data_complete(data = data, date = date, val = val, 
-                             by = by, year_valid = year_valid, q_valid = q_valid)
-    comp <- ungroup(comp)
-    comp <- select_(comp, ~ -n_days)
-    
-    ans <- merge(ans, comp, by = by)
-    ans <- mutate_(ans, 
-                   use = ~ (annual_valid & quarters_valid))
-  }
   ans
 
 }

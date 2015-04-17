@@ -38,9 +38,8 @@
 #' @return  A data frame with 98th percentiles of daily averages, per year
 
 pm_98_percentile <- function(data, date = "date", val = "avg_24hr", nr = "n_readings", 
-                             by = NULL, std = 28, completeness = TRUE, daily_valid = 18, 
-                             year_valid = 75, q_valid = 60, type = "caaqs") {
-  data <- data[!is.na(data[[val]]) & data[[nr]] >= 18, ]
+                             by = NULL, std = 28, daily_valid = 18, type = "caaqs") {
+  data <- data[!is.na(data[[val]]) & data[[nr]] >= daily_valid, ]
   
   if (!inherits(data[[date]], "Date")) {
     time_interval <- openair:::find.time.interval(data[[date]])
@@ -59,18 +58,6 @@ pm_98_percentile <- function(data, date = "date", val = "avg_24hr", nr = "n_read
                                                y = type),
                     exceed = ~ ann_98_percentile > std)
   ans <- ungroup(ans)
-  
-  if (completeness) {
-    comp <- pm_data_complete(data = data, dt = date, val = val, by = by, daily_valid = daily_valid,
-                             year_valid = year_valid, q_valid = q_valid)
-    comp <- ungroup(comp)
-    comp <- select_(comp, ~ -n_days)
-    
-    ans <- merge(ans, comp, by = by)
-    ans <- mutate_(ans, 
-                   use_but_incomplete = ~ exceed & annual_valid & !quarters_valid, 
-                   use = ~ (annual_valid & quarters_valid) | use_but_incomplete)
-  }
   
   ans
   
