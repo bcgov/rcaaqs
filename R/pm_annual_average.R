@@ -34,7 +34,7 @@
 
 pm_annual_average <- function(data, date = "date", val = "avg_24hr", by = NULL, 
                               completeness = TRUE, year_valid = 75, q_valid = 60) {
-  data <- data[!is.na(data[[val]]), ]
+  data <- data[!is.na(data[[val]]) & data[[nr]] >= 18, ]
   
   if (!inherits(data[[date]], "Date")) {
     time_interval <- openair:::find.time.interval(data[[date]])

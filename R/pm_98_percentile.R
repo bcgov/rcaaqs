@@ -37,9 +37,10 @@
 #' @seealso \code{\link{pm_daily_avg}}, \code{\link{quantile2}}
 #' @return  A data frame with 98th percentiles of daily averages, per year
 
-pm_98_percentile <- function(data, date = "date", val = "avg_24hr", by = NULL, std = 28, 
-                             completeness = TRUE, year_valid = 75, q_valid = 60, type = "caaqs") {
-  data <- data[!is.na(data[[val]]), ]
+pm_98_percentile <- function(data, date = "date", val = "avg_24hr", nr = "n_readings", 
+                             by = NULL, std = 28, completeness = TRUE, 
+                             year_valid = 75, q_valid = 60, type = "caaqs") {
+  data <- data[!is.na(data[[val]]) & data[[nr]] >= 18, ]
   
   if (!inherits(data[[date]], "Date")) {
     time_interval <- openair:::find.time.interval(data[[date]])
@@ -98,6 +99,10 @@ pm_98_percentile <- function(data, date = "date", val = "avg_24hr", by = NULL, s
 #' @export
 #' 
 quantile2 <- function(x, probs = 0.98, na.rm = FALSE, names = FALSE, type = "caaqs") {
+  if (missing(x) || length(x) == 0) {
+    warning("No non-missing arguments to quantile2; returning -Inf")
+    return(-Inf)
+  }
   if (!inherits(x, c("integer", "numeric"))) stop("x is not numeric")
   if (!all(probs <= 1 & probs >= 0)) stop("probs should be between 0 and 1")
   if (!(type == "caaqs" || type %in% 1:9)) stop("type needs to be either 'caaqs' or 1:9")

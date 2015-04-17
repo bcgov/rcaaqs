@@ -216,8 +216,8 @@ test_that("Exceed works", {
 })
 
 test_that("Number of days is correct", {
-  expect_equal(test_one$n_days, c(358L, 352L, 353L))
-  expect_equal(test_mult$n_days, c(358L, 352L, 353L, 363L, 240L, 164L))
+  expect_equal(test_one$n_days, c(317L, 332L, 317L))
+  expect_equal(test_mult$n_days, c(317L, 332L, 317L, 333L, 218L, 146L))
 })
 
 context("pm_data_complete")
