@@ -121,6 +121,14 @@ add_ymd <- function(df, datecol, tz = "Etc/GMT+8", outnames = NULL) {
   df
 }
 
-get_year_from_date <- function(date, tz = "Etc/GMT+8") {
-  as.integer(as.POSIXlt(date, tz = tz)$year + 1900)
+get_year_from_date <- function(date) {
+  as.integer(as.POSIXlt(date)$year + 1900)
+}
+
+get_month_from_date <- function(date) {
+  as.integer(as.POSIXlt(date)$mon + 1)
+}
+
+get_day_from_date <- function(date) {
+  as.integer(as.POSIXlt(date)$mday)
 }

@@ -36,33 +36,29 @@
 #'  as one for each quarter. Also includes whether or not the annual and 
 #'  quarterly requirements are met
 
-pm_data_complete <- function(data, date = "date", val = "avg_24hr", by = NULL, 
-                             year_valid = 75, q_valid = 60) {
+pm_data_complete <- function(data, dt = "date_time", val = "value", by = NULL, 
+                             daily_valid = 18, year_valid = 75, q_valid = 60) {
+  time_interval <- openair:::find.time.interval(data[[dt]])
+  if (!grepl("3600", time_interval)) stop("Time interval of date column must be one hour")
   data <- data[!is.na(data[[val]]), ]
   
-  if (!inherits(data[[date]], "Date")) {
-    time_interval <- openair:::find.time.interval(data[[date]])
-    if (!grepl("86400", time_interval)) stop("Time interval of date column can't be less than one day")
-  }
-  
-  data$year <- get_year_from_date(data[[date]])
-  
-  by <- c(by, "year")
-  
-  annual_formula <- interp(~percent_valid_days(x, q = "year"), 
-                           x = as.name(date))
-  q1_formula <- interp(~percent_valid_days(x, q = "Q1"), x = as.name(date))
-  q2_formula <- interp(~percent_valid_days(x, q = "Q2"), x = as.name(date))
-  q3_formula <- interp(~percent_valid_days(x, q = "Q3"), x = as.name(date))
-  q4_formula <- interp(~percent_valid_days(x, q = "Q4"), x = as.name(date))
-  
-  res <- group_by_(data, .dots = by)
-  res <- summarise_(res, n_days = ~n(),
-                    percent_valid_annual = annual_formula, 
-                    percent_valid_q1 = q1_formula, 
-                    percent_valid_q2 = q2_formula, 
-                    percent_valid_q3 = q3_formula, 
-                    percent_valid_q4 = q4_formula)
+  ## Summarise by date
+  data$date <- as.Date(data[[dt]])
+  data <- group_by_(data, .dots = c(by, "date"))
+  data <- summarise_(data, n_hrs = ~n())
+  data <- filter_(data, ~n_hrs >= daily_valid)
+
+  ## Add year column
+  data$year <- get_year_from_date(data[["date"]])
+
+  res <- group_by_(data, .dots = c(by, "year"))
+  res <- summarise_(res, 
+                    n_days = ~n(),
+                    percent_valid_annual = ~percent_valid_days(date, q = "year"), 
+                    percent_valid_q1 = ~percent_valid_days(date, q = "Q1"), 
+                    percent_valid_q2 = ~percent_valid_days(date, q = "Q2"), 
+                    percent_valid_q3 = ~percent_valid_days(date, q = "Q3"), 
+                    percent_valid_q4 = ~percent_valid_days(date, q = "Q4"))
   res <- rowwise(res)
   res <- mutate_(res, annual_valid = ~percent_valid_annual >= year_valid,
                  quarters_valid = ~all(c(percent_valid_q1, percent_valid_q2, 
@@ -79,24 +75,18 @@ pm_data_complete <- function(data, date = "date", val = "avg_24hr", by = NULL,
 #' @export
 #' @return  A percentage of days in the specified quarter that are in the supplied vector
 #' 
-percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), tz = "Etc/GMT-8") {
-  
+percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), 
+                               tz = "Etc/GMT-8") {
+  if (!tz %in% OlsonNames()) stop(tz, " is not a valid timezone.")
   if (!inherits(dates, "Date")) {
     time_interval <- openair:::find.time.interval(dates)
-    if (!grepl("86400", time_interval)) stop("Time interval of date column can't be less than one day")
+    if (!grepl("86400", time_interval)) stop("Time interval of date column must be one day")
   }
-  
-  if (!tz %in% OlsonNames()) stop(tz, " is not a valid timezone.")
   
   q = match.arg(q)
   
-  dates <- na.omit(dates)
-  
-  if (any(duplicated(dates))) {
-    dates <- unique(dates)
-    warning("There were duplicate dates detected. Duplicates were discarded and calculation proceeded")
-  }
-  
+  dates <- dates[!is.na(dates)]
+
   year <- get_year_from_date(dates[1])
   
   q_lengths <- c(year = -difftime(paste0(year, "-01-01"), paste0(year, "-12-31"), 
@@ -123,3 +113,18 @@ percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), tz = "E
   ret
 }
 
+# get_valid_days <- function(, daily_valid = 18, tz = "Etc/GMT-8") {
+#   if (!inherits(dt, "POSIXt")) stop("dt is not a valid date-time class (POSIXct or POSIXlt)")
+#   if (!tz %in% OlsonNames()) stop(tz, " is not a valid timezone.")
+#   time_interval <- openair:::find.time.interval(dt)
+#   if (!grepl("3600", time_interval)) stop("Time interval of date column must be one hour")
+#   
+#   dt <- unique(na.omit(dt))
+#   
+#   df <- data.frame(date = as.Date(dt, tz = tz))
+#   
+#   df <- group_by_(df, "date")
+#   df <- summarise_(df, n_hrs = ~n())
+#   df <- filter_(df, ~n_hrs >= daily_valid)
+#   df$date
+# }

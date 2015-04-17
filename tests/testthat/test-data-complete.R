@@ -97,7 +97,7 @@ one_id <- multi_id[multi_id$id == "a", ]
 test_one <- pm_data_complete(one_id, "date", val = "val")
 test_mult <- pm_data_complete(multi_id, "date", "val", by = "id")
 
-test_that("Only accepts date-time objects", {
+test_that("Only accepts date-time objects (POSIXt)", {
   dt <- seq(Sys.Date(), by = "1 day", length.out = 10)
   test <- data.frame(dt, val = rnorm(length(dt), 20, 5))
   
