@@ -32,7 +32,7 @@
 #' @seealso \code{\link{pm_daily_avg}}
 #' @export
 
-pm_annual_average <- function(data, date = "date", val = "avg_24hr", by = NULL, 
+pm_annual_average <- function(data, date = "date", val = "avg_24hr", nr = "n_readings", by = NULL, 
                               completeness = TRUE, year_valid = 75, q_valid = 60) {
   data <- data[!is.na(data[[val]]) & data[[nr]] >= 18, ]
   
