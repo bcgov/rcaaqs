@@ -19,13 +19,15 @@
 #'@import openair
 #'@param  data data frame (likely the result of running
 #'  \code{\link{pm_daily_avg}})
-#'@param  date the name of the "date" column (as a character string). Default
-#'  \code{"date"}
+#'@param  dt the name of the date/time column (as a character string). Default
+#'  \code{"date_time"}
 #'@param  val the name of the column with daily average PM2.5 values. Default
 #'  \code{"avg_24hr"}
 #'@param  by character vector of  grouping variables, probably an id if using
 #'  multiple sites. Even if not using multiple sites, you shoud specfify the id
 #'  column so that it is retained.
+#'@param  daily_valid  The minimum number of hourly readings in a day for the
+#'   daily average to be considered valid (default \code{18}).
 #'@param  year_valid  The percentage of valid days required in a year (default
 #'  75).
 #'@param  q_valid  The percentage of valid days required in each quarter

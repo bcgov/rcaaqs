@@ -20,9 +20,6 @@
 #'@param  year name of the column containing the year. Default \code{"year"}
 #'@param  val name of the column containing annual 98th percentile values.
 #'  Default \code{"ann_98_percentile"}
-#'@param flag name of the column containing a flag (\code{TRUE/FALSE}) if the 
-#'  value in the given year is based on incomplete data (but is still ok to
-#'  use). Default \code{"use_but_incomplete"}
 #'@param  by character vector of grouping variables in data, probably an id if
 #'  using multiple sites. Even if not using multiple sites, you shoud specfify
 #'  the id column so that it is retained in the output.

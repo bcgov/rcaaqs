@@ -21,12 +21,10 @@
 #' @param  by character vector of grouping variables in data, probably an id if
 #'   using multiple sites. Even if not using multiple sites, you shoud specfify
 #'   the id column so that it is retained in the output.
-#' @param completeness Should the completeness criteria be calculated (default 
-#'   TRUE)
-#' @param  year_valid  The percentage of valid days required in a year (default 
-#'   75). Only required if calculating the completeness criteria.
-#' @param  q_valid  The percentage of valid days required in each quarter 
-#'   (default 60). Only required if calculating the completeness criteria.
+#' @param nr the column containing the number of readings per day (default
+#'   \code{"n_readings"}).
+#' @param  daily_valid  The minimum number of hourly readings in a day for the
+#'   daily average to be considered valid (default \code{18}).
 #'   
 #' @return a data frame with annual average values per year
 #' @seealso \code{\link{pm_daily_avg}}

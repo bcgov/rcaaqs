@@ -18,20 +18,18 @@
 #' @import dplyr
 #' @import lazyeval
 #' @param  data data frame
-#' @param  date the name of the "date" column (as a character string).
-#'   Default \code{"date"}
-#' @param  val the name of the column with daily average PM2.5 values.
-#'   Default \code{"avg_24h"}.
-#' @param  by character vector of grouping variables in data, probably an id if
-#'   using multiple sites. Even if not using multiple sites, you shoud specfify
+#' @param  date the name of the "date" column (as a character string). Default
+#'   \code{"date"}
+#' @param  val the name of the column with daily average PM2.5 values. Default
+#'   \code{"avg_24h"}.
+#' @param  by character vector of grouping variables in data, probably an id if 
+#'   using multiple sites. Even if not using multiple sites, you shoud specfify 
 #'   the id column so that it is retained in the output.
 #' @param  std the value of the PM2.5 standard (default 28).
-#' @param completeness Should the completeness criteria be calculated (default 
-#'   TRUE)
-#' @param  year_valid  The percentage of valid days required in a year (default 
-#'   75). Only required if calculating the completeness criteria.
-#' @param  q_valid  The percentage of valid days required in each quarter 
-#'   (default 60). Only required if calculating the completeness criteria.
+#' @param nr the column containing the number of readings per day (default
+#'   \code{"n_readings"}).
+#' @param  daily_valid  The minimum number of hourly readings in a day for the
+#'   daily average to be considered valid (default \code{18}).
 #' @param type type of 98th percentile calculation to use. Default "caaqs"
 #' @export
 #' @seealso \code{\link{pm_daily_avg}}, \code{\link{quantile2}}
