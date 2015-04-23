@@ -21,7 +21,7 @@
 #' @param  date the name of the "date" column (as a character string).
 #'   Default \code{"date"}
 #' @param  val the name of the column with daily average PM2.5 values.
-#'   Default \code{"avg_24hr"}.
+#'   Default \code{"avg_24h"}.
 #' @param  by character vector of grouping variables in data, probably an id if
 #'   using multiple sites. Even if not using multiple sites, you shoud specfify
 #'   the id column so that it is retained in the output.
@@ -37,7 +37,7 @@
 #' @seealso \code{\link{pm_daily_avg}}, \code{\link{quantile2}}
 #' @return  A data frame with 98th percentiles of daily averages, per year
 
-pm_98_percentile <- function(data, date = "date", val = "avg_24hr", nr = "n_readings", 
+pm_98_percentile <- function(data, date = "date", val = "avg_24h", nr = "n_readings", 
                              by = NULL, std = 28, daily_valid = 18, type = "caaqs") {
   data <- data[!is.na(data[[val]]) & data[[nr]] >= daily_valid, ]
   

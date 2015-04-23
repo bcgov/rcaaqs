@@ -1,4 +1,4 @@
-parameter <- c(rep("o3", 4), rep("pm2.5_annual", 4), rep("pm2.5_daily", 4))
+parameter <- c(rep("o3", 4), rep("pm2.5_annual", 4), rep("pm2.5_24h", 4))
 
 labels <- rep(c("Actions for Keeping Clean Areas Clean", 
                 "Actions for Preventing Air Quality Deterioration", 

@@ -34,7 +34,7 @@
 #'@return a data frame, with year, the value, and the number of years the value 
 #'  is based on
 
-pm_24hr_caaq <- function(data, year = "year", val = "ann_98_percentile", 
+pm_24h_caaq <- function(data, year = "year", val = "ann_98_percentile", 
                          by = NULL, cyear = "latest") {
   vars <- c(year, val, by)
   
@@ -71,7 +71,7 @@ pm_24hr_caaq <- function(data, year = "year", val = "ann_98_percentile",
                     min_year     = interp(~min(x), x = as.name(year)),
                     max_year     = interp(~max(x), x = as.name(year)),
                     n_years      = ~n(),
-                    pm_24hr_metric = caaq_formula)
+                    pm_24h_metric = caaq_formula)
   ret
   
 }

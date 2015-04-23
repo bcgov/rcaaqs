@@ -1,4 +1,4 @@
-parameter <- c(rep("o3", 2), rep("pm2.5_annual", 2), rep("pm2.5_daily", 2))
+parameter <- c(rep("o3", 2), rep("pm2.5_annual", 2), rep("pm2.5_24h", 2))
 
 labels <- rep(c("Achieved", 
                 "Not Achieved"), 3)

@@ -49,7 +49,7 @@ pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL) {
   res <- group_by_(data, .dots = by)
   res <- summarise_(res, 
                     n_readings = readings_formula,
-                    avg_24hr = avg_formula)
+                    avg_24h = avg_formula)
   res <- mutate_(res, year = year_formula)
   ret <- ungroup(res)
   names(ret)[names(ret) == dt] <- "date"
@@ -70,6 +70,6 @@ pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL) {
 #   
 #   res <- group_by_(data, group_formula)
 #     ret <- summarise_(res, n_readings = readings_formula,  
-#                avg_24hr = avg_formula)
+#                avg_24h = avg_formula)
 # }
 # PM_avg_daily(data, date, value)
