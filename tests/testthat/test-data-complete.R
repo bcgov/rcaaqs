@@ -110,8 +110,8 @@ test_that("is a data frame", {
 })
 
 test_that("Has correct column types and dimensions", {
-  expect_equal(dim(test_one), c(3, 9))
-  expect_equal(dim(test_mult), c(6, 10))
+  expect_equal(dim(test_one), c(3, 10))
+  expect_equal(dim(test_mult), c(6, 11))
 })
 
 test_that("Number of days is correct", {

@@ -63,7 +63,7 @@ test_that("passes correctly to quantile", {
 
 
 
-context("pm 98 percentile without completeness")
+context("pm 98 percentile")
 
 multi_id <- readRDS("daily_averages.rds")
 
@@ -77,16 +77,14 @@ one_id <- multi_id[multi_id$id == "a", ]
 #                          val = rnorm(length(dates) + length(dates2), 20, 5), 
 #                          stringsAsFactors = FALSE)
 
-test_one <- pm_98_percentile(one_id, date = "dates", val = "val", 
-                             completeness = FALSE)
-test_mult <- pm_98_percentile(multi_id, date = "dates", val = "val", by = "id", 
-                              completeness = FALSE)
+test_one <- pm_98_percentile(one_id, date = "dates", val = "val")
+test_mult <- pm_98_percentile(multi_id, date = "dates", val = "val", by = "id")
 
 test_that("Only accepts date-type objects with time interval of one day", {
   posix <- seq.POSIXt(as.POSIXct("2012-01-01"), as.POSIXct("2012-01-31"), by = "hour")
   test <- data.frame(posix, val = rnorm(length(posix), 20, 5))
   
-  expect_error(pm_98_percentile(test, "posix", "val", completeness = FALSE))
+  expect_error(pm_98_percentile(test, "posix", "val"))
 })
 
 test_that("Is a data frame", {
@@ -116,7 +114,7 @@ test_that("Exceed works", {
   set.seed(42)
   multi_id$val <- rnorm(nrow(multi_id), 35, 1)
   res <- pm_98_percentile(multi_id, date = "dates", val = "val", by = "id", 
-                          std = 28, completeness = FALSE)
+                          std = 28)
   expect_true(all(res$exceed))
 })
 
