@@ -12,10 +12,10 @@
 
 #'Bin a vector of air quaility readings into CAAQS management levels
 #'
-#'Can be used for Ozone, PM2.5 (daily or annual)
+#'Can be used for Ozone, PM2.5 (24h or annual)
 #'@param x vector of air quality readings (pollutant concentrations)
 #'@param  parameter What is the parameter? Must be one of: \code{"o3",
-#'  "pm2.5_annual", "pm2.5_daily"}
+#'  "pm2.5_annual", "pm2.5_24h"}
 #'@param  output should the function output labels (\code{"labels"}; default or
 #'  break values in unicode (\code{"breaks_u"}) or break values in html
 #'  (\code{"breaks_h"}), or colour values (\code{"colour"} or \code{"color"})?
@@ -25,16 +25,16 @@
 #'@return factor
 
 cut_management <- function(x, parameter, output = "labels", drop_na = FALSE) {
-  cut_caaq(type = "management", x=x, parameter = parameter, output = output, 
+  cut_caaq(type = "management", x = x, parameter = parameter, output = output, 
            drop_na = drop_na)
 }
 
 #'Bin a vector of air quaility readings into CAAQS achievement levels
 #'
-#'Can be used for Ozone, PM2.5 (daily or annual)
+#'Can be used for Ozone, PM2.5 (24h or annual)
 #'@param x vector of air quality readings (pollutant concentrations)
 #'@param  parameter What is the parameter? Must be one of: \code{"o3",
-#'  "pm2.5_annual", "pm2.5_daily"}
+#'  "pm2.5_annual", "pm2.5_24h"}
 #'@param  output should the function output labels (\code{"labels"}; default or
 #'  break values in unicode (\code{"breaks_u"}) or break values in html
 #'  (\code{"breaks_h"}), or colour values (\code{"colour"} or \code{"color"})?
@@ -72,7 +72,7 @@ cut_caaq <- function(type, x, parameter, output, drop_na) {
 #'management reporting
 #'
 #'@param type one of "achievement", "management"
-#'@param parameter one of "all" (default), "o3", "PM2.5_annual", "PM2.5_daily"
+#'@param parameter one of "all" (default), "o3", "PM2.5_annual", "PM2.5_24h"
 #'@export
 #'@return A data frame
 #' @examples \dontrun{

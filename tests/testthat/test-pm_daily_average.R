@@ -23,6 +23,6 @@ test_that("has correct classes", {
   expect_is(ret$id, "character")
   expect_is(ret$date, "Date")
   expect_is(ret$n_readings, "integer")
-  expect_is(ret$avg_24hr, "numeric")
+  expect_is(ret$avg_24h, "numeric")
   expect_is(ret$year, "integer")
 })

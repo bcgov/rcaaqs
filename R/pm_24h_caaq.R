@@ -20,9 +20,6 @@
 #'@param  year name of the column containing the year. Default \code{"year"}
 #'@param  val name of the column containing annual 98th percentile values.
 #'  Default \code{"ann_98_percentile"}
-#'@param flag name of the column containing a flag (\code{TRUE/FALSE}) if the 
-#'  value in the given year is based on incomplete data (but is still ok to
-#'  use). Default \code{"use_but_incomplete"}
 #'@param  by character vector of grouping variables in data, probably an id if
 #'  using multiple sites. Even if not using multiple sites, you shoud specfify
 #'  the id column so that it is retained in the output.
@@ -34,9 +31,9 @@
 #'@return a data frame, with year, the value, and the number of years the value 
 #'  is based on
 
-pm_24hr_caaq <- function(data, year = "year", val = "ann_98_percentile", 
-                         flag = "use_but_incomplete", by = NULL, cyear = "latest") {
-  vars <- c(year, val, flag, by)
+pm_24h_caaq <- function(data, year = "year", val = "ann_98_percentile", 
+                         by = NULL, cyear = "latest") {
+  vars <- c(year, val, by)
   
   for (var in vars) {
     if (!var %in% names(data)) stop(var, " is not a column in data")
@@ -51,7 +48,6 @@ pm_24hr_caaq <- function(data, year = "year", val = "ann_98_percentile",
   }
   
   if (!inherits(data[[val]], "numeric")) stop(val, "is not numeric")
-  if (!inherits(data[[flag]], "logical")) stop("flag must be logical")
   
   years <- seq(to = cyear, length.out = 3)
   
@@ -72,8 +68,7 @@ pm_24hr_caaq <- function(data, year = "year", val = "ann_98_percentile",
                     min_year     = interp(~min(x), x = as.name(year)),
                     max_year     = interp(~max(x), x = as.name(year)),
                     n_years      = ~n(),
-                    pm_24hr_metric = caaq_formula, 
-                    based_on_incomplete = interp(~any(x), x = as.name(flag)))
+                    pm_24h_metric = caaq_formula)
   ret
   
 }
