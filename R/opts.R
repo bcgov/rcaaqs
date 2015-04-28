@@ -3,7 +3,7 @@ opts_rcaaqs$tz <- Sys.timezone()
 
 #' Set options
 #' 
-#' @param ... options to set. In the form option_name = "option value". Valid
+#' @param ... options to set. In the form \code{option_name = "option value"}. Valid
 #'   option names are: \code{tz}.
 #' @details Note that this method of setting options does no checking for valid
 #'   option values. For setting the timezone (\code{tz}), it is better to use
@@ -24,12 +24,13 @@ set_opts <- function(...) {
 }
 
 #' Get Options
-#'
-#' @param name option name (currently only the timezone, \code{"tz"})
-#'
+#' 
+#' @param name option name (currently only the timezone, \code{"tz"}). If
+#'   \code{NULL} (the default), will return a list of all options.
+#'   
 #' @return a list of options specified (all if no arguments given)
 #' @export
-#'
+#' 
 #' @examples
 #' get_opts()
 #' get_opts("tz")

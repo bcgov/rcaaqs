@@ -7,7 +7,7 @@
 set_opts(...)
 }
 \arguments{
-\item{...}{options to set. In the form option_name = "option value". Valid
+\item{...}{options to set. In the form \code{option_name = "option value"}. Valid
 option names are: \code{tz}.}
 }
 \value{

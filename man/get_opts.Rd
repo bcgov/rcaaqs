@@ -7,7 +7,8 @@
 get_opts(name = NULL)
 }
 \arguments{
-\item{name}{option name (currently only the timezone, \code{"tz"})}
+\item{name}{option name (currently only the timezone, \code{"tz"}). If
+  \code{NULL} (the default), will return a list of all options.}
 }
 \value{
 a list of options specified (all if no arguments given)
