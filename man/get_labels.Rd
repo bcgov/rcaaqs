@@ -4,7 +4,7 @@
 \alias{get_labels}
 \title{Get labels}
 \usage{
-get_labels(x, output, sub_na)
+get_labels(x, output, drop_na)
 }
 \arguments{
 \item{x}{dataframe - a subset of achievement_levels or caaqs_levels}

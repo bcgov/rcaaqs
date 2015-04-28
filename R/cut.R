@@ -44,23 +44,23 @@ cut_management <- function(x, parameter, output = "labels", drop_na = FALSE) {
 #'@return factor
 
 cut_achievement <- function(x, parameter, output = "labels", drop_na = FALSE) {
-  cut_caaq(type = "achievement", x=x, parameter = parameter, output = output, 
+  cut_caaq(type = "achievement", x = x, parameter = parameter, output = output, 
            drop_na = drop_na)
 }
 
 #' @keywords internal
 cut_caaq <- function(type, x, parameter, output, drop_na) {
   levels <- get_levels(type, parameter)
-  
+
   breaks <- c(levels$lower_breaks, Inf)
   
   sub_na <- !drop_na && any(is.na(x))
   
-  labels <- get_labels(levels, output, sub_na)
+  labels <- get_labels(levels, output, drop_na)
   
-  if (sub_na) {
+  if (!drop_na) {
     x[is.na(x)] <- -Inf
-    x[x == 0] <- 0.0001
+    x[x == 0] <- 0.000001
     breaks <- c(-Inf, breaks)
   }
   
@@ -103,7 +103,7 @@ get_levels <- function(type, parameter = "all") {
 #' @param output one of: "labels", "breaks_h", "breaks_u", "colour", "color"
 #' @keywords internal
 #' @return character vector
-get_labels <- function(x, output, sub_na) {
+get_labels <- function(x, output, drop_na) {
   
   if (!output %in% c("labels", "breaks_h", "breaks_u", "colour", "color")) {
     stop(output, " is not a valid input for output. It must be either 'labels',", 
@@ -123,7 +123,7 @@ get_labels <- function(x, output, sub_na) {
   
   labels <- as.character(labels)
   
-  if (sub_na) {
+  if (!drop_na) {
     if (output %in% c("colour", "color")) {
       labels <- c("#CCCCCC", labels)
     } else {
