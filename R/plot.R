@@ -28,7 +28,7 @@ plot_ts <- function(daily_data, caaqs_data, parameter, rep_yr, plot_exceedances 
     } else if (parameter == "pm2.5_24h") {
       param_name <- "24h PM2.5"
       caaq_metric <- "pm_24h_metric"
-      caaq_status <- "caaqs_annual"
+      caaq_status <- "caaqs_24h"
     }
   } else if (parameter == "o3") {
     val <-  "max8hr"
@@ -66,18 +66,18 @@ plot_ts <- function(daily_data, caaqs_data, parameter, rep_yr, plot_exceedances 
     }
   }
   
-#   if (nrow(caaqs_data) > 0) {
-#     min_year <- caaqs_data[["min_year"]]
-#     max_year <- caaqs_data[["max_year"]]
-#     
-#     lineplot <- lineplot + 
-#       geom_segment(data = caaqs_data, 
-#                    mapping = aes_string(x = as.Date(paste0(min_year, "-01-01")), 
-#                                  xend = as.Date(paste0(max_year, "-12-31")), 
-#                                  y = caaq_metric, yend = caaq_metric, 
-#                                  colour = factor(caaq_status, 
-#                                                  levels = c("Achieved", "Not Achieved"))), 
-#                    size = 1.5) + 
+  if (nrow(caaqs_data) > 0) {
+    min_year <- caaqs_data[["min_year"]]
+    max_year <- caaqs_data[["max_year"]]
+    caaqs_data$b_date <- as.Date(paste0(caaqs_data$min_year, "-01-01"))
+    caaqs_data$e_date <- as.Date(paste0(caaqs_data$max_year, "-12-31"))
+    
+    lineplot <- lineplot + 
+      geom_segment(data = caaqs_data, 
+                   mapping = aes_string(x = "b_date", xend = "e_date", 
+                                 y = caaq_metric, yend = caaq_metric, 
+                                 colour = caaq_status),  
+                   size = 1.5) + 
 #       annotate("text", x = as.Date(paste0(min_year, "-01-30")), 
 #                y = 73, label = "2011-2013 Ozone Metric", size = 3.5, hjust = 0, 
 #                colour = "grey50") + 
@@ -85,9 +85,9 @@ plot_ts <- function(daily_data, caaqs_data, parameter, rep_yr, plot_exceedances 
 #                    aes_string(x = as.Date(paste0(min_year, "-09-15")), y = 69, 
 #                        xend = as.Date(paste0(min_year, "-11-01")), 
 #                        yend = caaq_metric + 1)) +
-#       scale_colour_manual(values = c("#377eb8", "#e41a1c"), labels = "2011-2013 Ozone Metric", 
-#                           name = element_blank(), guide = "none")
-#   }
+      scale_colour_manual(values = c("#377eb8", "#e41a1c"), labels = "2011-2013 Ozone Metric", 
+                          name = element_blank(), guide = "none")
+  }
   
   lineplot
 }
