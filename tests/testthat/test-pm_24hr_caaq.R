@@ -14,15 +14,16 @@ test_that("Is a data frame", {
 
 test_that("Has correct dimensions", {
   expect_equal(dim(pm_24h_caaq(annual_values_one_id, year = "year", 
-                               val = "ann_98_percentile")), c(1, 5))
+                               val = "ann_98_percentile")), c(1, 7))
   
   # For multiple sites:
   expect_equal(dim(pm_24h_caaq(annual_values, year = "year", 
-                               val = "ann_98_percentile", by = "id")), c(2, 6))
+                               val = "ann_98_percentile", by = "id")), c(2, 8))
 })
 
 test_that("Column classes are correct", {
-  classes <- c(rep("integer", 4), "numeric")
+  classes <- c(as.list(c(rep("integer", 4), "numeric")), 
+               list(c("ordered", "factor"), c("ordered", "factor")))
   
   ret_classes <- unname(sapply(pm_24h_caaq(annual_values_one_id, year = "year", 
                                             val = "ann_98_percentile"), class))
