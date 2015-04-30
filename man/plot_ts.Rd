@@ -4,17 +4,27 @@
 \alias{plot_ts}
 \title{Plot daily time series data with exceedances}
 \usage{
-plot_ts(daily_df, parameter, rep_yr, plot_exceedances = FALSE)
+plot_ts(daily_data, caaqs_data = NULL, annual_data = NULL, parameter,
+  rep_yr, plot_exceedances = FALSE, base_size = 10)
 }
 \arguments{
-\item{daily_df}{a dataframe of daily aggregated air quality readings with
+\item{daily_data}{a dataframe of daily aggregated air quality readings with
 columns: date, avg_24h (if pm25), max8hr (if o3)}
+
+\item{caaqs_data}{(optional) a one-row dataframe with columns "min_year",
+"max_year" and columns for caaqs achievement status and management status}
+
+\item{annual_data}{(optional) a dataframe of annual average pm2.5
+concentrations with columns "year" and "ann_avg". Used only when
+\code{parameter = "pm2.5_annual"}}
 
 \item{parameter}{air pollutant ("o3", "pm2.5_annual", "pm2.5_daily")}
 
+\item{rep_yr}{The reporting year}
+
 \item{plot_exceedances}{logical. Should exceedances be plotted?}
 
-\item{rep_year}{the reporting year}
+\item{base_size}{base font size for the plot}
 }
 \value{
 a ggplot2 object

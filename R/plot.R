@@ -1,33 +1,52 @@
 #' Plot daily time series data with exceedances
 #' 
-#' @import ggplot2 scales
-#'
-#' @param daily_data a dataframe of daily aggregated air quality readings with
+#' @import ggplot2
+#' @importFrom scales date_format
+#'   
+#' @param daily_data a dataframe of daily aggregated air quality readings with 
 #'   columns: date, avg_24h (if pm25), max8hr (if o3)
+#' @param caaqs_data (optional) a one-row dataframe with columns "min_year",
+#'   "max_year" and columns for caaqs achievement status and management status
+#' @param annual_data (optional) a dataframe of annual average pm2.5
+#'   concentrations with columns "year" and "ann_avg". Used only when
+#'   \code{parameter = "pm2.5_annual"}
 #' @param parameter air pollutant ("o3", "pm2.5_annual", "pm2.5_daily")
-#' @param caaqs_data (optional) a one-row dataframe
 #' @param rep_yr The reporting year
 #' @param plot_exceedances logical. Should exceedances be plotted?
-#'
+#' @param base_size base font size for the plot
+#'   
 #' @return a ggplot2 object
 #' @export
+plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter, 
+                    rep_yr, plot_exceedances = FALSE, base_size = 10) {
   
   if (!"date" %in% names(daily_data)) stop("There is no 'date' column in daily_data")
   if (!inherits(daily_data[["date"]], c("POSIXt", "Date"))) stop("'date' column is not a valid date type")
-
-  if (grepl("pm2.5", parameter)) {
-    val <- "avg24h"
+  
+  line_col <- "#9ecae1"
+  plot_std <- TRUE
+  annot_size <- 0.32 * base_size
+  
+  if (parameter == "pm2.5_annual") {
+    val <- "avg_24h"
     ylab <- "Daily Average PM2.5\n(micrograms per cubic meter)"
-    if (parameter == "pm2.5_annual") {
-      if (plot_exceedances) stop("Plotting daily exceedances not meaningful for this metric")
+    plot_std <- FALSE
+    if (plot_exceedances) stop("Plotting daily exceedances not meaningful for this metric")
+    if (!is.null(caaqs_data)) {
+      if (is.null(annual_data) || !inherits(annual_data, "data.frame"))
+        stop("annual_data is required for pm2.5_annual if caaqs_data is supplied")
       param_name <- "Annual PM2.5"
       caaq_metric <- "pm_annual_metric"
       caaq_status <- "caaqs_annual"
-    } else if (parameter == "pm2.5_24h") {
-      param_name <- "24h PM2.5"
-      caaq_metric <- "pm_24h_metric"
-      caaq_status <- "caaqs_24h"
+      line_col = "grey85"
+      plot_std <- TRUE
     }
+  } else if (parameter == "pm2.5_24h") {
+    val <- "avg_24h"
+    ylab <- "Daily Average PM2.5\n(micrograms per cubic meter)"
+    param_name <- "24h PM2.5"
+    caaq_metric <- "pm_24h_metric"
+    caaq_status <- "caaqs_24h"
   } else if (parameter == "o3") {
     val <-  "max8hr"
     param_name <- "Ozone"
@@ -49,27 +68,25 @@
   maxdate <- as.Date(paste0(rep_yr, "-12-31"))
   mindate <- as.Date(paste0(min_year, "-01-01"))
   
-  p <- ggplot(daily_data, size = 1) + 
-    scale_x_date(expand = c(0, 50), limits = c(mindate - 1, maxdate), 
-                 breaks = date_breaks(width = "1 year"), labels = date_format("%Y")) + 
-    geom_line(aes_string(x = "date", y = val), colour = "#9ecae1", size = 0.5) + 
-    geom_hline(aes_string(yintercept = std), linetype = 2, colour = "#e41a1c") + 
-    annotate("text", label = paste0(param_name, " Standard (", std, " ", par_units, ")  \n"), 
-             x = maxdate, y = std, vjust = 0.3, hjust = 1, 
-             size = 3.5, colour = "#e41a1c") + 
-    theme_minimal(base_size = 10) + 
-    theme(axis.line =  element_line(colour = "black"), axis.title.y = element_text(vjust = 1)) + 
-    labs(x = NULL, y = ylab)
+  p <- ggplot(daily_data, size = 1)
+  p <- p + scale_x_date(expand = c(0, 50), limits = c(mindate - 1, maxdate), 
+                 breaks = mid_breaks(), labels = scales::date_format("%Y"))
+  p <- p + geom_line(aes_string(x = "date", y = val), colour = line_col, size = 0.5)
+  p <- p + theme_minimal(base_size = base_size)
+  p <- p + theme(axis.line =  element_line(colour = "black"), 
+                 axis.title.y = element_text(vjust = 1), 
+                 axis.ticks.x = element_blank(), panel.grid.major.x = element_blank(), 
+                 panel.grid.minor.x = element_line(colour = "grey85"))
+  p <- p + labs(x = NULL, y = ylab)
   
   if (plot_exceedances) {
     exceedance_data <- daily_data[daily_data[[val]] > std, , drop = FALSE]
     
     if (nrow(exceedance_data) > 0) {
-      p <- p + 
-        geom_point(data = exceedance_data, aes_string(x = "date", y = val), 
-                   colour = "#e41a1c", size = 2) + 
-        annotate("text", x = exceedance_data[["date"]][1] + 20, y = exceedance_data[[val]][1], 
-                 label = "Exceedances", hjust = 0, vjust = 0, colour = "#e41a1c", size = 3)
+      p <- p + geom_point(data = exceedance_data, aes_string(x = "date", y = val), 
+                   colour = "#e41a1c", size = 2)
+      p <- p + annotate("text", x = exceedance_data[["date"]][1] + 20, y = exceedance_data[[val]][1], 
+                 label = "Exceedances", hjust = 0, vjust = 0, colour = "#e41a1c", size = annot_size)
     }
   }
   
@@ -85,21 +102,45 @@
     seg_x <- label_pos_x + 5
     seg_xend <- seg_x + 50
     
-    p <- p + 
-      geom_segment(data = caaqs_data, 
+    p <- p + geom_segment(data = caaqs_data, 
                    mapping = aes_string(x = "b_date", xend = "e_date", 
-                                 y = caaq_metric, yend = caaq_metric, 
-                                 colour = caaq_status),  
-                   size = 1.5) + 
-      annotate("text", x = label_pos_x, y = label_pos_y, 
+                                        y = caaq_metric, yend = caaq_metric, 
+                                        colour = caaq_status), size = 1.5)
+    p <- p + annotate("text", x = label_pos_x, y = label_pos_y, 
                label = paste(min_year, "-", max_year, param_name, "Metric"), 
-               size = 3.5, hjust = 1, colour = "grey50") + 
-      geom_segment(colour = "grey60", x = as.numeric(seg_x), y = label_pos_y, 
-               xend = as.numeric(seg_xend), yend = caaqs_data[[caaq_metric]]) +
-      scale_colour_manual(values = c("#377eb8", "#e41a1c"), 
+               size = annot_size, hjust = 1, colour = "grey50")
+    p <- p + geom_segment(colour = "grey60", x = as.numeric(seg_x), y = label_pos_y, 
+                   xend = as.numeric(seg_xend), yend = caaqs_data[[caaq_metric]])
+    p <- p + scale_colour_manual(values = c("#377eb8", "#e41a1c"), 
                           labels = paste(min_year, "-", max_year, param_name, "Metric"), 
                           name = element_blank(), guide = "none")
   }
   
+  if (!is.null(annual_data) && parameter == "pm2.5_annual") {
+    stopifnot(nrow(annual_data) == 3)
+    annual_data$date <- as.Date(paste0(annual_data$year, "-06-30"))
+    
+    p <- p + geom_point(data = annual_data, 
+                        aes_string(x = "date", y = "ann_avg"), size = 5)
+    
+  }
+  
+  if (plot_std) {
+    p <- p + geom_hline(aes_string(yintercept = std), linetype = 2, colour = "#e41a1c")
+    p <- p + annotate("text", label = paste0(param_name, " Standard (", std, " ", par_units, ")  \n"), 
+                      x = maxdate, y = std, vjust = 0.3, hjust = 1, 
+                      size = annot_size, colour = "#e41a1c")
+  }
+  
   p
+}
+
+
+#' Move annual breaks to the midpoint of the year
+#' 
+#' @importFrom scales fullseq
+#'
+#' @return a function
+mid_breaks <- function() {
+  function(x) scales::fullseq(x, "1 year") + 365 / 2
 }
