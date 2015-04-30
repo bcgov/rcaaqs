@@ -6,14 +6,14 @@
 #'   columns: date, avg_24h (if pm25), max8hr (if o3)
 #' @param parameter air pollutant ("o3", "pm2.5_annual", "pm2.5_daily")
 #' @param caaqs_data (optional) a one-row dataframe
-#' @param rep_yr The reporging year
+#' @param rep_yr The reporting year
 #' @param plot_exceedances logical. Should exceedances be plotted?
 #'
 #' @return a ggplot2 object
 #' @export
-plot_ts <- function(daily_data, caaqs_data = NULL, parameter, rep_yr, plot_exceedances = FALSE) {
   
-  stopifnot("date" %in% names(daily_data) && inherits(daily_data[["date"]], c("POSIXt", "Date")))
+  if (!"date" %in% names(daily_data)) stop("There is no 'date' column in daily_data")
+  if (!inherits(daily_data[["date"]], c("POSIXt", "Date"))) stop("'date' column is not a valid date type")
 
   if (grepl("pm2.5", parameter)) {
     val <- "avg24h"
@@ -36,7 +36,8 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter, rep_yr, plot_excee
     stop(parameter, " is not a valid parameter name")
   }
   
-  stopifnot(val %in% names(daily_data) && inherits(daily_data[[val]], "numeric"))
+  if (!val %in% names(daily_data)) stop(val, " column is not present in daily_data")
+  if (!inherits(daily_data[[val]], "numeric")) stop(val, " is not numeric")
   
   param_levels <- rcaaqs::get_levels("achievement", parameter)
   std <- param_levels$lower_breaks[param_levels$labels == "Not Achieved"]
@@ -48,7 +49,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter, rep_yr, plot_excee
   maxdate <- as.Date(paste0(rep_yr, "-12-31"))
   mindate <- as.Date(paste0(min_year, "-01-01"))
   
-  lineplot <- ggplot(daily_data, size = 1) + 
+  p <- ggplot(daily_data, size = 1) + 
     scale_x_date(expand = c(0, 50), limits = c(mindate - 1, maxdate), 
                  breaks = date_breaks(width = "1 year"), labels = date_format("%Y")) + 
     geom_line(aes_string(x = "date", y = val), colour = "#9ecae1", size = 0.5) + 
@@ -64,7 +65,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter, rep_yr, plot_excee
     exceedance_data <- daily_data[daily_data[[val]] > std, , drop = FALSE]
     
     if (nrow(exceedance_data) > 0) {
-      lineplot <- lineplot + 
+      p <- p + 
         geom_point(data = exceedance_data, aes_string(x = "date", y = val), 
                    colour = "#e41a1c", size = 2) + 
         annotate("text", x = exceedance_data[["date"]][1] + 20, y = exceedance_data[[val]][1], 
@@ -79,22 +80,26 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter, rep_yr, plot_excee
     caaqs_data$b_date <- as.Date(paste0(caaqs_data$min_year, "-01-01"))
     caaqs_data$e_date <- as.Date(paste0(caaqs_data$max_year, "-12-31"))
     
-    lineplot <- lineplot + 
+    label_pos_x <- as.Date(paste0(min_year, "-09-15"))
+    label_pos_y <- ggplot_build(p)$panel$ranges[[1]]$y.range[2]
+    seg_x <- label_pos_x + 5
+    seg_xend <- seg_x + 50
+    
+    p <- p + 
       geom_segment(data = caaqs_data, 
                    mapping = aes_string(x = "b_date", xend = "e_date", 
                                  y = caaq_metric, yend = caaq_metric, 
                                  colour = caaq_status),  
                    size = 1.5) + 
-#       annotate("text", x = as.Date(paste0(min_year, "-01-30")), 
-#                y = 73, label = "2011-2013 Ozone Metric", size = 3.5, hjust = 0, 
-#                colour = "grey50") + 
-#       geom_segment(data = caaqs_data, colour = "grey60",
-#                    aes_string(x = as.Date(paste0(min_year, "-09-15")), y = 69, 
-#                        xend = as.Date(paste0(min_year, "-11-01")), 
-#                        yend = caaq_metric + 1)) +
-      scale_colour_manual(values = c("#377eb8", "#e41a1c"), labels = "2011-2013 Ozone Metric", 
+      annotate("text", x = label_pos_x, y = label_pos_y, 
+               label = paste(min_year, "-", max_year, param_name, "Metric"), 
+               size = 3.5, hjust = 1, colour = "grey50") + 
+      geom_segment(colour = "grey60", x = as.numeric(seg_x), y = label_pos_y, 
+               xend = as.numeric(seg_xend), yend = caaqs_data[[caaq_metric]]) +
+      scale_colour_manual(values = c("#377eb8", "#e41a1c"), 
+                          labels = paste(min_year, "-", max_year, param_name, "Metric"), 
                           name = element_blank(), guide = "none")
   }
   
-  lineplot
+  p
 }
