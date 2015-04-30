@@ -5,18 +5,16 @@
 #' @param daily_data a dataframe of daily aggregated air quality readings with
 #'   columns: date, avg_24h (if pm25), max8hr (if o3)
 #' @param parameter air pollutant ("o3", "pm2.5_annual", "pm2.5_daily")
-#' @param caaqs_data a one-row dataframe
+#' @param caaqs_data (optional) a one-row dataframe
 #' @param rep_yr The reporging year
 #' @param plot_exceedances logical. Should exceedances be plotted?
 #'
 #' @return a ggplot2 object
 #' @export
-plot_ts <- function(daily_data, caaqs_data, parameter, rep_yr, plot_exceedances = FALSE) {
+plot_ts <- function(daily_data, caaqs_data = NULL, parameter, rep_yr, plot_exceedances = FALSE) {
   
-  param_levels <- rcaaqs::get_levels("achievement", parameter)
-  std <- param_levels$lower_breaks[param_levels$labels == "Not Achieved"]
-  par_units <- as.character(param_levels$units_unicode[1])
-  
+  stopifnot("date" %in% names(daily_data) && inherits(daily_data[["date"]], c("POSIXt", "Date")))
+
   if (grepl("pm2.5", parameter)) {
     val <- "avg24h"
     ylab <- "Daily Average PM2.5\n(micrograms per cubic meter)"
@@ -34,7 +32,15 @@ plot_ts <- function(daily_data, caaqs_data, parameter, rep_yr, plot_exceedances 
     val <-  "max8hr"
     param_name <- "Ozone"
     ylab <- "Daily Maximum Ozone\n(parts per billion)"
+  } else {
+    stop(parameter, " is not a valid parameter name")
   }
+  
+  stopifnot(val %in% names(daily_data) && inherits(daily_data[[val]], "numeric"))
+  
+  param_levels <- rcaaqs::get_levels("achievement", parameter)
+  std <- param_levels$lower_breaks[param_levels$labels == "Not Achieved"]
+  par_units <- as.character(param_levels$units_unicode[1])
   
   daily_data <- daily_data[!is.na(daily_data[[val]]), , drop = FALSE]
   
@@ -66,7 +72,8 @@ plot_ts <- function(daily_data, caaqs_data, parameter, rep_yr, plot_exceedances 
     }
   }
   
-  if (nrow(caaqs_data) > 0) {
+  if (!is.null(caaqs_data)) {
+    stopifnot(nrow(caaqs_data) == 1)
     min_year <- caaqs_data[["min_year"]]
     max_year <- caaqs_data[["max_year"]]
     caaqs_data$b_date <- as.Date(paste0(caaqs_data$min_year, "-01-01"))
