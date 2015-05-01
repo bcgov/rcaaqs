@@ -6,6 +6,9 @@
 \usage{
 mid_breaks(width = "1 year")
 }
+\arguments{
+\item{width}{The desired interval of the breaks}
+}
 \value{
 a function
 }

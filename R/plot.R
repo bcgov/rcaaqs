@@ -140,6 +140,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
 #' Move annual breaks to the midpoint of the year
 #' 
 #' @importFrom scales fullseq
+#' @param width The desired interval of the breaks
 #'
 #' @return a function
 mid_breaks <- function(width = "1 year") {
