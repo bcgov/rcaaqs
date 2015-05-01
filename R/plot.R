@@ -62,7 +62,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
   std <- param_levels$lower_breaks[param_levels$labels == "Not Achieved"]
   par_units <- as.character(param_levels$units_unicode[1])
   
-  daily_data <- daily_data[!is.na(daily_data[[val]]), , drop = FALSE]
+  # daily_data <- daily_data[!is.na(daily_data[[val]]), , drop = FALSE]
   
   min_year <- rep_yr - 2
   maxdate <- as.Date(paste0(rep_yr, "-12-31"))
@@ -80,7 +80,8 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
   p <- p + labs(x = NULL, y = ylab)
   
   if (plot_exceedances) {
-    exceedance_data <- daily_data[daily_data[[val]] > std, , drop = FALSE]
+    exceedance_data <- daily_data[!is.na(daily_data[[val]]), , drop = FALSE]
+    exceedance_data <- exceedance_data[exceedance_data[[val]] > std, , drop = FALSE]
     
     if (nrow(exceedance_data) > 0) {
       p <- p + geom_point(data = exceedance_data, aes_string(x = "date", y = val), 
@@ -111,7 +112,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
                size = annot_size, hjust = 1, colour = "grey50")
     p <- p + geom_segment(colour = "grey60", x = as.numeric(seg_x), y = label_pos_y, 
                    xend = as.numeric(seg_xend), yend = caaqs_data[[caaq_metric]])
-    p <- p + scale_colour_manual(values = c("#377eb8", "#e41a1c"), 
+    p <- p + scale_colour_manual(values = c("Achieved" = "#377eb8", "Not Achieved" = "#e41a1c"), 
                           labels = paste(min_year, "-", max_year, param_name, "Metric"), 
                           name = element_blank(), guide = "none")
   }
