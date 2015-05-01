@@ -91,7 +91,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
     }
   }
   
-  if (!is.null(caaqs_data)) {
+  if (!is.null(caaqs_data) && !nrow(caaqs_data) == 0) {
     stopifnot(nrow(caaqs_data) == 1)
     min_year <- caaqs_data[["min_year"]]
     max_year <- caaqs_data[["max_year"]]
@@ -118,7 +118,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
   }
   
   if (!is.null(annual_data) && parameter == "pm2.5_annual") {
-    stopifnot(nrow(annual_data) == 3)
+    if (nrow(annual_data) > 3) stop("annual data should only be for three years (or less)")
     annual_data$date <- as.Date(paste0(annual_data$year, "-06-30"))
     
     p <- p + geom_point(data = annual_data, 
