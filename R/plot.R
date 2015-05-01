@@ -142,6 +142,11 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
 #' @importFrom scales fullseq
 #'
 #' @return a function
-mid_breaks <- function() {
-  function(x) scales::fullseq(x, "1 year") + 365 / 2
+mid_breaks <- function(width = "1 year") {
+  function(x) {
+    if (length(x) > 2) stop("x should be a range of length 2")
+    sq <- scales::fullseq(x, width)
+    diff <- diff(sq)
+    sq[-length(sq)] + diff / 2
+  }
 }

@@ -4,7 +4,7 @@
 \alias{mid_breaks}
 \title{Move annual breaks to the midpoint of the year}
 \usage{
-mid_breaks()
+mid_breaks(width = "1 year")
 }
 \value{
 a function
