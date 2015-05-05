@@ -93,28 +93,33 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
   
   if (!is.null(caaqs_data) && !nrow(caaqs_data) == 0) {
     stopifnot(nrow(caaqs_data) == 1)
-    min_year <- caaqs_data[["min_year"]]
-    max_year <- caaqs_data[["max_year"]]
-    caaqs_data$b_date <- as.Date(paste0(caaqs_data$min_year, "-01-01"))
-    caaqs_data$e_date <- as.Date(paste0(caaqs_data$max_year, "-12-31"))
-    
-    label_pos_x <- as.Date(paste0(min_year, "-09-15"))
-    label_pos_y <- ggplot_build(p)$panel$ranges[[1]]$y.range[2]
-    seg_x <- label_pos_x + 5
-    seg_xend <- seg_x + 50
-    
-    p <- p + geom_segment(data = caaqs_data, 
-                   mapping = aes_string(x = "b_date", xend = "e_date", 
-                                        y = caaq_metric, yend = caaq_metric, 
-                                        colour = caaq_status), size = 1.5)
-    p <- p + annotate("text", x = label_pos_x, y = label_pos_y, 
-               label = paste(min_year, "-", max_year, param_name, "Metric"), 
-               size = annot_size, hjust = 1, colour = "grey50")
-    p <- p + geom_segment(colour = "grey60", x = as.numeric(seg_x), y = label_pos_y, 
-                   xend = as.numeric(seg_xend), yend = caaqs_data[[caaq_metric]])
-    p <- p + scale_colour_manual(values = c("Achieved" = "#377eb8", "Not Achieved" = "#e41a1c"), 
-                          labels = paste(min_year, "-", max_year, param_name, "Metric"), 
-                          name = element_blank(), guide = "none")
+    if (is.na(caaqs_data[[caaq_metric]])) {
+      warning("caaqs not added to plot: Insufficient Data")
+    } else {
+      min_year <- caaqs_data[["min_year"]]
+      max_year <- caaqs_data[["max_year"]]
+      caaqs_data$b_date <- as.Date(paste0(caaqs_data$min_year, "-01-01"))
+      caaqs_data$e_date <- as.Date(paste0(caaqs_data$max_year, "-12-31"))
+      
+      label_pos_x <- as.Date(paste0(min_year, "-09-15"))
+      max_val_in_min_year <- max(daily_data[[val]][daily_data$date < label_pos_x], na.rm = TRUE)
+      label_pos_y <- max(max_val_in_min_year + 2, caaqs_data[[caaq_metric]] + 5)
+      seg_x <- label_pos_x + 5
+      seg_xend <- seg_x + 50
+      
+      p <- p + geom_segment(data = caaqs_data, 
+                            mapping = aes_string(x = "b_date", xend = "e_date", 
+                                                 y = caaq_metric, yend = caaq_metric, 
+                                                 colour = caaq_status), size = 1.5)
+      p <- p + annotate("text", x = label_pos_x, y = label_pos_y, 
+                        label = paste(min_year, "-", max_year, param_name, "Metric"), 
+                        size = annot_size, hjust = 1, colour = "grey50")
+      p <- p + geom_segment(colour = "grey60", x = as.numeric(seg_x), y = label_pos_y, 
+                            xend = as.numeric(seg_xend), yend = caaqs_data[[caaq_metric]])
+      p <- p + scale_colour_manual(values = c("Achieved" = "#377eb8", "Not Achieved" = "#e41a1c"), 
+                                   labels = paste(min_year, "-", max_year, param_name, "Metric"), 
+                                   name = element_blank(), guide = "none")
+    }
   }
   
   if (!is.null(annual_data) && parameter == "pm2.5_annual") {
@@ -129,7 +134,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
   if (plot_std) {
     p <- p + geom_hline(aes_string(yintercept = std), linetype = 2, colour = "#e41a1c")
     p <- p + annotate("text", label = paste0(param_name, " Standard (", std, " ", par_units, ")  \n"), 
-                      x = maxdate, y = std, vjust = 0.3, hjust = 1, 
+                      x = maxdate, y = std - 0.5, vjust = 1, hjust = 1, 
                       size = annot_size, colour = "#e41a1c")
   }
   
