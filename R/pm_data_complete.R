@@ -66,7 +66,7 @@ pm_data_complete <- function(data, dt = "date_time", val = "value", by = NULL,
                  annual_valid = ~percent_valid_annual >= year_valid,
                  quarters_valid = ~all(c(percent_valid_q1, percent_valid_q2, 
                                          percent_valid_q3, percent_valid_q4) >= q_valid), 
-                 use = ~quarters_valid & annual_valid)
+                 use_annual = ~quarters_valid & annual_valid)
   ret <- ungroup(res)
   ret
 }
