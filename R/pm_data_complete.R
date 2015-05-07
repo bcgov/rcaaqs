@@ -90,19 +90,13 @@ percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"),
   q = match.arg(q)
   
   dates <- dates[!is.na(dates)]
-
-  year <- get_year_from_date(dates[1])
   
-  q_lengths <- c(year = -difftime(paste0(year, "-01-01"), paste0(year, "-12-31"), 
-                                  tz = tz, units = "days"),
-                 Q1   = -difftime(paste0(year, "-01-01"), paste0(year, "-03-31"), 
-                                  tz = tz, units = "days"), 
-                 Q2   = -difftime(paste0(year, "-04-01"), paste0(year, "-06-30"), 
-                                  tz = tz, units = "days"), 
-                 Q3   = -difftime(paste0(year, "-07-01"), paste0(year, "-09-30"), 
-                                  tz = tz, units = "days"), 
-                 Q4   = -difftime(paste0(year, "-10-01"), paste0(year, "-12-31"), 
-                                  tz = tz, units = "days")) + 1
+  year <- get_year_from_date(dates[1])
+  is_leap_year <- lubridate::leap_year(year)
+  
+  if (is_leap_year) Q1 <- 91 else Q1 <- 90
+  q_lengths <- c(Q1 = Q1, Q2 = 91, Q3 = 92, Q4 = 92)
+  q_lengths <- c(year = sum(q_lengths), q_lengths)
   
   q_length = q_lengths[q]
   
