@@ -68,7 +68,7 @@ date_fill <- function(df, date_col, interval = NULL, fill_cols = NULL, add_ymd =
     edate <- max(dates, na.rm = TRUE)
     
     if (is.null(interval)) {
-      interval <- openair:::find.time.interval(dates)
+      interval <- test_time_interval(dates)
     }
     
     full_dates <- data.frame(date = seq(sdate, edate, by = interval))

@@ -40,8 +40,7 @@ pm_98_percentile <- function(data, date = "date", val = "avg_24h", nr = "n_readi
   data <- data[!is.na(data[[val]]) & data[[nr]] >= daily_valid, ]
   
   if (!inherits(data[[date]], "Date")) {
-    time_interval <- openair:::find.time.interval(data[[date]])
-    if (!grepl("86400", time_interval)) stop("Time interval of date column can't be less than one day")
+    if (test_time_interval(dates) != 86400) stop("Time interval of date column must be one day")
   }
       
   data$year <- get_year_from_date(data[[date]])
