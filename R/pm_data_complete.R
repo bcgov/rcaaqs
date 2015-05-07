@@ -116,19 +116,6 @@ percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"),
   ret
 }
 
-test_time_interval <- function(x) {
-  len <- min(100, length(x))
-  test_x <- sort(x[1:len])
-  m_diff <- Mode(diff(as.numeric(test_x)))
-  if (inherits(x, "Date")) m_diff <- m_diff * 3600 * 24
-  m_diff
-}
-
-Mode <- function(x) {
-  ux <- unique(x)
-  ux[which.max(tabulate(match(x, ux)))]
-}
-
 # get_valid_days <- function(, daily_valid = 18, tz = "Etc/GMT-8") {
 #   if (!inherits(dt, "POSIXt")) stop("dt is not a valid date-time class (POSIXct or POSIXlt)")
 #   if (!tz %in% OlsonNames()) stop(tz, " is not a valid timezone.")
