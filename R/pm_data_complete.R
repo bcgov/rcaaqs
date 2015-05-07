@@ -40,8 +40,14 @@
 
 pm_data_complete <- function(data, dt = "date_time", val = "value", by = NULL, 
                              daily_valid = 18, year_valid = 75, q_valid = 60) {
-  time_interval <- openair:::find.time.interval(data[[dt]])
-  if (!grepl("3600", time_interval)) stop("Time interval of date column must be one hour")
+  if (!inherits(data[[dt]], "POSIXct")) {
+    stop("dt must be POSIXct with time intervals of one hour")
+  }
+  
+  if (test_time_interval(data[[dt]]) != 3600) {
+    stop("dt must have a time intervals of one hour")
+  }
+  
   data <- data[!is.na(data[[val]]), ]
   
   ## Summarise by date
@@ -49,10 +55,10 @@ pm_data_complete <- function(data, dt = "date_time", val = "value", by = NULL,
   data <- group_by_(data, .dots = c(by, "date"))
   data <- summarise_(data, n_hrs = ~n())
   data <- filter_(data, ~n_hrs >= daily_valid)
-
+  
   ## Add year column
   data$year <- get_year_from_date(data[["date"]])
-
+  
   res <- group_by_(data, .dots = c(by, "year"))
   res <- summarise_(res, 
                     n_days = ~n(),
@@ -83,8 +89,7 @@ percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"),
                                tz = "Etc/GMT-8") {
   if (!tz %in% OlsonNames()) stop(tz, " is not a valid timezone.")
   if (!inherits(dates, "Date")) {
-    time_interval <- openair:::find.time.interval(dates)
-    if (!grepl("86400", time_interval)) stop("Time interval of date column must be one day")
+    if (test_time_interval(dates) != 86400) stop("Time interval of date column must be one day")
   }
   
   q = match.arg(q)
@@ -109,6 +114,19 @@ percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"),
   ret <- (length(q_dates) / q_length) * 100
   
   ret
+}
+
+test_time_interval <- function(x) {
+  len <- min(100, length(x))
+  test_x <- sort(x[1:len])
+  m_diff <- Mode(diff(as.numeric(test_x)))
+  if (inherits(x, "Date")) m_diff <- m_diff * 3600 * 24
+  m_diff
+}
+
+Mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
 }
 
 # get_valid_days <- function(, daily_valid = 18, tz = "Etc/GMT-8") {
