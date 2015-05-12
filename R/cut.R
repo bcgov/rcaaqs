@@ -90,11 +90,12 @@ get_levels <- function(type, parameter = "all") {
   
   parameter <- tolower(parameter)
   
-  match.arg(parameter, c(levels(levels$parameter), "all"))
+  if (!all(parameter %in% c(levels(levels$parameter), "all"))) 
+    stop("Unrecognized parameter(s)")
   
-  if (parameter == "all") return(levels)
+  if ("all" %in% parameter) return(levels)
   
-  levels[levels$parameter == parameter, ]
+  levels[levels$parameter %in% parameter, ]
 }
 
 #' Get labels
@@ -132,4 +133,33 @@ get_labels <- function(x, output, drop_na) {
   }
   
   labels
+}
+
+#' get the CAAQS value for a given parameter
+#'
+#' @param parameter parameter of interest. One or more of 
+#'
+#' @return a named vector of standards
+#' @keywords internal
+#'
+get_std <- function(parameter = "all") {
+  levels <- get_levels("achievement", parameter = parameter)
+  stds <- levels[levels$labels == "Not Achieved", "lower_breaks", drop = TRUE]
+  names(stds) <- levels[levels$labels == "Not Achieved", "parameter", drop = TRUE]
+  stds
+}
+
+#' get the CAAQS value for a given parameter
+#'
+#' @param parameter parameter of interest. One or more of 
+#'
+#' @return a named vector of units
+#' @keywords internal
+#'
+get_units <- function(parameter = "all") {
+  levels <- get_levels("achievement", parameter = parameter)
+  units_df <- unique(levels[c("parameter", "units_unicode")])
+  units <- as.character(units_df[["units_unicode"]])
+  names(units) <- units_df[["parameter"]]
+  units
 }
