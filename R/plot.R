@@ -6,18 +6,15 @@
 #' @param daily_data a dataframe of daily aggregated air quality readings with 
 #'   columns: date, avg_24h (if pm25), max8hr (if o3)
 #' @param caaqs_data (optional) a one-row dataframe with columns "min_year",
-#'   "max_year" and columns for caaqs achievement status and management status
-#' @param annual_data (optional) a dataframe of annual average pm2.5
-#'   concentrations with columns "year" and "ann_avg". Used only when
-#'   \code{parameter = "pm2.5_annual"}
-#' @param parameter air pollutant ("o3", "pm2.5_annual", "pm2.5_daily")
+#'   "max_year" and columns for caaqs achievement status and mangaement status
+#' @param parameter air pollutant ("o3", "pm2.5_annual", "pm2.5_24h")
 #' @param rep_yr The reporting year
 #' @param plot_exceedances logical. Should exceedances be plotted?
 #' @param base_size base font size for the plot
 #'   
 #' @return a ggplot2 object
 #' @export
-plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter, 
+plot_ts <- function(daily_data, caaqs_data = NULL, parameter, 
                     rep_yr, plot_exceedances = FALSE, base_size = 10) {
   
   if (!"date" %in% names(daily_data)) stop("There is no 'date' column in daily_data")
@@ -25,27 +22,24 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
   
   line_col <- "#9ecae1"
   plot_std <- TRUE
+  draw_caaqs <- FALSE
   annot_size <- 0.32 * base_size
   
   if (parameter == "pm2.5_annual") {
     val <- "avg_24h"
     ylab <- "Daily Average PM2.5\n(micrograms per cubic meter)"
-    plot_std <- FALSE
-    if (plot_exceedances) stop("Plotting daily exceedances not meaningful for this metric")
-    if (!is.null(caaqs_data)) {
-      if (is.null(annual_data) || !inherits(annual_data, "data.frame"))
-        stop("annual_data is required for pm2.5_annual if caaqs_data is supplied")
-      param_name <- "Annual PM2.5"
-      caaq_metric <- "pm_annual_metric"
-      caaq_status <- "caaqs_annual"
-      line_col = "grey85"
-      plot_std <- TRUE
+    param_name <- "Annual PM2.5"
+    caaq_metric <- "pm2.5_annual_metric"
+    caaq_status <- "caaqs_annual"
+    if (is.null(caaqs_data)) {
+      plot_std <- FALSE
     }
+    if (plot_exceedances) stop("Plotting daily exceedances not meaningful for this metric")
   } else if (parameter == "pm2.5_24h") {
     val <- "avg_24h"
     ylab <- "Daily Average PM2.5\n(micrograms per cubic meter)"
     param_name <- "24h PM2.5"
-    caaq_metric <- "pm_24h_metric"
+    caaq_metric <- "pm2.5_24h_metric"
     caaq_status <- "caaqs_24h"
   } else if (parameter == "o3") {
     val <-  "max8hr"
@@ -58,9 +52,8 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
   if (!val %in% names(daily_data)) stop(val, " column is not present in daily_data")
   if (!inherits(daily_data[[val]], "numeric")) stop(val, " is not numeric")
   
-  param_levels <- rcaaqs::get_levels("achievement", parameter)
-  std <- param_levels$lower_breaks[param_levels$labels == "Not Achieved"]
-  par_units <- as.character(param_levels$units_unicode[1])
+  std <- get_std(parameter)
+  par_units <- get_units(parameter)
   
   # daily_data <- daily_data[!is.na(daily_data[[val]]), , drop = FALSE]
   
@@ -96,14 +89,16 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
     if (is.na(caaqs_data[[caaq_metric]])) {
       warning("caaqs not added to plot: Insufficient Data")
     } else {
+      draw_caaqs <- TRUE
       min_year <- caaqs_data[["min_year"]]
       max_year <- caaqs_data[["max_year"]]
       caaqs_data$b_date <- as.Date(paste0(caaqs_data$min_year, "-01-01"))
       caaqs_data$e_date <- as.Date(paste0(caaqs_data$max_year, "-12-31"))
       
       label_pos_x <- as.Date(paste0(min_year, "-09-15"))
-      max_val_in_min_year <- max(daily_data[[val]][daily_data$date < label_pos_x], na.rm = TRUE)
-      label_pos_y <- max(max_val_in_min_year + 2, caaqs_data[[caaq_metric]] + 5)
+      # Put y label at higher of 98th percentile of data, or caaqs_data + 5
+      high_val_in_min_year <- quantile(daily_data[[val]][daily_data$date < label_pos_x], 0.98, na.rm = TRUE)
+      label_pos_y <- max(high_val_in_min_year + 2, caaqs_data[[caaq_metric]] + 5)
       seg_x <- label_pos_x + 5
       seg_xend <- seg_x + 50
       
@@ -113,8 +108,8 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
                                                  colour = caaq_status), size = 1.5)
       p <- p + annotate("text", x = label_pos_x, y = label_pos_y, 
                         label = paste(min_year, "-", max_year, param_name, "Metric"), 
-                        size = annot_size, hjust = 1, colour = "grey50")
-      p <- p + geom_segment(colour = "grey60", x = as.numeric(seg_x), y = label_pos_y, 
+                        size = annot_size, hjust = 1, colour = "grey45")
+      p <- p + geom_segment(colour = "grey45", x = as.numeric(seg_x), y = label_pos_y, 
                             xend = as.numeric(seg_xend), yend = caaqs_data[[caaq_metric]])
       p <- p + scale_colour_manual(values = c("Achieved" = "#377eb8", "Not Achieved" = "#e41a1c"), 
                                    labels = paste(min_year, "-", max_year, param_name, "Metric"), 
@@ -122,19 +117,20 @@ plot_ts <- function(daily_data, caaqs_data = NULL, annual_data = NULL, parameter
     }
   }
   
-  if (!is.null(annual_data) && parameter == "pm2.5_annual") {
-    if (nrow(annual_data) > 3) stop("annual data should only be for three years (or less)")
-    annual_data$date <- as.Date(paste0(annual_data$year, "-06-30"))
-    
-    p <- p + geom_point(data = annual_data, 
-                        aes_string(x = "date", y = "ann_avg"), size = 5)
-    
-  }
-  
   if (plot_std) {
     p <- p + geom_hline(aes_string(yintercept = std), linetype = 2, colour = "#e41a1c")
+    # Set y label position dependent on if and where caaqs line is drawn
+    if (draw_caaqs) {
+      if (caaqs_data[[caaq_metric]][1] < std || caaqs_data[[caaq_metric]][1] - std > 5) {
+        label_pos_y <- std + 3.5
+      } else {
+        label_pos_y <- std - 1
+      }
+    } else {
+      label_pos_y <- std + 3.5
+    }
     p <- p + annotate("text", label = paste0(param_name, " Standard (", std, " ", par_units, ")  \n"), 
-                      x = maxdate, y = std - 0.5, vjust = 1, hjust = 1, 
+                      x = maxdate, y = label_pos_y, vjust = 1, hjust = 1, 
                       size = annot_size, colour = "#e41a1c")
   }
   
