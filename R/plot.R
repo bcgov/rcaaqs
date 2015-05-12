@@ -24,13 +24,13 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
   plot_std <- TRUE
   draw_caaqs <- FALSE
   annot_size <- 0.32 * base_size
+  caaq_metric <- "metric_value"
+  caaq_status <- "caaqs"
   
   if (parameter == "pm2.5_annual") {
     val <- "avg_24h"
     ylab <- "Daily Average PM2.5\n(micrograms per cubic meter)"
     param_name <- "Annual PM2.5"
-    caaq_metric <- "pm2.5_annual_metric"
-    caaq_status <- "caaqs_annual"
     if (is.null(caaqs_data)) {
       plot_std <- FALSE
     }
@@ -39,8 +39,6 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
     val <- "avg_24h"
     ylab <- "Daily Average PM2.5\n(micrograms per cubic meter)"
     param_name <- "24h PM2.5"
-    caaq_metric <- "pm2.5_24h_metric"
-    caaq_status <- "caaqs_24h"
   } else if (parameter == "o3") {
     val <-  "max8hr"
     param_name <- "Ozone"
