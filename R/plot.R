@@ -152,3 +152,41 @@ mid_breaks <- function(width = "1 year") {
     sq[-length(sq)] + diff / 2
   }
 }
+
+#' Gnerate a summary plot of individual station CAAQS values, grouped by Airzone
+#'
+#' @param data a data frame with columns for the metric value, the station name, and the air zone
+#' @param metric name of column in data containing the CAAQS metric value for each station
+#' @param station name of column in data containing monitoring station names
+#' @param airzone name of column in data containing arizones
+#' @param parameter the parameter of interest ("o3", "pm2.5_annual", "pm2.5_24h")
+#' @param base_size base font size (default 12)
+#' @param pt_size size of points (default 4)
+#'
+#' @import ggplot2
+#'
+#' @return ggplot2 object
+#' @export
+#'
+summary_plot <- function(data, metric, station, airzone, parameter, base_size = 12, pt_size = 4) {
+  if (!inherits(data, "data.frame")) stop("data should be a data frame")
+  if (!all(c(metric, station, airzone) %in% names(data))) stop("not all of specified columns are in data")
+  if (!is.numeric(data[[metric]])) stop("specified metric column is not numeric")
+  
+  std <- unname(get_std(parameter))
+  units <- unname(get_units(parameter))
+  facet_string <- paste0(airzone, " ~ .")
+  
+  data[[airzone]] <- reorder(data[[airzone]], data[[metric]], max, order = TRUE)
+  data[[airzone]] <- factor(data[[airzone]], levels = rev(levels(data[[airzone]])))
+  data[[station]] <- factor(data[[station]], levels = data[[station]][order(data[[metric]])])
+  
+  p <- ggplot(data, aes_string(x = metric, y = station))
+  p <- p + facet_grid(facet_string, scales = "free_y", space = "free_y", drop = TRUE, 
+                      labeller = label_wrap_gen(15))
+  p <- p + geom_point(size = base_size / 3, colour = "#377eb8")
+  p <- p + geom_vline(xintercept = std, linetype = 2, colour = "#e41a1c")
+  p <- p + labs(x = "CAAQS Metric", y = "Monitoring Station")
+  p <- p + theme_bw(base_size = base_size)
+  p
+}
