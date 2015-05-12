@@ -63,8 +63,8 @@ pm_annual_caaq <- function(data, year = "year", val = "ann_avg", by = NULL, cyea
                     min_year     = interp(~min(x), x = as.name(year)),
                     max_year     = interp(~max(x), x = as.name(year)),
                     n_years      = ~n(),
-                    pm_annual_metric = caaq_formula, 
-                    caaqs_annual = ~cut_achievement(pm_annual_metric, "pm2.5_annual"), 
-                    mgmt_annual = ~cut_management(pm_annual_metric, "pm2.5_annual"))
+                    pm2.5_annual_metric = caaq_formula, 
+                    caaqs_annual = ~cut_achievement(pm2.5_annual_metric, "pm2.5_annual"), 
+                    mgmt_annual = ~cut_management(pm2.5_annual_metric, "pm2.5_annual"))
   ret
 }

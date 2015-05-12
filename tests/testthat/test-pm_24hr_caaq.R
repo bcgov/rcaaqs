@@ -39,7 +39,7 @@ test_that("Column classes are correct", {
 test_that("average is correct", {
   ret <- pm_24h_caaq(annual_values, year = "year", val = "ann_98_percentile", 
                      by = "id")
-  expect_equal(ret$pm_24h_metric, 
+  expect_equal(ret$pm2.5_24h_metric, 
                c(round(mean(annual_values$ann_98_percentile[annual_values$id == "a"]), 0), 
                  NA))
 })

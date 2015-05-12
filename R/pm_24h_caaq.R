@@ -68,9 +68,9 @@ pm_24h_caaq <- function(data, year = "year", val = "ann_98_percentile",
                     min_year     = interp(~min(x), x = as.name(year)),
                     max_year     = interp(~max(x), x = as.name(year)),
                     n_years      = ~n(),
-                    pm_24h_metric = caaq_formula, 
-                    caaqs_24h = ~cut_achievement(pm_24h_metric, "pm2.5_24h"), 
-                    mgmt_24h = ~cut_management(pm_24h_metric, "pm2.5_24h"))
+                    pm2.5_24h_metric = caaq_formula, 
+                    caaqs_24h = ~cut_achievement(pm2.5_24h_metric, "pm2.5_24h"), 
+                    mgmt_24h = ~cut_management(pm2.5_24h_metric, "pm2.5_24h"))
   ret
   
 }
