@@ -86,7 +86,7 @@ test_that("works with caaqs_data (pm_annual)", {
   names(daily_data) <- c("id", "date", "avg_24h", "n_readings")
   names(annual_data)[5] <- "ann_avg"
   caaqs_data <- pm_annual_caaq(annual_data)
-  p <- plot_ts(daily_data, caaqs_data = caaqs_data, annual_data = annual_data, 
+  p <- plot_ts(daily_data, caaqs_data = caaqs_data, 
                parameter = "pm2.5_annual", rep_yr = 2013, plot_exceedances = FALSE)
   expect_is(p, "ggplot")
   expect_is(ggplot2::ggplot_build(p), "list")
