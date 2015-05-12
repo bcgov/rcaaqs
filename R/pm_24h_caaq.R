@@ -60,7 +60,7 @@ pm_24h_caaq <- function(data, year = "year", val = "ann_98_percentile",
     rows <- group_by_(rows, .dots = by)
   }
   
-  caaq_formula <- interp(~ifelse(n_years >=2, round(mean(x), 0), NA_real_), 
+  caaq_formula <- interp(~ifelse(n_years >= 2, round(mean(x), 0), NA_real_), 
                          x = as.name(val))
   
   ret <- summarise_(rows, 
@@ -68,9 +68,10 @@ pm_24h_caaq <- function(data, year = "year", val = "ann_98_percentile",
                     min_year     = interp(~min(x), x = as.name(year)),
                     max_year     = interp(~max(x), x = as.name(year)),
                     n_years      = ~n(),
-                    pm2.5_24h_metric = caaq_formula, 
-                    caaqs_24h = ~cut_achievement(pm2.5_24h_metric, "pm2.5_24h"), 
-                    mgmt_24h = ~cut_management(pm2.5_24h_metric, "pm2.5_24h"))
+                    metric = ~"pm2.5_24h", 
+                    metric_value = caaq_formula, 
+                    caaqs = ~cut_achievement(metric_value, "pm2.5_24h"), 
+                    mgmt = ~cut_management(metric_value, "pm2.5_24h"))
   ret
   
 }

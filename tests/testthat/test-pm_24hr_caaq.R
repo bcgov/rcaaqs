@@ -14,15 +14,15 @@ test_that("Is a data frame", {
 
 test_that("Has correct dimensions", {
   expect_equal(dim(pm_24h_caaq(annual_values_one_id, year = "year", 
-                               val = "ann_98_percentile")), c(1, 7))
+                               val = "ann_98_percentile")), c(1, 8))
   
   # For multiple sites:
   expect_equal(dim(pm_24h_caaq(annual_values, year = "year", 
-                               val = "ann_98_percentile", by = "id")), c(2, 8))
+                               val = "ann_98_percentile", by = "id")), c(2, 9))
 })
 
 test_that("Column classes are correct", {
-  classes <- c(as.list(c(rep("integer", 4), "numeric")), 
+  classes <- c(as.list(c(rep("integer", 4), "character", "numeric")), 
                list(c("ordered", "factor"), c("ordered", "factor")))
   
   ret_classes <- unname(sapply(pm_24h_caaq(annual_values_one_id, year = "year", 
@@ -39,7 +39,7 @@ test_that("Column classes are correct", {
 test_that("average is correct", {
   ret <- pm_24h_caaq(annual_values, year = "year", val = "ann_98_percentile", 
                      by = "id")
-  expect_equal(ret$pm2.5_24h_metric, 
+  expect_equal(ret$metric_value, 
                c(round(mean(annual_values$ann_98_percentile[annual_values$id == "a"]), 0), 
                  NA))
 })
