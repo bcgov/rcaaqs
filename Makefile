@@ -5,7 +5,7 @@ PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 all: docs check build
 
 docs:
-	rm NAMESPACE
+	-rm NAMESPACE
 	Rscript -e "library('devtools'); library('methods'); document('.'); check_doc('.')"
 
 check:
