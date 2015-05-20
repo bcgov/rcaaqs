@@ -163,3 +163,20 @@ get_units <- function(parameter = "all") {
   names(units) <- units_df[["parameter"]]
   units
 }
+
+#' Get a vector of colours for management levels or achievement levels
+#' 
+#' @param type "achievement" or "management"
+#' @param drop_na Should NA (i.e., Insufficient Data) be excluded (\code{TRUE})
+#'   or includeded \code{FALSE} (the default)?
+#'   
+#' @return named vector of colours (hex)
+#' @export
+get_colours <- function(type = "management", drop_na = FALSE) {
+  if (!type %in% c("management", "achievement")) 
+    stop("type must be 'achievement' or 'management'")
+  levels <- get_levels(type = type, parameter = "pm2.5_24h")
+  colours <- get_labels(levels, "colour", drop_na = drop_na)
+  names(colours) <- get_labels(levels, "labels", drop_na = drop_na)
+  colours
+}
