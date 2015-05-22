@@ -40,7 +40,7 @@ pm_98_percentile <- function(data, date = "date", val = "avg_24h", nr = "n_readi
   data <- data[!is.na(data[[val]]) & data[[nr]] >= daily_valid, ]
   
   if (!inherits(data[[date]], "Date")) {
-    if (test_time_interval(dates) != 86400) stop("Time interval of date column must be one day")
+    if (test_time_interval(data[[date]]) != 86400) stop("Time interval of date column must be one day")
   }
       
   data$year <- get_year_from_date(data[[date]])
@@ -49,11 +49,11 @@ pm_98_percentile <- function(data, date = "date", val = "avg_24h", nr = "n_readi
   
   ans <- group_by_(data, .dots = by)
   ans <- summarise_(ans, 
-                    n_days = ~ n(),
+                    n_days = ~n(),
                     ann_98_percentile = interp(~quantile2(x, type = y), 
                                                x = as.name(val), 
                                                y = type),
-                    exceed = ~ ann_98_percentile > std)
+                    exceed = ~ann_98_percentile > std)
   ans <- ungroup(ans)
   
   ans

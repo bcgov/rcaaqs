@@ -36,7 +36,7 @@ pm_annual_average <- function(data, date = "date", val = "avg_24h", nr = "n_read
   data <- data[!is.na(data[[val]]) & data[[nr]] >= 18, ]
   
   if (!inherits(data[[date]], "Date")) {
-    if (test_time_interval(dates) != 86400) stop("Time interval of date column must be one day")
+    if (test_time_interval(data[[date]]) != 86400) stop("Time interval of date column must be one day")
   }
   
   data$year <- get_year_from_date(data[[date]])
@@ -47,7 +47,7 @@ pm_annual_average <- function(data, date = "date", val = "avg_24h", nr = "n_read
   
   ans <- group_by_(data, .dots = by)
   ans <- summarise_(ans, 
-                    n_days = ~ n(),
+                    n_days = ~n(),
                     ann_avg = avg_formula)
   
   ans
