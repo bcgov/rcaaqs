@@ -10,6 +10,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+#' Find time interval of a vector of regularly spaced dates/datetimes
+#'
+#' @param x vector of dates/datetimes
+#'
+#' @return character
 test_time_interval <- function(x) {
   len <- min(100, length(x))
   test_x <- sort(x[1:len])
@@ -18,6 +23,12 @@ test_time_interval <- function(x) {
   m_diff
 }
 
+
+#' Find the mode of a vector of numbers
+#'
+#' @param x vector of numbers
+#'
+#' @return vector of length 1
 Mode <- function(x) {
   ux <- unique(x)
   ux[which.max(tabulate(match(x, ux)))]
