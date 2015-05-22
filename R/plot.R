@@ -5,25 +5,33 @@
 #'   
 #' @param daily_data a dataframe of daily aggregated air quality readings with 
 #'   columns: date, avg_24h (if pm25), max8hr (if o3)
-#' @param caaqs_data (optional) a one-row dataframe with columns "min_year",
+#' @param caaqs_data (optional) a one-row dataframe with columns "min_year", 
 #'   "max_year" and columns for caaqs achievement status and mangaement status
 #' @param parameter air pollutant ("o3", "pm2.5_annual", "pm2.5_24h")
 #' @param rep_yr The reporting year
 #' @param plot_exceedances logical. Should exceedances be plotted?
 #' @param base_size base font size for the plot
+#' @param annot_size size of annotations. Scaling of this size is not the same
+#'   as the rest of the font sizes, so you will have to experiment. Defaults to
+#'   0.32*base_size
 #'   
 #' @return a ggplot2 object
 #' @export
 plot_ts <- function(daily_data, caaqs_data = NULL, parameter, 
-                    rep_yr, plot_exceedances = FALSE, base_size = 10) {
+                    rep_yr, plot_exceedances = FALSE, base_size = 10, 
+                    annot_size = NULL) {
   
   if (!"date" %in% names(daily_data)) stop("There is no 'date' column in daily_data")
   if (!inherits(daily_data[["date"]], c("POSIXt", "Date"))) stop("'date' column is not a valid date type")
+  if (is.null(annot_size)) {
+    annot_size <- 0.32*base_size
+  } else if (!is.numeric(annot_size)) {
+    stop("annot_size must be numeric")
+  }
   
   line_col <- "#9ecae1"
   plot_std <- TRUE
   draw_caaqs <- FALSE
-  annot_size <- 0.32 * base_size
   caaq_metric <- "metric_value"
   caaq_status <- "caaqs"
   
