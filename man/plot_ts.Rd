@@ -5,7 +5,7 @@
 \title{Plot daily time series data with exceedances}
 \usage{
 plot_ts(daily_data, caaqs_data = NULL, parameter, rep_yr,
-  plot_exceedances = FALSE, base_size = 10)
+  plot_exceedances = FALSE, base_size = 10, annot_size = NULL)
 }
 \arguments{
 \item{daily_data}{a dataframe of daily aggregated air quality readings with
@@ -21,6 +21,10 @@ columns: date, avg_24h (if pm25), max8hr (if o3)}
 \item{plot_exceedances}{logical. Should exceedances be plotted?}
 
 \item{base_size}{base font size for the plot}
+
+\item{annot_size}{size of annotations. Scaling of this size is not the same
+  as the rest of the font sizes, so you will have to experiment. Defaults to
+  0.32*base_size}
 }
 \value{
 a ggplot2 object

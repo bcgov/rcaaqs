@@ -4,23 +4,27 @@
 \alias{summary_plot}
 \title{Gnerate a summary plot of individual station CAAQS values, grouped by Airzone}
 \usage{
-summary_plot(data, metric, station, airzone, parameter, base_size = 12,
-  pt_size = 4)
+summary_plot(data, metric_val, station, airzone, parameter, base_size = 12,
+  pt_size = 4, ...)
 }
 \arguments{
-\item{data}{a data frame with columns for the metric value, the station name, and the air zone}
+\item{data}{a data frame with columns for the metric value, the station name,
+and the air zone}
 
-\item{metric}{name of column in data containing the CAAQS metric value for each station}
+\item{metric_val}{name of column in data containing the CAAQS metric value
+for each station}
 
 \item{station}{name of column in data containing monitoring station names}
 
 \item{airzone}{name of column in data containing arizones}
 
-\item{parameter}{the parameter of interest ("o3", "pm2.5_annual", "pm2.5_24h")}
+\item{parameter}{the name of the column containing the parameter(s) of interest}
 
 \item{base_size}{base font size (default 12)}
 
 \item{pt_size}{size of points (default 4)}
+
+\item{...}{options passed on to theme()}
 }
 \value{
 ggplot2 object
