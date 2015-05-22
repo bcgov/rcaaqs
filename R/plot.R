@@ -191,7 +191,7 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
     facet_string <- paste0(airzone, " ~ .")
   }
   
-  lines_df <- data.frame(std = rcaaqs:::get_std(metrics), foo = "bar")
+  lines_df <- data.frame(std = get_std(metrics), foo = "bar")
   names(lines_df)[2] <- parameter
   lines_df[[parameter]] <- rownames(lines_df)
   
@@ -208,7 +208,7 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
   p <- ggplot(data, aes_string(x = metric_val, y = station))
   p <- p + facet_grid(facet_string, scales = "free", space = "free_y", 
                       drop = TRUE, labeller = param_labeller(15))
-  p <- p + geom_vline(data = lines_df, aes(xintercept = std), linetype = 2, 
+  p <- p + geom_vline(data = lines_df, aes_string(xintercept = "std"), linetype = 2, 
                       colour = "#e41a1c")
   p <- p + labs(x = paste0("CAAQS Metric Value (", units, ")"), 
                 y = "Monitoring Station")
