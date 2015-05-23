@@ -2,7 +2,7 @@
 PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 
-all: docs check build
+all: check build install
 
 docs:
 	-rm NAMESPACE
