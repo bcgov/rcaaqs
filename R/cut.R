@@ -81,9 +81,9 @@ cut_caaq <- function(type, x, parameter, output, drop_na) {
 get_levels <- function(type, parameter = "all") {
   
   if (type == "achievement") {
-    levels <- rcaaqs::achievement_levels
+    levels <- achievement_levels
   } else if (type == "management") {
-    levels <- rcaaqs::management_levels
+    levels <- management_levels
   } else {
     stop("type must be one of achievement or management")
   }
