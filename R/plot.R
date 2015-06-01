@@ -240,3 +240,15 @@ param_labeller <- function(width = 25) {
     value
   }
 }
+
+management_map <- function(data, parameter = NULL) {
+  # do stuff
+}
+
+achievement_map <- function(data, parameter = NULL) {
+  # do stuff
+}
+
+achievement_plot <- function(data, parameter = NULL) {
+  # do stuff
+}
