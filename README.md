@@ -21,12 +21,12 @@ metrics according to the Canadian Ambient Air Quality Standards
   different pollutants. Currently these are only complete for PM2.5 (annual and
   24hr) metrics, and are in development for ozone. 
 - Functions for assigning
-  metrics for different pollutants into achievement and management categories
+  metrics for different pollutants into achievement and management categories.
 
 ### Installation
 
 The package is not available on CRAN, but can be installed using
-`devtools::install_github`:
+the [devtools](https://github.com/hadley/devtools) package:
 
 ``` r 
 install.packages("devtools") # if not already installed
@@ -36,25 +36,21 @@ install_github("bcgov/rcaaqs")
 
 ```
 
-### Usage
-
 ### Project Status
 
 The package is under active development. It is working well for the calculation
-of PM2.5 metrics, and the assignemnt of metrics into categories. We are working
+of PM~2.5~ metrics, and the assignemnt of metrics into categories. We are working
 on the ozone metric calculations.
 
 ### Getting Help or Reporting an Issue
 
 To report bugs/issues/feature requests, please file an 
-[issue](https://github.com/bcgov/<pkg-name>/issues/).
+[issue](https://github.com/bcgov/rcaaqs/issues/).
 
 ### How to Contribute
 
 If you would like to contribute to the package, please see our 
 [CONTRIBUTING](CONTRIBUTING.md) guidelines.
-
-### License
 
 ### License
 
