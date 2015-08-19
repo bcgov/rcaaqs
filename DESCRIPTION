@@ -2,7 +2,7 @@ Package: rcaaqs
 Type: Package
 Title: Tools for analyzing airquality data
 Version: 0.1
-Date: 2014-10-20
+Date: 2015-08-19
 Authors@R: c(person("Andy", "Teucher", role = c("aut", "cre"), 
                     email = "andy.teucher@gov.bc.ca"), 
              person("Province of British Columbia", role = "cph"))
@@ -10,7 +10,7 @@ Description: Analyze air quality data according to Canadian Ambient Air Quality 
 LazyData: true
 License: file LICENSE
 Depends:
-    R (>= 3.1.2)
+    R (>= 3.2.1)
 Imports:
     openair (>= 1.6),
     sp (>= 1.1-1),
