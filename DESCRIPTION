@@ -1,6 +1,6 @@
 Package: rcaaqs
 Type: Package
-Title: Tools for analyzing airquality data
+Title: Tools to implement CAAQS analysis for air quality
 Version: 0.1
 Date: 2015-08-19
 Authors@R: c(person("Andy", "Teucher", role = c("aut", "cre"), 
