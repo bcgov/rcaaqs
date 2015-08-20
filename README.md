@@ -39,7 +39,7 @@ install_github("bcgov/rcaaqs")
 ### Project Status
 
 The package is under active development. It is working well for the calculation
-of PM~2.5~ metrics, and the assignemnt of metrics into categories. We are working
+of PM<sub>2.5</sub> metrics, and the assignemnt of metrics into categories. We are working
 on the ozone metric calculations.
 
 ### Getting Help or Reporting an Issue
