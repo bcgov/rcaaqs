@@ -4,3 +4,6 @@
 ^data-raw$
 .Rhistory
 CONTRIBUTING.md
+^\.travis\.yml$
+^README\.Rmd$
+^README-.*\.png$
