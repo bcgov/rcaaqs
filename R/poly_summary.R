@@ -12,7 +12,6 @@
 
 #' A function to summarise occurrences of a variable within a polygon
 #'
-#' @import sp
 #' @param  polys SpatialPolygonsDataFrame to summarise by
 #' @param  points SpatialPointsDataFrame to summarise
 #' @param  fn The summary function with which to summarise point data in each polygon
@@ -21,6 +20,11 @@
 #' @return A data frame with the same number of rows as the SpatialPolygonsDataFrame.
 
 poly_summary <- function(polys, points, fn, ...) {
+  
+  if (!requireNamespace("sp", quietly = TRUE)) {
+    stop("sp Package required for this function to work. Please install it", 
+         call. = FALSE)
+  }
   
   if (!class(points) == "SpatialPointsDataFrame") {
     stop("points is not of class SpatialPointsDataFrame")
@@ -34,7 +38,7 @@ poly_summary <- function(polys, points, fn, ...) {
     stop("fn is not a valid function")
   }
   
-  out <- sapply(over(polys, geometry(points), returnList = TRUE), simplify = FALSE, 
+  out <- sapply(sp::over(polys, sp::geometry(points), returnList = TRUE), simplify = FALSE, 
                 function(x) {
                   data <- points@data[x,]
                   ret <- fn(data, ...)
