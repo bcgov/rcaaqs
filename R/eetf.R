@@ -7,7 +7,7 @@
 #'             that define the monitor IDs and dates for which EEs or TFs have 
 #'             been identified. The \code{date} column should be of class \code{Date}, 
 #'             \code{POSIXt}, or character in the form \code{"YYYY-MM-DD"}.
-#' @return
+#' @return data frame: daily_df with an additional column of logical values indicating EE/TFs.
 #' @export
 #'
 #' @examples
@@ -26,8 +26,18 @@ eetf <- function(daily_df, id_col = "ems_id", date_col = "date", eetf) {
       stop("'date' column in eetf contains malformed dates")
     }
   } else {
-    if (!is(eetf$date, "Date") || !is(eetf$date, "POSIXt")) {
+    if (!is(eetf$date, "Date") && !is(eetf$date, "POSIXt")) {
       stop("'date' column in eetf must be of class Date, POSIXct, POSIXlt, or character in the form YYYY-MM-DD")
     }
   }
+  
+  eetf$eetf <- TRUE
+  
+  join_vec <- c("id", "date")
+  join_vec <- setNames(join_vec, c(id_col, date_col))
+  
+  ret <- dplyr::left_join(daily_df, eetf, by = join_vec)
+  ret[is.na(ret$eetf), "eetf"] <- FALSE
+  ret
+  
 }
