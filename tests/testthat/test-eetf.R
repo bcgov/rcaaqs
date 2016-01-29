@@ -21,6 +21,14 @@ test_that("match_date_string_works", {
   expect_false(match_date_string("18265-01-15"))
 })
 
+test_that("list_to_df works", {
+  ans <- data.frame(id = c(rep("A", 2), rep("B", 3)), 
+                    value = c("a", "b", "x", "y", "z"), 
+                    stringsAsFactors = FALSE)
+  test_list <- list(A = c("a", "b"), B = c("x", "y", "z"))
+  expect_equal(list_to_df(test_list), ans)
+})
+
 test_that("eetf works with data frame eetf", {
   expect_equal(eetf(daily_avg, "ems_id", "dates", eetf_data), ans)
 })
