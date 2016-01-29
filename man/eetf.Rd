@@ -22,7 +22,7 @@ been identified. The \code{date} column should be of class \code{Date},
 data frame: daily_df with an additional column of logical values indicating EE/TFs.
 }
 \description{
-Flag Execeptional Events or Transboundary Flows affecting air quality
+Allows a user to flag EEs and TFs in a data frame of daily average air quality values.
 }
 \examples{
 daily_avg_file <- system.file("examples", "daily_avg.csv", package = "rcaaqs")

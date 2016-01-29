@@ -1,4 +1,6 @@
 #' Flag Execeptional Events or Transboundary Flows affecting air quality
+#' 
+#' Allows a user to flag EEs and TFs in a data frame of daily average air quality values.
 #'
 #' @param daily_df data frame of daily air quality values
 #' @param id_col column in daily_df that contains the id of air quality monitors

@@ -21,8 +21,12 @@ test_that("match_date_string_works", {
   expect_false(match_date_string("18265-01-15"))
 })
 
-test_that("eetf works", {
+test_that("eetf works with data frame eetf", {
   expect_equal(eetf(daily_avg, "ems_id", "dates", eetf_data), ans)
+})
+
+test_that("eetf works with list eetf", {
+  
 })
 
 test_that("eetf fails correctly", {
