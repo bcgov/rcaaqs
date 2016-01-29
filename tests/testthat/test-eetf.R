@@ -12,6 +12,15 @@ names(eetf_data)[2] <- "date"
 ans <- cbind(daily_avg, eetf = FALSE)
 ans$eetf[samp] <- TRUE
 
+test_that("match_date_string_works", {
+  expect_true(match_date_string("1826-12-31"))
+  expect_true(match_date_string("1826-01-01"))
+  expect_false(match_date_string("1826-00-31"))
+  expect_false(match_date_string("1826-12-32"))
+  expect_false(match_date_string("182-01-15"))
+  expect_false(match_date_string("18265-01-15"))
+})
+
 test_that("eetf works", {
   expect_equal(eetf(daily_avg, "ems_id", "dates", eetf_data), ans)
 })

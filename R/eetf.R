@@ -27,7 +27,7 @@ eetf <- function(daily_df, id_col = "ems_id", date_col = "date", eetf) {
     stop("eetf must be a data frame containing 'id' and 'date'")
   }
   if (is.character(eetf$date)) {
-    if (!all(grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", eetf$date))) {
+    if (!all(match_date_string(eetf$date))) {
       stop("'date' column in eetf contains malformed dates")
     } 
   } else {
@@ -45,4 +45,8 @@ eetf <- function(daily_df, id_col = "ems_id", date_col = "date", eetf) {
   ret[is.na(ret$eetf), "eetf"] <- FALSE
   ret
   
+}
+
+match_date_string <- function(s) {
+  grepl("^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$", s)
 }
