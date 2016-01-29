@@ -11,6 +11,11 @@
 #' @export
 #'
 #' @examples
+#' daily_avg_file <- system.file("examples", "daily_avg.csv", package = "rcaaqs")
+#' eetf_data_file <- system.file("examples", "eetf.csv", package = "rcaaqs")
+#' daily_avg <- read.csv(daily_avg_file, stringsAsFactors = FALSE)
+#' eetf_data <- read.csv(eetf_data_file, stringsAsFactors = FALSE)
+#' eetf(daily_df = daily_avg, id_col = "ems_id", date_col = "dates", eetf = eetf_data)
 eetf <- function(daily_df, id_col = "ems_id", date_col = "date", eetf) {
   if (!is(daily_df, "data.frame")) {
     stop("daily_df must be a data frame.")
@@ -24,7 +29,7 @@ eetf <- function(daily_df, id_col = "ems_id", date_col = "date", eetf) {
   if (is.character(eetf$date)) {
     if (!all(grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", eetf$date))) {
       stop("'date' column in eetf contains malformed dates")
-    }
+    } 
   } else {
     if (!is(eetf$date, "Date") && !is(eetf$date, "POSIXt")) {
       stop("'date' column in eetf must be of class Date, POSIXct, POSIXlt, or character in the form YYYY-MM-DD")
