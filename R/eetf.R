@@ -66,5 +66,7 @@ match_date_string <- function(s) {
 }
 
 list_to_df <- function(x) {
-  
+  x$id <- rownames(x)
+  y <- reshape2::melt(x)[,c(2,1)]
+  setNames(y, c("id", "value"))
 }
