@@ -30,13 +30,14 @@
 #'   \code{"n_readings"}).
 #' @param  daily_valid  The minimum number of hourly readings in a day for the
 #'   daily average to be considered valid (default \code{18}).
-#' @param type type of 98th percentile calculation to use. Default "caaqs"
+#' @param type type of 98th percentile calculation to use. Default "caaqs", as defined in CCME Guidance Document
 #' @export
 #' @seealso \code{\link{pm_daily_avg}}, \code{\link{quantile2}}
 #' @return  A data frame with 98th percentiles of daily averages, per year
 
 pm_98_percentile <- function(data, date = "date", val = "avg_24h", nr = "n_readings", 
-                             by = NULL, std = 28, daily_valid = 18, type = "caaqs") {
+                             by = NULL, std = 28, daily_valid = 18, type = "caaqs", 
+                             eetr = NULL) {
   data <- data[!is.na(data[[val]]) & data[[nr]] >= daily_valid, ]
   
   if (!inherits(data[[date]], "Date")) {
@@ -58,6 +59,23 @@ pm_98_percentile <- function(data, date = "date", val = "avg_24h", nr = "n_readi
   
   ans
   
+}
+
+eetf_adj <- function(x, val, std, type, eetf) {
+  x <- arrange_(x, ~desc(val))
+  y <- summarise_(x, 
+                  n_days = ~n(),
+                  ann_98_percentile = lazyeval::interp(~quantile2(x, type = y), 
+                                             x = as.name(val), 
+                                             y = type),
+                  exceed = ~ann_98_percentile > std)
+  if (y$exceed) {
+    if (x[1, val] > std) {
+      x <- x[-1,]
+      y <- eetf_adj(x, val = val, std = std, type = type, eetf = eetf)
+    }
+  }
+  y
 }
 
 #' Return the rank that should be used to determine the 98th percentile given a 
