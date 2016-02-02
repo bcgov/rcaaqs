@@ -122,3 +122,15 @@ test_that("Number of days is correct", {
   expect_equal(test_one$n_days, c(317L, 332L, 317L))
   expect_equal(test_mult$n_days, c(317L, 332L, 317L, 333L, 218L, 146L))
 })
+
+test_that("eetf works", {
+  skip("Not yet ready for testing")
+  set.seed(42) 
+  one_id$year <- get_year_from_date(one_id$dates)
+  test_eetf_data <- one_id[one_id$year == 2011,]
+  test_eetf_data$val <- rnorm(nrow(test_eetf_data), 24, 3)
+  test_eetf_data$eetf <- FALSE
+  test_eetf_data$eetf[test_eetf_data$val > 24] <- sample(c(TRUE, FALSE), sum(test_eetf_data$val > 24), replace = TRUE)
+  
+  eetf_adj(test_eetf_data, "val", 28, "caaqs", "eetf")
+})
