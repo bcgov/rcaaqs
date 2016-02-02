@@ -70,7 +70,7 @@ eetf_adj <- function(x, val, std, type, eetf) {
                                              y = type),
                   exceed = ~ann_98_percentile > std)
   if (y$exceed) {
-    if (x[1, val] > std) {
+    if (x[1, val] > std) { ## TODO: Need an AND condition here to test if 98p is EETF
       x <- x[-1,]
       y <- eetf_adj(x, val = val, std = std, type = type, eetf = eetf)
     }
