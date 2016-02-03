@@ -219,7 +219,7 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
   
   p <- ggplot(data, aes_string(x = metric_val, y = station))
   p <- p + facet_grid(facet_string, scales = "free", space = "free_y", 
-                      drop = TRUE, labeller = param_labeller(15))
+                      drop = TRUE, labeller = param_labeller)
   p <- p + geom_vline(data = lines_df, aes_string(xintercept = "std"), linetype = 2, 
                       colour = "#e41a1c")
   p <- p + labs(x = paste0("CAAQS Metric Value (", units, ")"), 
@@ -239,19 +239,13 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
   p
 }
 
-param_labeller <- function(width = 25) {
-  function(var, value) {
-    value <- as.character(value)
-    if (var == "metric") { 
-      value[value == "pm2.5_annual"] <- "PM2.5 Annual Metric"
-      value[value == "pm2.5_24h"]   <- "PM2.5 24-hour Metric"
-    } else {
-      wrap_it <- label_wrap_gen(width)
-      value <- wrap_it(var, value)
-    }
-    value
-  }
+label_metrics <- function(x) {
+  x[x == "pm2.5_annual"] <- "PM2.5 Annual Metric"
+  x[x == "pm2.5_24h"]   <- "PM2.5 24-hour Metric"
+  x
 }
+
+param_labeller <- ggplot2::as_labeller(label_metrics)
 
 management_map <- function(data, parameter = NULL) {
   # do stuff
