@@ -19,7 +19,7 @@
 #' @export
 #' @return dataframe with filled in dates
 format_date <- function(dates, format="%Y-%m-%d %H:%M:%S") {
-  lubridate::fast_strptime(dates, format = format, tz = "Etc/GMT+8") + 28800
+  lubridate::fast_strptime(dates, format = format, tz = "Etc/GMT+8")
 }
 
 #'Fill gaps in a date sequence
