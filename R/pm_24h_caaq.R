@@ -72,6 +72,16 @@ pm_24h_caaq <- function(data, year = "year", val = "ann_98_percentile",
                     metric_value = caaq_formula, 
                     caaqs = ~cut_achievement(metric_value, "pm2.5_24h"), 
                     mgmt = ~cut_management(metric_value, "pm2.5_24h"))
+  
+  # Hack to get ordered levels back in the data frame if group_by was used:
+  if (!is.ordered(ret$caaqs)) {
+    ret$caaqs <- ordered(ret$caaqs, levels = levels(cut_achievement(1, "pm2.5_24h")))
+  }
+  
+  if (!is.ordered(ret$mgmt)) {
+    ret$mgmt <- ordered(ret$mgmt, levels = levels(cut_management(1, "pm2.5_24h")))
+  }
+  
   ret
   
 }
