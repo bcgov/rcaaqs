@@ -8,7 +8,7 @@
 rcaaqs
 ======
 
-An [R](www.r-project.org) package to faciliate the calculation of air quality metrics according to the Canadian Ambient Air Quality Standards ([CAAQS](http://www.ccme.ca/en/current_priorities/air/caaqs.html))
+An [R](https://www.r-project.org/) package to faciliate the calculation of air quality metrics according to the Canadian Ambient Air Quality Standards ([CAAQS](http://www.ccme.ca/en/current_priorities/air/caaqs.html))
 
 ### Features
 
