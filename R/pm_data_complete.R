@@ -15,7 +15,6 @@
 #'
 #'@import dplyr
 #'@import lazyeval
-#'@import openair
 #'@param  data data frame of hourly values
 #'@param  dt the name of the date/time column (as a character string). Default
 #'  \code{"date_time"}

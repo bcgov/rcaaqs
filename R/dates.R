@@ -26,7 +26,6 @@ format_date <- function(dates, format="%Y-%m-%d %H:%M:%S") {
 #'
 #'Given a dataframe with one column as a date sequence, fill gaps in the dat
 #'sequence.
-#' @import openair
 #' @param  df Dataframe
 #' @param  date_col the column containing dates
 #' @param  interval The interval in the date sequence. If \code{NULL}, calculated

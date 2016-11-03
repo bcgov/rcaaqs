@@ -13,7 +13,6 @@ License: file LICENSE
 Depends:
     R (>= 3.2.1)
 Imports:
-    openair (>= 1.6),
     lubridate (>= 1.3.3),
     dplyr (>= 0.4.2),
     lazyeval (>= 0.1.10),
