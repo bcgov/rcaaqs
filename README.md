@@ -45,18 +45,15 @@ library(dplyr)
 
 ## Load sample data:
 data("pm25_sample_data")
-
-head(pm25_sample_data)
-#> # A tibble: 6 × 7
-#>    ems_id           date_time                     site  year month
-#>     <chr>              <dttm>                    <chr> <int> <int>
-#> 1 0220205 2011-03-01 00:59:59 Powell River Wildwood_60  2011    NA
-#> 2 0220205 2011-03-01 01:59:59 Powell River Wildwood_60  2011    NA
-#> 3 0220205 2011-03-01 02:59:59 Powell River Wildwood_60  2011    NA
-#> 4 0220205 2011-03-01 03:59:59 Powell River Wildwood_60  2011    NA
-#> 5 0220205 2011-03-01 04:59:59 Powell River Wildwood_60  2011    NA
-#> 6 0220205 2011-03-01 05:59:59 Powell River Wildwood_60  2011    NA
-#> # ... with 2 more variables: parameter <chr>, value <dbl>
+glimpse(pm25_sample_data)
+#> Observations: 229,496
+#> Variables: 6
+#> $ ems_id    <chr> "0220205", "0220205", "0220205", "0220205", "0220205...
+#> $ date_time <dttm> 2011-03-01 00:59:59, 2011-03-01 01:59:59, 2011-03-0...
+#> $ site      <chr> "Powell River Wildwood_60", "Powell River Wildwood_6...
+#> $ year      <int> 2011, 2011, 2011, 2011, 2011, 2011, 2011, 2011, 2011...
+#> $ parameter <chr> "PM25", "PM25", "PM25", "PM25", "PM25", "PM25", "PM2...
+#> $ value     <dbl> 2, 2, 0, 3, 1, 1, 2, 2, 2, 2, 1, 3, 1, 1, 0, 0, 0, 0...
 
 ## Calculate the data completeness criteria for the pm2.5 data:
 pm_completeness <- pm_data_complete(pm25_sample_data, 
