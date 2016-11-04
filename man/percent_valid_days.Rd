@@ -5,7 +5,7 @@
 \title{Given a vector of dates (in a single year), calculate the percentage of days in a quarter}
 \usage{
 percent_valid_days(dates, q = c("year", "Q1", "Q2", "Q3", "Q4"),
-  tz = "Etc/GMT-8")
+  tz = "Etc/GMT+8")
 }
 \arguments{
 \item{dates}{a vector of dates}

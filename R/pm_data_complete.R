@@ -106,7 +106,7 @@ data_complete <- function(data, dt, val, by, daily_valid, year_valid, q_valid) {
 #' @return  A percentage of days in the specified quarter that are in the supplied vector
 #' 
 percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), 
-                               tz = "Etc/GMT-8") {
+                               tz = "Etc/GMT+8") {
   if (!tz %in% OlsonNames()) stop(tz, " is not a valid timezone.")
   if (!inherits(dates, "Date")) {
     if (test_time_interval(dates) != 86400) stop("Time interval of date column must be one day")
