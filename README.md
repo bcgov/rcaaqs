@@ -195,6 +195,80 @@ glimpse(pm_caaq_annual)
 #> $ mgmt         <ord> Insufficient Data, Actions for Preventing Air Qua...
 ```
 
+You can view the CAAQS Achievement Levels as well as Management levels in the included data frames:
+
+``` r
+achievement_levels
+#>      parameter       labels lower_breaks upper_breaks    units_html
+#> 1           o3     Achieved            0           63           ppb
+#> 2           o3 Not Achieved           63          Inf           ppb
+#> 3 pm2.5_annual     Achieved            0           10 &mu;g/m&sup3;
+#> 4 pm2.5_annual Not Achieved           10          Inf &mu;g/m&sup3;
+#> 5    pm2.5_24h     Achieved            0           28 &mu;g/m&sup3;
+#> 6    pm2.5_24h Not Achieved           28          Inf &mu;g/m&sup3;
+#>   units_unicode       val_labels_html val_labels_unicode  colour
+#> 1           ppb           &leq; 63ppb            ≤ 63ppb #377EB8
+#> 2           ppb            &gt; 63ppb            > 63ppb #E41A1C
+#> 3         μg/m³ &leq; 10&mu;g/m&sup3;          ≤ 10μg/m³ #377EB8
+#> 4         μg/m³  &gt; 10&mu;g/m&sup3;          > 10μg/m³ #E41A1C
+#> 5         μg/m³ &leq; 28&mu;g/m&sup3;          ≤ 28μg/m³ #377EB8
+#> 6         μg/m³  &gt; 28&mu;g/m&sup3;          > 28μg/m³ #E41A1C
+
+management_levels
+#>       parameter                                           labels
+#> 1            o3            Actions for Keeping Clean Areas Clean
+#> 2            o3 Actions for Preventing Air Quality Deterioration
+#> 3            o3          Actions for Preventing CAAQS Exceedance
+#> 4            o3             Actions for Achieving Air Zone CAAQS
+#> 5  pm2.5_annual            Actions for Keeping Clean Areas Clean
+#> 6  pm2.5_annual Actions for Preventing Air Quality Deterioration
+#> 7  pm2.5_annual          Actions for Preventing CAAQS Exceedance
+#> 8  pm2.5_annual             Actions for Achieving Air Zone CAAQS
+#> 9     pm2.5_24h            Actions for Keeping Clean Areas Clean
+#> 10    pm2.5_24h Actions for Preventing Air Quality Deterioration
+#> 11    pm2.5_24h          Actions for Preventing CAAQS Exceedance
+#> 12    pm2.5_24h             Actions for Achieving Air Zone CAAQS
+#>    lower_breaks upper_breaks    units_html units_unicode
+#> 1           0.0         50.0           ppb           ppb
+#> 2          50.0         56.0           ppb           ppb
+#> 3          56.0         63.0           ppb           ppb
+#> 4          63.0          Inf           ppb           ppb
+#> 5           0.0          4.0 &mu;g/m&sup3;         μg/m³
+#> 6           4.0          6.4 &mu;g/m&sup3;         μg/m³
+#> 7           6.4         10.0 &mu;g/m&sup3;         μg/m³
+#> 8          10.0          Inf &mu;g/m&sup3;         μg/m³
+#> 9           0.0         10.0 &mu;g/m&sup3;         μg/m³
+#> 10         10.0         19.0 &mu;g/m&sup3;         μg/m³
+#> 11         19.0         28.0 &mu;g/m&sup3;         μg/m³
+#> 12         28.0          Inf &mu;g/m&sup3;         μg/m³
+#>                                      val_labels_html
+#> 1                                        &leq; 50ppb
+#> 2                       &gt; 50ppb &amp; &leq; 56ppb
+#> 3                       &gt; 56ppb &amp; &leq; 63ppb
+#> 4                                         &gt; 63ppb
+#> 5                               &leq; 4&mu;g/m&sup3;
+#> 6   &gt; 4&mu;g/m&sup3; &amp; &leq; 6.4&mu;g/m&sup3;
+#> 7  &gt; 6.4&mu;g/m&sup3; &amp; &leq; 10&mu;g/m&sup3;
+#> 8                               &gt; 10&mu;g/m&sup3;
+#> 9                              &leq; 10&mu;g/m&sup3;
+#> 10  &gt; 10&mu;g/m&sup3; &amp; &leq; 19&mu;g/m&sup3;
+#> 11  &gt; 19&mu;g/m&sup3; &amp; &leq; 28&mu;g/m&sup3;
+#> 12                              &gt; 28&mu;g/m&sup3;
+#>        val_labels_unicode  colour
+#> 1                 ≤ 50ppb #A6D96A
+#> 2       > 50ppb & ≤ 56ppb #FEE08B
+#> 3       > 56ppb & ≤ 63ppb #F46D43
+#> 4                 > 63ppb #A50026
+#> 5                ≤ 4μg/m³ #A6D96A
+#> 6   > 4μg/m³ & ≤ 6.4μg/m³ #FEE08B
+#> 7  > 6.4μg/m³ & ≤ 10μg/m³ #F46D43
+#> 8               > 10μg/m³ #A50026
+#> 9               ≤ 10μg/m³ #A6D96A
+#> 10  > 10μg/m³ & ≤ 19μg/m³ #FEE08B
+#> 11  > 19μg/m³ & ≤ 28μg/m³ #F46D43
+#> 12              > 28μg/m³ #A50026
+```
+
 ### Project Status
 
 The package is under active development. It is working well for the calculation of PM<sub>2.5</sub> metrics, and the assignemnt of metrics into categories. We are working on the ozone metric calculations.

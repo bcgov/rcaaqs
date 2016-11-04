@@ -113,6 +113,14 @@ pm_caaq_annual <- pm_annual_caaq(annual_avg, by = "ems_id", cyear = 2013)
 glimpse(pm_caaq_annual)
 ```
 
+You can view the CAAQS Achievement Levels as well as Management levels in the included data frames:
+
+```{r}
+achievement_levels
+
+management_levels
+```
+
 
 ### Project Status
 
