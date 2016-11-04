@@ -52,3 +52,17 @@
 #'   
 #' }
 "achievement_levels"
+
+#' Sample hourly PM2.5 data for 3 years from 10 stations
+#'
+#' @format A data frame with 7 variables:
+#' \describe{
+#'   \item{ems_id}{id of the monitoring station}
+#'   \item{date_time}{date/time (POSIXct) in ETC/GMT+8 timezone}
+#'   \item{site}{name of the monitoring station}
+#'   \item{year}{year}
+#'   \item{month}{month}
+#'   \item{parameter}{name of the parameter ("PM2.5")}
+#'   \item{value}{PM2.5 hourly value (in ppb)}
+#' }
+"pm25_sample_data"
