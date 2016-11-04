@@ -195,7 +195,7 @@ glimpse(pm_caaq_annual)
 #> $ mgmt         <ord> Insufficient Data, Actions for Preventing Air Qua...
 ```
 
-You can view the CAAQS Achievement Levels as well as Management levels in the included data frames:
+You can view the CAAQS Achievement Levels as well as Management levels in the included data frames. These are used internally in `pm_annual_caaq()` and `pm_24hr_caaq()` to assign metric values at each station to the appropriate CAAQS Achievement Level and Management Level:
 
 ``` r
 achievement_levels
