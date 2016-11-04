@@ -6,7 +6,7 @@ pm25_sample_data <- read_csv("data-raw/pm25_sample_data.csv",
                                date_time = col_datetime(format = ""),
                                site = col_character(),
                                year = col_integer(),
-                               month = col_integer(),
+                               month = col_skip(),
                                parameter = col_character(),
                                value = col_double()
                              ),
