@@ -24,7 +24,7 @@ envreportutils::devex_badge("exploration")
 
 # rcaaqs
 
-An [R](https://www.r-project.org/) package to faciliate the calculation of air quality 
+An [R](https://www.r-project.org/) package to facilitate the calculation of air quality 
 metrics according to the Canadian Ambient Air Quality Standards
 ([CAAQS](http://www.ccme.ca/en/current_priorities/air/caaqs.html))
 
@@ -33,7 +33,7 @@ metrics according to the Canadian Ambient Air Quality Standards
 - General functions for doing things like formatting dates, filling in
   sequences, etc. 
 - Functions for stepwise calculation of CAAQS metrics for
-  different pollutants. Currently these are only complete for PM2.5 
+  different pollutants. Currently these are only complete for PM~2.5~ 
   (annual and 24hr) metrics, and are in development for ozone. 
 - Functions for assigning
   metrics for different pollutants into achievement and management categories.
@@ -53,7 +53,7 @@ install_github("bcgov/rcaaqs")
 
 ### Usage
 
-This is a simple example using the included sample data set for PM<sub>2.5</sub>. For a fuller example with a larger dataset requiring more cleaning, see the [PM2.5 analysis we completed for 2011-2013](https://github.com/bcgov/pm25-caaqs-analysis).
+This is a simple example using the included sample data set for PM<sub>2.5</sub>. For a fuller example with a larger dataset requiring more cleaning, see the [PM<sub>2.5</sub> analysis we completed for 2011-2013](https://github.com/bcgov/pm25-caaqs-analysis).
 
 ```{r}
 library(rcaaqs)
@@ -113,7 +113,7 @@ pm_caaq_annual <- pm_annual_caaq(annual_avg, by = "ems_id", cyear = 2013)
 glimpse(pm_caaq_annual)
 ```
 
-You can view the CAAQS Achievement Levels as well as Management levels in the included data frames. These are used internally in `pm_annual_caaq()` and `pm_24hr_caaq()` to assign metric values at each station to the appropriate CAAQS Achievement Level and Management Level:
+You can view the CAAQS Achievement Levels as well as Management Levels in the included data frames. These are used internally in `pm_annual_caaq()` and `pm_24hr_caaq()` to assign metric values at each station to the appropriate CAAQS Achievement Level and Management Level:
 
 ```{r}
 achievement_levels
@@ -125,7 +125,7 @@ management_levels
 ### Project Status
 
 The package is under active development. It is working well for the calculation
-of PM<sub>2.5</sub> metrics, and the assignemnt of metrics into categories. We are working
+of PM<sub>2.5</sub> metrics, and the assignment of metrics into categories. We are working
 on the ozone metric calculations.
 
 ### Getting Help or Reporting an Issue
