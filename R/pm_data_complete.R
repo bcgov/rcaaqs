@@ -101,7 +101,7 @@ data_complete <- function(data, dt, val, by, daily_valid, year_valid, q_valid) {
 #' 
 #' @param  dates a vector of dates
 #' @param  q the time period of interest, one of: "year","Q1","Q2","Q3","Q4"
-#' @param  tz the timezone the dates are in. Default Etc/GMT-8 with no Daylight savings
+#' @param  tz the timezone the dates are in. Default Etc/GMT+8 with no Daylight savings
 #' @export
 #' @return  A percentage of days in the specified quarter that are in the supplied vector
 #' 
@@ -136,7 +136,7 @@ percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"),
   ret
 }
 
-# get_valid_days <- function(, daily_valid = 18, tz = "Etc/GMT-8") {
+# get_valid_days <- function(, daily_valid = 18, tz = "Etc/GMT+8") {
 #   if (!inherits(dt, "POSIXt")) stop("dt is not a valid date-time class (POSIXct or POSIXlt)")
 #   if (!tz %in% OlsonNames()) stop(tz, " is not a valid timezone.")
 #   time_interval <- openair:::find.time.interval(dt)

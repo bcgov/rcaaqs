@@ -12,7 +12,7 @@ percent_valid_days(dates, q = c("year", "Q1", "Q2", "Q3", "Q4"),
 
 \item{q}{the time period of interest, one of: "year","Q1","Q2","Q3","Q4"}
 
-\item{tz}{the timezone the dates are in. Default Etc/GMT-8 with no Daylight savings}
+\item{tz}{the timezone the dates are in. Default Etc/GMT+8 with no Daylight savings}
 }
 \value{
 A percentage of days in the specified quarter that are in the supplied vector
