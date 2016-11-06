@@ -107,7 +107,7 @@ data_complete <- function(data, dt, val, by, daily_valid, year_valid, q_valid) {
 #' 
 percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), 
                                tz = "Etc/GMT+8") {
-  if (!tz %in% OlsonNames()) stop(tz, " is not a valid timezone.")
+  if (!tz %in% rcaaqs_env$olson_names) stop(tz, " is not a valid timezone.")
   if (!inherits(dates, "Date")) {
     if (test_time_interval(dates) != 86400) stop("Time interval of date column must be one day")
   }
@@ -119,11 +119,11 @@ percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"),
   year <- get_year_from_date(dates[1])
   is_leap_year <- lubridate::leap_year(year)
   
-  if (is_leap_year) Q1 <- 91 else Q1 <- 90
+  Q1 <- ifelse(is_leap_year, 91, 90)
   q_lengths <- c(Q1 = Q1, Q2 = 91, Q3 = 92, Q4 = 92)
   q_lengths <- c(year = sum(q_lengths), q_lengths)
   
-  q_length = q_lengths[q]
+  q_length <- q_lengths[q]
   
   if (q == "year") {
     q_dates <- dates

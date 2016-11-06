@@ -15,6 +15,13 @@
 #' 
 NULL
 
+
+rcaaqs_env <- new.env(parent = emptyenv())
+
+.onLoad <- function(...) {
+  assign("olson_names", OlsonNames(), envir = rcaaqs_env)
+}
+
 #' Find time interval of a vector of regularly spaced dates/datetimes
 #'
 #' @param x vector of dates/datetimes
