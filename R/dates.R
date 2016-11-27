@@ -120,9 +120,47 @@ add_ymd <- function(df, datecol, tz = "Etc/GMT+8", outnames = NULL) {
   df
 }
 
-get_year_from_date <- function(date) {
-  as.integer(as.POSIXlt(date)$year + 1900)
+#'Calcuate number of days in quarter
+#'
+#' @importFrom lubridate fast_strptime
+#' @param  quarter the quarter of the year (1-4)
+#' @param year the year as a numeric
+#' @return vector with the number of days in that quarter year combination.
+days_in_quarter <- function(quarter, year) 
+  c(90,91,92,92)[quarter] + (lubridate::leap_year(year) & quarter == 1)
+
+valid_by_quarter <- function(input, date, by) {
+  if (!is.null(by)) input <- input %>% group_by_(.dots = by)
+  input %>% 
+    mutate_(year = interp(~get_year_from_date(date), 
+                          date = as.name(date)),
+            quarter = interp(~quarter(date), 
+                             date = as.name(date))) %>% 
+    group_by(year, quarter, add = TRUE) %>% 
+    summarise(days = n()) %>% 
+    mutate(valid_in_quarter = days / days_in_quarter(quarter, year))
 }
+globalVariables(c("year", "quarter", "days"))
+
+#'Calcuate number of days in quarter
+#'
+#' @import tidyr
+#' @param dat the date, date_time, or numeric value
+#' @param val some value to be interpolated
+#' @param interval some numeric step size. for date-times, in seconds.
+#' @return data.frame with all input dates and values, interpolated with NAs.
+pad.date.time <- function(dat, val, interval) {
+  all.dates <- full_seq(dat, interval)
+  data.frame(dat = all.dates, 
+             val = val[match(all.dates, dat)])
+}
+
+get_year_from_date <- function(date) 
+  as.integer(strftime(as.POSIXlt(date), "%Y"))
+
+# get_year_from_date <- function(date) {
+#   as.integer(as.POSIXlt(date)$year + 1900)
+# }
 
 get_month_from_date <- function(date) {
   as.integer(as.POSIXlt(date)$mon + 1)
