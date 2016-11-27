@@ -17,7 +17,8 @@ Imports:
     dplyr (>= 0.4.2),
     lazyeval (>= 0.1.10),
     ggplot2 (>= 1.0.1),
-    scales(>= 0.2.5)
+    scales(>= 0.2.5),
+    tidyr(>= 0.6.0)
 Suggests:
     sp (>= 1.1-1),
     rgdal (>= 1.0-4),
