@@ -19,7 +19,7 @@
 #' @export
 #' @return dataframe with filled in dates
 format_date <- function(dates, format="%Y-%m-%d %H:%M:%S") {
-  lubridate::fast_strptime(dates, format = format, tz = "Etc/GMT+8")
+  fast_strptime(dates, format = format, tz = "Etc/GMT+8")
 }
 
 #'Fill gaps in a date sequence
@@ -122,25 +122,20 @@ add_ymd <- function(df, datecol, tz = "Etc/GMT+8", outnames = NULL) {
 
 #'Calcuate number of days in quarter
 #'
-#' @importFrom lubridate fast_strptime
+#' @importFrom lubridate leap_year
 #' @param  quarter the quarter of the year (1-4)
 #' @param year the year as a numeric
 #' @return vector with the number of days in that quarter year combination.
 days_in_quarter <- function(quarter, year) 
-  c(90,91,92,92)[quarter] + (lubridate::leap_year(year) & quarter == 1)
+  c(90,91,92,92)[quarter] + (leap_year(year) & quarter == 1)
 
-valid_by_quarter <- function(input, date, by) {
-  if (!is.null(by)) input <- input %>% group_by_(.dots = by)
-  input %>% 
-    mutate_(year = interp(~get_year_from_date(date), 
-                          date = as.name(date)),
-            quarter = interp(~quarter(date), 
-                             date = as.name(date))) %>% 
-    group_by(year, quarter, add = TRUE) %>% 
-    summarise(days = n()) %>% 
-    mutate(valid_in_quarter = days / days_in_quarter(quarter, year))
-}
-globalVariables(c("year", "quarter", "days"))
+#'Calcuate number of days in year
+#'
+#' @importFrom lubridate leap_year
+#' @param year the year as a numeric
+#' @return vector with the number of days in that year.
+days_in_year <- function(year) 
+  365 + lubridate::leap_year(year)
 
 #'Calcuate number of days in quarter
 #'
@@ -149,10 +144,10 @@ globalVariables(c("year", "quarter", "days"))
 #' @param val some value to be interpolated
 #' @param interval some numeric step size. for date-times, in seconds.
 #' @return data.frame with all input dates and values, interpolated with NAs.
-pad.date.time <- function(dat, val, interval) {
-  all.dates <- full_seq(dat, interval)
-  data.frame(dat = all.dates, 
-             val = val[match(all.dates, dat)])
+pad_date_time <- function(dat, val, interval) {
+  all_dates <- full_seq(dat, interval)
+  data.frame(dat = all_dates, 
+             val = val[match(all_dates, dat)])
 }
 
 get_year_from_date <- function(date) 
@@ -169,3 +164,48 @@ get_month_from_date <- function(date) {
 get_day_from_date <- function(date) {
   as.integer(as.POSIXlt(date)$mday)
 }
+
+# Simply using as.Date on a time converts based on UTC.
+# This conversion just truncates the time part.
+time_to_date <- function(date_time) 
+  as.Date(date_time, attr(date_time, "tzone"))
+
+#'Calcuate number (or proportion) of valid days in each year and quarter
+#'
+#' @importFrom lubridate quarter
+#' @param data the input data.frame
+#' @param date the date
+#' @param by the grouping variable
+#' @param units either "prop" if you want proportion of valid days or "days" is absolute number of days is required.
+#' @return data.frame with valid days in each year and quarter
+valid_by_quarter <- function(data, date, by, units = c("prop", "days")) {
+  date <- as.name(date)
+  data <- mutate(data, 
+                 year    = get_year_from_date(date), 
+                 quarter = quarter(date))
+  data <- group_by_(data, .dots = c(by, "year", "quarter"))
+  data <- summarise(data, days = n())
+  data <- ungroup(data)
+  
+  # Cheap way to fill in quarters.  
+  all_q = do.call(rbind, replicate(4, unique(data[c(by, "year")]), simplify = FALSE))
+  all_q$quarter <- rep(1:4, each = nrow(all_q)/4)
+  data <- left_join(all_q, data, by = c(by, "year", "quarter"))
+  data$days <- ifelse(is.na(data$days), 0, data$days)
+  data$valid_in_quarter <- data$days
+  if(units == "prop") 
+    data$valid_in_quarter <- data$valid_in_quarter / days_in_quarter(data$quarter, data$year)
+  data <- group_by_(data, .dots = c(by, "year"))
+  data <- mutate_(data, valid_in_year = ~sum(days))
+  if(units == "prop") 
+    data$valid_in_year <- data$valid_in_year / days_in_year(data$year)
+  data <- arrange_(data, .dots = c(by, "year", "quarter"))
+  
+  # Format to wide columns.  
+  data <- group_by_(data, .dots = c("year", by))
+  data <- select_(data, .dots = c(by, "year", "quarter", "valid_in_quarter", "valid_in_year"))
+  data <- spread_(data, "quarter", "valid_in_quarter", sep = "_")
+  
+  ungroup(data)
+}
+
