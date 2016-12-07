@@ -28,16 +28,16 @@
 #'  \code{\link{o3_daily_max}}
 #'@seealso \code{\link{o3_daily_max}}
 #'  
-
-o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value", by = NULL){
-  if (!is.null(by)) data <- data %>% group_by_(.dots = by)
-  rolling.value(data, 
-                dat = dt, 
-                val = val, 
-                by = by, 
-                interval = 3600,
-                window = 8, 
-                valid.thresh = 6) %>% 
-    rename(rolling8 = rolled.value, flag_valid_8hr = valid)
-}
-globalVariables("rolled.value")
+# 
+# o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value", by = NULL){
+#   if (!is.null(by)) data <- data %>% group_by_(.dots = by)
+#   rolling.value(data, 
+#                 dat = dt, 
+#                 val = val, 
+#                 by = by, 
+#                 interval = 3600,
+#                 window = 8, 
+#                 valid.thresh = 6) %>% 
+#     rename(rolling8 = rolled.value, flag_valid_8hr = valid)
+# }
+# globalVariables("rolled.value")

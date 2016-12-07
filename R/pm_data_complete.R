@@ -28,113 +28,109 @@
 #'  75).
 #'@param  q_valid  The percentage of valid days required in each quarter
 #'  (default 60).
-#'@export
 #'@return A data frame with percentage of days with readings annually, as well 
 #'  as one for each quarter. Also includes whether or not the annual and 
 #'  quarterly requirements are met
-pm_data_complete <- function(data, dt = "date_time", val = "value", by = NULL, 
-                             daily_valid = 18, year_valid = 75, q_valid = 60) {
-  data_complete(data = data, dt = dt, val = val, by = by, 
-                daily_valid = daily_valid, year_valid = year_valid, 
-                q_valid = q_valid)
-}
+# pm_data_complete <- function(data, dt = "date_time", val = "value", by = NULL, 
+#                              daily_valid = 18, year_valid = 75, q_valid = 60) {
+#   data_complete(data = data, dt = dt, val = val, by = by, 
+#                 daily_valid = daily_valid, year_valid = year_valid, 
+#                 q_valid = q_valid)
+# }
 
-#' @export
 #' @rdname pm_data_complete
-so2_data_complete <- function(data, dt = "date_time", val = "value", by = NULL, 
-                             daily_valid = 18, year_valid = 75, q_valid = 60) {
-  data_complete(data = data, dt = dt, val = val, by = by, 
-                daily_valid = daily_valid, year_valid = year_valid, 
-                q_valid = q_valid)
-}
+# so2_data_complete <- function(data, dt = "date_time", val = "value", by = NULL, 
+#                              daily_valid = 18, year_valid = 75, q_valid = 60) {
+#   data_complete(data = data, dt = dt, val = val, by = by, 
+#                 daily_valid = daily_valid, year_valid = year_valid, 
+#                 q_valid = q_valid)
+# }
 
-#' @export
 #' @rdname pm_data_complete
-no2_data_complete <- function(data, dt = "date_time", val = "value", by = NULL, 
-                             daily_valid = 18, year_valid = 75, q_valid = 60) {
-  data_complete(data = data, dt = dt, val = val, by = by, 
-                daily_valid = daily_valid, year_valid = year_valid, 
-                q_valid = q_valid)
-}
+# no2_data_complete <- function(data, dt = "date_time", val = "value", by = NULL, 
+#                              daily_valid = 18, year_valid = 75, q_valid = 60) {
+#   data_complete(data = data, dt = dt, val = val, by = by, 
+#                 daily_valid = daily_valid, year_valid = year_valid, 
+#                 q_valid = q_valid)
+# }
 
 
 
-data_complete <- function(data, dt, val, by, daily_valid, year_valid, q_valid) {
-  if (!inherits(data[[dt]], "POSIXct")) {
-    stop("dt must be POSIXct with time intervals of one hour")
-  }
-  
-  if (test_time_interval(data[[dt]]) != 3600) {
-    stop("dt must have a time intervals of one hour")
-  }
-  
-  data <- data[!is.na(data[[val]]), ]
-  
-  ## Summarise by date
-  data$date <- as.Date(data[[dt]])
-  data <- group_by_(data, .dots = c(by, "date"))
-  data <- summarise_(data, n_hrs = ~n())
-  data <- filter_(data, ~n_hrs >= daily_valid)
-  
-  ## Add year column
-  data$year <- get_year_from_date(data[["date"]])
-  
-  res <- group_by_(data, .dots = c(by, "year"))
-  res <- summarise_(res, 
-                    n_days = ~n(),
-                    percent_valid_annual = ~percent_valid_days(date, q = "year"), 
-                    percent_valid_q1 = ~percent_valid_days(date, q = "Q1"), 
-                    percent_valid_q2 = ~percent_valid_days(date, q = "Q2"), 
-                    percent_valid_q3 = ~percent_valid_days(date, q = "Q3"), 
-                    percent_valid_q4 = ~percent_valid_days(date, q = "Q4"))
-  res <- rowwise(res)
-  res <- mutate_(res, 
-                 annual_valid = ~percent_valid_annual >= year_valid,
-                 quarters_valid = ~all(c(percent_valid_q1, percent_valid_q2, 
-                                         percent_valid_q3, percent_valid_q4) >= q_valid), 
-                 use_annual = ~quarters_valid & annual_valid)
-  ret <- ungroup(res)
-  ret
-}
+# data_complete <- function(data, dt, val, by, daily_valid, year_valid, q_valid) {
+#   if (!inherits(data[[dt]], "POSIXct")) {
+#     stop("dt must be POSIXct with time intervals of one hour")
+#   }
+#   
+#   if (test_time_interval(data[[dt]]) != 3600) {
+#     stop("dt must have a time intervals of one hour")
+#   }
+#   
+#   data <- data[!is.na(data[[val]]), ]
+#   
+#   ## Summarise by date
+#   data$date <- as.Date(data[[dt]])
+#   data <- group_by_(data, .dots = c(by, "date"))
+#   data <- summarise_(data, n_hrs = ~n())
+#   data <- filter_(data, ~n_hrs >= daily_valid)
+#   
+#   ## Add year column
+#   data$year <- get_year_from_date(data[["date"]])
+#   
+#   res <- group_by_(data, .dots = c(by, "year"))
+#   res <- summarise_(res, 
+#                     n_days = ~n(),
+#                     percent_valid_annual = ~percent_valid_days(date, q = "year"), 
+#                     percent_valid_q1 = ~percent_valid_days(date, q = "Q1"), 
+#                     percent_valid_q2 = ~percent_valid_days(date, q = "Q2"), 
+#                     percent_valid_q3 = ~percent_valid_days(date, q = "Q3"), 
+#                     percent_valid_q4 = ~percent_valid_days(date, q = "Q4"))
+#   res <- rowwise(res)
+#   res <- mutate_(res, 
+#                  annual_valid = ~percent_valid_annual >= year_valid,
+#                  quarters_valid = ~all(c(percent_valid_q1, percent_valid_q2, 
+#                                          percent_valid_q3, percent_valid_q4) >= q_valid), 
+#                  use_annual = ~quarters_valid & annual_valid)
+#   ret <- ungroup(res)
+#   ret
+# }
 
 #' Given a vector of dates (in a single year), calculate the percentage of days in a quarter
 #' 
 #' @param  dates a vector of dates
 #' @param  q the time period of interest, one of: "year","Q1","Q2","Q3","Q4"
 #' @param  tz the timezone the dates are in. Default Etc/GMT+8 with no Daylight savings
-#' @export
 #' @return  A percentage of days in the specified quarter that are in the supplied vector
 #' 
-percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), 
-                               tz = "Etc/GMT+8") {
-  if (!tz %in% rcaaqs_env$olson_names) stop(tz, " is not a valid timezone.")
-  if (!inherits(dates, "Date")) {
-    if (test_time_interval(dates) != 86400) stop("Time interval of date column must be one day")
-  }
-  
-  q = match.arg(q)
-  
-  dates <- dates[!is.na(dates)]
-  
-  year <- get_year_from_date(dates[1])
-  is_leap_year <- lubridate::leap_year(year)
-  
-  Q1 <- ifelse(is_leap_year, 91, 90)
-  q_lengths <- c(Q1 = Q1, Q2 = 91, Q3 = 92, Q4 = 92)
-  q_lengths <- c(year = sum(q_lengths), q_lengths)
-  
-  q_length <- q_lengths[q]
-  
-  if (q == "year") {
-    q_dates <- dates
-  } else {
-    q_dates <- dates[quarters(dates) %in% q]
-  }
-  
-  ret <- (length(q_dates) / q_length) * 100
-  
-  ret
-}
+# percent_valid_days <- function(dates, q = c("year","Q1","Q2","Q3","Q4"), 
+#                                tz = "Etc/GMT+8") {
+#   if (!tz %in% rcaaqs_env$olson_names) stop(tz, " is not a valid timezone.")
+#   if (!inherits(dates, "Date")) {
+#     if (test_time_interval(dates) != 86400) stop("Time interval of date column must be one day")
+#   }
+#   
+#   q = match.arg(q)
+#   
+#   dates <- dates[!is.na(dates)]
+#   
+#   year <- get_year_from_date(dates[1])
+#   is_leap_year <- lubridate::leap_year(year)
+#   
+#   Q1 <- ifelse(is_leap_year, 91, 90)
+#   q_lengths <- c(Q1 = Q1, Q2 = 91, Q3 = 92, Q4 = 92)
+#   q_lengths <- c(year = sum(q_lengths), q_lengths)
+#   
+#   q_length <- q_lengths[q]
+#   
+#   if (q == "year") {
+#     q_dates <- dates
+#   } else {
+#     q_dates <- dates[quarters(dates) %in% q]
+#   }
+#   
+#   ret <- (length(q_dates) / q_length) * 100
+#   
+#   ret
+# }
 
 # get_valid_days <- function(, daily_valid = 18, tz = "Etc/GMT+8") {
 #   if (!inherits(dt, "POSIXt")) stop("dt is not a valid date-time class (POSIXct or POSIXlt)")

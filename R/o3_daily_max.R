@@ -28,20 +28,20 @@
 #'  \code{\link{o3_ann_4th_highest}}
 #'@seealso \code{\link{o3_ann_4th_highest}}
 #'  
-
-# Clobbers any date column if there was one.
-o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL) {
-  if (!is.null(by)) data <- data %>% group_by_(.dots = by)
-  o3_standard <- 63
-  data %>% 
-    mutate_(date = interp(~as.Date(date_time), date_time = as.name(dt))) %>% 
-    daily.max(dat = "date", 
-              val = val, 
-              by = by, 
-              thresh = o3_standard, 
-              n.readings.min = 18) %>% 
-    rename(max8hr = max,
-           valid_max8hr = valid,
-           flag_max8hr_incomplete = flag)
-}
-globalVariables("flag")
+# 
+# # Clobbers any date column if there was one.
+# o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL) {
+#   if (!is.null(by)) data <- data %>% group_by_(.dots = by)
+#   o3_standard <- 63
+#   data %>% 
+#     mutate_(date = interp(~as.Date(date_time), date_time = as.name(dt))) %>% 
+#     daily.max(dat = "date", 
+#               val = val, 
+#               by = by, 
+#               thresh = o3_standard, 
+#               n.readings.min = 18) %>% 
+#     rename(max8hr = max,
+#            valid_max8hr = valid,
+#            flag_max8hr_incomplete = flag)
+# }
+# globalVariables("flag")
