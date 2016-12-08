@@ -2,7 +2,7 @@
 % Please edit documentation in R/dates.R
 \name{pad_date_time}
 \alias{pad_date_time}
-\title{Calcuate number of days in quarter}
+\title{Interpolate a sequence of dates and values with NA when dates are missing.}
 \usage{
 pad_date_time(dat, val, interval)
 }
@@ -17,6 +17,6 @@ pad_date_time(dat, val, interval)
 data.frame with all input dates and values, interpolated with NAs.
 }
 \description{
-Calcuate number of days in quarter
+Interpolate a sequence of dates and values with NA when dates are missing.
 }
 

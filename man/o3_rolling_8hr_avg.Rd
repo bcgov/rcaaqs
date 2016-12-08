@@ -2,9 +2,10 @@
 % Please edit documentation in R/rolling_stat.R
 \name{o3_rolling_8hr_avg}
 \alias{o3_rolling_8hr_avg}
-\title{Find the daily maximum of a value by some factor}
+\title{Find the rolling 8 hour average for ozone.}
 \usage{
-o3_rolling_8hr_avg(data, dt = "date_time", val = "value", by = NULL)
+o3_rolling_8hr_avg(data, dt = "date_time", val = "value", by = NULL,
+  exclude_df = NULL, exclude_df_dt = NULL)
 }
 \arguments{
 \item{data}{Dataframe}
@@ -14,6 +15,11 @@ o3_rolling_8hr_avg(data, dt = "date_time", val = "value", by = NULL)
 \item{val}{character the value column}
 
 \item{by}{character the columns to group by}
+
+\item{exclude_df}{he data.frame that has all the columns in the 
+by parameter, in addition exactly one or two date columns.}
+
+\item{exclude_df_dt}{a character vector with exactly one or two date columns.}
 }
 \description{
 Given a dataframe with one value column, find the maximum value by some date.
