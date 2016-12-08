@@ -10,12 +10,27 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-# Window functions.
+
+#'Compute the rolling sum with different windows.
+#'
+#' @importFrom dplyr lag
+#' @param x the input numeric value
+#' @param width The maximum number of values used to compute the sum.
+#' @return vector with all input dates and values, interpolated with NAs.
 rolling_sum <- function(x, width) {
   x <- ifelse(is.na(x), 0, x)
   cumsum(x) - lag(cumsum(x), width, default = 0)
 }
 
+#'Compute the rolling mean with different windows and thresholds.
+#'
+#' @param x the input numeric value
+#' @param width The maximum number of values used to compute the mean.
+#' @param thresh If at least thresh values are not used in computing 
+#' the mean, then the output will be set to NA. 
+#' @return A numeric vector with the rolling mean. The output vector will
+#' always have the same length as the input vector, which makes it convenient 
+#' to use with the summarise function in dplyr. 
 rolling_mean <- function(x, width = 8, thresh = 0){
   available <- rolling_sum(!is.na(x), width = width)
   sum <- rolling_sum(x, width = width)
@@ -34,7 +49,18 @@ n_within_window <- function(x, interval, window){
   rolling_sum(full_x %in% x, width = window)[match(x,full_x)]
 }
 
-# Check for bad intervals? (Duplicated dates. etc.)
+#'Calculate a rolling mean, but fill in missing date values with NA.
+#'
+#' @param dat the input date or date-time value
+#' @param val some numeric value to be interpolated with NAs.
+#' @param interval some numeric step size. for date-times, in seconds.
+#' @param width to calculate the mean, look back from current date 
+#' to width*interval behind.
+#' @param valid_thresh If there are less than width values available, 
+#' then the mean will still be calculated if there are at least valid_thresh available. 
+#' Set to equal width if this behaviour is not desired.
+#' @param digits how many digits should the value be rounded to?
+#' @return vector with all input dates and values, interpolated with NAs.
 filled_rolling_mean <- function(dat, val, interval = 3600, 
                                 width = 8, valid_thresh = 6, digits = 1) {
   dat_val_padded <- pad_date_time(dat, val, interval)
@@ -43,59 +69,6 @@ filled_rolling_mean <- function(dat, val, interval = 3600,
   # Ensure order and length is same as input.
   roll_mean[match(dat, dat_val_padded$dat)] 
 }
-
-# rolling_value <- function(input, dat, val, interval, by, window, valid_thresh, 
-#                           flag.num = NULL) {
-#   if (!is.null(by)) input <- input %>% group_by_(.dots = by)
-#   ret.val <- 
-#     input %>%
-#     mutate_(rolled.value =
-#               interp(~filled.rolling_mean(dat, val, interval, 
-#                                           window, valid.thresh),
-#                      dat = as.name(dat),
-#                      val = as.name(val),
-#                      interval = interval, 
-#                      window = window, 
-#                      valid.thresh = valid.thresh),
-#             n.within =
-#               interp(~n.within.window(dat, interval, window),
-#                      dat = input[[dat]],
-#                      interval = interval,
-#                      window = window)) %>%
-#     mutate(valid = n.within >= valid.thresh) %>% 
-#     ungroup
-#   if (!is.null(flag.num)) 
-#     ret.val <- ret.val %>% mutate(flag = n.within %in% flag.num)
-#   ret.val %>% select(-n.within)
-# }
-# globalVariables("n.within")
-
-#'Find the daily maximum of a value by some factor
-#'
-#'Given a dataframe with one value column, find the maximum value by some date.
-#' @importFrom  stats na.omit
-#' @param  input Dataframe
-#' @param  dat character the column containing dates
-#' @param  val character the value column
-#' @param  by  character the columns to group by
-#' @param  thresh numeric. 
-#' @param  n.readings.min numeric. 
-# '@return dataframe with filled in dates
-daily_max <- function(input, dat = "date", val = "value", 
-                      by = c("ems_id", "site"), 
-                      thresh = 63, n.readings.min = 18) {
-  input %>%
-    group_by_(.dots = c(by, dat)) %>%
-    summarise_(nReadings = interp(~length(na.omit(value)), 
-                                  value = as.name(val)), 
-               max       = interp(~max(value, na.rm = TRUE), 
-                                  value = as.name(val)), 
-               exceed    = interp(~max > thresh, thresh = thresh), 
-               valid     = interp(~nReadings >= n.readings.min, 
-                                  n.readings.min = n.readings.min)) %>%  
-    mutate(flag = exceed & !valid) # Flag for data incomplete, but used
-}
-globalVariables(c("exceed", "valid"))
 
 #'Find the maximum, return NA if no non-NA values.
 #'

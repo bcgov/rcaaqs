@@ -14,6 +14,7 @@
 #'
 #'Given a dataframe with one value column, find the maximum value by some date.
 #' @importFrom  stats na.omit
+#' @importFrom  lazyeval interp
 #' @param  data Dataframe
 #' @param  dt character the column containing dates
 #' @param  val character the value column
@@ -36,10 +37,10 @@ daily_stat <- function(data, dt = "date", val = "value",
                                    value = as.name(val), fun = stat), 
                exceed     = interp(~stat > thresh, thresh = thresh), 
                valid      = interp(~n_readings >= n_readings_min, 
-                                   n_readings_min = n_readings_min))  
-  data <- mutate(data, flag = exceed & !valid) # Flag for data incomplete, but used
-  mutate(data, stat = round(ifelse(valid | flag, stat, NA_real_), digits))
-  
+                                   n_readings_min = n_readings_min))
+  data$flag <- data$exceed & !data$valid # Flag for data incomplete, but used
+  data$stat <- round(ifelse(data$valid | data$flag, data$stat, NA_real_), digits)
+  data
 }
 
 # Clobbers any date column if there was one.
@@ -56,22 +57,7 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard, s
              stat = stat)
 }
 
-o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL) {
-  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = get_std("o3"))
-  rename_(data, max8hr = "stat", valid_max8hr = "valid", flag_max8hr_incomplete = "flag")
-}
-
-no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL) {
-  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf)
-  rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
-}
-
-so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL) {
-  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70)
-  rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
-}
-
-#'Find the daily average for PM2.5
+#' Cacluate daily maxima or averages for different sensor readings.
 #'
 #'@param data data frame with date and value
 #'@param dt the name (as a character string) of the date-time column. Default
@@ -81,9 +67,45 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL) {
 #'@param by character vector of grouping variables in data, probably an id if
 #'  using multiple sites. Even if not using multiple sites, you shoud specfify
 #'  the id column so that it is retained in the output.
-#'@export
-#'@return data frame with the daily averages, can be input into 
-pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL) {
+#'@param exclude_df a data.frame specifying which date ranges and sites to exclude. 
+#'  The data.frame must have to one date column if specific dates or date-times are to be excluded,
+#'  and exactly two date or date-time columns if a date range is needed.
+#'  must have all the columns of by provided, 
+#'@param exclude_df_dt specifies the one (or two) date columns to be use in the exclude_df data.frame.
+#' @name daily_stat_page
+NULL
+#> NULL
+
+#' @rdname daily_stat_page
+#' @export
+o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
+  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = get_std("o3"))
+  rename_(data, max8hr = "stat", valid_max8hr = "valid", flag_max8hr_incomplete = "flag")
+}
+
+#' @rdname daily_stat_page
+#' @export
+no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
+  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf)
+  rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
+}
+
+#' @rdname daily_stat_page
+#' @export
+so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
+  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70)
+  rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
+}
+
+#'Find the daily average for PM2.5
+#' @rdname daily_stat_page
+#' @return data frame with the daily averages, can be input into 
+#' @export
+pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, stat = mean_na)
   rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
 }

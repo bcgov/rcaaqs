@@ -137,9 +137,9 @@ days_in_quarter <- function(quarter, year)
 days_in_year <- function(year) 
   365 + lubridate::leap_year(year)
 
-#'Calcuate number of days in quarter
+#'Interpolate a sequence of dates and values with NA when dates are missing.
 #'
-#' @import tidyr
+#' @importFrom tidyr full_seq
 #' @param dat the date, date_time, or numeric value
 #' @param val some value to be interpolated
 #' @param interval some numeric step size. for date-times, in seconds.
@@ -149,13 +149,9 @@ pad_date_time <- function(dat, val, interval) {
   data.frame(dat = all_dates, 
              val = val[match(all_dates, dat)])
 }
-
-get_year_from_date <- function(date) 
-  as.integer(strftime(as.POSIXlt(date), "%Y"))
-
-# get_year_from_date <- function(date) {
-#   as.integer(as.POSIXlt(date)$year + 1900)
-# }
+get_year_from_date <- function(date) {
+  as.integer(as.POSIXlt(date)$year + 1900)
+}
 
 get_month_from_date <- function(date) {
   as.integer(as.POSIXlt(date)$mon + 1)
@@ -173,6 +169,7 @@ time_to_date <- function(date_time)
 #'Calcuate number (or proportion) of valid days in each year and quarter
 #'
 #' @importFrom lubridate quarter
+#' @importFrom tidyr spread_
 #' @param data the input data.frame
 #' @param date the date
 #' @param by the grouping variable

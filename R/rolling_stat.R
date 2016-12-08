@@ -30,7 +30,8 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
   if (!is.null(flag_num)) data$flag <- n_within %in% flag_num
   data
 }
-#'Find the daily maximum of a value by some factor
+
+#'Find the rolling 8 hour average for ozone.
 #'
 #'Given a dataframe with one value column, find the maximum value by some date.
 #' @importFrom  stats na.omit
@@ -39,8 +40,13 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
 #' @param  dt character the column containing date-times
 #' @param  val character the value column
 #' @param  by  character the columns to group by
+#' @param  exclude_df he data.frame that has all the columns in the 
+#' by parameter, in addition exactly one or two date columns.
+#' @param  exclude_df_dt a character vector with exactly one or two date columns.
 # '@return dataframe with rolling 8-hour averages.
-o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value", by = NULL){
+o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value", 
+                               by = NULL, exclude_df = NULL, exclude_df_dt = NULL){
+  if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   if (!is.POSIXt(data[[dt]])) stop(paste0('"', dt, '" is not a date-time'))
   if (!is.null(by)) data <- data %>% group_by_(.dots = by)
   rolling_value(data, 
@@ -55,7 +61,7 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value", by = NULL)
 
 so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = NULL) {
   if (!is.null(by)) data <- group_by_(data, .dots = by)
-  data <- filter(data, valid_year | exceed)
+  data <- data[data$valid_year | data$exceed,]
   data <- rolling_value(data,
                         dt = dt,
                         val = val,
@@ -69,7 +75,7 @@ so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = 
 
 no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = NULL) {
   if (!is.null(by)) data <- group_by_(data, .dots = by)
-  data <- filter(data, valid_year)
+  data <- data[data$valid_year]
   data <- rolling_value(data,
                         dt = dt,
                         val = val,
@@ -83,7 +89,7 @@ no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = 
 
 pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = NULL) {
   if (!is.null(by)) data <- group_by_(data, .dots = by)
-  data <- filter(data, valid_year)
+  data <- data[data$valid_year]
   data <- rolling_value(data,
                         dt = dt,
                         val = val,
@@ -117,7 +123,7 @@ pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = N
 # invalid and not flagged years, even though those measurements might be valid.
 o3_three_yr_avg <- function(data, dt = "year", val = "max8hr", by = NULL) {
   if (!is.null(by)) data <- group_by_(data, .dots = by)
-  data <- filter(data, valid_year | flag_year_based_on_incomplete_data)
+  data <- data[data$valid_year | data$flag_year_based_on_incomplete_data,]
   data <- rolling_value(data,
                         dt = dt,
                         val = val,
@@ -130,4 +136,4 @@ o3_three_yr_avg <- function(data, dt = "year", val = "max8hr", by = NULL) {
           ozone_metric = "rolled_value",
           flag_two_of_three_years = "flag")
 }
-globalVariables(c("valid_year", "flag_year_based_on_incomplete_data", "rolled.value", "flag"))
+
