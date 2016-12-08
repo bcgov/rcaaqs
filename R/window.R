@@ -87,3 +87,23 @@ max_na <- function(x)
 # '@return The maximum value of x, with NAs removed. If no non-NA values, return NA.
 mean_na <- function(x) 
   if (length(na.omit(x)) == 0) NA else mean(x, na.rm = TRUE)
+
+#'Find the quantile, return NA if no non-NA values.
+#' 
+#' Wraps \code{\link{quantile2}} but returns NA if no non-NA values
+#' @param x numeric vector whose sample quantiles are wanted.
+#' @param probs numeric vector of probablities with values in \eqn{[0,1]}. 
+#'   Default \code{0.98}
+#' @param na.rm logical; if true, any \code{NA} and \code{NaN}'s are removed 
+#'   from \code{x} before the quantiles are computed. Default \code{FALSE}
+#' @param names logical; if true, the result has a names attribute. Set to FALSE
+#'   for speedup with many probs. Default \code{FALSE}
+#' @param type \code{"caaqs"} (default) or an integer between 1 and 9 selecting
+#'   one of the nine base quantile algorithms be used. See
+#'   \code{\link[stats]{quantile}} for details
+#'   
+#' @return A vector of \code{length(probs)}; if \code{names = TRUE}, it has a
+#'   \code{names} attribute
+#' @seealso \code{\link{quantile2}}
+quantile2_na <- function(x, probs = 0.98, na.rm = TRUE, names = FALSE, type = "caaqs") 
+  if (length(na.omit(x)) == 0) NA else quantile2(x, probs = probs, na.rm = na.rm, names = names, type = type)
