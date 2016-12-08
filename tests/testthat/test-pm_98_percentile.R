@@ -77,9 +77,7 @@ one_id <- multi_id[multi_id$id == "a", ]
 
 test_one <- pm_yearly_98(one_id, dt = "dates", val = "val")
 test_mult <- pm_yearly_98(multi_id, dt = "dates", val = "val", by = "id")
-  
-# test_one <- pm_98_percentile(one_id, date = "dates", val = "val")
-# test_mult <- pm_98_percentile(multi_id, date = "dates", val = "val", by = "id")
+# saveRDS(test_mult, "~/rcaaqs/tests/testthat/annual_98_percentiles.rds")
 
 test_that("Only accepts date objects", {
   posix <- seq.POSIXt(as.POSIXct("2012-01-01"), as.POSIXct("2012-01-31"), by = "hour")
@@ -96,19 +94,19 @@ test_that("Is a data frame", {
  
 test_that("Has the right column names and dimensions", {
   expected_names <-c("year", "ann_98_percentile", "valid_in_year", "quarter_1", 
-                     "quarter_2", "quarter_3", "quarter_4", "ann_avg", "valid_year", 
+                     "quarter_2", "quarter_3", "quarter_4", "valid_year", 
                      "exceed", "flag_year_based_on_incomplete_data")
   expect_equal(names(test_one), expected_names)
-  expect_equal(dim(test_one), c(4, 11))
+  expect_equal(dim(test_one), c(4, 10))
 
   # For multiple years:
   expect_equal(names(test_mult), c("id", expected_names))
-  expect_equal(dim(test_mult), c(8, 12))
+  expect_equal(dim(test_mult), c(8, 11))
 })
  
 test_that("Columns are the right class", {
   classes <- c("integer", "numeric", "numeric", "numeric", "numeric", "numeric", 
-               "numeric", "numeric", "logical", "logical", "logical")
+               "numeric", "logical", "logical", "logical")
   expect_equal(unname(sapply(test_one, class)), classes)
   expect_equal(unname(sapply(test_mult, class)), c("character", classes))
 })

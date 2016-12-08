@@ -27,23 +27,13 @@ test_that("has correct classes", {
 })
 
 test_that("can exclude data rows", {
-  exclude_df <-
+  excl_df <-
     data.frame(id = "a",
                start = hourly_data$date[2],
-               stop = hourly_data$date[4])
-  ret <- pm_daily_avg(hourly_data, "date", "val", "id", exclude_df, c("start", "stop"))
-  
-  expect_is(ret$id, "character")
-  expect_is(ret$date, "Date")
-  expect_is(ret$n_readings, "integer")
-  expect_is(ret$avg_24h, "numeric")
-  expect_is(ret$exceed, "logical")
-  expect_is(ret$valid_avg_24h, "logical")
-  expect_is(ret$flag_avg_24hr_incomplete, "logical")
+               stop = hourly_data$date[4],
+               stringsAsFactors = FALSE)
+  ret <- pm_daily_avg(hourly_data, "date", "val", "id", excl_df, c("start", "stop"))
+  expect_equal(ret$avg_24h[1], round(mean(hourly_data$val[c(1,5:22)]),1))
 })
 
 
-# 
-# exclude_data(hourly_data, exclude_df)
-# 
-# pm_daily_avg(hourly_data, "date", "val", "id", exclude_df)
