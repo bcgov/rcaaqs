@@ -38,6 +38,7 @@ daily_stat <- function(data, dt = "date", val = "value",
                exceed     = interp(~stat > thresh, thresh = thresh), 
                valid      = interp(~n_readings >= n_readings_min, 
                                    n_readings_min = n_readings_min))
+  data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
   data$flag <- data$exceed & !data$valid # Flag for data incomplete, but used
   data$stat <- round(ifelse(data$valid | data$flag, data$stat, NA_real_), digits)
   data
@@ -86,7 +87,7 @@ o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL, ex
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
+  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = get_std("o3"))
   rename_(data, max8hr = "stat", valid_max8hr = "valid", flag_max8hr_incomplete = "flag")
 }
@@ -100,7 +101,7 @@ no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
+  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf)
   rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
 }
@@ -114,7 +115,7 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
+  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70)
   rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
 }
@@ -128,7 +129,7 @@ pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL, exclu
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
+  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, stat = mean_na)
   rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
 }
