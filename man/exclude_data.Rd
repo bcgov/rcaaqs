@@ -18,6 +18,9 @@ by parameter, in addition exactly one or two date columns.}
 
 \item{exclusion_date_cols}{a character vector with exactly one or two date columns.}
 }
+\value{
+dataframe with the specified dates or date ranges excluded.
+}
 \description{
 Given exclude rows from input dataset based on supplied data.frame which specifies specific dates or date ranges.
 }

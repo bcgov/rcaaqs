@@ -45,7 +45,5 @@ data frame with the daily averages, can be input into
 }
 \description{
 Cacluate daily maxima or averages for different sensor readings.
-
-Find the daily average for PM2.5
 }
 
