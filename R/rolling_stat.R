@@ -59,7 +59,7 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
+  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   if (!is.null(by)) data <- group_by_(data, .dots = by)
   data <- rolling_value(data, 
                        dt = dt, 
