@@ -114,7 +114,7 @@ test_that("Columns are the right class", {
 })
  
 test_that("Exceed works", {
-  expect_false(any(test_mult$exceed, na.rm = TRUE))
+  expect_false(any(test_mult$exceed))
 
   set.seed(42)
   multi_id$val <- rnorm(nrow(multi_id), 35, 1)
