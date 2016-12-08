@@ -30,7 +30,8 @@ yearly_stat <- function(data, dt = "date", val = "value",
   left_join(data, quarter_valid, by = c(by, "year"))
 }
 
-#'Find the yearly 98th percentile of the daily average for PM2.5
+
+#'Compute a yearly statistic (typically 98th percentile).
 #'
 #'@param data data frame with date and value
 #'@param dt the name (as a character string) of the date-time column. Default
@@ -43,9 +44,21 @@ yearly_stat <- function(data, dt = "date", val = "value",
 #' @param  exclude_df he data.frame that has all the columns in the 
 #' by parameter, in addition exactly one or two date columns.
 #' @param  exclude_df_dt a character vector with exactly one or two date columns.
-#'@export
-#'@return data frame with the 98th percentile
+#' @return data frame with the daily averages, can be input into 
+#' @name yearly_stat_page
+NULL
+#> NULL
+
+
+#' @rdname yearly_stat_page
+#' @importFrom  lubridate is.Date
+#' @export
 pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.Date(data[[dt]]), 
+            is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   data <- yearly_stat(data, dt, val, by, quantile2, list(na.rm = TRUE))
   data <- rename_(data, ann_98_percentile = "stat")
@@ -62,7 +75,15 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_
   data
 }
 
+#' @rdname yearly_stat_page
+#' @importFrom  lubridate is.Date
+#' @export
 so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.Date(data[[dt]]), 
+            is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   data <- yearly_stat(data, dt, val, by, quantile2, list(na.rm = TRUE, probs = 0.99))
   data <- rename_(data, ann_99_percentile = "stat")
@@ -79,7 +100,15 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
   data
 }
 
+#' @rdname yearly_stat_page
+#' @importFrom  lubridate is.Date
+#' @export
 no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.Date(data[[dt]]), 
+            is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   data <- yearly_stat(data, dt, val, by, quantile2, list(na.rm = TRUE, probs = 0.98))
   data <- rename_(data, ann_98_percentile = "stat")
@@ -95,7 +124,15 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
 }
 
 
+#' @rdname yearly_stat_page
+#' @importFrom  lubridate is.Date
+#' @export
 pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.Date(data[[dt]]), 
+            is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   data <- yearly_stat(data, dt, val, by, mean_na)
   data <- rename_(data, ann_avg = "stat")
@@ -109,10 +146,15 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude
   data
 }
 
-nth_highest <- function(x,n)
-  x[order(x, decreasing = TRUE)[n]]
-
+#' @rdname yearly_stat_page
+#' @importFrom  lubridate is.Date
+#' @export
 o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.Date(data[[dt]]), 
+            is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   data <- data[data$valid_max8hr | data$flag_max8hr_incomplete,]
   data <- yearly_stat(data, dt, val, by, 
@@ -128,7 +170,15 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL, exc
   data
 }
 
+#' @rdname yearly_stat_page
+#' @importFrom  lubridate is.POSIXt
+#' @export
 so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.Date(data[[dt]]), 
+            is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   data$date <- time_to_date(data[[dt]])
   data <- yearly_stat(data, "date", val, by, mean_na, quarter_units = "days") 
@@ -148,7 +198,15 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
   data
 }
 
+#' @rdname yearly_stat_page
+#' @importFrom  lubridate is.POSIXt
+#' @export
 no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.Date(data[[dt]]), 
+            is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   data$date <- time_to_date(data[[dt]])
   data <- yearly_stat(data, "date", val, by, mean_na, quarter_units = "days") 
@@ -214,3 +272,6 @@ quantile2 <- function(x, probs = 0.98, na.rm = FALSE, names = FALSE, type = "caa
   }
   ret
 }
+
+nth_highest <- function(x,n)
+  x[order(x, decreasing = TRUE)[n]]

@@ -72,39 +72,62 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard, s
 #'  and exactly two date or date-time columns if a date range is needed.
 #'  must have all the columns of by provided, 
 #'@param exclude_df_dt specifies the one (or two) date columns to be use in the exclude_df data.frame.
+#' @return data frame with the daily averages, can be input into 
 #' @name daily_stat_page
 NULL
 #> NULL
 
 #' @rdname daily_stat_page
+#' @importFrom lubridate is.POSIXt
 #' @export
 o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.POSIXt(data[[dt]]), 
+            is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = get_std("o3"))
   rename_(data, max8hr = "stat", valid_max8hr = "valid", flag_max8hr_incomplete = "flag")
 }
 
 #' @rdname daily_stat_page
+#' @importFrom lubridate is.POSIXt
 #' @export
 no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.POSIXt(data[[dt]]), 
+            is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf)
   rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
 }
 
 #' @rdname daily_stat_page
+#' @importFrom lubridate is.POSIXt
 #' @export
 so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.POSIXt(data[[dt]]), 
+            is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70)
   rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
 }
 
-#'Find the daily average for PM2.5
 #' @rdname daily_stat_page
-#' @return data frame with the daily averages, can be input into 
+#' @importFrom lubridate is.POSIXt
 #' @export
 pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.POSIXt(data[[dt]]), 
+            is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, stat = mean_na)
   rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")

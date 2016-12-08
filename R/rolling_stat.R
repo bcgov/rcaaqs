@@ -31,36 +31,56 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
   data
 }
 
-#'Find the rolling 8 hour average for ozone.
+
+#'Compute a rolling statistic (typically over years, but also hourly).
 #'
-#'Given a dataframe with one value column, find the maximum value by some date.
-#' @importFrom  stats na.omit
-#' @importFrom  lubridate is.POSIXt
-#' @param  data Dataframe
-#' @param  dt character the column containing date-times
-#' @param  val character the value column
-#' @param  by  character the columns to group by
+#'@param data data frame with date and value
+#'@param dt the name (as a character string) of the date-time column. 
+#'@param val the name (as a character string) of the value column. 
+#'@param by character vector of grouping variables in data, probably an id if
+#'  using multiple sites. Even if not using multiple sites, you shoud specify
+#'  the id column so that it is retained in the output.
 #' @param  exclude_df he data.frame that has all the columns in the 
 #' by parameter, in addition exactly one or two date columns.
 #' @param  exclude_df_dt a character vector with exactly one or two date columns.
 # '@return dataframe with rolling 8-hour averages.
+#' @name rolling_stat_page
+NULL
+#> NULL
+
+
+#' @rdname rolling_stat_page
+#' @importFrom  lubridate is.POSIXt
+#' @export
 o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value", 
                                by = NULL, exclude_df = NULL, exclude_df_dt = NULL){
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.POSIXt(data[[dt]]), 
+            is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
-  if (!is.POSIXt(data[[dt]])) stop(paste0('"', dt, '" is not a date-time'))
-  if (!is.null(by)) data <- data %>% group_by_(.dots = by)
-  rolling_value(data, 
-                dt = dt, 
-                val = val, 
-                by = by, 
-                interval = 3600,
-                window = 8, 
-                valid_thresh = 6) %>% 
-    rename_(rolling8 = "rolled_value", flag_valid_8hr = "valid")
+  if (!is.null(by)) data <- group_by_(data, .dots = by)
+  data <- rolling_value(data, 
+                       dt = dt, 
+                       val = val, 
+                       by = by, 
+                       interval = 3600,
+                       window = 8, 
+                       valid_thresh = 6)
+  rename_(data, rolling8 = "rolled_value", flag_valid_8hr = "valid")
 }
 
+#' @rdname rolling_stat_page
+#' @export
 so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.numeric(data[[dt]]), 
+            is.numeric(data[[val]]))
   if (!is.null(by)) data <- group_by_(data, .dots = by)
+  stopifnot(is.data.frame(data), is.character(dt), is.character(val), is.numeric(data[[dt]]))
   data <- data[data$valid_year | data$exceed,]
   data <- rolling_value(data,
                         dt = dt,
@@ -73,9 +93,16 @@ so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = 
   rename_(data, so2_metric = "rolled_value")
 }
 
+#' @rdname rolling_stat_page
+#' @export
 no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.numeric(data[[dt]]), 
+            is.numeric(data[[val]]))
   if (!is.null(by)) data <- group_by_(data, .dots = by)
-  data <- data[data$valid_year]
+  data <- data[data$valid_year,]
   data <- rolling_value(data,
                         dt = dt,
                         val = val,
@@ -87,9 +114,16 @@ no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = 
   rename_(data, no2_metric = "rolled_value")
 }
 
+#' @rdname rolling_stat_page
+#' @export
 pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.numeric(data[[dt]]), 
+            is.numeric(data[[val]]))
   if (!is.null(by)) data <- group_by_(data, .dots = by)
-  data <- data[data$valid_year]
+  data <- data[data$valid_year,]
   data <- rolling_value(data,
                         dt = dt,
                         val = val,
@@ -103,25 +137,14 @@ pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = N
           flag_two_of_three_years = "flag")
 }
 
-#'Calculate the 3-year rolling average of the ozone reading, following CAAQS data completeness 
-#'rules
-#'
-#'@param data data frame with date and value
-#'@param dt the name (as a character string) of the date-time column. Default
-#'  \code{"date_time"}
-#'@param val the name (as a character string) of the ozone value column. Default
-#'  \code{"value"}
-#'@param by character vector of grouping variables in data, probably an id if
-#'  using multiple sites. Even if not using multiple sites, you shoud specify
-#'  the id column so that it is retained in the output.
-#'@import dplyr
-#'@import lazyeval
-#'@export
-#'@return data frame with the 3-year rolling averages
-
-# The method here is correct, but it won't provide measurements for 
-# invalid and not flagged years, even though those measurements might be valid.
+#' @rdname rolling_stat_page
+#' @export
 o3_three_yr_avg <- function(data, dt = "year", val = "max8hr", by = NULL) {
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            is.numeric(data[[dt]]), 
+            is.numeric(data[[val]]))
   if (!is.null(by)) data <- group_by_(data, .dots = by)
   data <- data[data$valid_year | data$flag_year_based_on_incomplete_data,]
   data <- rolling_value(data,
