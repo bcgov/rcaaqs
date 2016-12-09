@@ -180,7 +180,7 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
-            is.Date(data[[dt]]), 
+            is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   data$date <- time_to_date(data[[dt]])
@@ -210,7 +210,7 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
-            is.Date(data[[dt]]), 
+            is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   data$date <- time_to_date(data[[dt]])
