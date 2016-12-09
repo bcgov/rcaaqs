@@ -13,7 +13,7 @@ An [R](https://www.r-project.org/) package to facilitate the calculation of air 
 ### Features
 
 -   General functions for doing things like formatting dates, filling in sequences, etc.
--   Functions for stepwise calculation of CAAQS metrics for different pollutants. Currently these are only complete for PM<sub>2.5</sub> (annual and 24hr) metrics, and are in development for ozone.
+-   Functions for stepwise calculation of CAAQS metrics for different pollutants. Currently these are only complete for PM<sub>2.5</sub> (annual and 24hr) metrics, ozone, NO<sub>2</sub>, and SO<sub>2</sub>.
 -   Functions for assigning metrics for different pollutants into achievement and management categories.
 
 ### Installation
@@ -114,6 +114,18 @@ glimpse(annual_avg)
 pm_98_just_valid <- pm_98[pm_98$exceed | pm_98$valid_year,]
 pm_caaq_daily <- 
   pm_24h_caaq(pm_98_just_valid, by = "ems_id", cyear = 2013)
+glimpse(pm_caaq_daily)
+#> Observations: 10
+#> Variables: 9
+#> $ ems_id       <chr> "0220205", "0310162", "0310172", "0310175", "0310...
+#> $ caaq_year    <dbl> 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2...
+#> $ min_year     <int> 2012, 2011, 2011, 2011, 2011, 2011, 2011, 2012, 2...
+#> $ max_year     <int> 2012, 2013, 2013, 2013, 2011, 2013, 2013, 2013, 2...
+#> $ n_years      <int> 1, 3, 3, 3, 1, 2, 3, 2, 3, 3
+#> $ metric       <chr> "pm2.5_24h", "pm2.5_24h", "pm2.5_24h", "pm2.5_24h...
+#> $ metric_value <dbl> NA, 13, 15, 13, NA, 12, 17, 27, 12, 15
+#> $ caaqs        <ord> Insufficient Data, Achieved, Achieved, Achieved, ...
+#> $ mgmt         <ord> Insufficient Data, Actions for Preventing Air Qua...
 
 ## Finally, calculate the Annual CAAQS metric: The 3-year average of the
 ## annual average concentrations. 

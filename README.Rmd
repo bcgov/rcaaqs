@@ -86,6 +86,7 @@ glimpse(annual_avg)
 pm_98_just_valid <- pm_98[pm_98$exceed | pm_98$valid_year,]
 pm_caaq_daily <- 
   pm_24h_caaq(pm_98_just_valid, by = "ems_id", cyear = 2013)
+glimpse(pm_caaq_daily)
 
 ## Finally, calculate the Annual CAAQS metric: The 3-year average of the
 ## annual average concentrations. 
