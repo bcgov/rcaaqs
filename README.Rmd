@@ -120,6 +120,76 @@ three_yr_avg <- o3_three_yr_avg(ann_4th_highest, by = c("ems_id", "site"))
 glimpse(three_yr_avg)
 ```
 
+This is a simple example using the included sample data set for SO<sub>2</sub>. 
+
+```{r}
+library(rcaaqs)
+library(dplyr)
+
+## Load sample data:
+data("so2_sample_data")
+glimpse(so2_sample_data)
+
+# Compute the daily average
+so2_maxdaily <- 
+  so2_daily_max(so2_sample_data, 
+                by = c("ems_id", "site"))
+glimpse(so2_maxdaily)
+
+## Compute yearly 98 percentiles of daily average by station 
+so2_99 <- 
+  so2_yearly_99(so2_maxdaily, 
+               by = c("ems_id", "site"))
+glimpse(so2_99)
+
+# Caclulate the three year statistics.
+so2_three_yr <- 
+  so2_three_yr_avg(so2_99,
+                   by = c("ems_id", "site"))
+glimpse(so2_three_yr)
+
+# Compute the yearly average of all one-hour readings.
+so2_yearly_avg <- 
+  so2_avg_hourly_by_year(so2_sample_data,
+                         by = c("ems_id", "site"))
+glimpse(so2_yearly_avg)
+```
+
+This is a simple example using the included sample data set for NO<sub>2</sub>. 
+```{r}
+library(rcaaqs)
+library(dplyr)
+
+## Load sample data:
+data("no2_sample_data")
+glimpse(no2_sample_data)
+
+# Compute the daily average
+no2_maxdaily <- 
+  no2_daily_max(no2_sample_data, 
+                by = c("ems_id", "site"))
+glimpse(no2_maxdaily)
+
+## Compute yearly 98 percentiles of daily average by station 
+no2_98 <- 
+  no2_yearly_98(no2_maxdaily, 
+               by = c("ems_id", "site"))
+glimpse(no2_98)
+
+# Caclulate the three year statistics.
+no2_three_yr <- 
+  no2_three_yr_avg(no2_98,
+                   by = c("ems_id", "site"))
+glimpse(no2_three_yr)
+
+# Compute the yearly average of all one-hour readings.
+no2_yearly_avg <- 
+  no2_avg_hourly_by_year(no2_sample_data,
+                         by = c("ems_id", "site"))
+glimpse(no2_yearly_avg)
+```
+
+
 You can view the CAAQS Achievement Levels as well as Management Levels in the included data frames. These are used internally in `pm_annual_caaq()` and `pm_24hr_caaq()` to assign metric values at each station to the appropriate CAAQS Achievement Level and Management Level:
 
 ```{r}
