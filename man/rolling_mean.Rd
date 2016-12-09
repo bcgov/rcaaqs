@@ -15,9 +15,8 @@ rolling_mean(x, width = 8, thresh = 0)
 the mean, then the output will be set to NA.}
 }
 \value{
-A numeric vector with the rolling mean. The output vector will
-always have the same length as the input vector, which makes it convenient 
-to use with the summarise function in dplyr.
+A rolling mean (see \code{\link[rcaaqs]{rolling_sum}}), except  
+if not at least thresh values, it returns NA.
 }
 \description{
 Compute the rolling mean with different windows and thresholds.

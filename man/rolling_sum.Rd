@@ -12,7 +12,7 @@ rolling_sum(x, width)
 \item{width}{The maximum number of values used to compute the sum.}
 }
 \value{
-vector with all input dates and values, interpolated with NAs.
+a vector y where y[i] = sum(x[i:i-1]) removing NAs, and ignoring non-positive indices.
 }
 \description{
 Compute the rolling sum with different windows.
