@@ -34,7 +34,7 @@ metrics according to the Canadian Ambient Air Quality Standards
   sequences, etc. 
 - Functions for stepwise calculation of CAAQS metrics for
   different pollutants. Currently these are only complete for PM~2.5~ 
-  (annual and 24hr) metrics, and are in development for ozone. 
+  (annual and 24hr) metrics, ozone, NO~2~, and SO~2~. 
 - Functions for assigning
   metrics for different pollutants into achievement and management categories.
 
