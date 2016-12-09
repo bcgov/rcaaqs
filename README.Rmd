@@ -202,9 +202,7 @@ management_levels
 
 ### Project Status
 
-The package is under active development. It is working well for the calculation
-of PM<sub>2.5</sub> metrics, and the assignment of metrics into categories. We are working
-on the ozone metric calculations.
+The package is under active development. 
 
 ### Getting Help or Reporting an Issue
 
