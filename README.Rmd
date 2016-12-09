@@ -24,7 +24,7 @@ envreportutils::devex_badge("exploration")
 
 # rcaaqs
 
-An [R](https://www.r-project.org/) package to faciliate the calculation of air quality 
+An [R](https://www.r-project.org/) package to facilitate the calculation of air quality 
 metrics according to the Canadian Ambient Air Quality Standards
 ([CAAQS](http://www.ccme.ca/en/current_priorities/air/caaqs.html))
 
@@ -33,7 +33,7 @@ metrics according to the Canadian Ambient Air Quality Standards
 - General functions for doing things like formatting dates, filling in
   sequences, etc. 
 - Functions for stepwise calculation of CAAQS metrics for
-  different pollutants. Currently these are only complete for PM2.5 
+  different pollutants. Currently these are only complete for PM~2.5~ 
   (annual and 24hr) metrics, and are in development for ozone. 
 - Functions for assigning
   metrics for different pollutants into achievement and management categories.
@@ -51,10 +51,81 @@ install_github("bcgov/rcaaqs")
 
 ```
 
+### Usage
+
+This is a simple example using the included sample data set for PM<sub>2.5</sub>. For a fuller example with a larger dataset requiring more cleaning, see the [PM<sub>2.5</sub> analysis we completed for 2011-2013](https://github.com/bcgov/pm25-caaqs-analysis).
+
+```{r}
+library(rcaaqs)
+library(dplyr)
+
+## Load sample data:
+data("pm25_sample_data")
+glimpse(pm25_sample_data)
+
+## Calculate the data completeness criteria for the pm2.5 data:
+pm_completeness <- pm_data_complete(pm25_sample_data, 
+                                    by = c("ems_id", "site"))
+
+## Columns are added showing the completeness evaluation annually 
+## and quarterly
+glimpse(pm_completeness)
+
+## Compute daily averages by station (these are used for both the 24 hr 
+## metric and the Annual metric:
+avgdaily <- pm_daily_avg(pm25_sample_data, by = c("ems_id", "site"))
+glimpse(avgdaily)
+
+# Calculate the PM25 24 Hour Metric -----------------------------------
+
+## Compute annual 98th percentile of 24h averages for each site
+ann_98_per <- pm_98_percentile(avgdaily, by = "ems_id")
+glimpse(ann_98_per)
+
+## Then join the results to the data completeness data frame and select 
+## only the results that are valid. This process could be more efficent
+ann_98_per <- left_join(ann_98_per, pm_completeness, 
+                        by = c("ems_id", "year"))
+ann_98_per <- filter(ann_98_per, use_annual | (exceed & annual_valid))
+glimpse(ann_98_per)
+
+## Finally, calcualte the 24 hr CAAQS metric: 'The 3-year average of the 
+## annual 98th percentile of the daily 24-hour average concentrations'
+pm_caaq_daily <- pm_24h_caaq(ann_98_per, by = "ems_id", cyear = 2013)
+glimpse(pm_caaq_daily)
+
+# Calculate the PM25 Annual Metric ------------------------------------
+
+## Compute the annaul average
+annual_avg <- pm_annual_average(avgdaily, by = "ems_id")
+glimpse(annual_avg)
+
+## Then join the results to the data completeness data frame and select 
+## only the results that are valid. This process could be more efficent
+annual_avg <- left_join(annual_avg, pm_completeness, 
+                        by = c("ems_id","year"))
+annual_avg <- filter(annual_avg, use_annual)
+glimpse(annual_avg)
+
+## Finally, calculate the Annual CAAQS metric: The 3-year average of the
+## annual average concentrations. 
+pm_caaq_annual <- pm_annual_caaq(annual_avg, by = "ems_id", cyear = 2013)
+glimpse(pm_caaq_annual)
+```
+
+You can view the CAAQS Achievement Levels as well as Management Levels in the included data frames. These are used internally in `pm_annual_caaq()` and `pm_24hr_caaq()` to assign metric values at each station to the appropriate CAAQS Achievement Level and Management Level:
+
+```{r}
+achievement_levels
+
+management_levels
+```
+
+
 ### Project Status
 
 The package is under active development. It is working well for the calculation
-of PM<sub>2.5</sub> metrics, and the assignemnt of metrics into categories. We are working
+of PM<sub>2.5</sub> metrics, and the assignment of metrics into categories. We are working
 on the ozone metric calculations.
 
 ### Getting Help or Reporting an Issue
