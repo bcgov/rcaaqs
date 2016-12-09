@@ -43,10 +43,11 @@ rolling_mean <- function(x, width = 8, thresh = 0){
 #' @param interval some numeric step size. for date-times, in seconds.
 #' @param window some numeric look-back window in \code{interval} units.
 #' @return vector of same length as x, that returns, for each x, the number 
-#' behind x that were within \code{window*interval] units, including x itself.
+#' behind x that were within \code{window*interval} units, including x itself.
 #' @examples
-#' n_within_window(c(1,2,7,8), interval = 1, window = 2)
-n_within_window <- function(x, interval, window){
+#' rcaaqs:::n_within_window(c(1,2,7,8), interval = 1, window = 2)
+#' # c(1,2,1,2)
+n_within_window <- function(x, interval, window) {
   full_x <- full_seq(x, interval)
   rolling_sum(full_x %in% x, width = window)[match(x,full_x)]
 }

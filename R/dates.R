@@ -176,10 +176,9 @@ time_to_date <- function(date_time)
 #' @param units either "prop" if you want proportion of valid days or "days" is absolute number of days is required.
 #' @return data.frame with valid days in each year and quarter
 valid_by_quarter <- function(data, date, by, units = c("prop", "days")) {
-  date <- as.name(date)
-  data <- mutate(data, 
-                 year    = get_year_from_date(date), 
-                 quarter = quarter(date))
+  data <- mutate_(data, 
+                  year    = interp(~get_year_from_date(date), date = as.name(date)), 
+                  quarter = interp(~quarter(date), date = as.name(date)))
   data <- group_by_(data, .dots = c(by, "year", "quarter"))
   data <- summarise(data, days = n())
   data <- ungroup(data)

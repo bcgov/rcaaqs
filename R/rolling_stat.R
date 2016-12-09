@@ -14,14 +14,13 @@
 rolling_value <- function(data, dt, val, interval, by, window, valid_thresh, 
                           flag_num = NULL) {
   if (!is.null(by)) data <- group_by_(data, .dots = by)
-  dt <- as.name(dt)
-  val <- as.name(val)
   data <- 
     mutate_(data, rolled_value = 
-            ~filled_rolling_mean(dt, val, interval, window, valid_thresh))
+            interp(~filled_rolling_mean(dt, val, interval, window, valid_thresh),
+                   dt = as.name(dt), val = as.name(val)))
   data <- 
     mutate_(data, n_within = 
-            ~n_within_window(dt, interval, window))
+            interp(~n_within_window(dt, interval, window), dt = as.name(dt)))
   data <- ungroup(data)
   n_within <- data$n_within
   data$n_within <- NULL

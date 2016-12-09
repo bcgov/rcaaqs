@@ -47,8 +47,7 @@ daily_stat <- function(data, dt = "date", val = "value",
 # Clobbers any date column if there was one.
 pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard, stat = max_na) {
   if (!is.null(by)) data <- group_by_(data, .dots = by)
-  date_time <- as.name(dt)
-  data <- mutate(data, date = time_to_date(date_time)) 
+  data <- mutate_(data, date = interp(~time_to_date(date_time), date_time = as.name(dt))) 
   daily_stat(data,
              dt = "date", 
              val = val, 
@@ -103,7 +102,7 @@ no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf)
-  rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
+  rename_(data, max_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
 }
 
 #' @rdname daily_stat_page
@@ -117,7 +116,7 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70)
-  rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
+  rename_(data, max_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
 }
 
 #' @rdname daily_stat_page

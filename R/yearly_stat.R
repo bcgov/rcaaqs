@@ -18,8 +18,8 @@ yearly_stat <- function(data, dt = "date", val = "value",
   quarter_valid <- valid_by_quarter(data, dt, by, quarter_units)
   
   # Calculate yearly statistic
-  dt <- as.name(dt)
-  data <- mutate(data, year = get_year_from_date(dt))
+  data <- mutate_(data, year = interp(~get_year_from_date(dt), 
+                                      dt = as.name(dt)))
   data <- group_by_(data, .dots = c(by, "year"))
   fun2 <- function(x) do.call(stat, c(list(x), stat.opts))
   data <- summarise_(data,
