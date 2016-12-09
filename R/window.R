@@ -16,7 +16,7 @@
 #' @importFrom dplyr lag
 #' @param x the input numeric value
 #' @param width The maximum number of values used to compute the sum.
-#' @return vector with all input dates and values, interpolated with NAs.
+#' @return a vector y where y[i] = sum(x[i:i-1]) removing NAs, and ignoring non-positive indices.
 rolling_sum <- function(x, width) {
   x <- ifelse(is.na(x), 0, x)
   cumsum(x) - lag(cumsum(x), width, default = 0)
@@ -28,9 +28,8 @@ rolling_sum <- function(x, width) {
 #' @param width The maximum number of values used to compute the mean.
 #' @param thresh If at least thresh values are not used in computing 
 #' the mean, then the output will be set to NA. 
-#' @return A numeric vector with the rolling mean. The output vector will
-#' always have the same length as the input vector, which makes it convenient 
-#' to use with the summarise function in dplyr. 
+#' @return A rolling mean (see \code{\link[rcaaqs]{rolling_sum}}), except  
+#' if not at least thresh values, it returns NA. 
 rolling_mean <- function(x, width = 8, thresh = 0){
   available <- rolling_sum(!is.na(x), width = width)
   sum <- rolling_sum(x, width = width)
@@ -42,8 +41,11 @@ rolling_mean <- function(x, width = 8, thresh = 0){
 #' @importFrom tidyr full_seq
 #' @param x the date, date_time, or numeric value
 #' @param interval some numeric step size. for date-times, in seconds.
-#' @param window some numeric look-back window.
-#' @return vector with all input dates and values, interpolated with NAs.
+#' @param window some numeric look-back window in \code{interval} units.
+#' @return vector of same length as x, that returns, for each x, the number 
+#' behind x that were within \code{window*interval] units, including x itself.
+#' @examples
+#' n_within_window(c(1,2,7,8), interval = 1, window = 2)
 n_within_window <- function(x, interval, window){
   full_x <- full_seq(x, interval)
   rolling_sum(full_x %in% x, width = window)[match(x,full_x)]
