@@ -44,7 +44,7 @@ yearly_stat <- function(data, dt = "date", val = "value",
 #' @param  exclude_df he data.frame that has all the columns in the 
 #' by parameter, in addition exactly one or two date columns.
 #' @param  exclude_df_dt a character vector with exactly one or two date columns.
-#' @return data frame with the daily averages, can be input into 
+#' @return data frame with the yearly summary (typically the 98th percentile)
 #' @name yearly_stat_page
 NULL
 #> NULL

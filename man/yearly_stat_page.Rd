@@ -51,7 +51,7 @@ by parameter, in addition exactly one or two date columns.}
 \item{exclude_df_dt}{a character vector with exactly one or two date columns.}
 }
 \value{
-data frame with the daily averages, can be input into
+data frame with the yearly summary (typically the 98th percentile)
 }
 \description{
 Compute a yearly statistic (typically 98th percentile).
