@@ -102,7 +102,7 @@ no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf)
-  rename_(data, max_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
+  rename_(data, max_24h = "stat", valid_max_24h = "valid", flag_max_24hr_incomplete = "flag")
 }
 
 #' @rdname daily_stat_page
@@ -116,7 +116,7 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             is.numeric(data[[val]]))
   if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70)
-  rename_(data, max_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
+  rename_(data, max_24h = "stat", valid_max_24h = "valid", flag_max_24hr_incomplete = "flag")
 }
 
 #' @rdname daily_stat_page
