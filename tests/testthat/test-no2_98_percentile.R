@@ -37,15 +37,6 @@ test_that("Columns are the right class", {
   expect_equal(unname(sapply(test_mult, class)), c("character", classes))
 })
  
-test_that("Exceed works", {
-  expect_false(any(test_mult$exceed))
-
-  set.seed(42)
-  multi_id$val <- rnorm(nrow(multi_id), 350, 1)
-  res <- no2_yearly_98(multi_id, dt = "dates", val = "val", by = "id")
-  expect_true(all(res$exceed))
-})
- 
 test_that("Number of valid days in year correct", {
   expect_equal(c(365,365,366,365) * test_one$valid_in_year, c(1L, 361L, 358L, 357L))
   expect_equal(c(365,365,366,365) * test_mult$valid_in_year, c(1L, 361L, 358L, 357L, 1L, 365L, 243L, 170L))
