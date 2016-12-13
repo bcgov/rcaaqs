@@ -10,7 +10,28 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-#'Find the daily maximum of a value by some factor
+#'Find the daily statistic of a value by some factor
+#'
+#'Given a dataframe with one value column, find the maximum value by some date.
+#' @importFrom  lazyeval interp
+#' @param  data Dataframe
+#' @param  dt character the column containing dates
+#' @param  val character the value column
+#' @param  by  character the columns to group by
+#' @param  thresh numeric. 
+#' @param  stat numeric. 
+#' @return dataframe with summarised statistic
+daily_stat <- function(data, dt = "date", val = "value", 
+                       by = c("ems_id", "site"),
+                       thresh, stat) {
+  # Stat calculation
+  data <- group_by_(data, .dots = c(by, dt))
+  summarise_(data,
+             stat   = interp(~fun(value), value = as.name(val), fun = stat),
+             exceed = interp(~stat > thresh, thresh = thresh))
+}
+
+#'Find the daily statistic of a value by some factor
 #'
 #'Given a dataframe with one value column, find the maximum value by some date.
 #' @importFrom  stats na.omit
@@ -19,48 +40,41 @@
 #' @param  dt character the column containing dates
 #' @param  val character the value column
 #' @param  by  character the columns to group by
-#' @param  thresh numeric. 
-#' @param  digits numeric. 
-#' @param  n_readings_min numeric. 
-#' @param  stat numeric. 
-# '@return dataframe with filled in dates
-daily_stat <- function(data, dt = "date", val = "value", 
-                       by = c("ems_id", "site"), digits = 1,
-                       thresh, n_readings_min,
-                       stat, exclude_df = NULL, exclude_df_dt = NULL) {
-  data <- group_by_(data, .dots = c(by, dt))
+#' @param  pollutant_standard If this value is exceeded, then exceed column will be true. 
+#' @param  digits The number of digits that the value should be rounded to. 
+#' @param  n_readings_min The minimum number of readings in a day for the summary statistic to be valid. 
+#' @param  stat function to summarise by. 
+#' @param exclude_df a data.frame specifying which date ranges and sites to exclude. 
+#'  The data.frame must have to one date column if specific dates or date-times are to be excluded,
+#'  and exactly two date or date-time columns if a date range is needed.
+#'  must have all the columns of by provided, 
+#' @param exclude_df_dt specifies the one (or two) date columns to be use in the exclude_df data.frame.
+#' @return dataframe with summarised statistic
+pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard, 
+                                 stat = max_na, exclude_df = NULL, exclude_df_dt = NULL, 
+                                 digits = 1, n_readings_min = 18) {
   # Validity checks (before data exclusion)
-  data <- 
-    summarise_(data,
+  validity <- mutate_(data, date = interp(~time_to_date(date_time), date_time = as.name(dt))) 
+  validity <- group_by_(validity, .dots = c(by, "date"))
+  validity <- 
+    summarise_(validity,
                n_readings = interp(~length(na.omit(value)), 
                                    value = as.name(val)), 
-               exceed     = interp(~stat > thresh, thresh = thresh), 
                valid      = interp(~n_readings >= n_readings_min, 
                                    n_readings_min = n_readings_min))
   # Exclude data before stat calculation
   if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
-  # Stat calculation
-  data <- group_by_(data, .dots = c(by, dt))
+  # Calculate statistic.
+  data <- mutate_(data, date = interp(~time_to_date(date_time), date_time = as.name(dt))) 
   data <- 
-    summarise_(data,
-               stat = interp(~fun(value), value = as.name(val), fun = stat))
+    daily_stat(data, dt = "date", val = val, by = by, 
+               thresh = pollutant_standard, stat = stat)
+  # Join together.
+  data <- left_join(data, validity, by = c(by, "date"))
   data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
   data$flag <- data$exceed & !data$valid # Flag for data incomplete, but used
   data$stat <- round(ifelse(data$valid | data$flag, data$stat, NA_real_), digits)
   data
-}
-
-# Clobbers any date column if there was one.
-pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard, stat = max_na, exclude_df = NULL, exclude_df_dt = NULL) {
-  if (!is.null(by)) data <- group_by_(data, .dots = by)
-  data <- mutate_(data, date = interp(~time_to_date(date_time), date_time = as.name(dt))) 
-  daily_stat(data,
-             dt = "date", 
-             val = val, 
-             by = by, 
-             thresh = pollutant_standard, 
-             n_readings_min = 18,
-             stat = stat, exclude_df, exclude_df_dt)
 }
 
 #' Cacluate daily maxima or averages for different sensor readings.
@@ -92,7 +106,7 @@ o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL, ex
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = get_std("o3"), exclude_df, exclude_df_dt)
+  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = get_std("o3"), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
   rename_(data, max8hr = "stat", valid_max8hr = "valid", flag_max8hr_incomplete = "flag")
 }
 
@@ -105,7 +119,7 @@ no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, exclude_df, exclude_df_dt)
+  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
   rename_(data, max_24h = "stat", valid_max_24h = "valid", flag_max_24hr_incomplete = "flag")
 }
 
@@ -118,7 +132,7 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70, exclude_df, exclude_df_dt)
+  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
   rename_(data, max_24h = "stat", valid_max_24h = "valid", flag_max_24hr_incomplete = "flag")
 }
 
@@ -131,6 +145,6 @@ pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL, exclu
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, stat = mean_na, exclude_df, exclude_df_dt)
+  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, stat = mean_na, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
   rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
 }

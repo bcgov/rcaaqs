@@ -2,10 +2,10 @@
 % Please edit documentation in R/daily_stat.R
 \name{daily_stat}
 \alias{daily_stat}
-\title{Find the daily maximum of a value by some factor}
+\title{Find the daily statistic of a value by some factor}
 \usage{
 daily_stat(data, dt = "date", val = "value", by = c("ems_id", "site"),
-  digits = 1, thresh, n_readings_min, stat)
+  thresh, stat)
 }
 \arguments{
 \item{data}{Dataframe}
@@ -16,13 +16,12 @@ daily_stat(data, dt = "date", val = "value", by = c("ems_id", "site"),
 
 \item{by}{character the columns to group by}
 
-\item{digits}{numeric.}
-
 \item{thresh}{numeric.}
 
-\item{n_readings_min}{numeric.}
-
 \item{stat}{numeric.}
+}
+\value{
+dataframe with summarised statistic
 }
 \description{
 Given a dataframe with one value column, find the maximum value by some date.
