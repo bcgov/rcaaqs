@@ -198,7 +198,7 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
   so2.std <- 5
   data$exceed <- data$max_yearly > so2.std 
   data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
-  data
+  rename_(data, avg_yearly = "max_yearly")
 }
 
 #' @rdname yearly_stat_page
@@ -223,7 +223,7 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
     data$quarter_2 > 0.6 &
     data$quarter_3 > 0.6 &
     data$quarter_4 > 0.6
-  data
+  rename_(data, avg_yearly = "max_yearly")
 }
 
 #' Return the rank that should be used to determine the 98th percentile given a 
