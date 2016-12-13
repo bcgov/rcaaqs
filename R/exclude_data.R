@@ -72,14 +72,20 @@ exclude_data <- function(data, dt, by, exclusion_df, exclusion_date_cols) {
     row_number_name <- find_new_name("row_number", names(data))
     data[[row_number_name]] <- seq.int(nrow(data))
     joined_all <- left_join(data, exclusion_df, by = by)
-    filtered <- joined_all[
-      is.na(joined_all[[start_name]]) | is.na(joined_all[[end_name]]) |
-        joined_all[[dt]] < joined_all[[start_name]] |
-        joined_all[[dt]] > joined_all[[end_name]],]
-    filtered <- filtered[!(names(filtered) %in% c(start_name, end_name))]
-    unique_rows <- unique(filtered) # Without row_number, this would remove duplicate rows.
-    unique_rows[[row_number_name]] <- NULL
-    ret_val <- unique_rows
+    test_col <- find_new_name("test_col", names(data))
+    joined_all[[test_col]] <- is.na(joined_all[[start_name]]) | is.na(joined_all[[end_name]]) |
+      joined_all[[dt]] < joined_all[[start_name]] |
+      joined_all[[dt]] > joined_all[[end_name]]
+    
+    # Aggregate row_number by all(test_col), then filter.
+    joined_all <- group_by_(joined_all, row_number_name)
+    joined_all <- summarise_(joined_all, to_filter = ~!all(test_col))
+    to_remove <- data.frame(joined_all)[joined_all$to_filter, row_number_name]
+    
+    # Join back.
+    data <- data[!(data[[row_number_name]] %in% to_remove),]
+    data[[row_number_name]] <- NULL
+    ret_val <- data
   }
   return(ret_val)
 }
