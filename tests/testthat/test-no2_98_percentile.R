@@ -20,8 +20,8 @@ test_that("Is a data frame", {
 
  
 test_that("Has the right column names and dimensions", {
-  expected_names <-c("year", "ann_98_percentile", "valid_in_year", "quarter_1", 
-                     "quarter_2", "quarter_3", "quarter_4", "valid_year")
+  expected_names <-c("year", "valid_in_year", "quarter_1", "quarter_2", "quarter_3", 
+                     "quarter_4", "ann_98_percentile", "valid_year")
   expect_equal(names(test_one), expected_names)
   expect_equal(dim(test_one), c(4, 8))
 
