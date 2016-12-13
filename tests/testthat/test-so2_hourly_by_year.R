@@ -10,8 +10,8 @@ test_that("Is a data frame", {
 
  
 test_that("Has the right column names and dimensions", {
-  expected_names <-c("id", "year", "max_yearly", "valid_in_year", "quarter_1", "quarter_2", 
-                     "quarter_3", "quarter_4", "valid_year", "exceed")
+  expected_names <-c("id", "year", "valid_in_year", "quarter_1", "quarter_2", "quarter_3", 
+                     "quarter_4", "max_yearly", "valid_year", "exceed")
   expect_equal(names(test), expected_names)
   expect_equal(dim(test), c(6, 10))
 })

@@ -67,17 +67,30 @@ context("pm 98 percentile")
 multi_id <- readRDS("daily_averages.rds")
 one_id <- multi_id[multi_id$id == "a", ]
 
-# Make a multi-year df
-# dates2 <- seq.Date(from = as.Date("2012-01-01"),
-#                             to = as.Date("2012-12-31"), by = "days")
-# mult_years <- data.frame(id = c(rep("a", length(dates)), rep("b", length(dates2))),
-#                          dates = c(dates, dates2),
-#                          val = rnorm(length(dates) + length(dates2), 20, 5),
-#                          stringsAsFactors = FALSE)
-
 test_one <- pm_yearly_98(one_id, dt = "dates", val = "val")
 test_mult <- pm_yearly_98(multi_id, dt = "dates", val = "val", by = "id")
-# saveRDS(test_mult, "~/rcaaqs/tests/testthat/annual_98_percentiles.rds")
+
+test_that("can exclude data rows", {
+  # Take out values 9.0 or above to make sure it changes
+  high_dates <- 
+    multi_id$date[multi_id$id == "a" & strftime(multi_id$dates,"%Y") == 2011 & 
+                    !is.na(multi_id$val)  & multi_id$val >= 9.0]
+  # max_val <- max(multi_id$val[multi_id$id == "a"], na.rm = TRUE)
+  # max_date <- 
+  #   multi_id[!is.na(multi_id$val) & multi_id$val == max_val & multi_id$id == "a","dates"]
+  # 
+  excl_df <-
+    data.frame(id = "a",
+               start = high_dates,
+               stop = high_dates + 1,
+               stringsAsFactors = FALSE)
+  
+  # testo <- rcaaqs:::exclude_data(multi_id, "dates", "id", excl_df, c("start", "stop"))
+  ret <- pm_yearly_98(multi_id, dt = "dates", val = "val", by = "id", 
+                            exclude_df = excl_df, exclude_df_dt = c("start", "stop"))
+
+  expect_equal(ret$ann_98_percentile[ret$id == "a" & ret$year == 2011], 8.4)
+})
 
 test_that("Only accepts date objects", {
   posix <- seq.POSIXt(as.POSIXct("2012-01-01"), as.POSIXct("2012-01-31"), by = "hour")
@@ -93,9 +106,9 @@ test_that("Is a data frame", {
 
  
 test_that("Has the right column names and dimensions", {
-  expected_names <-c("year", "ann_98_percentile", "valid_in_year", "quarter_1", 
-                     "quarter_2", "quarter_3", "quarter_4", "valid_year", 
-                     "exceed", "flag_year_based_on_incomplete_data")
+  expected_names <-c("year", "valid_in_year", "quarter_1", "quarter_2", "quarter_3", 
+                     "quarter_4", "ann_98_percentile", "valid_year", "exceed", 
+                     "flag_year_based_on_incomplete_data")
   expect_equal(names(test_one), expected_names)
   expect_equal(dim(test_one), c(4, 10))
 
