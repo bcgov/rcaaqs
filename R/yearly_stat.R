@@ -182,7 +182,6 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  data$date <- time_to_date(data[[dt]])
   data <- yearly_stat(data, "date", val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
   data <- rename_(data, max_yearly = "stat")
   data$max_yearly <- round(data$max_yearly, 1)
@@ -211,7 +210,6 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  data$date <- time_to_date(data[[dt]])
   data <- yearly_stat(data, "date", val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
   data <- rename_(data, max_yearly = "stat")
   data$max_yearly <- round(data$max_yearly, 1)
