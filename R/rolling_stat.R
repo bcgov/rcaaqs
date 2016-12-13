@@ -12,22 +12,30 @@
 
 # Rolling statistics.
 rolling_value <- function(data, dt, val, interval, by, window, valid_thresh, 
-                          flag_num = NULL) {
+                          flag_num = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+  # Determine validity
   if (!is.null(by)) data <- group_by_(data, .dots = by)
+  validity <- 
+    mutate_(data, n_within = 
+              interp(~n_within_window(dt, interval, window), dt = as.name(dt)))
+  validity$valid <- validity$n_within >= valid_thresh
+  valid_cols <- c(by, dt, "valid")
+  if (!is.null(flag_num)) {
+    validity$flag <- validity$n_within %in% flag_num
+    valid_cols <- c(valid_cols, "flag")
+  }
+  validity <- validity[valid_cols]
+  # Exclude data
+  if(!is.null(exclude_df)) data <- 
+    exclude_data(data, dt, by, exclude_df, exclude_df_dt)  
+  # Cacluate statistic
   data <- 
     mutate_(data, rolled_value = 
             interp(~filled_rolling_mean(dt, val, interval, window, valid_thresh),
                    dt = as.name(dt), val = as.name(val)))
-  data <- 
-    mutate_(data, n_within = 
-            interp(~n_within_window(dt, interval, window), dt = as.name(dt)))
   data <- ungroup(data)
-  n_within <- data$n_within
-  data$n_within <- NULL
-
-  data$valid <- n_within >= valid_thresh
-  if (!is.null(flag_num)) data$flag <- n_within %in% flag_num
-  data
+  # Join validity with statistic.
+  left_join(validity, data, by = c(by, dt))
 }
 
 
@@ -58,7 +66,6 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   if (!is.null(by)) data <- group_by_(data, .dots = by)
   data <- rolling_value(data, 
                        dt = dt, 
@@ -66,7 +73,9 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
                        by = by, 
                        interval = 3600,
                        window = 8, 
-                       valid_thresh = 6)
+                       valid_thresh = 6,
+                       exclude_df = exclude_df,
+                       exclude_df_dt = exclude_df_dt)
   rename_(data, rolling8 = "rolled_value", flag_valid_8hr = "valid")
 }
 
