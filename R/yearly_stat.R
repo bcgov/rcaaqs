@@ -13,9 +13,12 @@
 # Yearly statistics.
 yearly_stat <- function(data, dt = "date", val = "value", 
                         by = c("ems_id", "site"), 
-                        stat, stat.opts = NULL, quarter_units = "prop") {
+                        stat, stat.opts = NULL, quarter_units = "prop",
+                        exclude_df, exclude_df_dt) {
   # Get quarter validity
   quarter_valid <- valid_by_quarter(data, dt, by, quarter_units)
+  # Exclude data.
+  if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
   
   # Calculate yearly statistic
   data <- mutate_(data, year = interp(~get_year_from_date(dt), 
@@ -59,8 +62,7 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_
             is.character(val),
             is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
-  if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
-  data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.98, na.rm = TRUE))
+  data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.98, na.rm = TRUE), exclude_df, exclude_df_dt)
   data <- rename_(data, ann_98_percentile = "stat")
   data$ann_98_percentile <- round(data$ann_98_percentile, 1)
   data$valid_year <-
@@ -85,8 +87,7 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
             is.character(val),
             is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
-  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
-  data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.99, na.rm = TRUE))
+  data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.99, na.rm = TRUE), exclude_df, exclude_df_dt)
   data <- rename_(data, ann_99_percentile = "stat")
   data$ann_99_percentile <- round(data$ann_99_percentile, 1)
   data$valid_year <-
@@ -111,8 +112,7 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
             is.character(val),
             is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
-  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
-  data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.98, na.rm = TRUE))
+  data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.98, na.rm = TRUE), exclude_df, exclude_df_dt)
   data <- rename_(data, ann_98_percentile = "stat")
   data$ann_98_percentile <- round(data$ann_98_percentile, 1)
   data$valid_year <-
@@ -135,8 +135,7 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude
             is.character(val),
             is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
-  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
-  data <- yearly_stat(data, dt, val, by, mean_na)
+  data <- yearly_stat(data, dt, val, by, mean_na, exclude_df, exclude_df_dt)
   data <- rename_(data, ann_avg = "stat")
   data$ann_avg <- round(data$ann_avg, 1)
   data$valid_year <-
@@ -157,11 +156,10 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL, exc
             is.character(val),
             is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
-  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   data <- data[data$valid_max8hr | data$flag_max8hr_incomplete,]
   data <- yearly_stat(data, dt, val, by, 
                       nth_highest, stat.opts = list(n = 4), 
-                      quarter_units = "days")
+                      quarter_units = "days", exclude_df, exclude_df_dt)
   data <- rename_(data, max8hr = "stat")
   days_in_quarter_2_and_3 <- 183 
   data$valid_year <-
@@ -182,9 +180,8 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   data$date <- time_to_date(data[[dt]])
-  data <- yearly_stat(data, "date", val, by, mean_na, quarter_units = "days") 
+  data <- yearly_stat(data, "date", val, by, mean_na, quarter_units = "days", exclude_df, exclude_df_dt) 
   data <- rename_(data, max_yearly = "stat")
   data$max_yearly <- round(data$max_yearly, 1)
   data$valid_in_year <- data$valid_in_year / (days_in_year(data$year)*24)
@@ -212,9 +209,8 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   data$date <- time_to_date(data[[dt]])
-  data <- yearly_stat(data, "date", val, by, mean_na, quarter_units = "days") 
+  data <- yearly_stat(data, "date", val, by, mean_na, quarter_units = "days", exclude_df, exclude_df_dt) 
   data <- rename_(data, max_yearly = "stat")
   data$max_yearly <- round(data$max_yearly, 1)
   data$valid_in_year <- data$valid_in_year / (days_in_year(data$year)*24)
