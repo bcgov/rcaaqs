@@ -57,7 +57,7 @@ This is a simple example using the included sample data set for PM<sub>2.5</sub>
 
 ```{r}
 library(rcaaqs)
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
 
 ## Load sample data:
 data("pm25_sample_data")
@@ -98,7 +98,7 @@ glimpse(pm_caaq_annual)
 This is a simple example using the included sample data set for O<sub>3</sub>. 
 ```{r}
 library(rcaaqs)
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
 
 ## Load sample data:
 data(o3_sample_data)
@@ -125,7 +125,7 @@ This is a simple example using the included sample data set for SO<sub>2</sub>.
 
 ```{r}
 library(rcaaqs)
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
 
 ## Load sample data:
 data("so2_sample_data")
@@ -159,7 +159,7 @@ glimpse(so2_yearly_avg)
 This is a simple example using the included sample data set for NO<sub>2</sub>. 
 ```{r}
 library(rcaaqs)
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
 
 ## Load sample data:
 data("no2_sample_data")
