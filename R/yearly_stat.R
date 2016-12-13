@@ -254,7 +254,7 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
 #' 
 quantile2 <- function(x, probs = 0.98, na.rm = FALSE, names = FALSE, type = "caaqs") {
   if (missing(x) || length(x) == 0) {
-    warning("No non-missing arguments to quantile2_na; returning -Inf")
+    warning("No non-missing arguments to quantile2; returning -Inf")
     return(-Inf)
   }
   if (!inherits(x, c("integer", "numeric"))) stop("x is not numeric")
