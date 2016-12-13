@@ -18,7 +18,7 @@ yearly_stat <- function(data, dt = "date", val = "value",
   # Get quarter validity
   quarter_valid <- valid_by_quarter(data, dt, by, quarter_units)
   # Exclude data.
-  if(!is.null(exclude_df)) data <- exclude_df(data, dt, by, exclude_df, exclude_df_dt)
+  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   
   # Calculate yearly statistic
   data <- mutate_(data, year = interp(~get_year_from_date(dt), 
@@ -30,7 +30,7 @@ yearly_stat <- function(data, dt = "date", val = "value",
                                    value = as.name(val), 
                                    fun = stat))
   data <- ungroup(data)
-  left_join(data, quarter_valid, by = c(by, "year"))
+  left_join(quarter_valid, data, by = c(by, "year"))
 }
 
 
@@ -150,7 +150,8 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude
 #' @rdname yearly_stat_page
 #' @importFrom  lubridate is.Date
 #' @export
-o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL, 
+                               exclude_df = NULL, exclude_df_dt = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
@@ -159,7 +160,8 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL, exc
   data <- data[data$valid_max8hr | data$flag_max8hr_incomplete,]
   data <- yearly_stat(data, dt, val, by, 
                       nth_highest, stat.opts = list(n = 4), 
-                      quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
+                      quarter_units = "days", 
+                      exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
   data <- rename_(data, max8hr = "stat")
   days_in_quarter_2_and_3 <- 183 
   data$valid_year <-

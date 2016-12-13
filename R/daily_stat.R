@@ -62,6 +62,7 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
                                    value = as.name(val)), 
                valid      = interp(~n_readings >= n_readings_min, 
                                    n_readings_min = n_readings_min))
+  validity <- validity[c(by, "date", "n_readings", "valid")]
   # Exclude data before stat calculation
   if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   # Calculate statistic.
@@ -70,7 +71,7 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
     daily_stat(data, dt = "date", val = val, by = by, 
                thresh = pollutant_standard, stat = stat)
   # Join together.
-  data <- left_join(data, validity, by = c(by, "date"))
+  data <- left_join(validity, data, by = c(by, "date"))
   data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
   data$flag <- data$exceed & !data$valid # Flag for data incomplete, but used
   data$stat <- round(ifelse(data$valid | data$flag, data$stat, NA_real_), digits)
