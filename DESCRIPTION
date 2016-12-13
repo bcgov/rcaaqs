@@ -5,7 +5,9 @@ Version: 0.1
 Date: 2015-08-19
 Authors@R: c(person("Andy", "Teucher", role = c("aut", "cre"), 
                     email = "andy.teucher@gov.bc.ca"), 
-             person("Province of British Columbia", role = "cph"))
+             person("Province of British Columbia", role = "cph"),
+             person("Aman", "Verma", role = c("aut", "ctr"), 
+                    email = "aman.verma.mtl@gmail.com"))
 Description: Analyze air quality data according to Canadian Ambient Air Quality
     Standars (CAAQS) guidelines.
 LazyData: true
