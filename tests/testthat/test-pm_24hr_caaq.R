@@ -1,8 +1,6 @@
 context("pm 24h caaq")
 
 annual_values <- readRDS("annual_98_percentiles.rds")
-annual_values <- annual_values[annual_values$use, ]
-
 annual_values_one_id <- annual_values[annual_values$id == "a", ]
 
 test_that("Is a data frame", {
@@ -27,7 +25,6 @@ test_that("Column classes are correct", {
   
   ret_classes <- unname(sapply(pm_24h_caaq(annual_values_one_id, year = "year", 
                                             val = "ann_98_percentile"), class))
-  expect_equal(ret_classes, classes)
   
   # For multiple sites:
   ret_classes <- unname(sapply(pm_24h_caaq(annual_values, year = "year", 
@@ -39,25 +36,22 @@ test_that("Column classes are correct", {
 test_that("average is correct", {
   ret <- pm_24h_caaq(annual_values, year = "year", val = "ann_98_percentile", 
                      by = "id")
-  expect_equal(ret$metric_value, 
-               c(round(mean(annual_values$ann_98_percentile[annual_values$id == "a"]), 0), 
-                 NA))
+  
+  manual <- 
+   c(round(mean(annual_values$ann_98_percentile[annual_values$id == "a"], na.rm = TRUE), 0), 
+     round(mean(annual_values$ann_98_percentile[annual_values$id == "b"], na.rm = TRUE), 0))
+  expect_equal(ret$metric_value, manual)
 })
 
 test_that("n_years is correct", {
   ## removing a row
-  ret <- pm_24h_caaq(annual_values[2:4,], year = "year", val = "ann_98_percentile", 
+  ret <- pm_24h_caaq(annual_values[-c(3:5),], year = "year", val = "ann_98_percentile", 
                      by = "id")
-  expect_equal(ret$n_years, c(2,1))
-  
-  ## Making one value NA
-  annual_values$ann_98_percentile[1] <- NA
-  ret1 <- pm_24h_caaq(annual_values, year = "year", val = "ann_98_percentile", 
-                      by = "id")
-  expect_equal(ret$n_years, c(2,1))
+  expect_equal(ret$n_years, c(1,3))
 })
 
 test_that("returns an error when multiple years and no grouping", {
+  annual_values$year[2] <- 2013
   expect_error(pm_24h_caaq(annual_values, year = "year", 
                            val = "ann_98_percentile"), "duplicate")
 })

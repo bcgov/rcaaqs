@@ -65,3 +65,48 @@
 #'   \item{value}{PM2.5 hourly value (in ppb)}
 #' }
 "pm25_sample_data"
+
+#' Sample hourly ozone data for 3 years for 4 stations 
+#'
+#' @format A data frame with 6 variables:
+#' \describe{
+#'   \item{ems_id}{id of the monitoring station}
+#'   \item{date_time}{date/time (POSIXct) in ETC/GMT+8 timezone}
+#'   \item{site}{name of the monitoring station}
+#'   \item{year}{year}
+#'   \item{month}{month}
+#'   \item{parameter}{name of the parameter ("O3")}
+#'   \item{value}{ozone hourly value}
+#'   \item{units}{the units of value -- always 'ppb'}
+#' }
+"o3_sample_data"
+
+#' Sample hourly NO2 data for 3 years for 4 stations 
+#'
+#' @format A data frame with 6 variables:
+#' \describe{
+#'   \item{ems_id}{id of the monitoring station}
+#'   \item{date_time}{date/time (POSIXct) in ETC/GMT+8 timezone}
+#'   \item{site}{name of the monitoring station}
+#'   \item{year}{year}
+#'   \item{month}{month}
+#'   \item{parameter}{name of the parameter ("NO2")}
+#'   \item{value}{ozone hourly value}
+#'   \item{units}{the units of value -- always 'ppb'}
+#' }
+"no2_sample_data"
+
+#' Sample hourly SO2 data for 3 years for 4 stations 
+#'
+#' @format A data frame with 6 variables:
+#' \describe{
+#'   \item{ems_id}{id of the monitoring station}
+#'   \item{date_time}{date/time (POSIXct) in ETC/GMT+8 timezone}
+#'   \item{site}{name of the monitoring station}
+#'   \item{year}{year}
+#'   \item{month}{month}
+#'   \item{parameter}{name of the parameter ("SO2")}
+#'   \item{value}{ozone hourly value}
+#'   \item{units}{the units of value -- always 'ppb'}
+#' }
+"so2_sample_data"

@@ -30,5 +30,5 @@ notifications:
 env:
   matrix:
     - RVERSION=release
-    - RVERSION=devel
+#    - RVERSION=devel
 
