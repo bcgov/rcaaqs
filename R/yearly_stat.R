@@ -81,7 +81,7 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_
 #' @rdname yearly_stat_page
 #' @importFrom  lubridate is.Date
 #' @export
-so2_yearly_99 <- function(data, dt = "date_time", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
@@ -106,7 +106,7 @@ so2_yearly_99 <- function(data, dt = "date_time", val = "max_24h", by = NULL, ex
 #' @rdname yearly_stat_page
 #' @importFrom  lubridate is.Date
 #' @export
-no2_yearly_98 <- function(data, dt = "date_time", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
