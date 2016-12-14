@@ -81,7 +81,7 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_
 #' @rdname yearly_stat_page
 #' @importFrom  lubridate is.Date
 #' @export
-so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+so2_yearly_99 <- function(data, dt = "date_time", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
@@ -106,7 +106,7 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
 #' @rdname yearly_stat_page
 #' @importFrom  lubridate is.Date
 #' @export
-no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+no2_yearly_98 <- function(data, dt = "date_time", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
@@ -182,7 +182,7 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- yearly_stat(data, "date", val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
+  data <- yearly_stat(data, dt, val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
   data <- rename_(data, max_yearly = "stat")
   data$max_yearly <- round(data$max_yearly, 1)
   data$valid_in_year <- data$valid_in_year / (days_in_year(data$year)*24)
@@ -210,7 +210,7 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
             is.character(val),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- yearly_stat(data, "date", val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
+  data <- yearly_stat(data, dt, val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
   data <- rename_(data, max_yearly = "stat")
   data$max_yearly <- round(data$max_yearly, 1)
   data$valid_in_year <- data$valid_in_year / (days_in_year(data$year)*24)
