@@ -75,10 +75,6 @@ test_that("can exclude data rows", {
   high_dates <- 
     multi_id$date[multi_id$id == "a" & strftime(multi_id$dates,"%Y") == 2011 & 
                     !is.na(multi_id$val)  & multi_id$val >= 9.0]
-  # max_val <- max(multi_id$val[multi_id$id == "a"], na.rm = TRUE)
-  # max_date <- 
-  #   multi_id[!is.na(multi_id$val) & multi_id$val == max_val & multi_id$id == "a","dates"]
-  # 
   excl_df <-
     data.frame(id = "a",
                start = high_dates,

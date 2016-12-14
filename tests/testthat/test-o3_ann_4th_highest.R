@@ -53,3 +53,20 @@ test_that("Number of valid days in year correct", {
   expect_equal(test_one$valid_in_year, c(1L, 361L, 358L, 357L))
   expect_equal(test_mult$valid_in_year, c(1L, 361L, 358L, 357L, 1L, 365L, 243L, 170L))
 })
+
+test_that("can exclude data rows", {
+  # Take out values 9.0 or above to make sure it changes
+  high_dates <- 
+    multi_id$date[multi_id$id == "a" & strftime(multi_id$dates,"%Y") == 2011 & 
+                    !is.na(multi_id$val)  & multi_id$val >= 9.0]
+  excl_df <-
+    data.frame(id = "a",
+               start = high_dates,
+               stop = high_dates + 1,
+               stringsAsFactors = FALSE)
+  
+  ret <- o3_ann_4th_highest(multi_id, dt = "dates", val = "val", by = "id", 
+                       exclude_df = excl_df, exclude_df_dt = c("start", "stop"))
+  
+  expect_equal(round(ret$max8hr[ret$id == "a" & ret$year == 2011],1), 8.6)
+})
