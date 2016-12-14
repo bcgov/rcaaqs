@@ -14,10 +14,10 @@
 pm_yearly_98(data, dt = "date", val = "avg_24h", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL)
 
-so2_yearly_99(data, dt = "date_time", val = "max_24h", by = NULL,
+so2_yearly_99(data, dt = "date", val = "max_24h", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL)
 
-no2_yearly_98(data, dt = "date_time", val = "max_24h", by = NULL,
+no2_yearly_98(data, dt = "date", val = "max_24h", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL)
 
 pm_yearly_avg(data, dt = "date", val = "avg_24h", by = NULL,
