@@ -14,7 +14,7 @@ An [R](https://www.r-project.org/) package to facilitate the calculation of air 
 ### Features
 
 -   General functions for doing things like formatting dates, filling in sequences, etc.
--   Functions for stepwise calculation of CAAQS metrics for different pollutants. Currently these are only complete for PM<sub>2.5</sub> (annual and 24hr) metrics, ozone, NO<sub>2</sub>, and SO<sub>2</sub>.
+-   Functions for stepwise calculation of CAAQS metrics—including implementing data completeness criteria—for different air pollutants. Currently these are complete for PM<sub>2.5</sub> (annual and 24hr), O<sub>3</sub>, NO<sub>2</sub>, and SO<sub>2</sub> metrics.
 -   Functions for assigning metrics for different pollutants into achievement and management categories.
 
 ### Installation
