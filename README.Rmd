@@ -31,9 +31,9 @@ metrics according to the Canadian Ambient Air Quality Standards
 
 - General functions for doing things like formatting dates, filling in
   sequences, etc. 
-- Functions for stepwise calculation of CAAQS metrics for
-  different pollutants. Currently these are only complete for PM~2.5~ 
-  (annual and 24hr) metrics, ozone, NO~2~, and SO~2~. 
+- Functions for stepwise calculation of CAAQS metrics&mdash;including implementing data completeness criteria&mdash;for
+  different air pollutants. Currently these are complete for PM~2.5~ 
+  (annual and 24hr), O~3~, NO~2~, and SO~2~ metrics. 
 - Functions for assigning
   metrics for different pollutants into achievement and management categories.
 
