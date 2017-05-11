@@ -16,10 +16,11 @@
 #' @importFrom lubridate fast_strptime
 #' @param  dates vector of dates to convert as characters.
 #' @param format the format of the character dates
+#' @param lt return date object as POSIXlt. Default \code{FALSE}
 #' @export
 #' @return dataframe with filled in dates
-format_date <- function(dates, format="%Y-%m-%d %H:%M:%S") {
-  fast_strptime(dates, format = format, tz = "Etc/GMT+8")
+format_date <- function(dates, format="%Y-%m-%d %H:%M:%S", lt = FALSE) {
+  fast_strptime(dates, format = format, tz = "Etc/GMT+8", lt = lt)
 }
 
 #'Fill gaps in a date sequence
