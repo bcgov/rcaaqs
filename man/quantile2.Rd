@@ -35,4 +35,3 @@ according to the caaqs methods.
 \seealso{
 \code{\link[stats]{quantile}}
 }
-

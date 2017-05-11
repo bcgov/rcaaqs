@@ -4,12 +4,14 @@
 \alias{format_date}
 \title{Convert character date string from Raw air data to POSIXct}
 \usage{
-format_date(dates, format = "\%Y-\%m-\%d \%H:\%M:\%S")
+format_date(dates, format = "\%Y-\%m-\%d \%H:\%M:\%S", lt = FALSE)
 }
 \arguments{
 \item{dates}{vector of dates to convert as characters.}
 
 \item{format}{the format of the character dates}
+
+\item{lt}{return date object as POSIXlt. Default \code{FALSE}}
 }
 \value{
 dataframe with filled in dates
@@ -17,4 +19,3 @@ dataframe with filled in dates
 \description{
 Likely data downloaded from DataBC
 }
-

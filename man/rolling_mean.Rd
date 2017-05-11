@@ -21,4 +21,3 @@ if not at least thresh values, it returns NA.
 \description{
 Compute the rolling mean with different windows and thresholds.
 }
-

@@ -18,4 +18,3 @@ named vector of colours (hex)
 \description{
 Get a vector of colours for management levels or achievement levels
 }
-

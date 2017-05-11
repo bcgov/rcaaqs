@@ -27,4 +27,3 @@ For gases (type = "ozone", "so2", or "nox"), replaces values
  "pm25", replaces values \eqn{\le} -3.5 with \code{NA} and values between
  -3.5 and 0 with 0.
 }
-

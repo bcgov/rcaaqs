@@ -24,4 +24,3 @@ dataframe with the specified dates or date ranges excluded.
 \description{
 Given exclude rows from input dataset based on supplied data.frame which specifies specific dates or date ranges.
 }
-

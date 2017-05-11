@@ -19,4 +19,3 @@ data.frame with all input dates and values, interpolated with NAs.
 \description{
 Interpolate a sequence of dates and values with NA when dates are missing.
 }
-

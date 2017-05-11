@@ -18,4 +18,3 @@ character vector
 Get labels
 }
 \keyword{internal}
-

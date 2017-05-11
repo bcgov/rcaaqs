@@ -38,4 +38,3 @@ dataframe with summarised statistic
 \description{
 Given a dataframe with one value column, find the maximum value by some date.
 }
-

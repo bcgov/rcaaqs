@@ -22,4 +22,3 @@ so2_sample_data
 Sample hourly SO2 data for 3 years for 4 stations
 }
 \keyword{datasets}
-

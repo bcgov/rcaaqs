@@ -33,4 +33,3 @@ Wraps \code{\link{quantile2}} but returns NA if no non-NA values
 \seealso{
 \code{\link{quantile2}}
 }
-

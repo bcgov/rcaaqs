@@ -20,4 +20,3 @@ pm25_sample_data
 Sample hourly PM2.5 data for 3 years from 10 stations
 }
 \keyword{datasets}
-

@@ -22,4 +22,3 @@ o3_sample_data
 Sample hourly ozone data for 3 years for 4 stations
 }
 \keyword{datasets}
-

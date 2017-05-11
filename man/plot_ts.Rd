@@ -32,4 +32,3 @@ a ggplot2 object
 \description{
 Plot daily time series data with exceedances
 }
-

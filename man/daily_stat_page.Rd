@@ -2,10 +2,10 @@
 % Please edit documentation in R/daily_stat.R
 \name{daily_stat_page}
 \alias{daily_stat_page}
-\alias{no2_daily_max}
 \alias{o3_daily_max}
-\alias{pm_daily_avg}
+\alias{no2_daily_max}
 \alias{so2_daily_max}
+\alias{pm_daily_avg}
 \title{Cacluate daily maxima or averages for different sensor readings.}
 \usage{
 o3_daily_max(data, dt = "date_time", val = "rolling8", by = NULL,
@@ -46,4 +46,3 @@ data frame with the daily averages, can be input into
 \description{
 Cacluate daily maxima or averages for different sensor readings.
 }
-

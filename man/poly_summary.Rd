@@ -21,4 +21,3 @@ A data frame with the same number of rows as the SpatialPolygonsDataFrame.
 \description{
 A function to summarise occurrences of a variable within a polygon
 }
-

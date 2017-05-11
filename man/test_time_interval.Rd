@@ -15,4 +15,3 @@ character
 \description{
 Find time interval of a vector of regularly spaced dates/datetimes
 }
-

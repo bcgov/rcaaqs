@@ -15,4 +15,3 @@ vector with the number of days in that year.
 \description{
 Calcuate number of days in year
 }
-

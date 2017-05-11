@@ -15,4 +15,3 @@ a function
 \description{
 Move annual breaks to the midpoint of the year
 }
-

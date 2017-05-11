@@ -21,4 +21,3 @@ data.frame with valid days in each year and quarter
 \description{
 Calcuate number (or proportion) of valid days in each year and quarter
 }
-

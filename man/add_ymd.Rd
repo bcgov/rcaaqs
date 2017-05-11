@@ -22,4 +22,3 @@ a dataframe with the new columns added
 \description{
 Add a year, month, and day column to a dataframe based on a date column
 }
-

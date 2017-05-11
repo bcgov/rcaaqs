@@ -12,4 +12,3 @@ max_na(x)
 \description{
 max typically returns -Inf (and a warning) if no non-NA values; this wrapper avoids that.
 }
-

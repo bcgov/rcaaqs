@@ -17,4 +17,3 @@ a vector y where y[i] = sum(x[i:i-1]) removing NAs, and ignoring non-positive in
 \description{
 Compute the rolling sum with different windows.
 }
-

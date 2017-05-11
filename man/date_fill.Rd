@@ -33,4 +33,3 @@ bar <- foo[-c(2,5,6,7,10),]
 date_fill(bar, "Date", interval = "1 month", fill_cols = "label")
 }
 }
-

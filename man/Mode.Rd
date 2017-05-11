@@ -15,4 +15,3 @@ vector of length 1
 \description{
 Find the mode of a vector of numbers
 }
-

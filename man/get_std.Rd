@@ -16,4 +16,3 @@ a named vector of standards
 get the CAAQS value for a given parameter
 }
 \keyword{internal}
-

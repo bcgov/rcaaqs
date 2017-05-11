@@ -12,4 +12,3 @@ mean_na(x)
 \description{
 mean typically returns a warning if no non-NA values; this wrapper avoids that.
 }
-

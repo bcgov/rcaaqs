@@ -30,4 +30,3 @@ a data frame, with year, the value, and the number of years the value
 \description{
 Flags if based on only two years.
 }
-

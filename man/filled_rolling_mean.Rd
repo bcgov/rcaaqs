@@ -29,4 +29,3 @@ vector with all input dates and values, interpolated with NAs.
 \description{
 Calculate a rolling mean, but fill in missing date values with NA.
 }
-

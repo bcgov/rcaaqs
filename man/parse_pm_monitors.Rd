@@ -15,4 +15,3 @@ a character vector with simplified PM2.5 monitor names
 \description{
 <full description>
 }
-

@@ -24,4 +24,3 @@ number within a rolling window and step size (for dates or numeric)
 rcaaqs:::n_within_window(c(1,2,7,8), interval = 1, window = 2)
 # c(1,2,1,2)
 }
-

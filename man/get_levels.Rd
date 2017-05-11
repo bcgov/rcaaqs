@@ -24,4 +24,3 @@ management reporting
 get_levels("o3") 
 }
 }
-

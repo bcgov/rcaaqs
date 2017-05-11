@@ -17,4 +17,3 @@ vector with the number of days in that quarter year combination.
 \description{
 Calcuate number of days in quarter
 }
-
