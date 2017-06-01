@@ -67,7 +67,7 @@ n_within_window <- function(x, interval, window) {
 filled_rolling_mean <- function(dat, val, interval = 3600, 
                                 width = 8, valid_thresh = 6, digits = 1) {
   dat_val_padded <- pad_date_time(dat, val, interval)
-  roll_mean <- round(rolling_mean(
+  roll_mean <- round_caaqs(rolling_mean(
     dat_val_padded$val, width, valid_thresh), digits)
   # Ensure order and length is same as input.
   roll_mean[match(dat, dat_val_padded$dat)] 

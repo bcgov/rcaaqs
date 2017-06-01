@@ -54,7 +54,7 @@ pm_annual_caaq <- function(data, year = "year", val = "ann_avg", by = NULL, cyea
     rows <- group_by_(rows, .dots = by)
   }
   
-  caaq_formula <- interp(~ifelse(n_years >= 2, round(mean(x), 1), NA_real_), 
+  caaq_formula <- interp(~ifelse(n_years >= 2, round_caaqs(mean(x), 1), NA_real_), 
                          x = as.name(val))
   
   ret <- summarise_(rows, 

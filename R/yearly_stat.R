@@ -64,7 +64,7 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.98, na.rm = TRUE), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
   data <- rename_(data, ann_98_percentile = "stat")
-  data$ann_98_percentile <- round(data$ann_98_percentile, 1)
+  data$ann_98_percentile <- round_caaqs(data$ann_98_percentile, 1)
   data$valid_year <-
     data$valid_in_year > 0.75 &
     data$quarter_1 > 0.6 &
@@ -89,7 +89,7 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.99, na.rm = TRUE), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
   data <- rename_(data, ann_99_percentile = "stat")
-  data$ann_99_percentile <- round(data$ann_99_percentile, 1)
+  data$ann_99_percentile <- round_caaqs(data$ann_99_percentile, 1)
   data$valid_year <-
     data$valid_in_year > 0.75 &
     data$quarter_1 > 0.6 &
@@ -114,7 +114,7 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.98, na.rm = TRUE), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
   data <- rename_(data, ann_98_percentile = "stat")
-  data$ann_98_percentile <- round(data$ann_98_percentile, 1)
+  data$ann_98_percentile <- round_caaqs(data$ann_98_percentile, 1)
   data$valid_year <-
     data$valid_in_year > 0.75 &
     data$quarter_1 > 0.6 &
@@ -137,7 +137,7 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, mean_na, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
   data <- rename_(data, ann_avg = "stat")
-  data$ann_avg <- round(data$ann_avg, 1)
+  data$ann_avg <- round_caaqs(data$ann_avg, 1)
   data$valid_year <-
     data$valid_in_year > 0.75 &
     data$quarter_1 > 0.6 &
@@ -184,7 +184,7 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
   data <- rename_(data, max_yearly = "stat")
-  data$max_yearly <- round(data$max_yearly, 1)
+  data$max_yearly <- round_caaqs(data$max_yearly, 1)
   data$valid_in_year <- data$valid_in_year / (days_in_year(data$year)*24)
   for (q in 1:4)
     data[[paste0("quarter_",q)]] <- 
@@ -212,7 +212,7 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
   data <- rename_(data, max_yearly = "stat")
-  data$max_yearly <- round(data$max_yearly, 1)
+  data$max_yearly <- round_caaqs(data$max_yearly, 1)
   data$valid_in_year <- data$valid_in_year / (days_in_year(data$year)*24)
   for (q in 1:4)
     data[[paste0("quarter_",q)]] <- 
