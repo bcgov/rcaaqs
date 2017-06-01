@@ -74,7 +74,7 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
   data <- left_join(validity, data, by = c(by, "date"))
   data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
   data$flag <- data$exceed & !data$valid # Flag for data incomplete, but used
-  data$stat <- round(ifelse(data$valid | data$flag, data$stat, NA_real_), digits)
+  data$stat <- round_caaqs(ifelse(data$valid | data$flag, data$stat, NA_real_), digits)
   data
 }
 

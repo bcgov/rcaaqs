@@ -58,7 +58,7 @@ pm_24h_caaq <- function(data, year = "year", val = "ann_98_percentile",
     rows <- group_by_(rows, .dots = by)
   }
   
-  caaq_formula <- interp(~ifelse(n_years >= 2, round(mean(x), 0), NA_real_), 
+  caaq_formula <- interp(~ifelse(n_years >= 2, round_caaqs(mean(x), 0), NA_real_), 
                          x = as.name(val))
   
   ret <- summarise_(rows, 
