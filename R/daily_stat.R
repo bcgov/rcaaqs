@@ -105,6 +105,8 @@ o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL, ex
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = get_std("o3"), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
@@ -118,6 +120,8 @@ no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
@@ -131,6 +135,8 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
@@ -144,6 +150,8 @@ pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL, exclu
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, stat = mean_na, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)

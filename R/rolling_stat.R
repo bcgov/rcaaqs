@@ -64,9 +64,11 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  if (!is.null(by)) data <- group_by_(data, .dots = by)
+
   data <- rolling_value(data, 
                        dt = dt, 
                        val = val, 
@@ -85,10 +87,11 @@ so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = 
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.numeric(data[[dt]]), 
             is.numeric(data[[val]]))
-  if (!is.null(by)) data <- group_by_(data, .dots = by)
-  stopifnot(is.data.frame(data), is.character(dt), is.character(val), is.numeric(data[[dt]]))
+
   data <- data[data$valid_year | data$exceed,]
   data <- rolling_value(data,
                         dt = dt,
@@ -107,9 +110,11 @@ no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = 
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.numeric(data[[dt]]), 
             is.numeric(data[[val]]))
-  if (!is.null(by)) data <- group_by_(data, .dots = by)
+
   data <- data[data$valid_year,]
   data <- rolling_value(data,
                         dt = dt,
@@ -128,9 +133,11 @@ pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = N
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.numeric(data[[dt]]), 
             is.numeric(data[[val]]))
-  if (!is.null(by)) data <- group_by_(data, .dots = by)
+
   data <- data[data$valid_year,]
   data <- rolling_value(data,
                         dt = dt,
@@ -151,9 +158,11 @@ o3_three_yr_avg <- function(data, dt = "year", val = "max8hr", by = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.numeric(data[[dt]]), 
             is.numeric(data[[val]]))
-  if (!is.null(by)) data <- group_by_(data, .dots = by)
+
   data <- data[data$valid_year | data$flag_year_based_on_incomplete_data,]
   data <- rolling_value(data,
                         dt = dt,
