@@ -31,3 +31,12 @@ test_that("can exclude data rows", {
                c(NA, NA, NA, NA, NA, 21.5, 19.7, NA, NA, NA, NA, NA, NA, NA, 
                  NA, 6.3, 6, 6, 7.3, 9))
 })
+
+
+test_that("Errors correctly", {
+  expect_error(o3_rolling_8hr_avg(hourly_data, dt = "foo", val = "val", by = "id"),
+               "dt %in% names(data) is not TRUE", fixed = TRUE)
+  expect_error(o3_rolling_8hr_avg(hourly_data, dt = "date", val = "foo", by = "id"),
+               "val %in% names(data) is not TRUE", fixed = TRUE)
+               
+})
