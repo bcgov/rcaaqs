@@ -60,6 +60,8 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.98, na.rm = TRUE), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
@@ -85,6 +87,8 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.99, na.rm = TRUE), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
@@ -110,6 +114,8 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.98, na.rm = TRUE), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
@@ -133,6 +139,8 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, mean_na, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
@@ -155,6 +163,8 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- data[data$valid_max8hr | data$flag_max8hr_incomplete,]
@@ -180,6 +190,8 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
@@ -208,6 +220,8 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
             is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
