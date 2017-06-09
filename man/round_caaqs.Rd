@@ -2,9 +2,9 @@
 % Please edit documentation in R/zzz.R
 \name{round_caaqs}
 \alias{round_caaqs}
-\title{Round up from 5}
+\title{Round up from 5 (drop-in replacement for base::round)}
 \usage{
-round_caaqs(x, n = 0)
+round_caaqs(x, digits = 0)
 }
 \arguments{
 \item{x}{vector of numbers to round}

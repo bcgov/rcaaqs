@@ -46,7 +46,7 @@ Mode <- function(x) {
   ux[which.max(tabulate(match(x, ux)))]
 }
 
-#' Round up from 5
+#' Round up from 5 (drop-in replacement for base::round)
 #' 
 #' CAAQS methods requires always rounding up numbers ending in 5, 
 #' which is different than the default round, which uses the 'round to even'
@@ -56,9 +56,10 @@ Mode <- function(x) {
 #' @param n integer indicating the number of decimal places to round to (default 0)
 #'
 #' @return numeric vector
-round_caaqs <- function(x, n = 0) {
+#' @export
+round_caaqs <- function(x, digits = 0) {
   ## Scale x so we are rounding to a whole number
-  scale <- 10^n
+  scale <- 10^digits
   scaled_x <- x * scale
   
   ## Add (or subtract) 0.5 to the scaled x, truncate it to the nearest 
