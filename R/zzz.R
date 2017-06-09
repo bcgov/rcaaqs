@@ -66,3 +66,14 @@ round_caaqs <- function(x, digits = 0) {
   ## whole number, then get back to original magnitude by dividing by scale
   trunc(scaled_x + sign(x) * 0.5) / scale
 }
+
+#' Defunct functions in rcaaqs
+#' 
+#' These functions have been removed from rcaaqs.
+#' 
+#' \itemize{
+#'  \item \code{\link{format_date}}: This function is defunct. Use \code{\link{format_caaqs_dt}} instead.
+#' }
+#' 
+#' @name rcaaqs-deprecated
+NULL
