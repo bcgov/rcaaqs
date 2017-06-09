@@ -9,7 +9,7 @@ round_caaqs(x, digits = 0)
 \arguments{
 \item{x}{vector of numbers to round}
 
-\item{n}{integer indicating the number of decimal places to round to (default 0)}
+\item{digits}{integer indicating the number of decimal places to round to (default 0)}
 }
 \value{
 numeric vector

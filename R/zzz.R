@@ -53,7 +53,7 @@ Mode <- function(x) {
 #' rule. See ?round
 #'
 #' @param x vector of numbers to round
-#' @param n integer indicating the number of decimal places to round to (default 0)
+#' @param digits integer indicating the number of decimal places to round to (default 0)
 #'
 #' @return numeric vector
 #' @export
@@ -77,3 +77,4 @@ round_caaqs <- function(x, digits = 0) {
 #' 
 #' @name rcaaqs-deprecated
 NULL
+
