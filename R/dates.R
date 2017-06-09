@@ -10,17 +10,54 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-#'Convert character date string from Raw air data to POSIXct
+#' Format date-times in raw air quality data.
+#' 
+#' Intended for use with hourly air quality readings. Ensures that the date/times are in class 
+#' POSIXct in the correct timezone, and ensures that the timestamp is associated with 
+#' the previous hour as dictated in caaqs guidance manual.
 #'
-#' Likely data downloaded from DataBC
-#' @importFrom lubridate fast_strptime
-#' @param  dates vector of dates to convert as characters.
+#' @importFrom lubridate fast_strptime is.POSIXct tz
+#'
+#' @param  x vector of date-times as character or POSIXlt/ct.
 #' @param format the format of the character dates
-#' @param lt return date object as POSIXlt. Default \code{FALSE}
+#' @param prev_hour should the timestamp be assigned to the previous hour as dictated
+#' by the CAAQS guidance document? Default \code{TRUE}. This is accomplished by subtracting one 
+#' second off the times.
+#' @param tz the timezone of the date-times. See Details below.
+#' 
+#' @details You can set the timezone that you are working with in two different ways. You can set it 
+#' globally with: \code{options("rcaaqs.timezone" = "your_timezone")} or set it each time you call the 
+#' function by setting the \code{tz} argument to "your_timezone" where "your_timezone" is a valid 
+#' timezone - see \code{\link{OlsonNames}}.
+#'
 #' @export
-#' @return dataframe with filled in dates
-format_date <- function(dates, format="%Y-%m-%d %H:%M:%S", lt = FALSE) {
-  fast_strptime(dates, format = format, tz = "Etc/GMT+8", lt = lt)
+#' @return POSIXct vector
+format_caaqs_dt <- function(x, format="%Y-%m-%d %H:%M:%S", prev_hour = TRUE,
+                            tz = getOption("rcaaqs.timezone", default = "Etc/GMT+8")) {
+  
+  if (!tz %in% rcaaqs_env$olson_names) stop("Invalid timezone. See OlsonNames()", call. = FALSE)
+  
+  if (is.character(x))
+    x <- lubridate::fast_strptime(x, format = format, tz = tz, lt = FALSE)
+  else if (lubridate::is.POSIXt(x)) {
+    
+    if (lubridate::tz(x) != tz) {
+      lubridate::tz(x) <- tz
+    }
+    
+    if (lubridate::is.POSIXlt(x)) {
+      x <- as.POSIXct(x)
+    }
+    
+  } else {
+    stop("x should be a character string in the format described by the 'format' argument, or POSIXt", call. = FALSE)
+  }
+  
+  if (prev_hour) {
+    x <- x - 1
+  }
+  x
+  
 }
 
 #'Fill gaps in a date sequence
@@ -100,7 +137,8 @@ date_fill <- function(df, date_col, interval = NULL, fill_cols = NULL, add_ymd =
 #' @export
 #' @return a dataframe with the new columns added
 
-add_ymd <- function(df, datecol, tz = "Etc/GMT+8", outnames = NULL) {
+add_ymd <- function(df, datecol, tz = getOption("rcaaqs.timezone", default = "Etc/GMT+8"), 
+                    outnames = NULL) {
   if (is.null(outnames)) outnames <- c("year", "month", "day")
   int <- intersect(outnames, names(df))
   if (length(int) > 0) {

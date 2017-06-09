@@ -4,7 +4,8 @@
 \alias{add_ymd}
 \title{Add a year, month, and day column to a dataframe based on a date column}
 \usage{
-add_ymd(df, datecol, tz = "Etc/GMT+8", outnames = NULL)
+add_ymd(df, datecol, tz = getOption("rcaaqs.timezone", default = "Etc/GMT+8"),
+  outnames = NULL)
 }
 \arguments{
 \item{df}{dataframe}
