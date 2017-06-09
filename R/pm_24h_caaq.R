@@ -45,6 +45,8 @@ pm_24h_caaq <- function(data, year = "year", val = "ann_98_percentile",
     stop("cyear must be an integer or 'latest'")
   }
   
+  cyear <- as.integer(cyear)
+  
   if (!inherits(data[[val]], "numeric")) stop(val, "is not numeric")
   
   years <- seq(to = cyear, length.out = 3)
@@ -63,8 +65,8 @@ pm_24h_caaq <- function(data, year = "year", val = "ann_98_percentile",
   
   ret <- summarise_(rows, 
                     caaq_year    = cyear,
-                    min_year     = interp(~min(x), x = as.name(year)),
-                    max_year     = interp(~max(x), x = as.name(year)),
+                    min_year     = interp(~as.integer(min(x)), x = as.name(year)),
+                    max_year     = interp(~as.integer(max(x)), x = as.name(year)),
                     n_years      = ~n(),
                     metric = ~"pm2.5_24h", 
                     metric_value = caaq_formula, 

@@ -20,17 +20,26 @@ test_that("Has correct dimensions", {
 })
 
 test_that("Column classes are correct", {
-  classes <- c(as.list(c(rep("integer", 4), "character", "numeric")), 
-               list(c("ordered", "factor"), c("ordered", "factor")))
   
-  ret_classes <- unname(sapply(pm_24h_caaq(annual_values_one_id, year = "year", 
-                                            val = "ann_98_percentile"), class))
+  check_classes <- function(df, classes) {
+    for (i in seq_along(df)) {
+      expect_is(df[[i]], classes[[i]])
+    }
+  }
+  
+  classes <- c(rep("integer", 4), "character", "numeric", rep("ordered", 2))
+
+  ret <- pm_24h_caaq(annual_values_one_id, year = "year", 
+                     val = "ann_98_percentile")
+  
+    check_classes(ret, classes)
   
   # For multiple sites:
-  ret_classes <- unname(sapply(pm_24h_caaq(annual_values, year = "year", 
-                                            val = "ann_98_percentile", 
-                                           by = "id"), class))
-  expect_equal(ret_classes, c("character", classes))
+  ret<- pm_24h_caaq(annual_values, year = "year", 
+                    val = "ann_98_percentile", 
+                    by = "id")
+  
+  check_classes(ret, c("character", classes))
 })
 
 test_that("average is correct", {

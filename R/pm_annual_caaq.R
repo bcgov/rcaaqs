@@ -59,8 +59,8 @@ pm_annual_caaq <- function(data, year = "year", val = "ann_avg", by = NULL, cyea
   
   ret <- summarise_(rows, 
                     caaq_year    = cyear,
-                    min_year     = interp(~min(x), x = as.name(year)),
-                    max_year     = interp(~max(x), x = as.name(year)),
+                    min_year     = interp(~as.integer(min(x)), x = as.name(year)),
+                    max_year     = interp(~as.integer(max(x)), x = as.name(year)),
                     n_years      = ~n(),
                     metric = ~"pm2.5_annual", 
                     metric_value = caaq_formula, 
