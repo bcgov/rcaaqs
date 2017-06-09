@@ -1,8 +1,8 @@
 Package: rcaaqs
 Type: Package
 Title: Tools to implement CAAQS analysis for air quality
-Version: 0.2.0
-Date: 2017-06-01
+Version: 0.3.0
+Date: 2017-06-09
 Authors@R: c(person("Andy", "Teucher", role = c("aut", "cre"), 
                     email = "andy.teucher@gov.bc.ca"), 
              person("Province of British Columbia", role = "cph"),

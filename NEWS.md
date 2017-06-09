@@ -1,3 +1,11 @@
+# rcaaqs 0.3.0
+
+* Made `format_date` function defunct, and replaced it with `format_caaqs_dt`, which puts the 
+datetime into the correct timezone in POSIXct, and automatically assigns readings with the 
+previous hour by subtracting one second from the timestamp.
+* export `round_caaqs` function.
+* Add more robust checking of columns in core functions (#23)
+
 # rcaaqs 0.2.0
 
 * Added a `NEWS.md` file to track changes to the package.
