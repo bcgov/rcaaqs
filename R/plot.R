@@ -281,6 +281,7 @@ plot_station_instruments <- function(data, dt = "date_time", station = "station_
   ggplot(data, aes_(x = as.name("date"), y = as.name(instrument), colour = as.name(instrument))) + 
     facet_wrap("station_name", scales = "free_y", ncol = 1, strip.position = "left") +
     geom_line(size = 1) + 
+    labs(y = station) +
     theme(axis.text.y = element_blank(), 
           strip.text.y = element_text(angle = 180))
 }
