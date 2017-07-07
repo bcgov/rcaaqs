@@ -113,7 +113,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
       caaqs_data$b_date <- as.Date(paste0(caaqs_data$min_year, "-01-01"))
       caaqs_data$e_date <- as.Date(paste0(caaqs_data$max_year, "-12-31"))
       
-      label_pos_x <- as.Date(paste0(floor(mean(seq(min_year, max_year))), "-02-01"))
+      label_pos_x <- mean(c(mindate, maxdate))
       # Put y label at higher of 98th percentile of data, or caaqs_data + 5
       high_val_in_min_year <- quantile(daily_data[[val]][daily_data$date < label_pos_x], 0.98, na.rm = TRUE)
       label_pos_y <- max(high_val_in_min_year + 2, caaqs_data[[caaq_metric]] + 5)
