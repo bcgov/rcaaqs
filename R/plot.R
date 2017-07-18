@@ -14,6 +14,7 @@
 #' 
 #' @import ggplot2
 #' @importFrom scales date_format
+#' @importFrom tidyr complete_
 #'   
 #' @param daily_data a dataframe of daily aggregated air quality readings with 
 #'   columns: date, avg_24h (if pm25), max8hr (if o3)
@@ -74,6 +75,11 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
   par_units <- get_units(parameter)
   
   # daily_data <- daily_data[!is.na(daily_data[[val]]), , drop = FALSE]
+  
+  ## Fill in missing dates so that gaps in data are not connected
+  daily_data <- tidyr::complete_(
+    daily_data, cols = list(date = lazyeval::interp(~full_seq(y, 1), y = as.name("date")))
+  )
   
   min_year <- rep_yr - 2
   maxdate <- as.Date(paste0(rep_yr, "-12-31"))
