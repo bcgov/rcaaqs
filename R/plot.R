@@ -267,6 +267,7 @@ achievement_plot <- function(data, parameter = NULL) {
 
 #' Plot date ranges at which different instruments were deployed at each station
 #'
+#' @importFrom utils packageVersion
 #' @param data data frame
 #' @param dt a date or date/time column in data
 #' @param station column in data containing station names or ids
