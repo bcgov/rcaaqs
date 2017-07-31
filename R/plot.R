@@ -246,8 +246,8 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
 }
 
 label_metrics <- function(x) {
-  x[x == "pm2.5_annual"] <- bquote(~PM[2.5]~ 'Annual Metric')
-  x[x == "pm2.5_24h"]   <- bquote(~PM[2.5]~ '24-hour Metric')
+  x[x == "pm2.5_annual"] <- bquote(paste('PM'[2.5]*' Annual Metric'))
+  x[x == "pm2.5_24h"]   <- bquote(paste('PM'[2.5]*' 24-hour Metric'))
   x
 }
 
