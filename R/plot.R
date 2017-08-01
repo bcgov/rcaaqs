@@ -146,14 +146,14 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
     # Set y label position dependent on if and where caaqs line is drawn
     if (draw_caaqs) {
       if (caaqs_data[[caaq_metric]][1] < std || caaqs_data[[caaq_metric]][1] - std > 5) {
-        label_pos_y <- std + 3.5
+        label_pos_y <- std + 4.5
       } else {
         label_pos_y <- std - 1
       }
     } else {
       label_pos_y <- std + 3.5
     }
-    p <- p + annotate("text", label = paste0(param_name, " Standard (", std, " ", par_units, ")\n"), 
+    p <- p + annotate("text", label = paste0(param_name, " Standard (", std, " ", par_units, ") \n"), 
                       x = maxdate, y = label_pos_y, vjust = 1, hjust = 1, 
                       size = annot_size, colour = "#e41a1c")
   }
