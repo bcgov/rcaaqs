@@ -50,7 +50,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
   
   if (parameter == "pm2.5_annual") {
     val <- "avg_24h"
-    ylab <- "Daily Average PM2.5\n(micrograms per cubic meter)"
+    ylab <- "Daily Average PM2.5\n(micrograms per cubic metre)"
     param_name <- "Annual PM2.5"
     if (is.null(caaqs_data)) {
       plot_std <- FALSE
