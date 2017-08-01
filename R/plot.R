@@ -50,7 +50,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
   
   if (parameter == "pm2.5_annual") {
     val <- "avg_24h"
-    ylab <- bquote(atop('Daily Average', ~PM[2.5]~ '(micrograms per cubic metre)'))
+    ylab <- bquote(atop('Daily Average ' ~PM[2.5],~ '(micrograms per cubic metre)'))
     param_name <- "Annual PM2.5"
     if (is.null(caaqs_data)) {
       plot_std <- FALSE
@@ -58,7 +58,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
     if (plot_exceedances) stop("Plotting daily exceedances not meaningful for this metric")
   } else if (parameter == "pm2.5_24h") {
     val <- "avg_24h"
-    ylab <- bquote(atop('Daily Average', ~PM[2.5]~ '(micrograms per cubic metre)'))
+    ylab <- bquote(atop('Daily Average ' ~PM[2.5],~ '(micrograms per cubic metre)'))
     param_name <- "24h PM2.5"
   } else if (parameter == "o3") {
     val <-  "max8hr"
