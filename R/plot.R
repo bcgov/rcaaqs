@@ -146,7 +146,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
     # Set y label position dependent on if and where caaqs line is drawn
     if (draw_caaqs) {
       if (caaqs_data[[caaq_metric]][1] < std || caaqs_data[[caaq_metric]][1] - std > 5) {
-        label_pos_y <- std + 3.5
+        label_pos_y <- std + 4.5
       } else {
         label_pos_y <- std - 1
       }
