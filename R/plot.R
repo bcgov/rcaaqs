@@ -153,8 +153,8 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
     } else {
       label_pos_y <- std + 3.5
     }
-    p <- p + annotate("text", label = paste0(param_name, " Standard (", std, " ", par_units, ")  \n"), 
-                      x = maxdate, y = label_pos_y, vjust = 1.2, hjust = 1, 
+    p <- p + annotate("text", label = paste0(param_name, " Standard (", std, " ", par_units, ")\n"), 
+                      x = maxdate, y = label_pos_y, vjust = 1, hjust = 1, 
                       size = annot_size, colour = "#e41a1c")
   }
   
