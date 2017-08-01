@@ -151,7 +151,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
         label_pos_y <- std - 1
       }
     } else {
-      label_pos_y <- std + 3.5
+      label_pos_y <- std + 4.5
     }
     p <- p + annotate("text", label = paste0(param_name, " Standard (", std, " ", par_units, ") \n"), 
                       x = maxdate, y = label_pos_y, vjust = 1, hjust = 1, 
