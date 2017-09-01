@@ -13,21 +13,17 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, echo=FALSE, results='asis'}
-envreportutils::devex_badge("exploration")
-```
-
-[![Travis-CI Build Status](https://travis-ci.org/bcgov/rcaaqs.svg?branch=master)](https://travis-ci.org/bcgov/rcaaqs)
-
----
-
 # rcaaqs
+
+<div id="devex-badge"><a rel="Exploration" href="https://github.com/BCDevExchange/docs/blob/master/discussion/projectstates.md"><img alt="Being designed and built, but in the lab. May change, disappear, or be buggy." style="border-width:0" src="https://assets.bcdevexchange.org/images/badges/exploration.svg" title="Being designed and built, but in the lab. May change, disappear, or be buggy." /></a>[![Travis-CI Build Status](https://travis-ci.org/bcgov/rcaaqs.svg?branch=master)](https://travis-ci.org/bcgov/rcaaqs)</div>
+
+## Overview
 
 An [R](https://www.r-project.org/) package to facilitate the calculation of air quality 
 metrics according to the Canadian Ambient Air Quality Standards
 ([CAAQS](http://www.ccme.ca/en/current_priorities/air/caaqs.html))
 
-### Features
+## Features
 
 - General functions for doing things like formatting dates, filling in
   sequences, etc. 
@@ -37,7 +33,7 @@ metrics according to the Canadian Ambient Air Quality Standards
 - Functions for assigning
   metrics for different pollutants into achievement and management categories.
 
-### Installation
+## Installation
 
 The package is not available on CRAN, but can be installed using
 the [devtools](https://github.com/hadley/devtools) package:
@@ -50,7 +46,7 @@ install_github("bcgov/rcaaqs")
 
 ```
 
-### Usage
+## Usage
 
 This is a simple example using the included sample data set for PM<sub>2.5</sub>. 
 
@@ -199,23 +195,23 @@ management_levels
 ```
 
 
-### Project Status
+## Project Status
 
 The package is under active development. 
 
-### Getting Help or Reporting an Issue
+## Getting Help or Reporting an Issue
 
 To report bugs/issues/feature requests, please file an 
 [issue](https://github.com/bcgov/rcaaqs/issues/).
 
-### How to Contribute
+## How to Contribute
 
 If you would like to contribute to the package, please see our 
 [CONTRIBUTING](CONTRIBUTING.md) guidelines.
 
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
-### License
+## License
 
     Copyright 2015 Province of British Columbia
 
