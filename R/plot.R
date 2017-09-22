@@ -72,7 +72,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
   if (!inherits(daily_data[[val]], "numeric")) stop(val, " is not numeric")
   
   std <- get_std(parameter)
-  par_units <- get_units(parameter)
+  par_units <- plot_units(parameter)
   
   # daily_data <- daily_data[!is.na(daily_data[[val]]), , drop = FALSE]
   
@@ -146,16 +146,24 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
     # Set y label position dependent on if and where caaqs line is drawn
     if (draw_caaqs) {
       if (caaqs_data[[caaq_metric]][1] < std || caaqs_data[[caaq_metric]][1] - std > 5) {
-        label_pos_y <- std + 4.5
+        label_pos_y <- std + 5.5
       } else {
         label_pos_y <- std - 1
       }
     } else {
-      label_pos_y <- std + 4.5
+      label_pos_y <- std + 5.5
     }
-    p <- p + annotate("text", label = paste0(param_name, " Standard (", std, " ", par_units, ")  \n"), 
+    
+    ## Format parameter name so gets parsed correctly - replace space with ~ 
+    ## and number followed by letter with a * (no space) in between
+    plot_param_name <- gsub("\\s+", " ~ ", param_name)
+    plot_param_name <- gsub("([0-9])([a-zA-Z])", "\\1*\\2", plot_param_name)
+    
+    p <- p + annotate("text", 
                       x = maxdate, y = label_pos_y, vjust = 1, hjust = 1, 
-                      size = annot_size, colour = "#e41a1c")
+                      size = annot_size, colour = "#e41a1c",
+                      label = paste0(plot_param_name, " ~ Standard ~ (", std, " ~ ", par_units, ")", collapse = ""), 
+                      parse = TRUE)
   }
   
   p
@@ -213,7 +221,9 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
   names(lines_df)[2] <- parameter
   lines_df[[parameter]] <- rownames(lines_df)
   
-  units <- unname(get_units(metrics[1]))
+  units <- unname(plot_units(metrics[1]))
+  ## Conver to a call object for use in bquote
+  units <- parse(text = units)[[1]]
 
   data[[airzone]] <- reorder(data[[airzone]], data[[metric_val]], max, order = TRUE)
   data[[airzone]] <- factor(data[[airzone]], levels = rev(levels(data[[airzone]])))
@@ -228,8 +238,8 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
                       drop = TRUE, labeller = param_labeller)
   p <- p + geom_vline(data = lines_df, aes_string(xintercept = "std"), linetype = 2, 
                       colour = "#e41a1c")
-  p <- p + labs(x = paste0("CAAQS Metric Value (", units, ")"), 
-                y = "Monitoring Station")
+  p <- p + xlab(bquote(CAAQS ~ Metric ~ Value ~ (.(units))))
+  p <- p + ylab("Monitoring Station")
   p <- p + theme_bw(base_size = base_size)
   p <- p + guides(colour = FALSE)
   
@@ -292,3 +302,9 @@ plot_station_instruments <- function(data, dt = "date_time", station = "station_
     theme(axis.text.y = element_blank(), 
           strip.text.y = element_text(angle = 180))
 }
+
+plot_units <- function(parameters) {
+  c("o3" = "ppb",
+  "pm2.5_annual" = "mu * g/ m^{3}",
+  "pm2.5_24h" = "mu * g/ m^{3}")[parameters]
+} 
