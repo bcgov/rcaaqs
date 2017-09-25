@@ -1,23 +1,24 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<a rel="Exploration" href="https://github.com/BCDevExchange/docs/blob/master/discussion/projectstates.md"><img alt="Being designed and built, but in the lab. May change, disappear, or be buggy." style="border-width:0" src="https://assets.bcdevexchange.org/images/badges/exploration.svg" title="Being designed and built, but in the lab. May change, disappear, or be buggy." /></a>
-
-[![Travis-CI Build Status](https://travis-ci.org/bcgov/rcaaqs.svg?branch=master)](https://travis-ci.org/bcgov/rcaaqs)
-
-------------------------------------------------------------------------
-
 rcaaqs
 ======
 
+<a rel="Exploration" href="https://github.com/BCDevExchange/docs/blob/master/discussion/projectstates.md"><img alt="Being designed and built, but in the lab. May change, disappear, or be buggy." style="border-width:0" src="https://assets.bcdevexchange.org/images/badges/exploration.svg" title="Being designed and built, but in the lab. May change, disappear, or be buggy." /></a>[![Travis-CI Build Status](https://travis-ci.org/bcgov/rcaaqs.svg?branch=master)](https://travis-ci.org/bcgov/rcaaqs)
+
+Overview
+--------
+
 An [R](https://www.r-project.org/) package to facilitate the calculation of air quality metrics according to the Canadian Ambient Air Quality Standards ([CAAQS](http://www.ccme.ca/en/current_priorities/air/caaqs.html))
 
-### Features
+Features
+--------
 
 -   General functions for doing things like formatting dates, filling in sequences, etc.
 -   Functions for stepwise calculation of CAAQS metrics—including implementing data completeness criteria—for different air pollutants. Currently these are complete for PM<sub>2.5</sub> (annual and 24hr), O<sub>3</sub>, NO<sub>2</sub>, and SO<sub>2</sub> metrics.
 -   Functions for assigning metrics for different pollutants into achievement and management categories.
 
-### Installation
+Installation
+------------
 
 The package is not available on CRAN, but can be installed using the [devtools](https://github.com/hadley/devtools) package:
 
@@ -28,7 +29,8 @@ library(devtools)
 install_github("bcgov/rcaaqs")
 ```
 
-### Usage
+Usage
+-----
 
 This is a simple example using the included sample data set for PM<sub>2.5</sub>.
 
@@ -111,7 +113,7 @@ glimpse(pm_caaq_daily)
 #> Observations: 10
 #> Variables: 9
 #> $ ems_id       <chr> "0220205", "0310162", "0310172", "0310175", "0310...
-#> $ caaq_year    <dbl> 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2...
+#> $ caaq_year    <int> 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2...
 #> $ min_year     <int> 2012, 2011, 2011, 2011, 2011, 2011, 2011, 2012, 2...
 #> $ max_year     <int> 2012, 2013, 2013, 2013, 2011, 2013, 2013, 2013, 2...
 #> $ n_years      <int> 1, 3, 3, 3, 1, 2, 3, 2, 3, 3
@@ -172,7 +174,7 @@ glimpse(rolling_avg)
 #> $ month          <dbl> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
 #> $ value          <dbl> 13, 12, 12, 14, 19, 16, 14, 15, 12, 8, 11, 18, ...
 #> $ units          <chr> "ppb", "ppb", "ppb", "ppb", "ppb", "ppb", "ppb"...
-#> $ rolling8       <dbl> NA, NA, NA, NA, NA, 14.3, 14.3, 14.4, 14.2, 13....
+#> $ rolling8       <dbl> NA, NA, NA, NA, NA, 14.3, 14.3, 14.4, 14.3, 13....
 
 # Compute the daily maximum
 daily_max_o3 <- o3_daily_max(rolling_avg, by = c("ems_id", "site"))
@@ -184,7 +186,7 @@ glimpse(daily_max_o3)
 #> $ date                   <date> 2013-01-01, 2013-01-02, 2013-01-03, 20...
 #> $ n_readings             <int> 17, 23, 23, 23, 23, 23, 23, 23, 23, 23,...
 #> $ valid_max8hr           <lgl> FALSE, TRUE, TRUE, TRUE, TRUE, TRUE, TR...
-#> $ max8hr                 <dbl> NA, 30.6, 29.1, 27.9, 28.2, 29.4, 27.9,...
+#> $ max8hr                 <dbl> NA, 30.6, 29.1, 27.9, 28.3, 29.4, 27.9,...
 #> $ exceed                 <lgl> FALSE, FALSE, FALSE, FALSE, FALSE, FALS...
 #> $ flag_max8hr_incomplete <lgl> FALSE, FALSE, FALSE, FALSE, FALSE, FALS...
 
@@ -225,7 +227,7 @@ glimpse(three_yr_avg)
 #> $ valid_year                         <lgl> TRUE, TRUE, TRUE, TRUE, TRU...
 #> $ exceed                             <lgl> FALSE, FALSE, FALSE, FALSE,...
 #> $ flag_year_based_on_incomplete_data <lgl> FALSE, FALSE, FALSE, FALSE,...
-#> $ ozone_metric                       <dbl> NA, 52.6, 53.9, NA, 44.0, 4...
+#> $ ozone_metric                       <dbl> NA, 52.7, 53.9, NA, 44.0, 4...
 ```
 
 This is a simple example using the included sample data set for SO<sub>2</sub>.
@@ -400,7 +402,7 @@ glimpse(no2_three_yr)
 #> $ quarter_4         <dbl> 1.0000000, 1.0000000, 1.0000000, 0.9891304, ...
 #> $ ann_98_percentile <dbl> 30.4, 30.1, 30.3, 27.1, 25.6, 28.9, 36.7, 35...
 #> $ valid_year        <lgl> TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TR...
-#> $ no2_metric        <dbl> NA, 30.2, 30.3, NA, 26.4, 27.2, NA, 36.0, 36...
+#> $ no2_metric        <dbl> NA, 30.3, 30.3, NA, 26.4, 27.2, NA, 36.1, 36...
 
 # Compute the yearly average of all one-hour readings.
 no2_yearly_avg <- 
@@ -425,91 +427,58 @@ You can view the CAAQS Achievement Levels as well as Management Levels in the in
 
 ``` r
 achievement_levels
-#>      parameter       labels lower_breaks upper_breaks    units_html
-#> 1           o3     Achieved            0           63           ppb
-#> 2           o3 Not Achieved           63          Inf           ppb
-#> 3 pm2.5_annual     Achieved            0           10 &mu;g/m&sup3;
-#> 4 pm2.5_annual Not Achieved           10          Inf &mu;g/m&sup3;
-#> 5    pm2.5_24h     Achieved            0           28 &mu;g/m&sup3;
-#> 6    pm2.5_24h Not Achieved           28          Inf &mu;g/m&sup3;
-#>   units_unicode       val_labels_html val_labels_unicode  colour
-#> 1           ppb           &leq; 63ppb            = 63ppb #377EB8
-#> 2           ppb            &gt; 63ppb            > 63ppb #E41A1C
-#> 3         µg/m³ &leq; 10&mu;g/m&sup3;          = 10µg/m³ #377EB8
-#> 4         µg/m³  &gt; 10&mu;g/m&sup3;          > 10µg/m³ #E41A1C
-#> 5         µg/m³ &leq; 28&mu;g/m&sup3;          = 28µg/m³ #377EB8
-#> 6         µg/m³  &gt; 28&mu;g/m&sup3;          > 28µg/m³ #E41A1C
+#> # A tibble: 6 x 11
+#>      parameter       labels lower_breaks upper_breaks  units units_unicode
+#>          <chr>        <chr>        <dbl>        <dbl>  <chr>         <chr>
+#> 1           o3     Achieved            0           63    ppb           ppb
+#> 2           o3 Not Achieved           63          Inf    ppb           ppb
+#> 3 pm2.5_annual     Achieved            0           10 ug/m^3         µg/m³
+#> 4 pm2.5_annual Not Achieved           10          Inf ug/m^3         µg/m³
+#> 5    pm2.5_24h     Achieved            0           28 ug/m^3         µg/m³
+#> 6    pm2.5_24h Not Achieved           28          Inf ug/m^3         µg/m³
+#> # ... with 5 more variables: units_html <chr>, val_labels <chr>,
+#> #   val_labels_html <chr>, val_labels_unicode <chr>, colour <chr>
 
 management_levels
+#> # A tibble: 12 x 11
 #>       parameter                                           labels
-#> 1            o3            Actions for Keeping Clean Areas Clean
-#> 2            o3 Actions for Preventing Air Quality Deterioration
-#> 3            o3          Actions for Preventing CAAQS Exceedance
-#> 4            o3             Actions for Achieving Air Zone CAAQS
-#> 5  pm2.5_annual            Actions for Keeping Clean Areas Clean
-#> 6  pm2.5_annual Actions for Preventing Air Quality Deterioration
-#> 7  pm2.5_annual          Actions for Preventing CAAQS Exceedance
-#> 8  pm2.5_annual             Actions for Achieving Air Zone CAAQS
-#> 9     pm2.5_24h            Actions for Keeping Clean Areas Clean
+#>           <chr>                                            <chr>
+#>  1           o3            Actions for Keeping Clean Areas Clean
+#>  2           o3 Actions for Preventing Air Quality Deterioration
+#>  3           o3          Actions for Preventing CAAQS Exceedance
+#>  4           o3             Actions for Achieving Air Zone CAAQS
+#>  5 pm2.5_annual            Actions for Keeping Clean Areas Clean
+#>  6 pm2.5_annual Actions for Preventing Air Quality Deterioration
+#>  7 pm2.5_annual          Actions for Preventing CAAQS Exceedance
+#>  8 pm2.5_annual             Actions for Achieving Air Zone CAAQS
+#>  9    pm2.5_24h            Actions for Keeping Clean Areas Clean
 #> 10    pm2.5_24h Actions for Preventing Air Quality Deterioration
 #> 11    pm2.5_24h          Actions for Preventing CAAQS Exceedance
 #> 12    pm2.5_24h             Actions for Achieving Air Zone CAAQS
-#>    lower_breaks upper_breaks    units_html units_unicode
-#> 1           0.0         50.0           ppb           ppb
-#> 2          50.0         56.0           ppb           ppb
-#> 3          56.0         63.0           ppb           ppb
-#> 4          63.0          Inf           ppb           ppb
-#> 5           0.0          4.0 &mu;g/m&sup3;         µg/m³
-#> 6           4.0          6.4 &mu;g/m&sup3;         µg/m³
-#> 7           6.4         10.0 &mu;g/m&sup3;         µg/m³
-#> 8          10.0          Inf &mu;g/m&sup3;         µg/m³
-#> 9           0.0         10.0 &mu;g/m&sup3;         µg/m³
-#> 10         10.0         19.0 &mu;g/m&sup3;         µg/m³
-#> 11         19.0         28.0 &mu;g/m&sup3;         µg/m³
-#> 12         28.0          Inf &mu;g/m&sup3;         µg/m³
-#>                                      val_labels_html
-#> 1                                        &leq; 50ppb
-#> 2                       &gt; 50ppb &amp; &leq; 56ppb
-#> 3                       &gt; 56ppb &amp; &leq; 63ppb
-#> 4                                         &gt; 63ppb
-#> 5                               &leq; 4&mu;g/m&sup3;
-#> 6   &gt; 4&mu;g/m&sup3; &amp; &leq; 6.4&mu;g/m&sup3;
-#> 7  &gt; 6.4&mu;g/m&sup3; &amp; &leq; 10&mu;g/m&sup3;
-#> 8                               &gt; 10&mu;g/m&sup3;
-#> 9                              &leq; 10&mu;g/m&sup3;
-#> 10  &gt; 10&mu;g/m&sup3; &amp; &leq; 19&mu;g/m&sup3;
-#> 11  &gt; 19&mu;g/m&sup3; &amp; &leq; 28&mu;g/m&sup3;
-#> 12                              &gt; 28&mu;g/m&sup3;
-#>        val_labels_unicode  colour
-#> 1                 = 50ppb #A6D96A
-#> 2       > 50ppb & = 56ppb #FEE08B
-#> 3       > 56ppb & = 63ppb #F46D43
-#> 4                 > 63ppb #A50026
-#> 5                = 4µg/m³ #A6D96A
-#> 6   > 4µg/m³ & = 6.4µg/m³ #FEE08B
-#> 7  > 6.4µg/m³ & = 10µg/m³ #F46D43
-#> 8               > 10µg/m³ #A50026
-#> 9               = 10µg/m³ #A6D96A
-#> 10  > 10µg/m³ & = 19µg/m³ #FEE08B
-#> 11  > 19µg/m³ & = 28µg/m³ #F46D43
-#> 12              > 28µg/m³ #A50026
+#> # ... with 9 more variables: lower_breaks <dbl>, upper_breaks <dbl>,
+#> #   units <chr>, units_unicode <chr>, units_html <chr>, val_labels <chr>,
+#> #   val_labels_html <chr>, val_labels_unicode <chr>, colour <chr>
 ```
 
-### Project Status
+Project Status
+--------------
 
 The package is under active development.
 
-### Getting Help or Reporting an Issue
+Getting Help or Reporting an Issue
+----------------------------------
 
 To report bugs/issues/feature requests, please file an [issue](https://github.com/bcgov/rcaaqs/issues/).
 
-### How to Contribute
+How to Contribute
+-----------------
 
 If you would like to contribute to the package, please see our [CONTRIBUTING](CONTRIBUTING.md) guidelines.
 
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
-### License
+License
+-------
 
     Copyright 2015 Province of British Columbia
 

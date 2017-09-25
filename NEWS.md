@@ -1,3 +1,7 @@
+# rcaaqs 0.3.1
+
+* Fixed plotting functions to more reliably plot special characters (e.g., mu and superscript)
+
 # rcaaqs 0.3.0
 
 * Made `format_date` function defunct, and replaced it with `format_caaqs_dt`, which puts the 
