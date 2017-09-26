@@ -257,12 +257,12 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
 }
 
 label_metrics <- function(x) {
-  x[x == "pm2.5_annual"] <- "PM2.5 Annual Metric"
-  x[x == "pm2.5_24h"]   <- "PM2.5 24-hour Metric"
-  x
+  x[x == "pm2.5_annual"] <- "PM[2.5]~Annual~Metric"
+  x[x == "pm2.5_24h"]   <- "PM[2.5]~24*'-'*hour~Metric"
+  gsub("\\s", "~", x)
 }
 
-param_labeller <- ggplot2::as_labeller(label_metrics)
+param_labeller <- ggplot2::as_labeller(label_metrics, default = label_parsed)
 
 management_map <- function(data, parameter = NULL) {
   # do stuff
