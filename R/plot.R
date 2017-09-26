@@ -155,11 +155,6 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
       label_pos_y <- std + (base_size / 2)
     }
     
-    ## Format parameter name so gets parsed correctly - replace space with ~ 
-    ## and number followed by letter with a * (no space) in between
-    # plot_param_name <- gsub("\\s+", " ~ ", param_name)
-    # plot_param_name <- gsub("([0-9])([a-zA-Z])", "\\1*\\2", plot_param_name)
-    
     p <- p + annotate("text", 
                       x = maxdate, y = label_pos_y, vjust = 1, hjust = 1, 
                       size = annot_size, colour = "#e41a1c",
