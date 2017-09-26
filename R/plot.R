@@ -50,16 +50,16 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
   
   if (parameter == "pm2.5_annual") {
     val <- "avg_24h"
-    ylab <- "Daily Average PM2.5\n(micrograms per cubic metre)"
-    param_name <- "Annual PM2.5"
+    ylab <- bquote(atop('Daily Average ' ~PM[2.5],~ '(micrograms per cubic metre)'))
+    param_name <- "Annual~PM[2.5]"
     if (is.null(caaqs_data)) {
       plot_std <- FALSE
     }
     if (plot_exceedances) stop("Plotting daily exceedances not meaningful for this metric")
   } else if (parameter == "pm2.5_24h") {
     val <- "avg_24h"
-    ylab <- "Daily Average PM2.5\n(micrograms per cubic metre)"
-    param_name <- "24h PM2.5"
+    ylab <- bquote(atop('Daily Average ' ~PM[2.5],~ '(micrograms per cubic metre)'))
+    param_name <- "24*h~PM[2.5]"
   } else if (parameter == "o3") {
     val <-  "max8hr"
     param_name <- "Ozone"
@@ -131,12 +131,13 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
                                                  y = caaq_metric, yend = caaq_metric, 
                                                  colour = caaq_status), size = 1.5)
       p <- p + annotate("text", x = label_pos_x, y = label_pos_y, 
-                        label = paste(min_year, "-", max_year, param_name, "Metric"), 
+                        label = paste0(min_year, "-", max_year, "~", param_name, "~Metric"), 
+                        parse = TRUE,
                         size = annot_size, hjust = 1, colour = "grey45")
       p <- p + geom_segment(colour = "grey45", x = as.numeric(seg_x), y = label_pos_y, 
                             xend = as.numeric(seg_xend), yend = caaqs_data[[caaq_metric]])
       p <- p + scale_colour_manual(values = c("Achieved" = "#377eb8", "Not Achieved" = "#e41a1c"), 
-                                   labels = paste(min_year, "-", max_year, param_name, "Metric"), 
+                                   labels = expression(paste0(min_year, "-", max_year, "~", param_name, "~Metric")), 
                                    name = element_blank(), guide = "none")
     }
   }
@@ -154,15 +155,10 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
       label_pos_y <- std + (base_size / 2)
     }
     
-    ## Format parameter name so gets parsed correctly - replace space with ~ 
-    ## and number followed by letter with a * (no space) in between
-    plot_param_name <- gsub("\\s+", " ~ ", param_name)
-    plot_param_name <- gsub("([0-9])([a-zA-Z])", "\\1*\\2", plot_param_name)
-    
     p <- p + annotate("text", 
                       x = maxdate, y = label_pos_y, vjust = 1, hjust = 1, 
                       size = annot_size, colour = "#e41a1c",
-                      label = paste0(plot_param_name, " ~ Standard ~ (", std, " ~ ", par_units, ")", collapse = ""), 
+                      label = paste0(param_name, " ~ Standard ~ (", std, " ~ ", par_units, ")", collapse = ""), 
                       parse = TRUE)
   }
   
@@ -256,12 +252,12 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
 }
 
 label_metrics <- function(x) {
-  x[x == "pm2.5_annual"] <- "PM2.5 Annual Metric"
-  x[x == "pm2.5_24h"]   <- "PM2.5 24-hour Metric"
-  x
+  x[x == "pm2.5_annual"] <- "PM[2.5]~Annual~Metric"
+  x[x == "pm2.5_24h"]   <- "PM[2.5]~24*'-'*hour~Metric"
+  gsub("\\s", "~", x)
 }
 
-param_labeller <- ggplot2::as_labeller(label_metrics)
+param_labeller <- ggplot2::as_labeller(label_metrics, default = label_parsed)
 
 management_map <- function(data, parameter = NULL) {
   # do stuff

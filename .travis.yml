@@ -1,6 +1,6 @@
 language: r
 cran: https://cran.rstudio.com
-cache: packages
+# cache: packages
 sudo: required
 dist: trusty
 
