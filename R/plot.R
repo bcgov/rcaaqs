@@ -134,7 +134,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
                         label = paste0(min_year, "-", max_year, "~", param_name, "~Metric"), 
                         parse = TRUE,
                         size = annot_size, hjust = 1, colour = "grey45")
-      p <- p + geom_segment(colour = "grey45", x = as.numeric(seg_x), y = label_pos_y, 
+      p <- p + geom_segment(data = caaqs_data, colour = "grey45", x = as.numeric(seg_x), y = label_pos_y, 
                             xend = as.numeric(seg_xend), yend = caaqs_data[[caaq_metric]])
       p <- p + scale_colour_manual(values = c("Achieved" = "#377eb8", "Not Achieved" = "#e41a1c"), 
                                    labels = expression(paste0(min_year, "-", max_year, "~", param_name, "~Metric")), 
