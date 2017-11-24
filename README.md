@@ -3,7 +3,7 @@
 rcaaqs
 ======
 
-<a rel="Exploration" href="https://github.com/BCDevExchange/docs/blob/master/discussion/projectstates.md"><img alt="Being designed and built, but in the lab. May change, disappear, or be buggy." style="border-width:0" src="https://assets.bcdevexchange.org/images/badges/exploration.svg" title="Being designed and built, but in the lab. May change, disappear, or be buggy." /></a>[![Travis-CI Build Status](https://travis-ci.org/bcgov/rcaaqs.svg?branch=master)](https://travis-ci.org/bcgov/rcaaqs)
+<a rel="Delivery" href="https://github.com/BCDevExchange/assets/blob/master/README.md"><img alt="In production, but maybe in Alpha or Beta. Intended to persist and be supported." style="border-width:0" src="https://assets.bcdevexchange.org/images/badges/delivery.svg" title="In production, but maybe in Alpha or Beta. Intended to persist and be supported." /></a>[![Travis-CI Build Status](https://travis-ci.org/bcgov/rcaaqs.svg?branch=master)](https://travis-ci.org/bcgov/rcaaqs)
 
 Overview
 --------
@@ -432,10 +432,10 @@ achievement_levels
 #>          <chr>        <chr>        <dbl>        <dbl>  <chr>         <chr>
 #> 1           o3     Achieved            0           63    ppb           ppb
 #> 2           o3 Not Achieved           63          Inf    ppb           ppb
-#> 3 pm2.5_annual     Achieved            0           10 ug/m^3         µg/m³
-#> 4 pm2.5_annual Not Achieved           10          Inf ug/m^3         µg/m³
-#> 5    pm2.5_24h     Achieved            0           28 ug/m^3         µg/m³
-#> 6    pm2.5_24h Not Achieved           28          Inf ug/m^3         µg/m³
+#> 3 pm2.5_annual     Achieved            0           10 ug/m^3         μg/m³
+#> 4 pm2.5_annual Not Achieved           10          Inf ug/m^3         μg/m³
+#> 5    pm2.5_24h     Achieved            0           28 ug/m^3         μg/m³
+#> 6    pm2.5_24h Not Achieved           28          Inf ug/m^3         μg/m³
 #> # ... with 5 more variables: units_html <chr>, val_labels <chr>,
 #> #   val_labels_html <chr>, val_labels_unicode <chr>, colour <chr>
 
