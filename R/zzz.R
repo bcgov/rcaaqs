@@ -67,6 +67,14 @@ round_caaqs <- function(x, digits = 0) {
   trunc(scaled_x + sign(x) * 0.5) / scale
 }
 
+check_vars <- function(vars, data) {
+  if(!is.data.frame(data)) stop("'", deparse(substitute(data)), "' is not a data frame", call. = FALSE)
+  for(var in vars) {
+    if(!is.character(var) && !is.null(var)) stop(var, " is not a character", call. = FALSE)
+    if(!var %in% names(data) && !is.null(var)) stop(var, " is not a column in data", call. = FALSE)
+  }
+}
+
 #' Defunct functions in rcaaqs
 #' 
 #' These functions have been removed from rcaaqs.
@@ -77,4 +85,5 @@ round_caaqs <- function(x, digits = 0) {
 #' 
 #' @name rcaaqs-deprecated
 NULL
+
 
