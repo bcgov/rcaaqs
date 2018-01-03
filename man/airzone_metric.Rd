@@ -4,7 +4,8 @@
 \alias{airzone_metric}
 \title{Calculate the airzone metric}
 \usage{
-airzone_metric(df, n_years = "n_years", az = "Airzone", val, keep = NULL)
+airzone_metric(df, n_years = "n_years", az = "airzone",
+  caaq_metric = "caaq_metric", caaq_status = "caaq_status", keep = NULL)
 }
 \arguments{
 \item{df}{The dataframe}
@@ -14,7 +15,9 @@ on}
 
 \item{az}{Airzone column}
 
-\item{val}{the column containing the the metric for individual stations}
+\item{caaq_metric}{the column containing the caaq metric for individual stations}
+
+\item{caaq_status}{the column containing the caaq status for individual stations}
 
 \item{keep}{columns in the input df that you would like to retain in the
 output data frame. You can make it a named vector to rename the column in
@@ -23,7 +26,8 @@ can also be used to rename any of the columns specified by n_years, az, or
 val.}
 }
 \value{
-A dataframe with two columns: metric value and achievement status
+A dataframe with four columns: airzone, number of years in
+ calculation, caaq metric value, and achievement status
 }
 \description{
 <full description>

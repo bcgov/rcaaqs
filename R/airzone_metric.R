@@ -19,28 +19,35 @@
 #'@param n_years The column containing the number of years each 3yr avg is based
 #'  on
 #'@param az Airzone column
-#'@param  val the column containing the the metric for individual stations
+#'@param caaq_metric the column containing the caaq metric for individual stations
+#'@param caaq_status the column containing the caaq status for individual stations
 #'@param keep columns in the input df that you would like to retain in the
 #'  output data frame. You can make it a named vector to rename the column in
 #'  the output. Use the form \code{keep = c(new_name = "existing_name")}. This
 #'  can also be used to rename any of the columns specified by n_years, az, or
 #'  val.
 #'@export
-#'@return A dataframe with two columns: metric value and achievement status
+#'@return A dataframe with four columns: airzone, number of years in
+#'  calculation, caaq metric value, and achievement status
 
-airzone_metric <- function(df, n_years = "n_years", az = "Airzone", val, keep = NULL) {
-  if (!is.data.frame(df)) stop("df must be a data frame")
-  if (!n_years %in% names(df)) stop("n_years is not a column in ", df)
-  if (!is.numeric(df[[n_years]])) stop("n_years must be numeric or integer")
-  if (!val %in% names(df)) stop("val is not a column in ", df)
-  if (!is.numeric(df[[val]])) stop("val must be numeric")
-
-  # set val column to NA if n_years < 3
-  df <- group_by_(df, az)
-  df <- do_(df, ~parse_incomplete(., n_years, val))
-  df <- slice_(df, interp(~which.max(x), x = as.name(val)))
+airzone_metric <- function(df, n_years = "n_years", az = "airzone", 
+                           caaq_metric = "caaq_metric", caaq_status = "caaq_status",
+                           keep = NULL) {
   
-  df <- df[,c(az, n_years, val, setdiff(keep, c(az, n_years, val)))]
+  # Check inputs
+  check_vars(c(n_years, az, caaq_metric, caaq_status), df)
+  if (!is.numeric(df[[n_years]])) stop("Data column ", n_years, " must be numeric")
+  if (!is.numeric(df[[caaq_metric]])) stop("Data column", caaq_metric, " must be numeric")
+
+  # set caaq_metric column to NA if n_years < 3 (unless only have 2 years)
+  df <- group_by_(df, az)
+  df <- do_(df, ~parse_incomplete(., n_years, caaq_metric))
+  df <- slice_(df, interp(~which.max(x), x = as.name(caaq_metric)))
+  
+  df <- df[, c(az, n_years, caaq_metric, caaq_status, 
+               setdiff(keep, c(az, n_years, caaq_metric, caaq_status)))]
+  
+  # Get achievement status and management
   
   # Rename keep columns if asked to
   if (!is.null(names(keep))) {
