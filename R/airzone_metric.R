@@ -62,3 +62,68 @@ parse_incomplete <- function(df, n_years, val) {
   }
   df
 }
+
+#' Assign locations to airzones
+#' 
+#' With a data set containing station locations, calculate which airzones each 
+#' station belongs to. Requires a Spatial Polygons Data Frame object from the
+#' \code{sp} package containting the airzone names and locations (polygons).
+#' 
+#' @param df Data frame. Contains station ids and air quality data.
+#' @param airzones SpatialPolygonsDataFrame. Polygons reflecting airzone
+#'   locations
+#' @param az Character. Name of airzones column in the 'airzones'
+#'   SpatialPolygonsDataFrame object
+#' @param station_id Character. Name of the station_id column in the 'df' data
+#'   frame
+#' @param coords Character vector. Names of the columns containing latitude and 
+#'   longitude (respectively) for each station. Defaults to 'lat' and 'lon'
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' # Using the airzone spatial dataframe from the bcmaps package
+#' bc_airzones <- bcmaps::airzones("sp")
+#' 
+#' df_airzones <- assign_airzone(df, bc_airzones)
+#' }
+#'
+#' @export
+assign_airzone <- function(df, airzones, az = "Airzone", 
+                           station_id = "ems_id",
+                           coords = c("lat", "lon")) {
+  
+  # Check inputs
+  check_vars(c(station_id, coords), df)
+  
+  if(all(class(airzones) != "SpatialPolygonsDataFrame")) {
+    stop("airzones must be a SpatialPolygonsDataFrame (from the 'sp' package)")
+  }
+
+  check_vars(az, airzones@data, name_data = "the airzones Spatial Polygons Data Frame")
+  
+  if(!(az %in% names(airzones@data))) {
+    stop("'", az, "' is not a column in the Spatial Polygons Data Frame")
+  }
+  
+  # Rename to standard
+  names(airzones@data)[names(airzones@data) == az] <- "airzone"
+  
+  # Get stations data
+  st <- dplyr::select(df, station_id, coords)
+  st <- dplyr::distinct(st)
+  
+  # Convert all to long/lat
+  st_coord <- st
+  sp::coordinates(st_coord) <- c(coords[2], coords[1])
+  sp::proj4string(st_coord) <- "+proj=longlat +datum=WGS84"
+  
+  airzones <- sp::spTransform(airzones, sp::CRS("+proj=longlat +datum=WGS84"))
+  
+  # Calculate overlap between stations and airzones
+  st <- cbind(st, sp::`%over%`(st_coord, airzones))
+  
+  # Merge with dataframe
+  df <- left_join(df, st[, c(station_id, "airzone")], by = station_id)
+  df
+}
