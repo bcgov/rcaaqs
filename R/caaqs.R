@@ -1,10 +1,10 @@
 
-#' Calculate the three-year average for the Ozone metric
+#' Calculate the three-year average for the Ozone CAAQ metric
 #' 
-#' Calculates and returns the Ozone metric based on a rolling three-year
+#' Calculates and returns the Ozone CAAQ metric based on a rolling three-year 
 #' average.
 #'
-#' @param data Data frame. Contains three year average data output from
+#' @param df Data frame. Contains three year average data output from
 #'   \code{o3_three_yr_avg}
 #' @param year Character. The name of the data column containing years. Defaults
 #'   to 'year'.
@@ -15,7 +15,7 @@
 #'   you shoud specfify the id column so that it is retained in the output.
 #'
 #' @return A data frame arranged by grouping variables (if present) with caaq
-#'   metrics, achievement levels and management levels.#' 
+#'   metrics, achievement levels and management levels.
 #'
 #' @examples
 #' 
@@ -28,22 +28,22 @@
 #' o3_final_caaq <- o3_caaq(o3_avg, by = c("ems_id", "site"))
 #' 
 #' @export
-o3_caaq <- function(data, year = "year", val = "ozone_metric", by = NULL) {
+o3_caaq <- function(df, year = "year", val = "ozone_metric", by = NULL) {
 
-  check_vars(list(year, val, by), data)
+  check_vars(list(year, val, by), df)
   
   # Rename to standard
-  names(data)[names(data) == year] <- "year"
-  names(data)[names(data) == val] <- "ozone_metric"
+  names(df)[names(df) == year] <- "year"
+  names(df)[names(df) == val] <- "ozone_metric"
   
-  # Start with ungrouped data
-  data <- dplyr::ungroup(data)
+  # Start with ungrouped df
+  df <- dplyr::ungroup(df)
   
-  # Group Data
-  if(!is.null(by)) data <- dplyr::group_by_if(data, names(data) %in% by)
+  # Group df if supplied
+  if(!is.null(by)) df <- dplyr::group_by_if(df, names(df) %in% by)
   
   # Check for duplicates (considering grouping)
-  dup <- dplyr::group_by(data, .data$year, add = TRUE)
+  dup <- dplyr::group_by(df, .data$year, add = TRUE)
   dup <- dplyr::summarize(dup, n = length(.data$year))
   if(any(dup$n > 1)) {
     msg <- paste0("Duplicate values in '", year, "'.")
@@ -52,37 +52,43 @@ o3_caaq <- function(data, year = "year", val = "ozone_metric", by = NULL) {
     stop(msg)
   }
   
+  # Order by date (within grouping if applied)
+  df <- dplyr::arrange(df, !!!lapply(c(by, "year"), as.name))
+  
   # Calculate number of years in rolling averages
-  data <- dplyr::mutate(data, 
-                        n_years = dplyr::case_when(.data$valid == "FALSE" & .data$flag_two_of_three_years == "FALSE" ~ 1,
-                                                   .data$valid == "TRUE" & .data$flag_two_of_three_years == "FALSE" ~ 3,
-                                                   TRUE ~ 2),
-                        n_total = length(.data$year),
-                        min_year = min(.data$year), max_year = max(.data$year))
+  df <- dplyr::mutate(df, 
+                      year_lag1 = dplyr::lag(.data$year),
+                      year_lag2 = dplyr::lag(.data$year, 2),
+                      n_total = length(.data$year),
+                      min_year = dplyr::case_when(!is.na(.data$year_lag2) ~ .data$year_lag2,
+                                                  !is.na(.data$year_lag1) ~ .data$year_lag1,
+                                                  TRUE ~ .data$year),
+                      max_year = .data$year,
+                      n_years = .data$max_year - .data$min_year + 1L)
   
   # Extract 3-year average if 3 or more years in the data, otherwise, use 2-year average
-  data <- dplyr::filter(data, (.data$n_years == 3 & .data$n_total >= 3) | 
+  df <- dplyr::filter(df, (.data$n_years == 3 & .data$n_total >= 3) | 
                           (.data$n_years == 2 & .data$n_total == 2))
   
-  data <- dplyr::ungroup(data)
+  df <- dplyr::ungroup(df)
   
   # Round ozone caaqs metric
-  data$metric_value <- round_caaqs(data$ozone_metric)
+  df$metric_value <- round_caaqs(df$ozone_metric)
   
   # Consider flagging data based on incomplete?
   
   ## Determine station achievements
-  data$caaqs <- cut_achievement(data$metric_value, "o3", output = "labels")
-  data$mgmt <- cut_management(data$metric_value, "o3")
-  data$metric = "ozone"
-  data$caaq_year <- data$year
+  df$caaqs <- cut_achievement(df$metric_value, "o3", output = "labels")
+  df$mgmt <- cut_management(df$metric_value, "o3")
+  df$metric = "ozone"
+  df$caaq_year <- df$year
   
   # Clean up
-  data <- dplyr::select(data, dplyr::one_of(by, "caaq_year", "min_year", 
+  df <- dplyr::select(df, dplyr::one_of(by, "caaq_year", "min_year", 
                                             "max_year", "n_years", "metric", 
                                             "metric_value", "caaqs", "mgmt"))
   
-  data
+  df
 }
 
 
