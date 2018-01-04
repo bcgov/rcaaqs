@@ -19,8 +19,8 @@
 #'@param n_years The column containing the number of years each 3yr avg is based
 #'  on
 #'@param az Airzone column
-#'@param caaq_metric the column containing the caaq metric for individual stations
-#'@param caaq_status the column containing the caaq status for individual stations
+#'@param caaq the column containing the caaq metric for individual stations
+#'@param status the column containing the caaq status for individual stations
 #'@param keep columns in the input df that you would like to retain in the
 #'  output data frame. You can make it a named vector to rename the column in
 #'  the output. Use the form \code{keep = c(new_name = "existing_name")}. This
@@ -31,23 +31,26 @@
 #'  calculation, caaq metric value, and achievement status
 
 airzone_metric <- function(df, n_years = "n_years", az = "airzone", 
-                           caaq_metric = "caaq_metric", caaq_status = "caaq_status",
+                           caaq = "caaq_metric", status = "caaq_status",
                            keep = NULL) {
   
   # Check inputs
-  check_vars(c(n_years, az, caaq_metric, caaq_status), df)
+  check_vars(c(n_years, az, caaq, status), df)
   if (!is.numeric(df[[n_years]])) stop("Data column ", n_years, " must be numeric")
-  if (!is.numeric(df[[caaq_metric]])) stop("Data column", caaq_metric, " must be numeric")
-
-  # set caaq_metric column to NA if n_years < 3 (unless only have 2 years)
-  df <- group_by_(df, az)
-  df <- do_(df, ~parse_incomplete(., n_years, caaq_metric))
-  df <- slice_(df, interp(~which.max(x), x = as.name(caaq_metric)))
+  if (!is.numeric(df[[caaq]])) stop("Data column", caaq, " must be numeric")
   
-  df <- df[, c(az, n_years, caaq_metric, caaq_status, 
-               setdiff(keep, c(az, n_years, caaq_metric, caaq_status)))]
+  # set caaq column to NA if n_years < 3 (unless only have 2 years)
+  df <- tidyr::nest(df, - !! as.name(az))
+  df <- dplyr::mutate(df, data = purrr::map(data, ~ parse_incomplete(., n_years, caaq)))
   
-  # Get achievement status and management
+  # Take station with max caaq for each airzone
+  df <- dplyr::mutate(df, data = purrr::map(data, ~ slice(.x, which.max(.x[[caaq]]))))
+  df <- tidyr::unnest(df)
+  df <- dplyr::arrange(df, !! as.name(az))
+  
+  # Arrange column order
+  df <- df[, c(az, n_years, caaq, status, 
+               setdiff(keep, c(az, n_years, caaq, status)))]
   
   # Rename keep columns if asked to
   if (!is.null(names(keep))) {
