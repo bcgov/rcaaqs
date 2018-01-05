@@ -11,28 +11,43 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 # Rolling statistics.
+
+#' @importFrom rlang .data
 rolling_value <- function(data, dt, val, interval, by, window, valid_thresh, 
                           flag_num = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
-  # Determine validity
+  
   if (!is.null(by)) data <- group_by_(data, .dots = by)
+  
+  # Pad in missing years with NA
+  fill <- list(NA)
+  names(fill) <- val
+  data <- tidyr::complete(data, .data$year = tidyr::full_seq(.data$year, 1), 
+                          tidyr::nesting(!!!rlang::syms(by)), fill = fill)
+  
+  # Determine validity
   validity <- 
-    mutate_(data, n_within = 
+    mutate_(data, n_years = 
               interp(~n_within_window(dt, interval, window), dt = as.name(dt)))
-  validity$valid <- validity$n_within >= valid_thresh
+  validity$valid <- validity$n_years >= valid_thresh
   valid_cols <- c(by, dt, "valid")
+
   if (!is.null(flag_num)) {
-    validity$flag <- validity$n_within %in% flag_num
-    valid_cols <- c(valid_cols, "flag")
+    validity$flag <- validity$n_years %in% flag_num
+    valid_cols <- c(valid_cols, "n_years", "flag")
   }
   validity <- validity[valid_cols]
   # Exclude data
   if(!is.null(exclude_df)) data <- 
     exclude_data(data, dt, by, exclude_df, exclude_df_dt)  
+  
+  
   # Cacluate statistic
-  data <- 
-    mutate_(data, rolled_value = 
-            interp(~filled_rolling_mean(dt, val, interval, window, valid_thresh),
-                   dt = as.name(dt), val = as.name(val)))
+  data <- dplyr::mutate(data,
+                        rolled_value = round_caaqs(rolling_mean(!!as.name(val), width = window, valid_thresh), digits = 1))
+  # data <- 
+  #   mutate_(data, rolled_value = 
+  #           interp(~filled_rolling_mean(dt, val, interval, window, valid_thresh),
+  #                  dt = as.name(dt), val = as.name(val)))
   data <- ungroup(data)
   # Join validity with statistic.
   left_join(validity, data, by = c(by, dt))
