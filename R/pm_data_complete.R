@@ -10,28 +10,31 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-#'Calculates the percentage of days with readings annually, as well as for each 
-#'quarter for each year in a dataset.
+
+#' Calculates the percentage of days with readings annually, as well as for each
+#' quarter for each year in a dataset.
 #'
-#'@import dplyr
-#'@import lazyeval
-#'@param  data data frame of hourly values
-#'@param  dt the name of the date/time column (as a character string). Default
-#'  \code{"date_time"}
-#'@param  val the name of the column with hourly values. Default \code{"value"}
-#'@param  by character vector of  grouping variables, probably an id if using
-#'  multiple sites. Even if not using multiple sites, you shoud specfify the id
-#'  column so that it is retained.
-#'@param  daily_valid  The minimum number of hourly readings in a day for the
+#' @import dplyr
+#' @import lazyeval
+#' @param  data data frame of hourly values
+#' @param  dt the name of the date/time column (as a character string). Default 
+#'   \code{"date_time"}
+#' @param  val the name of the column with hourly values. Default \code{"value"}
+#' @param  by character vector of  grouping variables, probably an id if using 
+#'   multiple sites. Even if not using multiple sites, you shoud specfify the id
+#'   column so that it is retained.
+#' @param  daily_valid  The minimum number of hourly readings in a day for the 
 #'   daily average to be considered valid (default \code{18}).
-#'@param  year_valid  The percentage of valid days required in a year (default
-#'  75).
-#'@param  q_valid  The percentage of valid days required in each quarter
-#'  (default 60).
-#'@return A data frame with percentage of days with readings annually, as well 
-#'  as one for each quarter. Also includes whether or not the annual and 
-#'  quarterly requirements are met
-# pm_data_complete <- function(data, dt = "date_time", val = "value", by = NULL, 
+#' @param  year_valid  The percentage of valid days required in a year (default 
+#'   75).
+#' @param  q_valid  The percentage of valid days required in each quarter 
+#'   (default 60).
+#'   
+#' @return A data frame with percentage of days with readings annually, as well 
+#'   as one for each quarter. Also includes whether or not the annual and 
+#'   quarterly requirements are met
+#'  
+#  pm_data_complete <- function(data, dt = "date_time", val = "value", by = NULL, 
 #                              daily_valid = 18, year_valid = 75, q_valid = 60) {
 #   data_complete(data = data, dt = dt, val = val, by = by, 
 #                 daily_valid = daily_valid, year_valid = year_valid, 
