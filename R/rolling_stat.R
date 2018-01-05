@@ -21,7 +21,7 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
   # Pad in missing years with NA
   fill <- list(NA)
   names(fill) <- val
-  data <- tidyr::complete(data, .data$year = tidyr::full_seq(.data$year, 1), 
+  data <- tidyr::complete(data, year = tidyr::full_seq(year, 1), 
                           tidyr::nesting(!!!rlang::syms(by)), fill = fill)
   
   # Determine validity
