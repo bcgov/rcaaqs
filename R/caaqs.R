@@ -70,6 +70,53 @@ caaq <- function(df, year, val, by, metric, n) {
   df
 }
 
+#' Calculate the PM2.5 24 hour CAAQ metric
+#' 
+#' Calculates and returns the PM2.5 24 hour CAAQ metric based on a rolling
+#' three-year average.
+#'
+#' @param df Data frame. Contains three year PM2.5 24hr average data output from
+#'   \code{pm_three_yr_avg}
+#' @param year Character. The name of the data column containing years. Defaults
+#'   to 'year'.
+#' @param val Character. The name of the data column containing the pm metric.
+#'   Defaults to 'pm_metric'.
+#' @param by Character. The name(s) of the data column(s) specifying the data
+#'   grouping variables (i.e. site_id, etc.). Even if not using multiple sites,
+#'   you shoud specfify the id column so that it is retained in the output.
+#'
+#' @return A data frame arranged by grouping variables (if present) with caaq
+#'   metrics, achievement levels and management levels.
+#'   
+#' @export
+pm_24h_caaq <- function(df, year = "year", val = "pm_metric",
+                        by = NULL) {
+  caaq(df, year, val, by, metric = "pm2.5_24h", n = 3)
+}
+
+#' Calculate the PM2.5 annaul CAAQ metric
+#' 
+#' Calculates and returns the PM2.5 annual CAAQ metric based on a rolling
+#' three-year average.
+#'
+#' @param df Data frame. Contains PM2.5 annual three year average data output
+#'   from \code{pm_three_yr_avg}
+#' @param year Character. The name of the data column containing years. Defaults
+#'   to 'year'.
+#' @param val Character. The name of the data column containing the pm metric.
+#'   Defaults to 'pm_metric'.
+#' @param by Character. The name(s) of the data column(s) specifying the data
+#'   grouping variables (i.e. site_id, etc.). Even if not using multiple sites,
+#'   you shoud specfify the id column so that it is retained in the output.
+#'
+#' @return A data frame arranged by grouping variables (if present) with caaq
+#'   metrics, achievement levels and management levels.
+#' @export
+pm_annual_caaq <- function(df, year = "year", val = "pm_metric",
+                         by = NULL) {
+  caaq(df, year, val, by, metric = "pm2.5_annual", n = 3)
+}
+
 #' Calculate the Ozone CAAQ metric
 #' 
 #' Calculates and returns the Ozone CAAQ metric based on a rolling three-year 
