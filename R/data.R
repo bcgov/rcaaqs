@@ -10,15 +10,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-#' Borders of British Columbia Airzones
-#'
-#' @format A SpatialPolgonsDataFrame with 7 polygons and 1 variable
-#' \describe{
-#' \item{Airzone}{The name of the airzone}
-#' }
-#' @source \url{http://catalogue.data.gov.bc.ca/dataset/british-columbia-air-zones}
-"airzone_map"
-
 #' CAAQS Management levels for air pollutaionts
 #'
 #' @format A data frame with 8 variables:
