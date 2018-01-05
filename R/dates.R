@@ -174,14 +174,17 @@ add_ymd <- function(df, datecol, tz = getOption("rcaaqs.timezone", default = "Et
   df
 }
 
-#'Calcuate number of days in quarter
+#' Calcuate number of days in quarter
 #'
-#' @importFrom lubridate leap_year
 #' @param  quarter the quarter of the year (1-4)
 #' @param year the year as a numeric
+#' 
 #' @return vector with the number of days in that quarter year combination.
+#' 
+#' @noRd
+
 days_in_quarter <- function(quarter, year) 
-  c(90,91,92,92)[quarter] + (leap_year(year) & quarter == 1)
+  c(90,91,92,92)[quarter] + (lubridate::leap_year(year) & quarter == 1)
 
 #' Calcuate number of days in year
 #'
