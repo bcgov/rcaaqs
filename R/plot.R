@@ -10,11 +10,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+
 #' Plot daily time series data with exceedances
-#' 
-#' @import ggplot2
-#' @importFrom scales date_format
-#' @importFrom tidyr complete_
 #'   
 #' @param daily_data a dataframe of daily aggregated air quality readings with 
 #'   columns: date, avg_24h (if pm25), max8hr (if o3)
@@ -24,12 +21,14 @@
 #' @param rep_yr The reporting year
 #' @param plot_exceedances logical. Should exceedances be plotted?
 #' @param base_size base font size for the plot
-#' @param annot_size size of annotations. Scaling of this size is not the same
-#'   as the rest of the font sizes, so you will have to experiment. Defaults to
+#' @param annot_size size of annotations. Scaling of this size is not the same 
+#'   as the rest of the font sizes, so you will have to experiment. Defaults to 
 #'   0.32*base_size
 #'   
 #' @return a ggplot2 object
+#' 
 #' @export
+
 plot_ts <- function(daily_data, caaqs_data = NULL, parameter, 
                     rep_yr, plot_exceedances = FALSE, base_size = 10, 
                     annot_size = NULL) {
@@ -168,10 +167,12 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
 
 #' Move annual breaks to the midpoint of the year
 #' 
-#' @importFrom scales fullseq
 #' @param width The desired interval of the breaks
 #'
 #' @return a function
+#' 
+#' @noRd
+
 mid_breaks <- function(width = "1 year") {
   function(x) {
     if (length(x) > 2) stop("x should be a range of length 2")
@@ -181,7 +182,7 @@ mid_breaks <- function(width = "1 year") {
   }
 }
 
-#' Gnerate a summary plot of individual station CAAQS values, grouped by Airzone
+#' Generate a summary plot of individual station CAAQS values, grouped by Airzone
 #' 
 #' @param data a data frame with columns for the metric value, the station name,
 #'   and the air zone

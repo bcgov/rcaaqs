@@ -22,8 +22,8 @@ columns: date, avg_24h (if pm25), max8hr (if o3)}
 
 \item{base_size}{base font size for the plot}
 
-\item{annot_size}{size of annotations. Scaling of this size is not the same
-as the rest of the font sizes, so you will have to experiment. Defaults to
+\item{annot_size}{size of annotations. Scaling of this size is not the same 
+as the rest of the font sizes, so you will have to experiment. Defaults to 
 0.32*base_size}
 }
 \value{

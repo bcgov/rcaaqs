@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{summary_plot}
 \alias{summary_plot}
-\title{Gnerate a summary plot of individual station CAAQS values, grouped by Airzone}
+\title{Generate a summary plot of individual station CAAQS values, grouped by Airzone}
 \usage{
 summary_plot(data, metric_val, station, airzone, parameter, base_size = 12,
   pt_size = 4, ...)
@@ -30,5 +30,5 @@ for each station}
 ggplot2 object
 }
 \description{
-Gnerate a summary plot of individual station CAAQS values, grouped by Airzone
+Generate a summary plot of individual station CAAQS values, grouped by Airzone
 }

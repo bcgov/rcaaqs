@@ -27,6 +27,8 @@
 #'     achievement and management categories
 #'   }
 #'   
+#' @import ggplot2
+#' 
 #' @docType package
 #' @name rcaaqs
 NULL
