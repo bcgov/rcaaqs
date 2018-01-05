@@ -13,8 +13,8 @@ exclude_data(data, dt, by, exclusion_df, exclusion_date_cols)
 
 \item{by}{an optional character vector specifying the columns to join on.}
 
-\item{exclusion_df}{the data.frame that has all the columns in the 
-by parameter, in addition exactly one or two date columns.}
+\item{exclusion_df}{the data.frame that has all the columns in the by
+parameter, in addition exactly one or two date columns.}
 
 \item{exclusion_date_cols}{a character vector with exactly one or two date columns.}
 }
