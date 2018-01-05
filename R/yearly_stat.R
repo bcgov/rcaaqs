@@ -10,7 +10,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-# Yearly statistics.
+
+# Yearly statistics
 yearly_stat <- function(data, dt = "date", val = "value", 
                         by = c("ems_id", "site"), 
                         stat, stat.opts = NULL, quarter_units = "prop",
@@ -21,51 +22,56 @@ yearly_stat <- function(data, dt = "date", val = "value",
   if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   
   # Calculate yearly statistic
-  data <- mutate_(data, year = interp(~get_year_from_date(dt), 
-                                      dt = as.name(dt)))
-  data <- group_by_(data, .dots = c(by, "year"))
+  data <- dplyr::mutate_(data, year = lazyeval::interp(~get_year_from_date(dt), 
+                                                       dt = as.name(dt)))
+  data <- dplyr::group_by_(data, .dots = c(by, "year"))
   fun2 <- function(x) do.call(stat, c(list(x), stat.opts))
-  data <- summarise_(data,
-                     stat = interp(~fun2(value), 
-                                   value = as.name(val), 
-                                   fun = stat))
-  data <- ungroup(data)
-  left_join(quarter_valid, data, by = c(by, "year"))
+  data <- dplyr::summarise_(data,
+                            stat = lazyeval::interp(~fun2(value), 
+                                                    value = as.name(val), 
+                                                    fun = stat))
+  data <- dplyr::ungroup(data)
+  dplyr::left_join(quarter_valid, data, by = c(by, "year"))
 }
 
 
-#'Compute a yearly statistic (typically 98th percentile).
+#' Compute a yearly statistic (typically 98th percentile).
 #'
-#'@param data data frame with date and value
-#'@param dt the name (as a character string) of the date-time column. Default
-#'  \code{"date"}
-#'@param val the name (as a character string) of the value column. Default
-#'  \code{"value"}
-#'@param by character vector of grouping variables in data, probably an id if
-#'  using multiple sites. Even if not using multiple sites, you shoud specify
-#'  the id column so that it is retained in the output.
-#' @param  exclude_df he data.frame that has all the columns in the 
-#' by parameter, in addition exactly one or two date columns.
-#' @param  exclude_df_dt a character vector with exactly one or two date columns.
+#' @param data data frame with date and value
+#' @param dt the name (as a character string) of the date-time column. Default 
+#'   \code{"date"}
+#' @param val the name (as a character string) of the value column. Default 
+#'   \code{"value"}
+#' @param by character vector of grouping variables in data, probably an id if 
+#'   using multiple sites. Even if not using multiple sites, you shoud specify 
+#'   the id column so that it is retained in the output.
+#' @param  exclude_df he data.frame that has all the columns in the by
+#'   parameter, in addition exactly one or two date columns.
+#' @param  exclude_df_dt a character vector with exactly one or two date
+#'   columns.
+#'   
 #' @return data frame with the yearly summary (typically the 98th percentile)
+#' 
 #' @name yearly_stat_page
+#' 
 NULL
 #> NULL
 
 
 #' @rdname yearly_stat_page
-#' @importFrom  lubridate is.Date
 #' @export
+
 pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
             dt %in% names(data),
             val %in% names(data),
-            is.Date(data[[dt]]), 
+            lubridate::is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
+  
   data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.98, na.rm = TRUE), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  data <- rename_(data, ann_98_percentile = "stat")
+  data <- dplyr::rename_(data, ann_98_percentile = "stat")
   data$ann_98_percentile <- round_caaqs(data$ann_98_percentile, 1)
   data$valid_year <-
     data$valid_in_year > 0.75 &
@@ -81,18 +87,18 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_
 }
 
 #' @rdname yearly_stat_page
-#' @importFrom  lubridate is.Date
 #' @export
+
 so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
             dt %in% names(data),
             val %in% names(data),
-            is.Date(data[[dt]]), 
+            lubridate::is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.99, na.rm = TRUE), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  data <- rename_(data, ann_99_percentile = "stat")
+  data <- dplyr::rename_(data, ann_99_percentile = "stat")
   data$ann_99_percentile <- round_caaqs(data$ann_99_percentile, 1)
   data$valid_year <-
     data$valid_in_year > 0.75 &
@@ -108,18 +114,18 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
 }
 
 #' @rdname yearly_stat_page
-#' @importFrom  lubridate is.Date
 #' @export
+
 no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
             dt %in% names(data),
             val %in% names(data),
-            is.Date(data[[dt]]), 
+            lubridate::is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.98, na.rm = TRUE), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  data <- rename_(data, ann_98_percentile = "stat")
+  data <- dplyr::rename_(data, ann_98_percentile = "stat")
   data$ann_98_percentile <- round_caaqs(data$ann_98_percentile, 1)
   data$valid_year <-
     data$valid_in_year > 0.75 &
@@ -133,18 +139,18 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
 
 
 #' @rdname yearly_stat_page
-#' @importFrom  lubridate is.Date
 #' @export
+
 pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
             dt %in% names(data),
             val %in% names(data),
-            is.Date(data[[dt]]), 
+            lubridate::is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, mean_na, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  data <- rename_(data, ann_avg = "stat")
+  data <- dplyr::rename_(data, ann_avg = "stat")
   data$ann_avg <- round_caaqs(data$ann_avg, 1)
   data$valid_year <-
     data$valid_in_year > 0.75 &
@@ -156,8 +162,8 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude
 }
 
 #' @rdname yearly_stat_page
-#' @importFrom  lubridate is.Date
 #' @export
+
 o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL, 
                                exclude_df = NULL, exclude_df_dt = NULL) {
   stopifnot(is.data.frame(data), 
@@ -165,14 +171,14 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
             is.character(val),
             dt %in% names(data),
             val %in% names(data),
-            is.Date(data[[dt]]), 
+            lubridate::is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- data[data$valid_max8hr | data$flag_max8hr_incomplete,]
   data <- yearly_stat(data, dt, val, by, 
                       nth_highest, stat.opts = list(n = 4), 
                       quarter_units = "days", 
                       exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  data <- rename_(data, max8hr = "stat")
+  data <- dplyr::rename_(data, max8hr = "stat")
   days_in_quarter_2_and_3 <- 183 
   data$valid_year <-
     (data$quarter_2 + data$quarter_3) / days_in_quarter_2_and_3 > 0.75
@@ -184,18 +190,18 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
 }
 
 #' @rdname yearly_stat_page
-#' @importFrom  lubridate is.POSIXt
 #' @export
+
 so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
             dt %in% names(data),
             val %in% names(data),
-            is.POSIXt(data[[dt]]), 
+            lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
-  data <- rename_(data, max_yearly = "stat")
+  data <- dplyr::rename_(data, max_yearly = "stat")
   data$max_yearly <- round_caaqs(data$max_yearly, 1)
   data$valid_in_year <- data$valid_in_year / (days_in_year(data$year)*24)
   for (q in 1:4)
@@ -210,22 +216,22 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
   so2.std <- 5
   data$exceed <- data$max_yearly > so2.std 
   data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
-  rename_(data, avg_yearly = "max_yearly")
+  dplyr::rename_(data, avg_yearly = "max_yearly")
 }
 
 #' @rdname yearly_stat_page
-#' @importFrom  lubridate is.POSIXt
 #' @export
+
 no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
             dt %in% names(data),
             val %in% names(data),
-            is.POSIXt(data[[dt]]), 
+            lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- yearly_stat(data, dt, val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
-  data <- rename_(data, max_yearly = "stat")
+  data <- dplyr::rename_(data, max_yearly = "stat")
   data$max_yearly <- round_caaqs(data$max_yearly, 1)
   data$valid_in_year <- data$valid_in_year / (days_in_year(data$year)*24)
   for (q in 1:4)
@@ -237,7 +243,7 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
     data$quarter_2 > 0.6 &
     data$quarter_3 > 0.6 &
     data$quarter_4 > 0.6
-  rename_(data, avg_yearly = "max_yearly")
+  dplyr::rename_(data, avg_yearly = "max_yearly")
 }
 
 #' Return the rank that should be used to determine the 98th percentile given a 
@@ -246,6 +252,7 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
 #' Wraps \code{\link[stats]{quantile}} but with different defaults, adds another
 #' \code{type}, "caaqs", where the percentile (default 0.98) is calculated 
 #' according to the caaqs methods.
+#' 
 #' @param x numeric vector whose sample quantiles are wanted.
 #' @param probs numeric vector of probablities with values in \eqn{[0,1]}. 
 #'   Default \code{0.98}
@@ -259,9 +266,11 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
 #'   
 #' @return A vector of \code{length(probs)}; if \code{names = TRUE}, it has a
 #'   \code{names} attribute
+#'   
 #' @seealso \code{\link[stats]{quantile}}
-#' @export
 #' 
+#' @export
+
 quantile2 <- function(x, probs = 0.98, na.rm = FALSE, names = FALSE, type = "caaqs") {
   if (missing(x) || length(x) == 0) {
     warning("No non-missing arguments to quantile2; returning -Inf")

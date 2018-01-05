@@ -35,20 +35,21 @@ no2_avg_hourly_by_year(data, dt = "date_time", val = "value", by = NULL,
 \arguments{
 \item{data}{data frame with date and value}
 
-\item{dt}{the name (as a character string) of the date-time column. Default
+\item{dt}{the name (as a character string) of the date-time column. Default 
 \code{"date"}}
 
-\item{val}{the name (as a character string) of the value column. Default
+\item{val}{the name (as a character string) of the value column. Default 
 \code{"value"}}
 
-\item{by}{character vector of grouping variables in data, probably an id if
-using multiple sites. Even if not using multiple sites, you shoud specify
+\item{by}{character vector of grouping variables in data, probably an id if 
+using multiple sites. Even if not using multiple sites, you shoud specify 
 the id column so that it is retained in the output.}
 
-\item{exclude_df}{he data.frame that has all the columns in the 
-by parameter, in addition exactly one or two date columns.}
+\item{exclude_df}{he data.frame that has all the columns in the by
+parameter, in addition exactly one or two date columns.}
 
-\item{exclude_df_dt}{a character vector with exactly one or two date columns.}
+\item{exclude_df_dt}{a character vector with exactly one or two date
+columns.}
 }
 \value{
 data frame with the yearly summary (typically the 98th percentile)
