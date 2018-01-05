@@ -10,14 +10,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+
 #' A function to summarise occurrences of a variable within a polygon
 #'
 #' @param  polys SpatialPolygonsDataFrame to summarise by
 #' @param  points SpatialPointsDataFrame to summarise
 #' @param  fn The summary function with which to summarise point data in each polygon
 #' @param  ... Other arguments to fn
-#' @export
+#' 
 #' @return A data frame with the same number of rows as the SpatialPolygonsDataFrame.
+#' 
 
 poly_summary <- function(polys, points, fn, ...) {
   
