@@ -9,7 +9,7 @@ get_colours(type = "management", drop_na = FALSE)
 \arguments{
 \item{type}{"achievement" or "management"}
 
-\item{drop_na}{Should NA (i.e., Insufficient Data) be excluded (\code{TRUE})
+\item{drop_na}{Should NA (i.e., Insufficient Data) be excluded (\code{TRUE}) 
 or includeded \code{FALSE} (the default)?}
 }
 \value{

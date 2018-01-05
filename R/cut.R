@@ -68,16 +68,20 @@ cut_caaq <- function(type, x, parameter, output, drop_na) {
       ordered_result = TRUE)
 }
 
-#'Return CAAQS levels for any or all, parameters, for either achievement or
-#'management reporting
+#' Return CAAQS levels for any or all, parameters, for either achievement or 
+#' management reporting
 #'
-#'@param type one of "achievement", "management"
-#'@param parameter one of "all" (default), "o3", "PM2.5_annual", "PM2.5_24h"
-#'@export
-#'@return A data frame
+#' @param type one of "achievement", "management"
+#' @param parameter one of "all" (default), "o3", "PM2.5_annual", "PM2.5_24h"
+#' 
+#' @return A data frame
+#' 
 #' @examples \dontrun{
-#' get_levels("o3") 
-#'}
+#'  get_levels("o3") 
+#' }
+#' 
+#' @noRd
+
 get_levels <- function(type, parameter = "all") {
   
   if (type == "achievement") {
@@ -100,10 +104,14 @@ get_levels <- function(type, parameter = "all") {
 
 #' Get labels
 #'
-#' @param x dataframe - a subset of achievement_levels or caaqs_levels
-#' @param output one of: "labels", "breaks_h", "breaks_u", "colour", "color"
+#' @param x Data frame. A subset of achievement_levels or caaqs_levels
+#' @param output Character. One of: "labels", "breaks_h", "breaks_u", "colour",
+#'   "color"
 #' @keywords internal
 #' @return character vector
+#' 
+#' @noRd
+
 get_labels <- function(x, output, drop_na) {
   
   if (!output %in% c("labels", "breaks_h", "breaks_u", "colour", "color")) {
@@ -135,13 +143,15 @@ get_labels <- function(x, output, drop_na) {
   labels
 }
 
-#' get the CAAQS value for a given parameter
+#' Get the CAAQS value for a given parameter
 #'
 #' @param parameter parameter of interest. One or more of 
 #'
 #' @return a named vector of standards
 #' @keywords internal
-#'
+#' 
+#' @noRd
+
 get_std <- function(parameter = "all") {
   levels <- get_levels("achievement", parameter = parameter)
   stds <- levels[levels$labels == "Not Achieved", "lower_breaks", drop = TRUE]
@@ -156,6 +166,8 @@ get_std <- function(parameter = "all") {
 #' @return a named vector of units
 #' @keywords internal
 #'
+#' @noRd
+
 get_units <- function(parameter = "all") {
   levels <- get_levels("achievement", parameter = parameter)
   units_df <- unique(levels[c("parameter", "units_unicode")])
@@ -167,11 +179,12 @@ get_units <- function(parameter = "all") {
 #' Get a vector of colours for management levels or achievement levels
 #' 
 #' @param type "achievement" or "management"
-#' @param drop_na Should NA (i.e., Insufficient Data) be excluded (\code{TRUE})
+#' @param drop_na Should NA (i.e., Insufficient Data) be excluded (\code{TRUE}) 
 #'   or includeded \code{FALSE} (the default)?
 #'   
 #' @return named vector of colours (hex)
 #' @export
+
 get_colours <- function(type = "management", drop_na = FALSE) {
   if (!type %in% c("management", "achievement")) 
     stop("type must be 'achievement' or 'management'")
