@@ -75,6 +75,10 @@ check_vars <- function(vars, data, name_data = "data") {
   }
 }
 
+check_mode <- function(var, df, c) {
+  if(mode(df[[var]]) != c) stop("Column '", var, "' is not ", c, call. = FALSE)
+}
+
 #' Defunct functions in rcaaqs
 #' 
 #' These functions have been removed from rcaaqs.
