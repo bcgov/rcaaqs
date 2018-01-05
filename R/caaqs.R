@@ -70,7 +70,7 @@ caaq <- function(df, year, val, by, metric, n) {
   df
 }
 
-#' Calculate the three-year average for the Ozone CAAQ metric
+#' Calculate the Ozone CAAQ metric
 #' 
 #' Calculates and returns the Ozone CAAQ metric based on a rolling three-year 
 #' average.

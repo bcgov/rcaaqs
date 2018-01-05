@@ -2,7 +2,7 @@
 % Please edit documentation in R/caaqs.R
 \name{o3_caaq}
 \alias{o3_caaq}
-\title{Calculate the three-year average for the Ozone CAAQ metric}
+\title{Calculate the Ozone CAAQ metric}
 \usage{
 o3_caaq(df, year = "year", val = "ozone_metric", by = NULL)
 }
