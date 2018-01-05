@@ -14,8 +14,6 @@
 #' Calculates the percentage of days with readings annually, as well as for each
 #' quarter for each year in a dataset.
 #'
-#' @import dplyr
-#' @import lazyeval
 #' @param  data data frame of hourly values
 #' @param  dt the name of the date/time column (as a character string). Default 
 #'   \code{"date_time"}
