@@ -10,8 +10,8 @@ airzone_metric(df, n_years = "n_years", az = "airzone",
 \arguments{
 \item{df}{The dataframe}
 
-\item{n_years}{The column containing the number of years each 3yr avg is based
-on}
+\item{n_years}{The column containing the number of years each 3yr avg is
+based on}
 
 \item{az}{Airzone column}
 
@@ -19,10 +19,10 @@ on}
 
 \item{status}{the column containing the caaq status for individual stations}
 
-\item{keep}{columns in the input df that you would like to retain in the
-output data frame. You can make it a named vector to rename the column in
-the output. Use the form \code{keep = c(new_name = "existing_name")}. This
-can also be used to rename any of the columns specified by n_years, az, or
+\item{keep}{columns in the input df that you would like to retain in the 
+output data frame. You can make it a named vector to rename the column in 
+the output. Use the form \code{keep = c(new_name = "existing_name")}. This 
+can also be used to rename any of the columns specified by n_years, az, or 
 val.}
 }
 \value{

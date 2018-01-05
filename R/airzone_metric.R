@@ -10,25 +10,26 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-#'Calculate the airzone metric
+#' Calculate the airzone metric
 #'
-#'<full description>
-#'@import dplyr
-#'@import lazyeval
-#'@param df The dataframe
-#'@param n_years The column containing the number of years each 3yr avg is based
-#'  on
-#'@param az Airzone column
-#'@param caaq the column containing the caaq metric for individual stations
-#'@param status the column containing the caaq status for individual stations
-#'@param keep columns in the input df that you would like to retain in the
-#'  output data frame. You can make it a named vector to rename the column in
-#'  the output. Use the form \code{keep = c(new_name = "existing_name")}. This
-#'  can also be used to rename any of the columns specified by n_years, az, or
-#'  val.
-#'@export
-#'@return A dataframe with four columns: airzone, number of years in
+#' <full description>
+#' 
+#' @param df The dataframe
+#' @param n_years The column containing the number of years each 3yr avg is
+#'   based on
+#' @param az Airzone column
+#' @param caaq the column containing the caaq metric for individual stations
+#' @param status the column containing the caaq status for individual stations
+#' @param keep columns in the input df that you would like to retain in the 
+#'   output data frame. You can make it a named vector to rename the column in 
+#'   the output. Use the form \code{keep = c(new_name = "existing_name")}. This 
+#'   can also be used to rename any of the columns specified by n_years, az, or 
+#'   val.
+#'  
+#' @return A dataframe with four columns: airzone, number of years in
 #'  calculation, caaq metric value, and achievement status
+#'
+#' @export
 
 airzone_metric <- function(df, n_years = "n_years", az = "airzone", 
                            caaq = "caaq_metric", status = "caaq_status",
