@@ -15,14 +15,14 @@ License: file LICENSE
 Depends:
     R (>= 3.3.0)
 Imports:
-    lubridate (>= 1.6.0),
     dplyr (>= 0.7.0),
-    lazyeval (>= 0.2.0),
     ggplot2 (>= 2.2.0),
+    lubridate (>= 1.6.0),
+    purrr (>= 0.2.4),
     scales(>= 0.4.0),
     tidyr(>= 0.6.0)
 Suggests:
-    sp (>= 1.2),
     rgdal (>= 1.2),
+    sp (>= 1.2),
     testthat (>= 1.0.0)
 RoxygenNote: 6.0.1
