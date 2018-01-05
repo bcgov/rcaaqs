@@ -33,12 +33,13 @@ pm_daily_avg(data, dt = "date_time", val = "value", by = NULL,
 using multiple sites. Even if not using multiple sites, you shoud specfify
 the id column so that it is retained in the output.}
 
-\item{exclude_df}{a data.frame specifying which date ranges and sites to exclude. 
-The data.frame must have to one date column if specific dates or date-times are to be excluded,
-and exactly two date or date-time columns if a date range is needed.
-must have all the columns of by provided,}
+\item{exclude_df}{a data.frame specifying which date ranges and sites to
+exclude. The data.frame must have to one date column if specific dates or
+date-times are to be excluded, and exactly two date or date-time columns if
+a date range is needed. must have all the columns of by provided}
 
-\item{exclude_df_dt}{specifies the one (or two) date columns to be use in the exclude_df data.frame.}
+\item{exclude_df_dt}{specifies the one (or two) date columns to be use in the
+exclude_df data.frame.}
 }
 \value{
 data frame with the daily averages, can be input into
