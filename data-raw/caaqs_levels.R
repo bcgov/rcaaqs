@@ -46,7 +46,11 @@ achievement_levels <- tribble(
   "pm2.5_annual", "Achieved",     0,             10.0,          "ug/m^3",
   "pm2.5_annual", "Not Achieved", 10.0,          Inf,           "ug/m^3",
   "pm2.5_24h",    "Achieved",     0,             28,            "ug/m^3",
-  "pm2.5_24h",    "Not Achieved", 28,            Inf,           "ug/m^3"
+  "pm2.5_24h",    "Not Achieved", 28,            Inf,           "ug/m^3",
+  "no2_1yr",      "Unknown",      0,             Inf,           "ppb",
+  "no2_3yr",      "Unknown",      0,             Inf,           "ppb",
+  "so2_1yr",      "Unknown",      0,             Inf,           "ppb",
+  "so2_3yr",      "Unknown",      0,             Inf,           "ppb"
 ) %>% 
   left_join(units_tbl, by = "units") %>% 
   mutate(val_labels = ifelse(is.infinite(upper_breaks), 
@@ -71,7 +75,11 @@ management_levels <- tribble(
   "pm2.5_24h",    "Actions for Keeping Clean Areas Clean",            0,             10,            "ug/m^3",
   "pm2.5_24h",    "Actions for Preventing Air Quality Deterioration", 10,            19,            "ug/m^3",
   "pm2.5_24h",    "Actions for Preventing CAAQS Exceedance",          19,            28,            "ug/m^3",
-  "pm2.5_24h",    "Actions for Achieving Air Zone CAAQS",             28,            Inf,           "ug/m^3"
+  "pm2.5_24h",    "Actions for Achieving Air Zone CAAQS",             28,            Inf,           "ug/m^3",
+  "no2_1yr",      "Unknown",                                          0,             Inf,           "ppb",
+  "no2_3yr",      "Unknown",                                          0,             Inf,           "ppb",
+  "so2_1yr",      "Unknown",                                          0,             Inf,           "ppb",
+  "so2_3yr",      "Unknown",                                          0,             Inf,           "ppb"
 ) %>% 
   left_join(units_tbl, by = "units") %>% 
   mutate(
