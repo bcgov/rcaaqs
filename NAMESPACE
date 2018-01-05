@@ -2,7 +2,6 @@
 
 export(airzone_metric)
 export(assign_airzone)
-export(clean_neg)
 export(cut_achievement)
 export(cut_management)
 export(format_caaqs_dt)
