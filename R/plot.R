@@ -274,7 +274,6 @@ achievement_plot <- function(data, parameter = NULL) {
 
 #' Plot date ranges at which different instruments were deployed at each station
 #'
-#' @importFrom utils packageVersion
 #' @param data data frame
 #' @param dt a date or date/time column in data
 #' @param station column in data containing station names or ids
@@ -283,9 +282,7 @@ achievement_plot <- function(data, parameter = NULL) {
 #' @return a ggplot2 opbject
 #' @export
 plot_station_instruments <- function(data, dt = "date_time", station = "station_name", instrument = "instrument") {
-  ## This uses the new tidyevl/rlang framework:
-  if (!packageVersion("dplyr") >= "0.7.0") stop("You need to install dplyr 0.7.0 or higher")
-  # browser()
+  
   data$date <- as.Date(data[[dt]])
   
   ## conversation here discussing quosing strings: https://github.com/tidyverse/rlang/issues/116
