@@ -10,13 +10,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-# Rolling statistics.
 
+#' Rolling statistics
+#' 
+#' @noRd
+#' 
 #' @importFrom rlang .data
+
 rolling_value <- function(data, dt, val, interval, by, window, valid_thresh, 
                           flag_num = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
   
-  if (!is.null(by)) data <- group_by_(data, .dots = by)
+  if (!is.null(by)) data <- dplyr::group_by_(data, .dots = by)
   
   # Pad in missing years with NA
   fill <- list(NA)
@@ -26,8 +30,8 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
   
   # Determine validity
   validity <- 
-    mutate_(data, n_years = 
-              interp(~n_within_window(dt, interval, window), dt = as.name(dt)))
+    dplyr::mutate_(data, n_years = 
+              lazyeval::interp(~n_within_window(dt, interval, window), dt = as.name(dt)))
   validity$valid <- validity$n_years >= valid_thresh
   valid_cols <- c(by, dt, "valid")
 
@@ -48,32 +52,35 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
   #   mutate_(data, rolled_value = 
   #           interp(~filled_rolling_mean(dt, val, interval, window, valid_thresh),
   #                  dt = as.name(dt), val = as.name(val)))
-  data <- ungroup(data)
+  data <- dplyr::ungroup(data)
   # Join validity with statistic.
   left_join(validity, data, by = c(by, dt))
 }
 
 
-#'Compute a rolling statistic (typically over years, but also hourly).
+#' Compute a rolling statistic (typically over years, but also hourly).
 #'
-#'@param data data frame with date and value
-#'@param dt the name (as a character string) of the date-time column. 
-#'@param val the name (as a character string) of the value column. 
-#'@param by character vector of grouping variables in data, probably an id if
-#'  using multiple sites. Even if not using multiple sites, you shoud specify
-#'  the id column so that it is retained in the output.
-#' @param  exclude_df he data.frame that has all the columns in the 
-#' by parameter, in addition exactly one or two date columns.
-#' @param  exclude_df_dt a character vector with exactly one or two date columns.
-# '@return dataframe with rolling 8-hour averages.
+#' @param data data frame with date and value
+#' @param dt the name (as a character string) of the date-time column.
+#' @param val the name (as a character string) of the value column.
+#' @param by character vector of grouping variables in data, probably an id if 
+#'   using multiple sites. Even if not using multiple sites, you shoud specify 
+#'   the id column so that it is retained in the output.
+#' @param  exclude_df he data.frame that has all the columns in the by
+#'   parameter, in addition exactly one or two date columns.
+#' @param  exclude_df_dt a character vector with exactly one or two date
+#'   columns.
+#'   
+#' @return dataframe with rolling 8-hour averages.
+#' 
 #' @name rolling_stat_page
 NULL
 #> NULL
 
 
 #' @rdname rolling_stat_page
-#' @importFrom  lubridate is.POSIXt
 #' @export
+
 o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value", 
                                by = NULL, exclude_df = NULL, exclude_df_dt = NULL){
   stopifnot(is.data.frame(data), 
@@ -81,7 +88,7 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
             is.character(val),
             dt %in% names(data),
             val %in% names(data),
-            is.POSIXt(data[[dt]]), 
+            lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
 
   data <- rolling_value(data, 
@@ -93,11 +100,12 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
                        valid_thresh = 6,
                        exclude_df = exclude_df,
                        exclude_df_dt = exclude_df_dt)
-  rename_(data, rolling8 = "rolled_value", flag_valid_8hr = "valid")
+  dplyr::rename_(data, rolling8 = "rolled_value", flag_valid_8hr = "valid")
 }
 
 #' @rdname rolling_stat_page
 #' @export
+
 so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
@@ -116,11 +124,12 @@ so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = 
                         window = 3,
                         valid_thresh = 2,
                         flag_num = 2)
-  rename_(data, so2_metric = "rolled_value")
+  dplyr::rename_(data, so2_metric = "rolled_value")
 }
 
 #' @rdname rolling_stat_page
 #' @export
+
 no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
@@ -139,11 +148,12 @@ no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = 
                         window = 3,
                         valid_thresh = 2,
                         flag_num = 2)
-  rename_(data, no2_metric = "rolled_value")
+  dplyr::rename_(data, no2_metric = "rolled_value")
 }
 
 #' @rdname rolling_stat_page
 #' @export
+
 pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
@@ -162,13 +172,14 @@ pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = N
                         window = 3,
                         valid_thresh = 2,
                         flag_num = 2)
-  rename_(data,
+  dplyr::rename_(data,
           pm_metric = "rolled_value",
           flag_two_of_three_years = "flag")
 }
 
 #' @rdname rolling_stat_page
 #' @export
+
 o3_three_yr_avg <- function(data, dt = "year", val = "max8hr", by = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
@@ -187,7 +198,7 @@ o3_three_yr_avg <- function(data, dt = "year", val = "max8hr", by = NULL) {
                         window = 3,
                         valid_thresh = 2,
                         flag_num = 2) 
-  rename_(data,
+  dplyr::rename_(data,
           ozone_metric = "rolled_value",
           flag_two_of_three_years = "flag")
 }
