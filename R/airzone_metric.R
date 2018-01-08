@@ -19,7 +19,6 @@
 #'   based on
 #' @param az Airzone column
 #' @param caaq the column containing the caaq metric for individual stations
-#' @param status the column containing the caaq status for individual stations
 #' @param keep columns in the input df that you would like to retain in the 
 #'   output data frame. You can make it a named vector to rename the column in 
 #'   the output. Use the form \code{keep = c(new_name = "existing_name")}. This 
@@ -27,16 +26,15 @@
 #'   val.
 #'  
 #' @return A dataframe with four columns: airzone, number of years in
-#'  calculation, caaq metric value, and achievement status
+#'  calculation, and caaq metric value
 #'
 #' @export
 
 airzone_metric <- function(df, n_years = "n_years", az = "airzone", 
-                           caaq = "caaq_metric", status = "caaq_status",
-                           keep = NULL) {
+                           caaq = "caaq_metric", keep = NULL) {
   
   # Check inputs
-  check_vars(c(n_years, az, caaq, status), df)
+  check_vars(c(n_years, az, caaq), df)
   if (!is.numeric(df[[n_years]])) stop("Data column ", n_years, " must be numeric")
   if (!is.numeric(df[[caaq]])) stop("Data column", caaq, " must be numeric")
   
@@ -45,13 +43,13 @@ airzone_metric <- function(df, n_years = "n_years", az = "airzone",
   df <- dplyr::mutate(df, data = purrr::map(data, ~ parse_incomplete(., n_years, caaq)))
   
   # Take station with max caaq for each airzone
-  df <- dplyr::mutate(df, data = purrr::map(data, ~ slice(.x, which.max(.x[[caaq]]))))
+  df <- dplyr::mutate(df, data = purrr::map(data, ~ dplyr::slice(.x, which.max(.x[[caaq]]))))
   df <- tidyr::unnest(df)
   df <- dplyr::arrange(df, !! as.name(az))
   
   # Arrange column order
-  df <- df[, c(az, n_years, caaq, status, 
-               setdiff(keep, c(az, n_years, caaq, status)))]
+  df <- df[, c(az, n_years, caaq,
+               setdiff(keep, c(az, n_years, caaq)))]
   
   # Rename keep columns if asked to
   if (!is.null(names(keep))) {
