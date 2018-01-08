@@ -269,7 +269,7 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
 #'   
 #' @seealso \code{\link[stats]{quantile}}
 #' 
-#' @export
+#' @noRd
 
 quantile2 <- function(x, probs = 0.98, na.rm = FALSE, names = FALSE, type = "caaqs") {
   if (missing(x) || length(x) == 0) {

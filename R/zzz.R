@@ -50,7 +50,8 @@ Mode <- function(x) {
 #' @param digits integer indicating the number of decimal places to round to (default 0)
 #'
 #' @return numeric vector
-#' @export
+#' @noRd
+
 round_caaqs <- function(x, digits = 0) {
   ## Scale x so we are rounding to a whole number
   scale <- 10^digits
