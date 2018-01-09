@@ -35,7 +35,7 @@ caaq <- function(df, year, val, by, metric, n) {
       msg <- paste0("Duplicate values in '", year, "'.")
       if(is.null(by)) msg <- paste0(msg, " Consider using 'by' to specify grouping argument(s).")
       if(!is.null(by)) msg <- paste0(msg, " Consider adding additional grouping variables to 'by'.")
-      stop(msg)
+      stop(msg, call. = FALSE)
     }
 
     # Calculate min/max and total number of years in rolling averages
