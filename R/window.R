@@ -144,4 +144,4 @@ mean_na <- function(x)
 #' @noRd
 
 quantile2_na <- function(x, probs = 0.98, na.rm = TRUE, names = FALSE, type = "caaqs") 
-  if (length(na.omit(x)) == 0) NA else quantile2(x, probs = probs, na.rm = na.rm, names = names, type = type)
+  if (length(stats::na.omit(x)) == 0) NA else quantile2(x, probs = probs, na.rm = na.rm, names = names, type = type)

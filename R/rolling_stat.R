@@ -59,7 +59,7 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
 
   # All missing data gets NA, even if filled by rolling mean
   data <- dplyr::mutate(data,
-                        rolled_value = replace(rolled_value, 
+                        rolled_value = replace(.data$rolled_value, 
                                                is.na(!!!rlang::syms(val)), 
                                                as.numeric(NA)))
   # data <- 

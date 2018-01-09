@@ -42,11 +42,11 @@ airzone_metric <- function(df, n_years = "n_years", az = "airzone",
   if (!is.numeric(df[[caaq]])) stop("Data column", caaq, " must be numeric")
   
   # set caaq column to NA if n_years < 3 (unless only have 2 years)
-  df <- dplyr::mutate(df, data = purrr::map(data, ~ parse_incomplete(., n_years, caaq)))
   df <- tidyr::nest(df, - !!!rlang::syms(az))
+  df <- dplyr::mutate(df, data = purrr::map(.data$data, ~ parse_incomplete(., n_years, caaq)))
   
   # Take station with max caaq for each airzone
-  df <- dplyr::mutate(df, data = purrr::map(data, ~ dplyr::slice(.x, which.max(.x[[caaq]]))))
+  df <- dplyr::mutate(df, data = purrr::map(.data$data, ~ dplyr::slice(.x, which.max(.x[[caaq]]))))
   df <- tidyr::unnest(df)
   df <- dplyr::arrange(df, !!!rlang::syms(az))
   
@@ -136,6 +136,6 @@ assign_airzone <- function(df, airzones, az = "Airzone",
   st <- cbind(st, sp::`%over%`(st_coord, airzones))
   
   # Merge with dataframe
-  df <- left_join(df, st[, c(station_id, "airzone")], by = station_id)
+  df <- dplyr::left_join(df, st[, c(station_id, "airzone")], by = station_id)
   df
 }

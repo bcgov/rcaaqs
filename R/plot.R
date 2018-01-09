@@ -288,8 +288,8 @@ plot_station_instruments <- function(data, dt = "date_time", station = "station_
   data$date <- as.Date(data[[dt]])
   
   ## conversation here discussing quosing strings: https://github.com/tidyverse/rlang/issues/116
-  data <- group_by(data, date, !! as.name(station), !! as.name(instrument)) %>% 
-    summarise()
+  data <- dplyr::group_by(data, date, !!!rlang::syms(station), !!!rlang::syms(instrument))
+  data <- dplyr::summarize(data)
   
   ggplot(data, aes_(x = as.name("date"), y = as.name(instrument), colour = as.name(instrument))) + 
     facet_wrap("station_name", scales = "free_y", ncol = 1, strip.position = "left") +
