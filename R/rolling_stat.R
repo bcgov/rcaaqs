@@ -21,11 +21,12 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
                           flag_num = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
   
   if (!is.null(by)) data <- dplyr::group_by_(data, .dots = by)
-  
+
   # Pad in missing years with NA
   fill <- list(NA)
   names(fill) <- val
-  data <- tidyr::complete(data, year = tidyr::full_seq(year, 1), 
+  data <- tidyr::complete(data,
+                          !!!rlang::syms(dt) := tidyr::full_seq(!!!rlang::syms(dt), interval),
                           tidyr::nesting(!!!rlang::syms(by)), fill = fill)
   
   # Determine validity
@@ -40,14 +41,28 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
     valid_cols <- c(valid_cols, "n_years", "flag")
   }
   validity <- validity[valid_cols]
+  
   # Exclude data
   if(!is.null(exclude_df)) data <- 
     exclude_data(data, dt, by, exclude_df, exclude_df_dt)  
   
+  # Add in NAs for excluded data
+  data <- tidyr::complete(data,
+                          !!!rlang::syms(dt) := tidyr::full_seq(!!!rlang::syms(dt), interval),
+                          tidyr::nesting(!!!rlang::syms(by)), fill = fill)
   
   # Cacluate statistic
   data <- dplyr::mutate(data,
-                        rolled_value = round_caaqs(rolling_mean(!!as.name(val), width = window, valid_thresh), digits = 1))
+                        rolled_value = round_caaqs(rolling_mean(!!as.name(val), 
+                                                                width = window, 
+                                                                valid_thresh), 
+                                                   digits = 1))
+
+  # All missing data gets NA, even if filled by rolling mean
+  data <- dplyr::mutate(data,
+                        rolled_value = replace(rolled_value, 
+                                               is.na(!!!rlang::syms(val)), 
+                                               as.numeric(NA)))
   # data <- 
   #   mutate_(data, rolled_value = 
   #           interp(~filled_rolling_mean(dt, val, interval, window, valid_thresh),

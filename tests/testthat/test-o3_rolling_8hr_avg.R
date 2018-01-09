@@ -10,7 +10,7 @@ test_that("Is a data frame", {
 test_that("Has the right column names and dimensions", {
   expected_names <- c("id", "date", "flag_valid_8hr", "val", "rolling8")
   expect_equal(names(test), expected_names)
-  expect_equal(dim(test), c(43961, 5))
+  expect_equal(dim(test), c(52608, 5))
 })
 
 test_that("Columns are the right class", {
@@ -27,9 +27,9 @@ test_that("can exclude data rows", {
                stringsAsFactors = FALSE)
   ret <- o3_rolling_8hr_avg(hourly_data, dt = "date", val = "val", by = "id", 
                             excl_df, c("start", "stop"))
-  expect_equal(ret$rolling8[1:20], 
+  expect_equal(ret$rolling8[1:25], 
                c(NA, NA, NA, NA, NA, 21.5, 19.7, NA, NA, NA, NA, NA, NA, NA, 
-                 NA, 6.3, 6, 6, 7.3, 9))
+                 NA, NA, NA, 6.3, 6, 6, 7.3, 9, 11.4, 13.3, 14.0))
 })
 
 
