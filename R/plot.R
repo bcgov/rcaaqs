@@ -77,7 +77,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
   
   ## Fill in missing dates so that gaps in data are not connected
   daily_data <- tidyr::complete_(
-    daily_data, cols = list(date = lazyeval::interp(~full_seq(y, 1), y = as.name("date")))
+    daily_data, cols = list(date = lazyeval::interp(~tidyr::full_seq(y, 1), y = as.name("date")))
   )
   
   min_year <- rep_yr - 2

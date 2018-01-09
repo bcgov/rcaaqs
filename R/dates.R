@@ -270,6 +270,6 @@ valid_by_quarter <- function(data, date, by, units = c("prop", "days")) {
   data <- dplyr::select_(data, .dots = c(by, "year", "quarter", "valid_in_quarter", "valid_in_year"))
   data <- tidyr::spread_(data, "quarter", "valid_in_quarter", sep = "_")
   
-  ungroup(data)
+  dplyr::ungroup(data)
 }
 

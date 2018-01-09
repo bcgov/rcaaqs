@@ -56,7 +56,7 @@ exclude_data <- function(data, dt, by, exclusion_df, exclusion_date_cols) {
     }
     by_vector <- c(by, stats::setNames(exclusion_date_col, 
                                 if (dt_new_set) dt_new else dt))
-    ret_val <- anti_join(data, exclusion_df, by = by_vector)
+    ret_val <- dplyr::anti_join(data, exclusion_df, by = by_vector)
     if(dt_new_set) ret_val[[dt_new]] <- NULL
     
   } else { # Must be a date range
@@ -72,15 +72,15 @@ exclude_data <- function(data, dt, by, exclusion_df, exclusion_date_cols) {
       stop("Exclusion columns are date-times, but data columns are dates")
     row_number_name <- find_new_name("row_number", names(data))
     data[[row_number_name]] <- seq.int(nrow(data))
-    joined_all <- left_join(data, exclusion_df, by = by)
+    joined_all <- dplyr::left_join(data, exclusion_df, by = by)
     test_col <- find_new_name("test_col", names(data))
     joined_all[[test_col]] <- is.na(joined_all[[start_name]]) | is.na(joined_all[[end_name]]) |
       joined_all[[dt]] < joined_all[[start_name]] |
       joined_all[[dt]] > joined_all[[end_name]]
-    
+
     # Aggregate row_number by all(test_col), then filter.
-    joined_all <- group_by_(joined_all, row_number_name)
-    joined_all <- summarise_(joined_all, to_filter = ~!all(test_col))
+    joined_all <- dplyr::group_by_(joined_all, row_number_name)
+    joined_all <- dplyr::summarise_(joined_all, to_filter = ~!all(test_col))
     to_remove <- data.frame(joined_all)[joined_all$to_filter, row_number_name]
     
     # Join back.

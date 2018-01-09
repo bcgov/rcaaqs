@@ -54,7 +54,7 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
   #                  dt = as.name(dt), val = as.name(val)))
   data <- dplyr::ungroup(data)
   # Join validity with statistic.
-  left_join(validity, data, by = c(by, dt))
+  dplyr::left_join(validity, data, by = c(by, dt))
 }
 
 
