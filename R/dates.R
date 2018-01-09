@@ -254,8 +254,8 @@ valid_by_quarter <- function(data, date, by, units = c("prop", "days")) {
   data <- dplyr::summarise(data, days = length(.data$year))
   data <- dplyr::ungroup(data)
   
-  # Cheap way to fill in quarters.  
-  all_q = do.call(rbind, replicate(4, unique(data[c(by, "year")]), simplify = FALSE))
+  # Cheap way to fill in quarters
+  all_q <- do.call(rbind, replicate(4, unique(data[c(by, "year")]), simplify = FALSE))
   all_q$quarter <- rep(1:4, each = nrow(all_q)/4)
   data <- dplyr::left_join(all_q, data, by = c(by, "year", "quarter"))
   data$days <- ifelse(is.na(data$days), 0, data$days)

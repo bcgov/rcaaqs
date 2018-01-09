@@ -13,14 +13,16 @@
 # the License.
 
 
-#' Given exclude rows from input dataset based on supplied data.frame which specifies specific dates or date ranges.
+#' Given exclude rows from input dataset based on supplied data.frame which
+#' specifies specific dates or date ranges.
 #'
 #' @param  data Dataframe
 #' @param  dt character the column containing date-times
 #' @param  by  an optional character vector specifying the columns to join on.
-#' @param  exclusion_df  the data.frame that has all the columns in the by
+#' @param  exclusion_df  the data.frame that has all the columns in the by 
 #'   parameter, in addition exactly one or two date columns.
-#' @param  exclusion_date_cols a character vector with exactly one or two date columns.
+#' @param  exclusion_date_cols a character vector with exactly one or two date
+#'   columns.
 #' 
 #' @return dataframe with the specified dates or date ranges excluded.
 #' 
