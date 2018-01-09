@@ -3,8 +3,8 @@ caaq <- function(df, year, val, by, metric, n) {
 
   # Check inputs
   check_vars(list(year, val, by), df)
-  check_mode(year, df, "numeric")
-  check_mode(val, df, "numeric")
+  check_class(year, df, "numeric")
+  check_class(val, df, "numeric")
   
   # Rename to standard
   names(df)[names(df) == year] <- "year"

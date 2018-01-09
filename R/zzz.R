@@ -70,8 +70,16 @@ check_vars <- function(vars, data, name_data = "data") {
   }
 }
 
-check_mode <- function(var, df, c) {
-  if(mode(df[[var]]) != c) stop("Column '", var, "' is not ", c, call. = FALSE)
+check_class <- function(var, df, c) {
+  stp <- FALSE
+  if(c == "numeric") {
+    if(mode(df[[var]]) != c) stp <- TRUE
+  } else if (c == "POSIXct") {
+    if(!lubridate::is.POSIXct(df[[var]])) stp <- TRUE
+  } else {
+    if(!any(class(df[[var]]) == c)) stp <- TRUE
+  }
+  if(stp) stop("Column '", var, "' is not ", c, call. = FALSE)
 }
 
 #' Defunct functions in rcaaqs
