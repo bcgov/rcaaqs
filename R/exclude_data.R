@@ -21,6 +21,8 @@
 #' @param  exclusion_date_cols a character vector with exactly one or two date columns.
 #' 
 #' @return dataframe with the specified dates or date ranges excluded.
+#' 
+#' @noRd
 
 exclude_data <- function(data, dt, by, exclusion_df, exclusion_date_cols) {
   if (!all(by %in% names(exclusion_df))) 
