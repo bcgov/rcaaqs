@@ -19,8 +19,9 @@ Imports:
     ggplot2 (>= 2.2.0),
     lubridate (>= 1.6.0),
     purrr (>= 0.2.4),
-    scales(>= 0.4.0),
-    tidyr(>= 0.6.0)
+    rlang (>= 0.1.6),
+    scales (>= 0.4.0),
+    tidyr (>= 0.6.0)
 Suggests:
     rgdal (>= 1.2),
     sp (>= 1.2),

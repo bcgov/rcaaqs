@@ -14,8 +14,6 @@
 #' Rolling statistics
 #' 
 #' @noRd
-#' 
-#' @importFrom rlang .data
 
 rolling_value <- function(data, dt, val, interval, by, window, valid_thresh, 
                           flag_num = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
