@@ -62,5 +62,5 @@ test_that("n_years is correct", {
 test_that("returns an error when multiple years and no grouping", {
   annual_values$year[2] <- 2013
   expect_error(pm_24h_caaq(annual_values, year = "year", 
-                           val = "ann_98_percentile"), "duplicate")
+                           val = "ann_98_percentile"), "Duplicate")
 })
