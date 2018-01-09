@@ -82,12 +82,12 @@ exclude_data <- function(data, dt, by, exclusion_df, exclusion_date_cols) {
       joined_all[[dt]] < joined_all[[start_name]] |
       joined_all[[dt]] > joined_all[[end_name]]
 
-    # Aggregate row_number by all(test_col), then filter.
-    joined_all <- dplyr::group_by_(joined_all, row_number_name)
-    joined_all <- dplyr::summarise_(joined_all, to_filter = ~!all(test_col))
+    # Aggregate row_number by all(test_col), then filter
+    joined_all <- dplyr::group_by(joined_all, !!!rlang::syms(row_number_name))
+    joined_all <- dplyr::summarise(joined_all, to_filter = !all(.data$test_col))
     to_remove <- data.frame(joined_all)[joined_all$to_filter, row_number_name]
     
-    # Join back.
+    # Join back
     data <- data[!(data[[row_number_name]] %in% to_remove),]
     data[[row_number_name]] <- NULL
     ret_val <- data

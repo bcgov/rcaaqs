@@ -246,11 +246,12 @@ time_to_date <- function(date_time) {
 #' @noRd
 
 valid_by_quarter <- function(data, date, by, units = c("prop", "days")) {
-  data <- dplyr::mutate_(data, 
-                         year    = lazyeval::interp(~get_year_from_date(date), date = as.name(date)), 
-                         quarter = lazyeval::interp(~lubridate::quarter(date), date = as.name(date)))
-  data <- dplyr::group_by_(data, .dots = c(by, "year", "quarter"))
-  data <- dplyr::summarise(data, days = n())
+  data <- dplyr::mutate(data,
+                        year = get_year_from_date(!!!rlang::syms(date)),
+                        quarter = lubridate::quarter(!!!rlang::syms(date)))
+
+  data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year", "quarter")))
+  data <- dplyr::summarise(data, days = length(.data$year))
   data <- dplyr::ungroup(data)
   
   # Cheap way to fill in quarters.  
@@ -259,18 +260,23 @@ valid_by_quarter <- function(data, date, by, units = c("prop", "days")) {
   data <- dplyr::left_join(all_q, data, by = c(by, "year", "quarter"))
   data$days <- ifelse(is.na(data$days), 0, data$days)
   data$valid_in_quarter <- data$days
-  if(units == "prop") 
-    data$valid_in_quarter <- data$valid_in_quarter / days_in_quarter(data$quarter, data$year)
-  data <- dplyr::group_by_(data, .dots = c(by, "year"))
-  data <- dplyr::mutate_(data, valid_in_year = ~sum(days))
-  if(units == "prop") 
-    data$valid_in_year <- data$valid_in_year / days_in_year(data$year)
-  data <- dplyr::arrange_(data, .dots = c(by, "year", "quarter"))
   
-  # Format to wide columns.  
-  data <- dplyr::group_by_(data, .dots = c("year", by))
-  data <- dplyr::select_(data, .dots = c(by, "year", "quarter", "valid_in_quarter", "valid_in_year"))
-  data <- tidyr::spread_(data, "quarter", "valid_in_quarter", sep = "_")
+  if(units == "prop") {
+    data$valid_in_quarter <- data$valid_in_quarter / days_in_quarter(data$quarter, data$year)
+  }
+  data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year")))
+  
+  data <- dplyr::mutate(data, valid_in_year = sum(.data$days))
+  
+  if(units == "prop") {
+    data$valid_in_year <- data$valid_in_year / days_in_year(data$year)
+  }
+  data <- dplyr::arrange(data, !!!rlang::syms(c(by, "year", "quarter")))
+  
+  # Format to wide columns
+  data <- dplyr::group_by(data, !!!rlang::syms(c("year", by)))
+  data <- dplyr::select(data, c(by, "year", "quarter", "valid_in_quarter", "valid_in_year"))
+  data <- tidyr::spread(data, "quarter", "valid_in_quarter", sep = "_")
   
   dplyr::ungroup(data)
 }

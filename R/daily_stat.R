@@ -30,11 +30,13 @@
 daily_stat <- function(data, dt = "date", val = "value", 
                        by = c("ems_id", "site"),
                        thresh, stat) {
+
   # Stat calculation
-  data <- dplyr::group_by_(data, .dots = c(by, dt))
-  dplyr::summarise_(data,
-             stat   = lazyeval::interp(~fun(value), value = as.name(val), fun = stat),
-             exceed = lazyeval::interp(~stat > thresh, thresh = thresh))
+  data <- dplyr::group_by(data, !!!rlang::syms(c(by, dt)))
+  
+  dplyr::summarize(data,
+                   stat = stat(!!!rlang::syms(val)),
+                   exceed = .data$stat > thresh)
 }
 
 #' Find the daily statistic of a value by some factor
@@ -65,25 +67,27 @@ daily_stat <- function(data, dt = "date", val = "value",
 pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard, 
                                  stat = max_na, exclude_df = NULL, exclude_df_dt = NULL, 
                                  digits = 1, n_readings_min = 18) {
+  
   # Validity checks (before data exclusion)
-  validity <- dplyr::mutate_(data, date = lazyeval::interp(~time_to_date(date_time), 
-                                                           date_time = as.name(dt))) 
-  validity <- dplyr::group_by_(validity, .dots = c(by, "date"))
-  validity <- 
-    dplyr::summarise_(validity,
-               n_readings = lazyeval::interp(~length(stats::na.omit(value)), 
-                                   value = as.name(val)), 
-               valid      = lazyeval::interp(~n_readings >= n_readings_min, 
-                                   n_readings_min = n_readings_min))
-  validity <- validity[c(by, "date", "n_readings", "valid")]
+  validity <- dplyr::mutate(data,
+                            date = time_to_date(!!!rlang::syms(dt)))
+  
+  validity <- dplyr::group_by(validity, !!!rlang::syms(c(by, "date")))
+  
+  validity <- dplyr::summarize(validity,
+                               n_readings = length(stats::na.omit(!!!rlang::syms(val))),
+                               valid = .data$n_readings >= n_readings_min)
+  
   # Exclude data before stat calculation
   if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
-  # Calculate statistic.
-  data <- dplyr::mutate_(data, date = lazyeval::interp(~time_to_date(date_time), date_time = as.name(dt))) 
-  data <- 
-    daily_stat(data, dt = "date", val = val, by = by, 
-               thresh = pollutant_standard, stat = stat)
-  # Join together.
+  
+  # Calculate statistic
+  data <- dplyr::mutate(data, 
+                        date = time_to_date(!!!rlang::syms(dt)))
+  data <- daily_stat(data, dt = "date", val = val, by = by, 
+                     thresh = pollutant_standard, stat = stat)
+  
+  # Join together
   data <- dplyr::left_join(validity, data, by = c(by, "date"))
   data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
   data$flag <- data$exceed & !data$valid # Flag for data incomplete, but used
@@ -123,8 +127,12 @@ o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL, ex
             val %in% names(data),
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
+  
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = get_std("o3"), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  dplyr::rename_(data, max8hr = "stat", valid_max8hr = "valid", flag_max8hr_incomplete = "flag")
+  dplyr::rename(data, 
+                "max8hr" = "stat", 
+                "valid_max8hr" = "valid", 
+                "flag_max8hr_incomplete" = "flag")
 }
 
 #' @rdname daily_stat_page
@@ -139,7 +147,10 @@ no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  dplyr::rename_(data, max_24h = "stat", valid_max_24h = "valid", flag_max_24hr_incomplete = "flag")
+  dplyr::rename(data, 
+                "max_24h" = "stat", 
+                "valid_max_24h" = "valid", 
+                "flag_max_24hr_incomplete" = "flag")
 }
 
 #' @rdname daily_stat_page
@@ -154,7 +165,10 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  dplyr::rename_(data, max_24h = "stat", valid_max_24h = "valid", flag_max_24hr_incomplete = "flag")
+  dplyr::rename(data, 
+                "max_24h" = "stat", 
+                "valid_max_24h" = "valid", 
+                "flag_max_24hr_incomplete" = "flag")
 }
 
 #' @rdname daily_stat_page
@@ -169,5 +183,8 @@ pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL, exclu
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, stat = mean_na, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  dplyr::rename_(data, avg_24h = "stat", valid_avg_24h = "valid", flag_avg_24hr_incomplete = "flag")
+  dplyr::rename(data, 
+                "avg_24h" = "stat",
+                "valid_avg_24h" = "valid",
+                "flag_avg_24hr_incomplete" = "flag")
 }

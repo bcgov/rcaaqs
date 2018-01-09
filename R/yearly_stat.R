@@ -24,14 +24,12 @@ yearly_stat <- function(data, dt = "date", val = "value",
   if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   
   # Calculate yearly statistic
-  data <- dplyr::mutate_(data, year = lazyeval::interp(~get_year_from_date(dt), 
-                                                       dt = as.name(dt)))
-  data <- dplyr::group_by_(data, .dots = c(by, "year"))
-  fun2 <- function(x) do.call(stat, c(list(x), stat.opts))
-  data <- dplyr::summarise_(data,
-                            stat = lazyeval::interp(~fun2(value), 
-                                                    value = as.name(val), 
-                                                    fun = stat))
+  data <- dplyr::mutate(data, year = get_year_from_date(!!!rlang::syms(dt)))
+  data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year")))
+  
+  data <- dplyr::summarize(data,
+                           stat = stat(!!!rlang::syms(val)))
+  
   data <- dplyr::ungroup(data)
   dplyr::left_join(quarter_valid, data, by = c(by, "year"))
 }
@@ -72,15 +70,18 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_
             lubridate::is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
   
-  data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.98, na.rm = TRUE), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  data <- dplyr::rename_(data, ann_98_percentile = "stat")
+  data <- yearly_stat(data, dt, val, by, quantile2_na, 
+                      list(probs = 0.98, na.rm = TRUE), 
+                      exclude_df = exclude_df, 
+                      exclude_df_dt = exclude_df_dt)
+  
+  data <- dplyr::rename(data, "ann_98_percentile" = "stat")
   data$ann_98_percentile <- round_caaqs(data$ann_98_percentile, 1)
-  data$valid_year <-
-    data$valid_in_year > 0.75 &
-    data$quarter_1 > 0.6 &
-    data$quarter_2 > 0.6 &
-    data$quarter_3 > 0.6 &
-    data$quarter_4 > 0.6
+  data$valid_year <- data$valid_in_year > 0.75 &
+                       data$quarter_1 > 0.6 &
+                       data$quarter_2 > 0.6 &
+                       data$quarter_3 > 0.6 &
+                       data$quarter_4 > 0.6
   standard <- get_std("pm2.5_24h")
   data$exceed <- data$ann_98_percentile > standard
   data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
@@ -99,15 +100,19 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
             val %in% names(data),
             lubridate::is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.99, na.rm = TRUE), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  data <- dplyr::rename_(data, ann_99_percentile = "stat")
+  
+  data <- yearly_stat(data, dt, val, by, quantile2_na, 
+                      list(probs = 0.99, na.rm = TRUE), 
+                      exclude_df = exclude_df, 
+                      exclude_df_dt = exclude_df_dt)
+  
+  data <- dplyr::rename(data, "ann_99_percentile" = "stat")
   data$ann_99_percentile <- round_caaqs(data$ann_99_percentile, 1)
-  data$valid_year <-
-    data$valid_in_year > 0.75 &
-    data$quarter_1 > 0.6 &
-    data$quarter_2 > 0.6 &
-    data$quarter_3 > 0.6 &
-    data$quarter_4 > 0.6
+  data$valid_year <- data$valid_in_year > 0.75 &
+                       data$quarter_1 > 0.6 &
+                       data$quarter_2 > 0.6 &
+                       data$quarter_3 > 0.6 &
+                       data$quarter_4 > 0.6
   standard <- 70
   data$exceed <- data$ann_99_percentile > standard
   data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
@@ -126,15 +131,19 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
             val %in% names(data),
             lubridate::is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- yearly_stat(data, dt, val, by, quantile2_na, list(probs = 0.98, na.rm = TRUE), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  data <- dplyr::rename_(data, ann_98_percentile = "stat")
+  
+  data <- yearly_stat(data, dt, val, by, quantile2_na, 
+                      list(probs = 0.98, na.rm = TRUE), 
+                      exclude_df = exclude_df, 
+                      exclude_df_dt = exclude_df_dt)
+  
+  data <- dplyr::rename(data, "ann_98_percentile" = "stat")
   data$ann_98_percentile <- round_caaqs(data$ann_98_percentile, 1)
-  data$valid_year <-
-    data$valid_in_year > 0.75 &
-    data$quarter_1 > 0.6 &
-    data$quarter_2 > 0.6 &
-    data$quarter_3 > 0.6 &
-    data$quarter_4 > 0.6
+  data$valid_year <- data$valid_in_year > 0.75 &
+                       data$quarter_1 > 0.6 &
+                       data$quarter_2 > 0.6 &
+                       data$quarter_3 > 0.6 &
+                       data$quarter_4 > 0.6
   standard <- 70
   data
 }
@@ -151,15 +160,19 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude
             val %in% names(data),
             lubridate::is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- yearly_stat(data, dt, val, by, mean_na, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  data <- dplyr::rename_(data, ann_avg = "stat")
+  
+  data <- yearly_stat(data, dt, val, by, mean_na, 
+                      exclude_df = exclude_df, 
+                      exclude_df_dt = exclude_df_dt)
+  
+  data <- dplyr::rename(data, "ann_avg" = "stat")
   data$ann_avg <- round_caaqs(data$ann_avg, 1)
-  data$valid_year <-
-    data$valid_in_year > 0.75 &
-    data$quarter_1 > 0.6 &
-    data$quarter_2 > 0.6 &
-    data$quarter_3 > 0.6 &
-    data$quarter_4 > 0.6
+  
+  data$valid_year <- data$valid_in_year > 0.75 &
+                       data$quarter_1 > 0.6 &
+                       data$quarter_2 > 0.6 &
+                       data$quarter_3 > 0.6 &
+                       data$quarter_4 > 0.6
   data
 }
 
@@ -175,15 +188,18 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
             val %in% names(data),
             lubridate::is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
+  
   data <- data[data$valid_max8hr | data$flag_max8hr_incomplete,]
   data <- yearly_stat(data, dt, val, by, 
                       nth_highest, stat.opts = list(n = 4), 
                       quarter_units = "days", 
-                      exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
-  data <- dplyr::rename_(data, max8hr = "stat")
+                      exclude_df = exclude_df, 
+                      exclude_df_dt = exclude_df_dt)
+  
+  data <- dplyr::rename(data, "max8hr" = "stat")
   days_in_quarter_2_and_3 <- 183 
-  data$valid_year <-
-    (data$quarter_2 + data$quarter_3) / days_in_quarter_2_and_3 > 0.75
+  
+  data$valid_year <- (data$quarter_2 + data$quarter_3) / days_in_quarter_2_and_3 > 0.75
   o3_standard <- get_std("o3")
   data$exceed <- data$max8hr > o3_standard
   data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
@@ -202,23 +218,30 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
             val %in% names(data),
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- yearly_stat(data, dt, val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
-  data <- dplyr::rename_(data, max_yearly = "stat")
+  
+  data <- yearly_stat(data, dt, val, by, mean_na, 
+                      quarter_units = "days", 
+                      exclude_df = exclude_df, 
+                      exclude_df_dt = exclude_df_dt) 
+  
+  data <- dplyr::rename(data, "max_yearly" = "stat")
   data$max_yearly <- round_caaqs(data$max_yearly, 1)
-  data$valid_in_year <- data$valid_in_year / (days_in_year(data$year)*24)
-  for (q in 1:4)
-    data[[paste0("quarter_",q)]] <- 
-      data[[paste0("quarter_",q)]] / (days_in_quarter(q, data$year)*24)
-  data$valid_year <-
-    data$valid_in_year > 0.75 &
-    data$quarter_1 > 0.6 &
-    data$quarter_2 > 0.6 &
-    data$quarter_3 > 0.6 &
-    data$quarter_4 > 0.6
+  
+  data$valid_in_year <- data$valid_in_year / (days_in_year(data$year) * 24)
+                          
+  for (q in 1:4) {
+    data[[paste0("quarter_",q)]] <- data[[paste0("quarter_",q)]] / (days_in_quarter(q, data$year) * 24)
+  }
+  
+  data$valid_year <- data$valid_in_year > 0.75 &
+                       data$quarter_1 > 0.6 &
+                       data$quarter_2 > 0.6 &
+                       data$quarter_3 > 0.6 &
+                       data$quarter_4 > 0.6
   so2.std <- 5
   data$exceed <- data$max_yearly > so2.std 
   data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
-  dplyr::rename_(data, avg_yearly = "max_yearly")
+  dplyr::rename(data, "avg_yearly" = "max_yearly")
 }
 
 #' @rdname yearly_stat_page
@@ -232,20 +255,26 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
             val %in% names(data),
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- yearly_stat(data, dt, val, by, mean_na, quarter_units = "days", exclude_df = exclude_df, exclude_df_dt = exclude_df_dt) 
-  data <- dplyr::rename_(data, max_yearly = "stat")
+  
+  data <- yearly_stat(data, dt, val, by, mean_na, 
+                      quarter_units = "days", 
+                      exclude_df = exclude_df, 
+                      exclude_df_dt = exclude_df_dt) 
+  
+  data <- dplyr::rename(data, "max_yearly" = "stat")
   data$max_yearly <- round_caaqs(data$max_yearly, 1)
-  data$valid_in_year <- data$valid_in_year / (days_in_year(data$year)*24)
-  for (q in 1:4)
+  data$valid_in_year <- data$valid_in_year / (days_in_year(data$year) * 24)
+  for (q in 1:4) {
     data[[paste0("quarter_",q)]] <- 
-    data[[paste0("quarter_",q)]] / (days_in_quarter(q, data$year)*24)
-  data$valid_year <-
-    data$valid_in_year > 0.75 &
-    data$quarter_1 > 0.6 &
-    data$quarter_2 > 0.6 &
-    data$quarter_3 > 0.6 &
-    data$quarter_4 > 0.6
-  dplyr::rename_(data, avg_yearly = "max_yearly")
+      data[[paste0("quarter_",q)]] / (days_in_quarter(q, data$year) * 24)
+  }
+  data$valid_year <- data$valid_in_year > 0.75 &
+                       data$quarter_1 > 0.6 &
+                       data$quarter_2 > 0.6 &
+                       data$quarter_3 > 0.6 &
+                       data$quarter_4 > 0.6
+  
+  dplyr::rename(data, "avg_yearly" = "max_yearly")
 }
 
 #' Return the rank that should be used to determine the 98th percentile given a 

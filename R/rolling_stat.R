@@ -67,7 +67,8 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
   #           interp(~filled_rolling_mean(dt, val, interval, window, valid_thresh),
   #                  dt = rlang::syms(dt), val = rlang::syms(val)))
   data <- dplyr::ungroup(data)
-  # Join validity with statistic.
+  
+  # Join validity with statistic
   dplyr::left_join(validity, data, by = c(by, dt))
 }
 
@@ -114,7 +115,9 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
                        valid_thresh = 6,
                        exclude_df = exclude_df,
                        exclude_df_dt = exclude_df_dt)
-  dplyr::rename_(data, rolling8 = "rolled_value", flag_valid_8hr = "valid")
+  dplyr::rename(data, 
+                "rolling8" = "rolled_value", 
+                "flag_valid_8hr" = "valid")
 }
 
 #' @rdname rolling_stat_page
@@ -138,7 +141,7 @@ so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = 
                         window = 3,
                         valid_thresh = 2,
                         flag_num = 2)
-  dplyr::rename_(data, so2_metric = "rolled_value")
+  dplyr::rename(data, "so2_metric" = "rolled_value")
 }
 
 #' @rdname rolling_stat_page
@@ -162,7 +165,7 @@ no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = 
                         window = 3,
                         valid_thresh = 2,
                         flag_num = 2)
-  dplyr::rename_(data, no2_metric = "rolled_value")
+  dplyr::rename(data, "no2_metric" = "rolled_value")
 }
 
 #' @rdname rolling_stat_page
@@ -186,9 +189,9 @@ pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = N
                         window = 3,
                         valid_thresh = 2,
                         flag_num = 2)
-  dplyr::rename_(data,
-          pm_metric = "rolled_value",
-          flag_two_of_three_years = "flag")
+  dplyr::rename(data,
+          "pm_metric" = "rolled_value",
+          "flag_two_of_three_years" = "flag")
 }
 
 #' @rdname rolling_stat_page
@@ -212,8 +215,8 @@ o3_three_yr_avg <- function(data, dt = "year", val = "max8hr", by = NULL) {
                         window = 3,
                         valid_thresh = 2,
                         flag_num = 2) 
-  dplyr::rename_(data,
-          ozone_metric = "rolled_value",
-          flag_two_of_three_years = "flag")
+  dplyr::rename(data,
+          "ozone_metric" = "rolled_value",
+          "flag_two_of_three_years" = "flag")
 }
 
