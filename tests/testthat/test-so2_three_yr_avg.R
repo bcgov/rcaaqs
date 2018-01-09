@@ -12,12 +12,12 @@ test_that("Is a data frame", {
 })
 
 test_that("Has correct dimensions", {
-  expect_equal(dim(test_mult), c(4, 14))
-  expect_equal(dim(test_one), c(3, 13))
+  expect_equal(dim(test_mult), c(4, 15))
+  expect_equal(dim(test_one), c(3, 14))
 })
 
 test_that("Column classes are correct", {
-  classes <- c("integer", "logical", "logical", "numeric", "numeric", "numeric", 
+  classes <- c("numeric", "logical", "numeric", "logical", "numeric", "numeric", "numeric", 
                "numeric", "numeric", "numeric", "logical", "logical", "logical", 
                "numeric")
   one_classes <- unname(sapply(test_one, class))
