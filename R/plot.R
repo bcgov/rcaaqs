@@ -289,7 +289,7 @@ plot_station_instruments <- function(data, dt = "date_time", station = "station_
   data <- dplyr::group_by(data, date, !!!rlang::syms(station), !!!rlang::syms(instrument))
   data <- dplyr::summarize(data)
   
-  ggplot(data, aes_(x = as.name("date"), y = as.name(instrument), colour = as.name(instrument))) + 
+  ggplot(data, aes_string(x = "date", y = instrument, colour = instrument)) + 
     facet_wrap("station_name", scales = "free_y", ncol = 1, strip.position = "left") +
     geom_line(size = 1) + 
     labs(y = station) +
