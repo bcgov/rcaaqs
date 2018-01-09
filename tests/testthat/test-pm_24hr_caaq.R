@@ -5,9 +5,9 @@ annual_values_one_id <- annual_values[annual_values$id == "a", ]
 
 test_that("Is a data frame", {
   expect_is(pm_24h_caaq(annual_values, year = "year", val = "ann_98_percentile", 
-                        by = "id", cyear = "latest"), "data.frame")
-  expect_is(pm_24h_caaq(annual_values_one_id, year = "year", val = "ann_98_percentile", 
-                        cyear = "latest"), "data.frame")
+                        by = "id"), "data.frame")
+  expect_is(pm_24h_caaq(annual_values_one_id, year = "year", val = "ann_98_percentile"), 
+            "data.frame")
 })
 
 test_that("Has correct dimensions", {

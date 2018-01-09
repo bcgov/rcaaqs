@@ -67,7 +67,7 @@ test_that("plot_ts works without caaqs_data (pm_24h)", {
 
 test_that("works with caaqs_data (pm24h)", {
   names(daily_data) <- c("id", "date", "avg_24h", "n_readings")
-  caaqs_data <- pm_24h_caaq(annual_data)
+  caaqs_data <- pm_24h_caaq(annual_data, val = "ann_98_percentile")
   p <- plot_ts(daily_data, caaqs_data = caaqs_data, parameter = "pm2.5_24h", 
                rep_yr = 2013, plot_exceedances = FALSE)
   expect_is(p, "ggplot")
@@ -85,7 +85,7 @@ test_that("plot_ts works without caaqs_data (pm_annual)", {
 test_that("works with caaqs_data (pm_annual)", {
   names(daily_data) <- c("id", "date", "avg_24h", "n_readings")
   names(annual_data)[3] <- "ann_avg"
-  caaqs_data <- pm_annual_caaq(annual_data)
+  caaqs_data <- pm_annual_caaq(annual_data, val = "ann_avg")
   p <- plot_ts(daily_data, caaqs_data = caaqs_data, 
                parameter = "pm2.5_annual", rep_yr = 2013, plot_exceedances = FALSE)
   expect_is(p, "ggplot")
