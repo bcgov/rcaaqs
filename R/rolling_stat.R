@@ -52,7 +52,7 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
   
   # Cacluate statistic
   data <- dplyr::mutate(data,
-                        rolled_value = round_caaqs(rolling_mean(!!as.name(val), 
+                        rolled_value = round_caaqs(rolling_mean(!!!rlang::syms(val), 
                                                                 width = window, 
                                                                 valid_thresh), 
                                                    digits = 1))
@@ -65,7 +65,7 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
   # data <- 
   #   mutate_(data, rolled_value = 
   #           interp(~filled_rolling_mean(dt, val, interval, window, valid_thresh),
-  #                  dt = as.name(dt), val = as.name(val)))
+  #                  dt = rlang::syms(dt), val = rlang::syms(val)))
   data <- dplyr::ungroup(data)
   # Join validity with statistic.
   dplyr::left_join(validity, data, by = c(by, dt))

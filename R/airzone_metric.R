@@ -42,13 +42,13 @@ airzone_metric <- function(df, n_years = "n_years", az = "airzone",
   if (!is.numeric(df[[caaq]])) stop("Data column", caaq, " must be numeric")
   
   # set caaq column to NA if n_years < 3 (unless only have 2 years)
-  df <- tidyr::nest(df, - !! as.name(az))
   df <- dplyr::mutate(df, data = purrr::map(data, ~ parse_incomplete(., n_years, caaq)))
+  df <- tidyr::nest(df, - !!!rlang::syms(az))
   
   # Take station with max caaq for each airzone
   df <- dplyr::mutate(df, data = purrr::map(data, ~ dplyr::slice(.x, which.max(.x[[caaq]]))))
   df <- tidyr::unnest(df)
-  df <- dplyr::arrange(df, !! as.name(az))
+  df <- dplyr::arrange(df, !!!rlang::syms(az))
   
   # Arrange column order
   df <- df[, c(az, n_years, caaq,
