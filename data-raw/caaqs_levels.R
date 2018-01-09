@@ -53,7 +53,8 @@ achievement_levels <- tribble(
   "so2_3yr",      "Unknown",      0,             Inf,           "ppb"
 ) %>% 
   left_join(units_tbl, by = "units") %>% 
-  mutate(val_labels = ifelse(is.infinite(upper_breaks), 
+  mutate(parameter = factor(parameter),
+         val_labels = ifelse(is.infinite(upper_breaks), 
                              paste0("> ", lower_breaks, units), 
                              paste0("<= ", upper_breaks, units)), 
          val_labels_html = str_replace_all(val_labels, operators_regex, replace_chars("html")), 
@@ -83,6 +84,7 @@ management_levels <- tribble(
 ) %>% 
   left_join(units_tbl, by = "units") %>% 
   mutate(
+    parameter = factor(parameter),
     val_labels = ifelse(
       is.infinite(upper_breaks), paste0("> ", lower_breaks, units), 
       ifelse(lower_breaks == 0, paste0("<= ", upper_breaks, units),
