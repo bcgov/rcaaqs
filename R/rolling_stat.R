@@ -1,14 +1,16 @@
 # Copyright 2015 Province of British Columbia
 # 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at
 # 
 # http://www.apache.org/licenses/LICENSE-2.0
 # 
-# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and limitations under the License.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
 
 
 #' Rolling statistics
@@ -18,7 +20,7 @@
 rolling_value <- function(data, dt, val, interval, by, window, valid_thresh, 
                           flag_num = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
   
-  if (!is.null(by)) data <- dplyr::group_by_(data, .dots = by)
+  if (!is.null(by)) data <- dplyr::group_by(data, !!!rlang::syms(by))
 
   # Pad in missing years with NA
   fill <- list(NA)
@@ -28,9 +30,8 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
                           tidyr::nesting(!!!rlang::syms(by)), fill = fill)
   
   # Determine validity
-  validity <- 
-    dplyr::mutate_(data, n_years = 
-              lazyeval::interp(~n_within_window(dt, interval, window), dt = as.name(dt)))
+  validity <- dplyr::mutate(data, 
+                            n_years = n_within_window(!!!rlang::syms(dt), interval, window))
   validity$valid <- validity$n_years >= valid_thresh
   valid_cols <- c(by, dt, "valid")
 
