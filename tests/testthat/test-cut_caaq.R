@@ -21,9 +21,9 @@ test_that("management breaks are correct for o3: category", {
 })
 
 test_that("management breaks are correct for o3: value labels (html)", {
-  expected <- c(rep("&leq; 50ppb", 3), 
-                rep("&gt; 50ppb &amp; &leq; 56ppb", 2), 
-                rep("&gt; 56ppb &amp; &leq; 63ppb", 2), 
+  expected <- c(rep("&lteq; 50ppb", 3), 
+                rep("&gt; 50ppb &amp; &lteq; 56ppb", 2), 
+                rep("&gt; 56ppb &amp; &lteq; 63ppb", 2), 
                 rep("&gt; 63ppb", 2))
   
   res <- cut_management(o3_vec, "o3", output = "breaks_h", drop_na = TRUE)
@@ -83,8 +83,12 @@ test_that("get_units works", {
   expect_equal(get_units("o3"), c(o3 = "ppb"))
   expect_equal(get_units("pm2.5_annual"), c(pm2.5_annual = "\u03BCg/m\u00B3"))
   expect_equal(get_units("pm2.5_24h"), c(pm2.5_24h = "\u03BCg/m\u00B3"))
-  expect_equal(length(get_units()), 3)
+  expect_equal(length(get_units()), 7)
   expect_equal(length(get_units("o3")), 1)
   expect_equal(length(get_units("pm2.5_annual")), 1)
   expect_equal(length(get_units("pm2.5_24h")), 1)
+  expect_equal(length(get_units("no2_1yr")), 1)
+  expect_equal(length(get_units("no2_3yr")), 1)
+  expect_equal(length(get_units("so2_1yr")), 1)
+  expect_equal(length(get_units("so2_3yr")), 1)
 })
