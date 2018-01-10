@@ -24,7 +24,7 @@ yearly_stat <- function(data, dt = "date", val = "value",
   if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   
   # Calculate yearly statistic
-  data <- dplyr::mutate(data, year = get_year_from_date(!!!rlang::syms(dt)))
+  data <- dplyr::mutate(data, year = lubridate::year(!!!rlang::syms(dt)))
   data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year")))
   
   data <- dplyr::summarize(data,

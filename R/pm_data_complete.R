@@ -77,7 +77,7 @@
 #   data <- filter_(data, ~n_hrs >= daily_valid)
 #   
 #   ## Add year column
-#   data$year <- get_year_from_date(data[["date"]])
+#   data$year <- lubridate::year(data[["date"]])
 #   
 #   res <- group_by_(data, .dots = c(by, "year"))
 #   res <- summarise_(res, 
@@ -115,7 +115,7 @@
 #   
 #   dates <- dates[!is.na(dates)]
 #   
-#   year <- get_year_from_date(dates[1])
+#   year <- lubridate::year(dates[1])
 #   is_leap_year <- lubridate::leap_year(year)
 #   
 #   Q1 <- ifelse(is_leap_year, 91, 90)

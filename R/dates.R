@@ -215,18 +215,6 @@ pad_date_time <- function(dat, val, interval) {
              val = val[match(all_dates, dat)])
 }
 
-get_year_from_date <- function(date) {
-  as.integer(as.POSIXlt(date)$year + 1900)
-}
-
-get_month_from_date <- function(date) {
-  as.integer(as.POSIXlt(date)$mon + 1)
-}
-
-get_day_from_date <- function(date) {
-  as.integer(as.POSIXlt(date)$mday)
-}
-
 # Simply using as.Date on a time converts based on UTC.
 # This conversion just truncates the time part.
 time_to_date <- function(date_time) {
@@ -247,7 +235,7 @@ time_to_date <- function(date_time) {
 
 valid_by_quarter <- function(data, date, by, units = c("prop", "days")) {
   data <- dplyr::mutate(data,
-                        year = get_year_from_date(!!!rlang::syms(date)),
+                        year = lubridate::year(!!!rlang::syms(date)),
                         quarter = lubridate::quarter(!!!rlang::syms(date)))
 
   data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year", "quarter")))
