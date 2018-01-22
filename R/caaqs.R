@@ -13,37 +13,37 @@
 # the License.
 
 #' @importFrom rlang .data
-caaq <- function(df, year, val, by, metric, n) {
+caaq <- function(data, year, val, by, metric, n) {
 
   # Check inputs
-  check_vars(list(year, val, by), df)
-  check_class(year, df, "numeric")
-  check_class(val, df, "numeric")
+  check_vars(list(year, val, by), data)
+  check_class(year, data, "numeric")
+  check_class(val, data, "numeric")
   
   # Rename to standard
-  names(df)[names(df) == year] <- "year"
-  names(df)[names(df) == val] <- "metric_value"
+  names(data)[names(data) == year] <- "year"
+  names(data)[names(data) == val] <- "metric_value"
   
-  # Start with ungrouped df
-  df <- dplyr::ungroup(df)
+  # Start with ungrouped data
+  data <- dplyr::ungroup(data)
   
-  # Group df if supplied
+  # Group data if supplied
   if(!is.null(by)) {
     if(n == 1) message("Grouping doesn't apply to single year caaqs. 'by' ignored.")
-    if(n == 3) df <- dplyr::group_by_if(df, names(df) %in% by)
+    if(n == 3) data <- dplyr::group_by_if(data, names(data) %in% by)
   }
   
   # Order by date (within grouping if applied)
-  df <- dplyr::arrange(df, !!! rlang::syms(c(by, "year")))
+  data <- dplyr::arrange(data, !!! rlang::syms(c(by, "year")))
   
   if(n == 1) {
     # Round caaqs metric (already completed for 3yr, but necessary for 1yr)
-    df$metric_value <- round_caaqs(df$metric_value)
+    data$metric_value <- round_caaqs(data$metric_value)
   }
   if(n == 3) {
     
     # Check for duplicates (considering grouping)
-    dup <- dplyr::group_by(df, .data$year, add = TRUE)
+    dup <- dplyr::group_by(data, .data$year, add = TRUE)
     dup <- dplyr::summarize(dup, n = length(.data$year))
     if(any(dup$n > 1)) {
       msg <- paste0("Duplicate values in '", year, "'.")
@@ -53,7 +53,7 @@ caaq <- function(df, year, val, by, metric, n) {
     }
 
     # Calculate min/max and total number of years in rolling averages
-    df <- dplyr::mutate(df, 
+    data <- dplyr::mutate(data, 
                         year_lag1 = dplyr::lag(.data$year),
                         year_lag2 = dplyr::lag(.data$year, 2),
                         min_year = dplyr::case_when(!is.na(.data$year_lag2) ~ .data$year_lag2,
@@ -63,25 +63,25 @@ caaq <- function(df, year, val, by, metric, n) {
                         n_max = as.integer(max(.data$n_years, na.rm = TRUE)))
     
     # Extract 3-year average if 3 or more years in the data, otherwise, use 2-year average
-    df <- dplyr::filter(df, .data$n_years == .data$n_max)
+    data <- dplyr::filter(data, .data$n_years == .data$n_max)
     
-    df <- dplyr::ungroup(df)
+    data <- dplyr::ungroup(data)
   }
 
   # Consider flagging data based on incomplete?
   
   ## Determine station achievements
-  df$caaqs <- cut_achievement(df$metric_value, metric, output = "labels")
-  df$mgmt <- cut_management(df$metric_value, metric)
-  df$metric = metric
-  df$caaq_year <- df$year
+  data$caaqs <- cut_achievement(data$metric_value, metric, output = "labels")
+  data$mgmt <- cut_management(data$metric_value, metric)
+  data$metric = metric
+  data$caaq_year <- data$year
   
   # Clean up
-  df <- dplyr::select(df, dplyr::one_of(by, "caaq_year", "min_year", 
+  data <- dplyr::select(data, dplyr::one_of(by, "caaq_year", "min_year", 
                                         "max_year", "n_years", "metric", 
                                         "metric_value", "caaqs", "mgmt"))
   
-  df
+  data
 }
 
 #' Calculate the PM2.5 24 hour CAAQ metric
@@ -89,7 +89,7 @@ caaq <- function(df, year, val, by, metric, n) {
 #' Calculates and returns the PM2.5 24 hour CAAQ metric based on a rolling
 #' three-year average.
 #'
-#' @param df Data frame. Contains three year PM2.5 24hr average data output from
+#' @param data Data frame. Contains three year PM2.5 24hr average data output from
 #'   \code{pm_three_yr_avg}
 #' @param year Character. The name of the data column containing years. Defaults
 #'   to 'year'.
@@ -103,9 +103,9 @@ caaq <- function(df, year, val, by, metric, n) {
 #'   metrics, achievement levels and management levels.
 #'   
 #' @export
-pm_24h_caaq <- function(df, year = "year", val = "pm_metric",
+pm_24h_caaq <- function(data, year = "year", val = "pm_metric",
                         by = NULL) {
-  caaq(df, year, val, by, metric = "pm2.5_24h", n = 3)
+  caaq(data, year, val, by, metric = "pm2.5_24h", n = 3)
 }
 
 #' Calculate the PM2.5 annaul CAAQ metric
@@ -113,7 +113,7 @@ pm_24h_caaq <- function(df, year = "year", val = "pm_metric",
 #' Calculates and returns the PM2.5 annual CAAQ metric based on a rolling
 #' three-year average.
 #'
-#' @param df Data frame. Contains PM2.5 annual three year average data output
+#' @param data Data frame. Contains PM2.5 annual three year average data output
 #'   from \code{pm_three_yr_avg}
 #' @param year Character. The name of the data column containing years. Defaults
 #'   to 'year'.
@@ -126,9 +126,9 @@ pm_24h_caaq <- function(df, year = "year", val = "pm_metric",
 #' @return A data frame arranged by grouping variables (if present) with caaq
 #'   metrics, achievement levels and management levels.
 #' @export
-pm_annual_caaq <- function(df, year = "year", val = "pm_metric",
+pm_annual_caaq <- function(data, year = "year", val = "pm_metric",
                          by = NULL) {
-  caaq(df, year, val, by, metric = "pm2.5_annual", n = 3)
+  caaq(data, year, val, by, metric = "pm2.5_annual", n = 3)
 }
 
 #' Calculate the Ozone CAAQ metric
@@ -136,7 +136,7 @@ pm_annual_caaq <- function(df, year = "year", val = "pm_metric",
 #' Calculates and returns the Ozone CAAQ metric based on a rolling three-year 
 #' average.
 #'
-#' @param df Data frame. Contains three year average data output from
+#' @param data Data frame. Contains three year average data output from
 #'   \code{o3_three_yr_avg}
 #' @param year Character. The name of the data column containing years. Defaults
 #'   to 'year'.
@@ -160,28 +160,28 @@ pm_annual_caaq <- function(df, year = "year", val = "pm_metric",
 #' o3_final_caaq <- o3_caaq(o3_avg, by = c("ems_id", "site"))
 #' 
 #' @export
-o3_caaq <- function(df, year = "year", val = "ozone_metric", by = NULL) {
-  caaq(df, year, val, by, metric = "o3", n = 3)
+o3_caaq <- function(data, year = "year", val = "ozone_metric", by = NULL) {
+  caaq(data, year, val, by, metric = "o3", n = 3)
 }
 
 #' @export
-so2_1yr_caaq <- function(df, year = "year", val = "ann_99_percentile", by = NULL) {
+so2_1yr_caaq <- function(data, year = "year", val = "ann_99_percentile", by = NULL) {
   
   # CHECK VALIDITY
-  caaq(df, year, val, by, metric = "so2_1yr", n = 1)
+  caaq(data, year, val, by, metric = "so2_1yr", n = 1)
 }
 
 #' @export
-so2_3yr_caaq <- function(df, year = "year", val = "so2_metric", by = NULL) {
-  caaq(df, year, val, by, metric = "so2_3yr", n = 3)
+so2_3yr_caaq <- function(data, year = "year", val = "so2_metric", by = NULL) {
+  caaq(data, year, val, by, metric = "so2_3yr", n = 3)
 }
 
 #' @export
-no2_1yr_caaq <- function(df, year = "year", val = "avg_yearly", by = NULL) {
-  caaq(df, year, val, by, metric = "no2_1yr", n = 1)
+no2_1yr_caaq <- function(data, year = "year", val = "avg_yearly", by = NULL) {
+  caaq(data, year, val, by, metric = "no2_1yr", n = 1)
 }
 
 #' @export
-no2_3yr_caaq <- function(df, year = "year", val = "no2_metric", by = NULL) {
-  caaq(df, year, val, by, metric = "no2_3yr", n = 3)
+no2_3yr_caaq <- function(data, year = "year", val = "no2_metric", by = NULL) {
+  caaq(data, year, val, by, metric = "no2_3yr", n = 3)
 }

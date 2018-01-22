@@ -75,7 +75,7 @@ format_caaqs_dt <- function(x, format="%Y-%m-%d %H:%M:%S", prev_hour = TRUE,
 #' Given a dataframe with one column as a date sequence, fill gaps in the dat 
 #' sequence.
 #' 
-#' @param  df Dataframe
+#' @param  data Dataframe
 #' @param  date_col the column containing dates
 #' @param  interval The interval in the date sequence. If \code{NULL}, calculated
 #'  automatically.
@@ -95,7 +95,7 @@ format_caaqs_dt <- function(x, format="%Y-%m-%d %H:%M:%S", prev_hour = TRUE,
 #' 
 #' @noRd
 
-date_fill <- function(df, date_col, interval = NULL, fill_cols = NULL, add_ymd = FALSE) {
+date_fill <- function(data, date_col, interval = NULL, fill_cols = NULL, add_ymd = FALSE) {
   
   if (!is.null(interval) && 
         (!is.numeric(interval) && 
@@ -104,9 +104,9 @@ date_fill <- function(df, date_col, interval = NULL, fill_cols = NULL, add_ymd =
          "?seq.POSIXt for help, or let the function find it for you")
   }
   
-  df <- df[order(df[[date_col]]), ]
+  data <- data[order(data[[date_col]]), ]
   
-  dates <- df[[date_col]]
+  dates <- data[[date_col]]
   
   ## Function to check for non-uniform intervals
   diff_ints <- function(d) {
@@ -124,7 +124,7 @@ date_fill <- function(df, date_col, interval = NULL, fill_cols = NULL, add_ymd =
     }
     
     full_dates <- data.frame(date = seq(sdate, edate, by = interval))
-    out <- merge(df, full_dates, by.x = date_col, by.y = "date", all = TRUE)
+    out <- merge(data, full_dates, by.x = date_col, by.y = "date", all = TRUE)
     
     if (!is.null(fill_cols)) {
       for (col in fill_cols) {
@@ -134,7 +134,7 @@ date_fill <- function(df, date_col, interval = NULL, fill_cols = NULL, add_ymd =
     }
     
   } else {
-    out <- df
+    out <- data
   }
   
   if (add_ymd) out <- add_ymd(out, "date")
@@ -144,8 +144,8 @@ date_fill <- function(df, date_col, interval = NULL, fill_cols = NULL, add_ymd =
 
 #' Add a year, month, and day column to a dataframe based on a date column
 #'
-#' @param df dataframe
-#' @param datecol the column in df that contains the dates as a character string
+#' @param data dataframe
+#' @param datecol the column in data that contains the dates as a character string
 #' @param outnames the names for the new columns in order of year, month, day 
 #'   (defaults to "year", "month", "day")
 #' @param tz the timezone
@@ -154,10 +154,10 @@ date_fill <- function(df, date_col, interval = NULL, fill_cols = NULL, add_ymd =
 #' 
 #' @noRd
 
-add_ymd <- function(df, datecol, tz = getOption("rcaaqs.timezone", default = "Etc/GMT+8"), 
+add_ymd <- function(data, datecol, tz = getOption("rcaaqs.timezone", default = "Etc/GMT+8"), 
                     outnames = NULL) {
   if (is.null(outnames)) outnames <- c("year", "month", "day")
-  int <- intersect(outnames, names(df))
+  int <- intersect(outnames, names(data))
   if (length(int) > 0) {
     ques <- function(int) {
       ans <- tolower(readline(paste("Column(s)", paste0(int, collapse = ", "), 
@@ -169,11 +169,11 @@ add_ymd <- function(df, datecol, tz = getOption("rcaaqs.timezone", default = "Et
     if (tolower(overwrite) == "n") stop("Exiting function on user request")
   }
 
-  dateslt <- as.POSIXlt(df[, datecol], tz = tz)
-  df[,outnames[1]] <- dateslt$year + 1900
-  df[,outnames[2]] <- dateslt$mon + 1
-  df[,outnames[3]] <- dateslt$mday
-  df
+  dateslt <- as.POSIXlt(data[, datecol], tz = tz)
+  data[,outnames[1]] <- dateslt$year + 1900
+  data[,outnames[2]] <- dateslt$mon + 1
+  data[,outnames[3]] <- dateslt$mday
+  data
 }
 
 #' Calcuate number of days in quarter

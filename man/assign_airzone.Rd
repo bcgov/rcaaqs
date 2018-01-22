@@ -4,11 +4,11 @@
 \alias{assign_airzone}
 \title{Assign locations to airzones}
 \usage{
-assign_airzone(df, airzones, az = "Airzone", station_id = "ems_id",
+assign_airzone(data, airzones, az = "Airzone", station_id = "ems_id",
   coords = c("lat", "lon"))
 }
 \arguments{
-\item{df}{Data frame. Contains station ids and air quality data.}
+\item{data}{Data frame. Contains station ids and air quality data}
 
 \item{airzones}{SpatialPolygonsDataFrame. Polygons reflecting airzone
 locations}
@@ -16,8 +16,7 @@ locations}
 \item{az}{Character. Name of airzones column in the 'airzones'
 SpatialPolygonsDataFrame object}
 
-\item{station_id}{Character. Name of the station_id column in the 'df' data
-frame}
+\item{station_id}{Character. Name of the station_id column in 'data'}
 
 \item{coords}{Character vector. Names of the columns containing latitude and 
 longitude (respectively) for each station. Defaults to 'lat' and 'lon'}
@@ -38,7 +37,7 @@ function to extract a Spatial Polygons Data Frame of BC airzones from the
 # Using the airzone spatial dataframe from the bcmaps package
 bc_airzones <- bcmaps::airzones("sp")
 
-df_airzones <- assign_airzone(df, bc_airzones)
+by_airzones <- assign_airzone(data, bc_airzones)
 }
 
 }

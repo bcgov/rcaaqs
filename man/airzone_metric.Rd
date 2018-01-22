@@ -4,11 +4,11 @@
 \alias{airzone_metric}
 \title{Calculate the airzone metric}
 \usage{
-airzone_metric(df, n_years = "n_years", az = "airzone",
+airzone_metric(data, n_years = "n_years", az = "airzone",
   caaq = "caaq_metric", keep = NULL)
 }
 \arguments{
-\item{df}{The dataframe}
+\item{data}{The dataframe}
 
 \item{n_years}{The column containing the number of years each 3yr avg is
 based on}
@@ -17,7 +17,7 @@ based on}
 
 \item{caaq}{the column containing the caaq metric for individual stations}
 
-\item{keep}{columns in the input df that you would like to retain in the 
+\item{keep}{columns in the input data that you would like to retain in the 
 output data frame. You can make it a named vector to rename the column in 
 the output. Use the form \code{keep = c(new_name = "existing_name")}. This 
 can also be used to rename any of the columns specified by n_years, az, or 

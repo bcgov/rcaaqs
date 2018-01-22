@@ -4,10 +4,10 @@
 \alias{pm_annual_caaq}
 \title{Calculate the PM2.5 annaul CAAQ metric}
 \usage{
-pm_annual_caaq(df, year = "year", val = "pm_metric", by = NULL)
+pm_annual_caaq(data, year = "year", val = "pm_metric", by = NULL)
 }
 \arguments{
-\item{df}{Data frame. Contains PM2.5 annual three year average data output
+\item{data}{Data frame. Contains PM2.5 annual three year average data output
 from \code{pm_three_yr_avg}}
 
 \item{year}{Character. The name of the data column containing years. Defaults

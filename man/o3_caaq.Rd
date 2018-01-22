@@ -4,10 +4,10 @@
 \alias{o3_caaq}
 \title{Calculate the Ozone CAAQ metric}
 \usage{
-o3_caaq(df, year = "year", val = "ozone_metric", by = NULL)
+o3_caaq(data, year = "year", val = "ozone_metric", by = NULL)
 }
 \arguments{
-\item{df}{Data frame. Contains three year average data output from
+\item{data}{Data frame. Contains three year average data output from
 \code{o3_three_yr_avg}}
 
 \item{year}{Character. The name of the data column containing years. Defaults

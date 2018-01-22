@@ -4,10 +4,10 @@
 \alias{pm_24h_caaq}
 \title{Calculate the PM2.5 24 hour CAAQ metric}
 \usage{
-pm_24h_caaq(df, year = "year", val = "pm_metric", by = NULL)
+pm_24h_caaq(data, year = "year", val = "pm_metric", by = NULL)
 }
 \arguments{
-\item{df}{Data frame. Contains three year PM2.5 24hr average data output from
+\item{data}{Data frame. Contains three year PM2.5 24hr average data output from
 \code{pm_three_yr_avg}}
 
 \item{year}{Character. The name of the data column containing years. Defaults

@@ -17,12 +17,12 @@
 #'
 #' <full description>
 #' 
-#' @param df The dataframe
+#' @param data The dataframe
 #' @param n_years The column containing the number of years each 3yr avg is
 #'   based on
 #' @param az Airzone column
 #' @param caaq the column containing the caaq metric for individual stations
-#' @param keep columns in the input df that you would like to retain in the 
+#' @param keep columns in the input data that you would like to retain in the 
 #'   output data frame. You can make it a named vector to rename the column in 
 #'   the output. Use the form \code{keep = c(new_name = "existing_name")}. This 
 #'   can also be used to rename any of the columns specified by n_years, az, or 
@@ -33,25 +33,25 @@
 #'
 #' @export
 
-airzone_metric <- function(df, n_years = "n_years", az = "airzone", 
+airzone_metric <- function(data, n_years = "n_years", az = "airzone", 
                            caaq = "caaq_metric", keep = NULL) {
   
   # Check inputs
-  check_vars(c(n_years, az, caaq), df)
-  if (!is.numeric(df[[n_years]])) stop("Data column ", n_years, " must be numeric")
-  if (!is.numeric(df[[caaq]])) stop("Data column", caaq, " must be numeric")
+  check_vars(c(n_years, az, caaq), data)
+  if (!is.numeric(data[[n_years]])) stop("Data column ", n_years, " must be numeric")
+  if (!is.numeric(data[[caaq]])) stop("Data column", caaq, " must be numeric")
   
   # set caaq column to NA if n_years < 3 (unless only have 2 years)
-  df <- tidyr::nest(df, - !!!rlang::syms(az))
-  df <- dplyr::mutate(df, data = purrr::map(.data$data, ~ parse_incomplete(., n_years, caaq)))
+  data <- tidyr::nest(data, - !!!rlang::syms(az))
+  data <- dplyr::mutate(data, data = purrr::map(.data$data, ~ parse_incomplete(., n_years, caaq)))
   
   # Take station with max caaq for each airzone
-  df <- dplyr::mutate(df, data = purrr::map(.data$data, ~ dplyr::slice(.x, which.max(.x[[caaq]]))))
-  df <- tidyr::unnest(df)
-  df <- dplyr::arrange(df, !!!rlang::syms(az))
+  data <- dplyr::mutate(data, data = purrr::map(.data$data, ~ dplyr::slice(.x, which.max(.x[[caaq]]))))
+  data <- tidyr::unnest(data)
+  data <- dplyr::arrange(data, !!!rlang::syms(az))
   
   # Arrange column order
-  df <- df[, c(az, n_years, caaq,
+  data <- data[, c(az, n_years, caaq,
                setdiff(keep, c(az, n_years, caaq)))]
   
   # Rename keep columns if asked to
@@ -59,18 +59,18 @@ airzone_metric <- function(df, n_years = "n_years", az = "airzone",
     for (k in keep) {
       n <- names(keep)[keep == k]
       if (nchar(n) > 0) {
-        names(df)[names(df) == k] <- n
+        names(data)[names(data) == k] <- n
       }
     }
   }
-  df
+  data
 }
 
-parse_incomplete <- function(df, n_years, val) {
-  if (all(df[[n_years]] < 3)) {
-    df <- df
+parse_incomplete <- function(data, n_years, val) {
+  if (all(data[[n_years]] < 3)) {
+    data <- data
   } else {
-    df[df[[n_years]] < 3, val] <- NA
+    data[data[[n_years]] < 3, val] <- NA
   }
   df
 }
@@ -85,13 +85,12 @@ parse_incomplete <- function(df, n_years, val) {
 #' function to extract a Spatial Polygons Data Frame of BC airzones from the 
 #' \code{\link{bcmaps}} package.
 #' 
-#' @param df Data frame. Contains station ids and air quality data.
+#' @param data Data frame. Contains station ids and air quality data
 #' @param airzones SpatialPolygonsDataFrame. Polygons reflecting airzone
 #'   locations
 #' @param az Character. Name of airzones column in the 'airzones'
 #'   SpatialPolygonsDataFrame object
-#' @param station_id Character. Name of the station_id column in the 'df' data
-#'   frame
+#' @param station_id Character. Name of the station_id column in 'data'
 #' @param coords Character vector. Names of the columns containing latitude and 
 #'   longitude (respectively) for each station. Defaults to 'lat' and 'lon'
 #' 
@@ -101,17 +100,17 @@ parse_incomplete <- function(df, n_years, val) {
 #' # Using the airzone spatial dataframe from the bcmaps package
 #' bc_airzones <- bcmaps::airzones("sp")
 #' 
-#' df_airzones <- assign_airzone(df, bc_airzones)
+#' by_airzones <- assign_airzone(data, bc_airzones)
 #' }
 #'
 #' @export
-assign_airzone <- function(df, airzones, az = "Airzone", 
+assign_airzone <- function(data, airzones, az = "Airzone", 
                            station_id = "ems_id",
                            coords = c("lat", "lon")) {
   # Check inputs
-  check_vars(c(station_id, coords), df)
-  check_class(coords[1], df, "numeric")
-  check_class(coords[2], df, "numeric")
+  check_vars(c(station_id, coords), data)
+  check_class(coords[1], data, "numeric")
+  check_class(coords[2], data, "numeric")
   
   if(all(class(airzones) != "SpatialPolygonsDataFrame")) {
     stop("airzones must be a SpatialPolygonsDataFrame (from the 'sp' package)")
@@ -125,11 +124,11 @@ assign_airzone <- function(df, airzones, az = "Airzone",
   
   # Rename to standard
   names(airzones@data)[names(airzones@data) == az] <- "airzone"
-  names(df)[names(df) == coords[1]] <- "lat"
-  names(df)[names(df) == coords[2]] <- "lon"
+  names(data)[names(data) == coords[1]] <- "lat"
+  names(data)[names(data) == coords[2]] <- "lon"
   
   # Get stations data
-  st <- dplyr::select(df, station_id, "lat", "lon")
+  st <- dplyr::select(data, station_id, "lat", "lon")
   st <- dplyr::distinct(st)
   
   # Convert all to long/lat
@@ -143,6 +142,6 @@ assign_airzone <- function(df, airzones, az = "Airzone",
   st <- cbind(st, sp::`%over%`(st_coord, airzones))
   
   # Merge with dataframe
-  df <- dplyr::left_join(df, st[, c(station_id, "airzone")], by = station_id)
-  df
+  data <- dplyr::left_join(data, st[, c(station_id, "airzone")], by = station_id)
+  data
 }
