@@ -25,7 +25,12 @@ longitude (respectively) for each station. Defaults to 'lat' and 'lon'}
 \description{
 With a data set containing station locations, calculate which airzones each 
 station belongs to. Requires a Spatial Polygons Data Frame object from the
-\code{sp} package containting the airzone names and locations (polygons).
+\code{sp} package containing the airzone names and locations (polygons).
+}
+\details{
+For British Columbia, consider using the \link[bcmaps]{airzones("sp")}
+function to extract a Spatial Polygons Data Frame of BC airzones from the 
+\code{\link{bcmaps}} package.
 }
 \examples{
 

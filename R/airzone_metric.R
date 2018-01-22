@@ -79,7 +79,11 @@ parse_incomplete <- function(df, n_years, val) {
 #' 
 #' With a data set containing station locations, calculate which airzones each 
 #' station belongs to. Requires a Spatial Polygons Data Frame object from the
-#' \code{sp} package containting the airzone names and locations (polygons).
+#' \code{sp} package containing the airzone names and locations (polygons).
+#' 
+#' For British Columbia, consider using the \link[bcmaps]{airzones("sp")}
+#' function to extract a Spatial Polygons Data Frame of BC airzones from the 
+#' \code{\link{bcmaps}} package.
 #' 
 #' @param df Data frame. Contains station ids and air quality data.
 #' @param airzones SpatialPolygonsDataFrame. Polygons reflecting airzone
@@ -104,9 +108,10 @@ parse_incomplete <- function(df, n_years, val) {
 assign_airzone <- function(df, airzones, az = "Airzone", 
                            station_id = "ems_id",
                            coords = c("lat", "lon")) {
-  
   # Check inputs
   check_vars(c(station_id, coords), df)
+  check_class(coords[1], df, "numeric")
+  check_class(coords[2], df, "numeric")
   
   if(all(class(airzones) != "SpatialPolygonsDataFrame")) {
     stop("airzones must be a SpatialPolygonsDataFrame (from the 'sp' package)")
@@ -120,14 +125,16 @@ assign_airzone <- function(df, airzones, az = "Airzone",
   
   # Rename to standard
   names(airzones@data)[names(airzones@data) == az] <- "airzone"
+  names(df)[names(df) == coords[1]] <- "lat"
+  names(df)[names(df) == coords[2]] <- "lon"
   
   # Get stations data
-  st <- dplyr::select(df, station_id, coords)
+  st <- dplyr::select(df, station_id, "lat", "lon")
   st <- dplyr::distinct(st)
   
   # Convert all to long/lat
   st_coord <- st
-  sp::coordinates(st_coord) <- c(coords[2], coords[1])
+  sp::coordinates(st_coord) <- c("lon", "lat")
   sp::proj4string(st_coord) <- "+proj=longlat +datum=WGS84"
   
   airzones <- sp::spTransform(airzones, sp::CRS("+proj=longlat +datum=WGS84"))
