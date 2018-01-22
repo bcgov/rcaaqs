@@ -227,7 +227,7 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
   
   order_metric <- data[[parameter]][which.max(data[[metric_val]])]
   order_data <- data[data[["metric"]] == order_metric, c(metric_val, station)]
-  stn_levels <- order_data[[station]][order(order_data[[metric_val]])]
+  stn_levels <- unique(order_data[[station]][order(order_data[[metric_val]])])
   data[[station]] <- factor(data[[station]], levels = stn_levels)
   
   p <- ggplot(data, aes_string(x = metric_val, y = station))
