@@ -72,7 +72,7 @@ parse_incomplete <- function(data, n_years, val) {
   } else {
     data[data[[n_years]] < 3, val] <- NA
   }
-  df
+  data
 }
 
 #' Assign locations to airzones
