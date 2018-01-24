@@ -127,6 +127,10 @@ assign_airzone <- function(data, airzones, az = "Airzone",
   names(data)[names(data) == coords[1]] <- "lat"
   names(data)[names(data) == coords[2]] <- "lon"
   
+  if(min(data$lat, na.rm = TRUE) < -90 | max(data$lat, na.rm = TRUE) > 90) stop("latitude can only range from -90 to +90")
+  if(min(data$lon, na.rm = TRUE) < -180 | max(data$lon, na.rm = TRUE) > 180) stop("longitude can only range from -180 to +180")
+  
+  
   # Get stations data
   st <- dplyr::select(data, station_id, "lat", "lon")
   st <- dplyr::distinct(st)
