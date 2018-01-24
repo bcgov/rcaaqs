@@ -40,6 +40,7 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
     valid_cols <- c(valid_cols, "n_years", "flag")
   }
   validity <- validity[valid_cols]
+  validity <- dplyr::ungroup(validity)
   
   # Exclude data
   if(!is.null(exclude_df)) data <- 
