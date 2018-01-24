@@ -26,9 +26,11 @@ yearly_stat <- function(data, dt = "date", val = "value",
   # Calculate yearly statistic
   data <- dplyr::mutate(data, year = lubridate::year(!!!rlang::syms(dt)))
   data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year")))
-  
-  data <- dplyr::summarize(data,
-                           stat = stat(!!!rlang::syms(val)))
+  if(!is.null(stat.opts)) {
+    data <- dplyr::summarize(data, stat = stat(!!!rlang::syms(val), !!unlist(stat.opts)))
+  } else {
+    data <- dplyr::summarize(data, stat = stat(!!!rlang::syms(val)))
+  }
   
   data <- dplyr::ungroup(data)
   dplyr::left_join(quarter_valid, data, by = c(by, "year"))
