@@ -18,11 +18,13 @@ yearly_stat <- function(data, dt = "date", val = "value",
                         by = c("ems_id", "site"), 
                         stat, stat.opts = NULL, quarter_units = "prop",
                         exclude_df, exclude_df_dt) {
+  
   # Get quarter validity
   quarter_valid <- valid_by_quarter(data, dt, by, quarter_units)
-  # Exclude data.
-  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
   
+  # Exclude data
+  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
+
   # Calculate yearly statistic
   data <- dplyr::mutate(data, year = lubridate::year(!!!rlang::syms(dt)))
   data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year")))
@@ -331,5 +333,8 @@ quantile2 <- function(x, probs = 0.98, na.rm = FALSE, names = FALSE, type = "caa
   ret
 }
 
-nth_highest <- function(x,n)
+
+nth_highest <- function(x, n) {
   x[order(x, decreasing = TRUE)[n]]
+}
+
