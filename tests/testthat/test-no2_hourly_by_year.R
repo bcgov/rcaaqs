@@ -17,7 +17,7 @@ test_that("Has the right column names and dimensions", {
 })
  
 test_that("Columns are the right class", {
-  classes <- c("character", "integer", "numeric", "numeric", "numeric", "numeric", "numeric", 
+  classes <- c("character", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", 
                "numeric", "logical")
   expect_equal(unname(sapply(test, class)), classes)
 })
@@ -41,3 +41,4 @@ test_that("can exclude data rows", {
   
   expect_equal(ret$avg_yearly[ret$id == "a" & ret$year == 2011], 4.3)
 })
+

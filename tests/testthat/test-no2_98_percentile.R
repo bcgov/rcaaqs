@@ -31,7 +31,7 @@ test_that("Has the right column names and dimensions", {
 })
  
 test_that("Columns are the right class", {
-  classes <- c("integer", "numeric", "numeric", "numeric", "numeric", "numeric", 
+  classes <- c("numeric", "numeric", "numeric", "numeric", "numeric", "numeric", 
                "numeric", "logical")
   expect_equal(unname(sapply(test_one, class)), classes)
   expect_equal(unname(sapply(test_mult, class)), c("character", classes))

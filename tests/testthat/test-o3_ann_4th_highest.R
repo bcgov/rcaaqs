@@ -34,7 +34,7 @@ test_that("Has the right column names and dimensions", {
 })
  
 test_that("Columns are the right class", {
-  classes <- c("integer", "numeric", "numeric", "numeric", "numeric", "numeric", 
+  classes <- c("numeric", "numeric", "numeric", "numeric", "numeric", "numeric", 
                "numeric", "logical", "logical", "logical")
   expect_equal(unname(sapply(test_one, class)), classes)
   expect_equal(unname(sapply(test_mult, class)), c("character", classes))
@@ -70,3 +70,4 @@ test_that("can exclude data rows", {
   
   expect_equal(round(ret$max8hr[ret$id == "a" & ret$year == 2011],1), 8.6)
 })
+
