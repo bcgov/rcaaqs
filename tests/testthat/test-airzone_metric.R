@@ -50,3 +50,42 @@ test_that("renaming keep cols works", {
   expect_equal(names(res), c("Airzone", "yearssss", "value", "rep_site", "otherdata"))
 })
 
+test_that("assign_airzone catches incorrect input", {
+  p <- readRDS("pm_ann_caaq.rds")
+  
+  expect_error(assign_airzone(""), "'data' is not a data frame")
+  expect_error(assign_airzone(p), "'lat' is not a column in data")
+  expect_error(assign_airzone(p, coords = c("latitude", "lon")), "'lon' is not a column in data")
+  
+  expect_error(assign_airzone(p, coords = c("ems_id", "site")), "Column 'ems_id' is not numeric")
+  expect_error(assign_airzone(p, coords = c("latitude", "site")), "Column 'site' is not numeric")
+  
+  expect_error(assign_airzone(p, coords = c("latitude", "longitude")), "argument \"airzones\" is missing, with no default")
+  
+  skip_if_not_installed("bcmaps")
+  expect_error(assign_airzone(p, coords = c("latitude", "longitude"),
+                              airzones = bcmaps::airzones("sp"), az = "az"), 
+               "'az' is not a column in the airzones Spatial Polygons Data Frame")
+  
+  expect_error(assign_airzone(p, coords = c("longitude", "latitude"),
+                              airzones = bcmaps::airzones("sp")),
+               "latitude can only range from -90 to \\+90")
+})
+
+test_that("assign_airzone returns expected input", {
+  p <- readRDS("pm_ann_caaq.rds")
+  
+  expect_silent(a <- assign_airzone(p, coords = c("latitude", "longitude"),
+                                    airzones = bcmaps::airzones("sp")))
+  
+  expect_is(a, "data.frame")
+  expect_length(a, 13)
+  expect_equal(nrow(a), 10)
+  expect_true("airzone" %in% names(a))
+  expect_is(a$airzone, "character")
+  expect_equal(a$airzone, c("Georgia Strait", "Lower Fraser Valley", "Georgia Strait", 
+                            "Lower Fraser Valley", "Lower Fraser Valley", "Lower Fraser Valley", 
+                            "Central Interior", "Central Interior", "Southern Interior", "Central Interior"))
+  
+})
+
