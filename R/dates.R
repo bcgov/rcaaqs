@@ -217,6 +217,7 @@ pad_date_time <- function(dat, val, interval) {
 
 # Simply using as.Date on a time converts based on UTC.
 # This conversion just truncates the time part.
+# THIS IS EQUIVALENT TO, BUT FASTER THAN, lubridate::as_date
 time_to_date <- function(date_time) {
   as.Date(date_time, attr(date_time, "tzone"))
 }
