@@ -18,7 +18,7 @@
 #' @noRd
 
 rolling_value <- function(data, dt, val, interval, by, window, valid_thresh, 
-                          flag_num = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+                          flag_num = NULL) {
   
   if (!is.null(by)) data <- dplyr::group_by(data, !!!rlang::syms(by))
 
@@ -42,16 +42,7 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
   validity <- validity[valid_cols]
   validity <- dplyr::ungroup(validity)
   
-  # Exclude data
-  if(!is.null(exclude_df)) data <- 
-    exclude_data(data, dt, by, exclude_df, exclude_df_dt)  
-  
-  # Add in NAs for excluded data
-  data <- tidyr::complete(data,
-                          !!!rlang::syms(dt) := tidyr::full_seq(!!!rlang::syms(dt), interval),
-                          tidyr::nesting(!!!rlang::syms(by)), fill = fill)
-  
-  # Cacluate statistic
+  # Calcuate statistic
   data <- dplyr::mutate(data,
                         rolled_value = round_caaqs(rolling_mean(!!!rlang::syms(val), 
                                                                 width = window, 
@@ -98,7 +89,7 @@ NULL
 #' @export
 
 o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value", 
-                               by = NULL, exclude_df = NULL, exclude_df_dt = NULL){
+                               by = NULL){
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
@@ -113,9 +104,10 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
                        by = by, 
                        interval = 3600,
                        window = 8, 
-                       valid_thresh = 6,
-                       exclude_df = exclude_df,
-                       exclude_df_dt = exclude_df_dt)
+                       valid_thresh = 6)
+  
+  
+  
   dplyr::rename(data, 
                 "rolling8" = "rolled_value", 
                 "flag_valid_8hr" = "valid")

@@ -53,20 +53,15 @@ daily_stat <- function(data, dt = "date", val = "value",
 #' @param  n_readings_min The minimum number of readings in a day for the
 #'   summary statistic to be valid.
 #' @param  stat function to summarise by. 
-#' @param exclude_df a data.frame specifying which date ranges and sites to
-#'   exclude. The data.frame must have to one date column if specific dates or
-#'   date-times are to be excluded, and exactly two date or date-time columns if
-#'   a date range is needed. must have all the columns of by provided,
-#' @param exclude_df_dt specifies the one (or two) date columns to be use in the
-#'   exclude_df data.frame.
 #'   
 #' @return dataframe with summarised statistic
 #' 
 #' @noRd
 
 pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard, 
-                                 stat = max_na, exclude_df = NULL, exclude_df_dt = NULL, 
-                                 digits = 1, n_readings_min = 18) {
+                                 stat = max_na, digits = 1, 
+                                 n_readings_min = 18) {
+  
   
   # Validity checks (before data exclusion)
   validity <- dplyr::mutate(data,
@@ -78,8 +73,9 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
                                n_readings = length(stats::na.omit(!!!rlang::syms(val))),
                                valid = .data$n_readings >= n_readings_min)
   
-  # Exclude data before stat calculation
-  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
+  # Exclude data before stat calculation - THIS SHOULD HAPPEN IN NEXT STEP, NOT HERE
+  # if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, 
+  #                                               exclude_df, exclude_df_dt, val)
   
   # Calculate statistic
   data <- dplyr::mutate(data, 
@@ -119,7 +115,7 @@ NULL
 #' @rdname daily_stat_page
 #' @export
 
-o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
@@ -128,7 +124,8 @@ o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL, ex
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   
-  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = get_std("o3"), exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
+  # Daily stat
+  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = get_std("o3"))
   dplyr::rename(data, 
                 "max8hr" = "stat", 
                 "valid_max8hr" = "valid", 
@@ -146,7 +143,7 @@ no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             val %in% names(data),
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
+  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf)
   dplyr::rename(data, 
                 "max_24h" = "stat", 
                 "valid_max_24h" = "valid", 
@@ -164,7 +161,7 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             val %in% names(data),
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
+  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70)
   dplyr::rename(data, 
                 "max_24h" = "stat", 
                 "valid_max_24h" = "valid", 
@@ -174,7 +171,7 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
 #' @rdname daily_stat_page
 #' @export
 
-pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),
@@ -182,7 +179,8 @@ pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL, exclu
             val %in% names(data),
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
-  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, stat = mean_na, exclude_df = exclude_df, exclude_df_dt = exclude_df_dt)
+  data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, 
+                               stat = mean_na)
   dplyr::rename(data, 
                 "avg_24h" = "stat",
                 "valid_avg_24h" = "valid",

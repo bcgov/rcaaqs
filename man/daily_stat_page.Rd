@@ -8,8 +8,7 @@
 \alias{pm_daily_avg}
 \title{Cacluate daily maxima or averages for different sensor readings.}
 \usage{
-o3_daily_max(data, dt = "date_time", val = "rolling8", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL)
+o3_daily_max(data, dt = "date_time", val = "rolling8", by = NULL)
 
 no2_daily_max(data, dt = "date_time", val = "value", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL)
@@ -17,8 +16,7 @@ no2_daily_max(data, dt = "date_time", val = "value", by = NULL,
 so2_daily_max(data, dt = "date_time", val = "value", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL)
 
-pm_daily_avg(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL)
+pm_daily_avg(data, dt = "date_time", val = "value", by = NULL)
 }
 \arguments{
 \item{data}{data frame with date and value}

@@ -23,15 +23,25 @@ yearly_stat <- function(data, dt = "date", val = "value",
   quarter_valid <- valid_by_quarter(data, dt, by, quarter_units)
   
   # Exclude data
-  if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, exclude_df, exclude_df_dt)
+  if(!is.null(exclude_df)) {
+    data <- exclude_data(data, dt, by, 
+                         exclude_df, exclude_df_dt,
+                         val = val)
+  } else {
+    data$exclude <- FALSE
+  }
 
   # Calculate yearly statistic
   data <- dplyr::mutate(data, year = lubridate::year(!!!rlang::syms(dt)))
   data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year")))
   if(!is.null(stat.opts)) {
-    data <- dplyr::summarize(data, stat = stat(!!!rlang::syms(val), !!unlist(stat.opts)))
+    data <- dplyr::summarize(data, 
+                             stat = stat(!!!rlang::syms(val), !!unlist(stat.opts)),
+                             exclude = any(exclude))
   } else {
-    data <- dplyr::summarize(data, stat = stat(!!!rlang::syms(val)))
+    data <- dplyr::summarize(data, 
+                             stat = stat(!!!rlang::syms(val)),
+                             exclude = any(exclude))
   }
   
   data <- dplyr::ungroup(data)
@@ -65,7 +75,8 @@ NULL
 #' @rdname yearly_stat_page
 #' @export
 
-pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, 
+                         exclude_df = NULL, exclude_df_dt = NULL) {
   stopifnot(is.data.frame(data), 
             is.character(dt),
             is.character(val),

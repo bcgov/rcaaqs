@@ -9,8 +9,7 @@
 \alias{o3_three_yr_avg}
 \title{Compute a rolling statistic (typically over years, but also hourly).}
 \usage{
-o3_rolling_8hr_avg(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL)
+o3_rolling_8hr_avg(data, dt = "date_time", val = "value", by = NULL)
 
 so2_three_yr_avg(data, dt = "year", val = "ann_99_percentile", by = NULL)
 
