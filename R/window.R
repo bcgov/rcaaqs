@@ -40,7 +40,7 @@ rolling_sum <- function(x, width) {
 #'   
 #' @noRd
 
-rolling_mean <- function(x, width = 8, thresh = 0){
+rolling_mean <- function(x, width = 8, thresh = 0) {
   available <- rolling_sum(!is.na(x), width = width)
   sum <- rolling_sum(x, width = width)
   ifelse(available >= thresh, sum/available, NA)
@@ -102,8 +102,9 @@ filled_rolling_mean <- function(dat, val, interval = 3600,
 #'   
 #' @noRd
 
-max_na <- function(x) 
+max_na <- function(x) {
   if (length(stats::na.omit(x)) == 0) NA else max(x, na.rm = TRUE)
+}
 
 #' Find the mean, return NA if no non-NA values.
 #'
@@ -117,8 +118,9 @@ max_na <- function(x)
 #'   
 #' @noRd
 
-mean_na <- function(x) 
+mean_na <- function(x) {
   if (length(stats::na.omit(x)) == 0) NA else mean(x, na.rm = TRUE)
+}
 
 #' Find the quantile, return NA if no non-NA values.
 #' 
@@ -142,5 +144,10 @@ mean_na <- function(x)
 #' 
 #' @noRd
 
-quantile2_na <- function(x, probs = 0.98, na.rm = TRUE, names = FALSE, type = "caaqs") 
-  if (length(stats::na.omit(x)) == 0) NA else quantile2(x, probs = probs, na.rm = na.rm, names = names, type = type)
+quantile2_na <- function(x, probs = 0.98, na.rm = TRUE, names = FALSE, type = "caaqs") {
+  if (length(stats::na.omit(x)) == 0) {
+    NA
+  } else {
+    quantile2(x, probs = probs, na.rm = na.rm, names = names, type = type)
+  }
+}
