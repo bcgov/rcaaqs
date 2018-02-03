@@ -97,6 +97,9 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
             val %in% names(data),
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
+  
+  # Initial data checks for first time raw data is passed to rcaaqs
+  data <- initial_check(data, dt = dt, by = by)
 
   data <- rolling_value(data, 
                        dt = dt, 

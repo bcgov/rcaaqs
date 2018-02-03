@@ -234,6 +234,9 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
   
+  # Initial data checks for first time raw data is passed to rcaaqs
+  data <- initial_check(data, dt = dt, by = by)
+  
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       quarter_units = "days", 
                       exclude_df = exclude_df, 
@@ -270,6 +273,9 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
             val %in% names(data),
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
+  
+  # Initial data checks for first time raw data is passed to rcaaqs
+  data <- initial_check(data, dt = dt, by = by)
   
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       quarter_units = "days", 

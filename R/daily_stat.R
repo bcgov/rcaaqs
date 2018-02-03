@@ -12,6 +12,32 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
+
+# Initial data check - When user first passes raw data to rcaaqs, check for
+# obvious problems
+initial_check <- function(data, dt, by) {
+
+  data <- dplyr::arrange(data, !!!rlang::syms(c(by, "date_time")))
+  
+  # Confirm that data is hourly sequential with no gaps
+  data <- dplyr::group_by(data, !!!rlang::syms(by))
+  data <- dplyr::mutate(data, diff = difftime(date_time, 
+                                              dplyr::lag(date_time), 
+                                              units = "hours"))
+  
+  # Fill out gaps with NA
+  if(any(data$diff < 1, na.rm = TRUE)) {
+    stop("data resolution is less than hourly, summarize to hourly first", 
+         call. = FALSE)
+  } else if (any(data$diff > 1, na.rm = TRUE)) {
+    data <- tidyr::complete(data,
+                            !!!rlang::syms(dt) := tidyr::full_seq(!!!rlang::syms(dt), 3600),
+                            tidyr::nesting(!!!rlang::syms(by)))
+  }
+  
+  dplyr::select(data, -dplyr::matches("diff"))
+}
+
 #' Find the daily statistic of a value by some factor
 #'
 #' Given a dataframe with one value column, find the maximum value by some date.
@@ -143,6 +169,11 @@ no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             val %in% names(data),
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
+  
+  # Initial data checks for first time raw data is passed to rcaaqs
+  data <- initial_check(data, dt = dt, by = by)
+  
+  # Daily stat
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf)
   dplyr::rename(data, 
                 "max_24h" = "stat", 
@@ -161,6 +192,11 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
             val %in% names(data),
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
+  
+  # Initial data checks for first time raw data is passed to rcaaqs
+  data <- initial_check(data, dt = dt, by = by)
+  
+  # Daily stat
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70)
   dplyr::rename(data, 
                 "max_24h" = "stat", 
@@ -179,6 +215,10 @@ pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL) {
             val %in% names(data),
             lubridate::is.POSIXt(data[[dt]]), 
             is.numeric(data[[val]]))
+  
+  # Initial data checks for first time raw data is passed to rcaaqs
+  data <- initial_check(data, dt = dt, by = by)
+  
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, 
                                stat = mean_na)
   dplyr::rename(data, 
