@@ -53,15 +53,10 @@ initial_check <- function(data, dt, by) {
 #' 
 #' @noRd
 
-daily_stat <- function(data, dt = "date", val = "value", 
-                       by = c("ems_id", "site"),
-                       thresh, stat) {
-
+daily_stat <- function(data, val = "value", thresh, stat) {
   # Stat calculation
-  data <- dplyr::group_by(data, !!!rlang::syms(c(by, dt)))
-  
   dplyr::summarize(data,
-                   stat = stat(!!!rlang::syms(val)),
+                   stat = stat(.data[[val]]),
                    exceed = .data$stat > thresh)
 }
 
@@ -88,12 +83,14 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
                                  stat = max_na, digits = 1, 
                                  n_readings_min = 18) {
   
+  # Start with ungrouped data
+  data <- dplyr::ungroup(data)
   
-  # Validity checks (before data exclusion)
-  validity <- dplyr::mutate(data,
-                            date = time_to_date(!!!rlang::syms(dt)))
+  # Add dates
+  data <- dplyr::mutate(data, date = time_to_date(!!!rlang::syms(dt)))
   
-  validity <- dplyr::group_by(validity, !!!rlang::syms(c(by, "date")))
+  # Validity checks
+  validity <- dplyr::group_by(data, !!!rlang::syms(c(by, "date")))
   
   validity <- dplyr::summarize(validity,
                                n_readings = length(stats::na.omit(!!!rlang::syms(val))),
@@ -104,16 +101,14 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
   #                                               exclude_df, exclude_df_dt, val)
   
   # Calculate statistic
-  data <- dplyr::mutate(data, 
-                        date = time_to_date(!!!rlang::syms(dt)))
-  data <- daily_stat(data, dt = "date", val = val, by = by, 
-                     thresh = pollutant_standard, stat = stat)
+  data <- dplyr::group_by(data, !!!rlang::syms(c(by, "date")))
+  data <- daily_stat(data, val = val, thresh = pollutant_standard, stat = stat)
   
   # Join together
   data <- dplyr::left_join(validity, data, by = c(by, "date"))
   data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
   data$flag <- data$exceed & !data$valid # Flag for data incomplete, but used
-  data$stat <- round_caaqs(ifelse(data$valid | data$flag, data$stat, NA_real_), digits)
+  data$stat <- round_caaqs(data$stat, digits)
   data
 }
 
