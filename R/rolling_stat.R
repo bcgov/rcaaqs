@@ -22,42 +22,26 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
   
   if (!is.null(by)) data <- dplyr::group_by(data, !!!rlang::syms(by))
 
-  # Pad in missing years with NA
-  fill <- list(NA)
-  names(fill) <- val
-  data <- tidyr::complete(data,
-                          !!!rlang::syms(dt) := tidyr::full_seq(!!!rlang::syms(dt), interval),
-                          tidyr::nesting(!!!rlang::syms(by)), fill = fill)
-  
   # Determine validity
-  validity <- dplyr::mutate(data, 
-                            n_years = n_within_window(!!!rlang::syms(dt), interval, window))
-  validity$valid <- validity$n_years >= valid_thresh
+  validity <- dplyr::mutate(data, n_val = n_within_window(.data[[val]], window))
+  validity$valid <- validity$n_val >= valid_thresh
   valid_cols <- c(by, dt, "valid")
 
   if (!is.null(flag_num)) {
-    validity$flag <- validity$n_years %in% flag_num
-    valid_cols <- c(valid_cols, "n_years", "flag")
+    validity$flag <- validity$n_val %in% flag_num
+    valid_cols <- c(valid_cols, "n_val", "flag")
   }
+  
   validity <- validity[valid_cols]
   validity <- dplyr::ungroup(validity)
   
   # Calcuate statistic
   data <- dplyr::mutate(data,
-                        rolled_value = round_caaqs(rolling_mean(!!!rlang::syms(val), 
+                        rolled_value = round_caaqs(rolling_mean(.data[[val]], 
                                                                 width = window, 
                                                                 valid_thresh), 
                                                    digits = 1))
 
-  # All missing data gets NA, even if filled by rolling mean
-  data <- dplyr::mutate(data,
-                        rolled_value = replace(.data$rolled_value, 
-                                               is.na(!!!rlang::syms(val)), 
-                                               as.numeric(NA)))
-  # data <- 
-  #   mutate_(data, rolled_value = 
-  #           interp(~filled_rolling_mean(dt, val, interval, window, valid_thresh),
-  #                  dt = rlang::syms(dt), val = rlang::syms(val)))
   data <- dplyr::ungroup(data)
   
   # Join validity with statistic
