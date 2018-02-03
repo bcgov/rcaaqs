@@ -61,9 +61,8 @@ rolling_mean <- function(x, width = 8, thresh = 0){
 #' 
 #' @noRd
 
-n_within_window <- function(x, interval, window) {
-  full_x <- tidyr::full_seq(x, interval)
-  rolling_sum(full_x %in% x, width = window)[match(x,full_x)]
+n_within_window <- function(x, window) {
+  rolling_sum(!is.na(x), width = window)
 }
 
 #' Calculate a rolling mean, but fill in missing date values with NA.
