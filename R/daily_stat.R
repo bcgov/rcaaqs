@@ -147,6 +147,10 @@ o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL) {
   
   # Daily stat
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = get_std("o3"))
+  
+  # Remove invalid data (< 75% of hourly measures) BUT if exceeds standard, keep and flag
+  data$stat[!data$valid & !data$exceed] <- as.numeric(NA)
+  
   dplyr::rename(data, 
                 "max8hr" = "stat", 
                 "valid_max8hr" = "valid", 
@@ -170,6 +174,10 @@ no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
   
   # Daily stat
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf)
+  
+  # Remove invalid data (< 75% of hourly measures) 
+  data$stat[!data$valid] <- as.numeric(NA)
+  
   dplyr::rename(data, 
                 "max_24h" = "stat", 
                 "valid_max_24h" = "valid", 
@@ -193,6 +201,10 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
   
   # Daily stat
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70)
+  
+  # Remove invalid data (< 75% of hourly measures) BUT if exceeds standard, keep and flag
+  data$stat[!data$valid & !data$exceed] <- as.numeric(NA)
+  
   dplyr::rename(data, 
                 "max_24h" = "stat", 
                 "valid_max_24h" = "valid", 
@@ -216,8 +228,14 @@ pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL) {
   
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, 
                                stat = mean_na)
+  
+  # Remove invalid data (< 75% of hourly measures)
+  data$stat[!data$valid] <- as.numeric(NA)
+  
+  # Remove flag (not applicable to pm)
+  data$flag <- NULL
+  
   dplyr::rename(data, 
                 "avg_24h" = "stat",
-                "valid_avg_24h" = "valid",
-                "flag_avg_24hr_incomplete" = "flag")
+                "valid_avg_24h" = "valid")
 }
