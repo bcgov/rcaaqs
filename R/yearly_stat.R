@@ -17,6 +17,7 @@
 yearly_stat <- function(data, dt = "date", val = "value", 
                         by = c("ems_id", "site"), 
                         stat, stat.opts = NULL, quarter_units = "prop",
+                        pollutant_standard,
                         exclude_df, exclude_df_dt) {
   
   # Get quarter validity
@@ -44,8 +45,10 @@ yearly_stat <- function(data, dt = "date", val = "value",
                              exclude = any(exclude))
   }
   
-  # Round data
-  data$stat <- round_caaqs(data$stat, 1)
+  # Round data / Exceeds threshold
+  data <- dplyr::mutate(data, 
+                        stat = round_caaqs(.data$stat, 1),
+                        exceed = .data$stat > pollutant_standard)
   
   data <- dplyr::ungroup(data)
   dplyr::left_join(quarter_valid, data, by = c(by, "year"))
@@ -90,6 +93,7 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL,
   
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.98, na.rm = TRUE), 
+                      pollutant_standard = get_std("pm2.5_24h"),
                       exclude_df = exclude_df, 
                       exclude_df_dt = exclude_df_dt)
   
@@ -99,9 +103,6 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL,
                        data$quarter_2 > 0.6 &
                        data$quarter_3 > 0.6 &
                        data$quarter_4 > 0.6
-  standard <- get_std("pm2.5_24h")
-  data$exceed <- data$ann_98_percentile > standard
-  data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
   data$flag_year_based_on_incomplete_data <- data$exceed & !data$valid_year
   data
 }
@@ -120,6 +121,7 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
   
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.99, na.rm = TRUE), 
+                      pollutant_standard = get_std("so2_3yr"),
                       exclude_df = exclude_df, 
                       exclude_df_dt = exclude_df_dt)
   
@@ -130,9 +132,6 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
                        data$quarter_2 > 0.6 &
                        data$quarter_3 > 0.6 &
                        data$quarter_4 > 0.6
-  standard <- 70
-  data$exceed <- data$ann_99_percentile > standard
-  data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
   data$flag_year_based_on_incomplete_data <- data$exceed & !data$valid_year
   data
 }
@@ -151,6 +150,7 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
   
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.98, na.rm = TRUE), 
+                      pollutant_standard = get_std("no2_3yr"),
                       exclude_df = exclude_df, 
                       exclude_df_dt = exclude_df_dt)
   
@@ -161,7 +161,7 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
                        data$quarter_2 > 0.6 &
                        data$quarter_3 > 0.6 &
                        data$quarter_4 > 0.6
-  standard <- 70
+  
   data
 }
 
@@ -179,6 +179,7 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude
             is.numeric(data[[val]]))
   
   data <- yearly_stat(data, dt, val, by, mean_na, 
+                      pollutant_standard = get_std("pm2.5_annual"),
                       exclude_df = exclude_df, 
                       exclude_df_dt = exclude_df_dt)
   
@@ -209,6 +210,7 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
   data <- yearly_stat(data, dt, val, by, 
                       nth_highest, stat.opts = list(n = 4), 
                       quarter_units = "days", 
+                      pollutant_standard = get_std("o3"),
                       exclude_df = exclude_df, 
                       exclude_df_dt = exclude_df_dt)
   
@@ -216,9 +218,6 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
   days_in_quarter_2_and_3 <- 183 
   
   data$valid_year <- (data$quarter_2 + data$quarter_3) / days_in_quarter_2_and_3 > 0.75
-  o3_standard <- get_std("o3")
-  data$exceed <- data$max8hr > o3_standard
-  data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
   data$flag_year_based_on_incomplete_data <- data$exceed & !data$valid_year
   data
 }
@@ -240,6 +239,7 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
   
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       quarter_units = "days", 
+                      pollutant_standard = get_std("so2_1yr"),
                       exclude_df = exclude_df, 
                       exclude_df_dt = exclude_df_dt) 
   
@@ -256,9 +256,6 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
                        data$quarter_2 > 0.6 &
                        data$quarter_3 > 0.6 &
                        data$quarter_4 > 0.6
-  so2.std <- 5
-  data$exceed <- data$max_yearly > so2.std 
-  data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
   dplyr::rename(data, "avg_yearly" = "max_yearly")
 }
 
@@ -279,6 +276,7 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
   
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       quarter_units = "days", 
+                      pollutant_standard = get_std("no2_1yr"),
                       exclude_df = exclude_df, 
                       exclude_df_dt = exclude_df_dt) 
   
