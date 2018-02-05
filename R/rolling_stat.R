@@ -93,7 +93,7 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
                        window = 8, 
                        valid_thresh = 6)
   
-  
+  # Data completeness done inside 'rolling_value'
   
   dplyr::rename(data, 
                 "rolling8" = "rolled_value", 
