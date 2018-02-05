@@ -46,28 +46,6 @@ initial_check <- function(data, dt, by) {
 #' @param  dt character the column containing dates
 #' @param  val character the value column
 #' @param  by  character the columns to group by
-#' @param  thresh numeric. 
-#' @param  stat numeric. 
-#' 
-#' @return dataframe with summarised statistic
-#' 
-#' @noRd
-
-daily_stat <- function(data, val = "value", thresh, stat) {
-  # Stat calculation
-  dplyr::summarize(data,
-                   stat = stat(.data[[val]]),
-                   exceed = .data$stat > thresh)
-}
-
-#' Find the daily statistic of a value by some factor
-#'
-#' Given a dataframe with one value column, find the maximum value by some date.
-#' 
-#' @param  data Dataframe
-#' @param  dt character the column containing dates
-#' @param  val character the value column
-#' @param  by  character the columns to group by
 #' @param  pollutant_standard If this value is exceeded, then exceed column will
 #'   be true.
 #' @param  digits The number of digits that the value should be rounded to. 
@@ -100,15 +78,18 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
   # if(!is.null(exclude_df)) data <- exclude_data(data, dt, by, 
   #                                               exclude_df, exclude_df_dt, val)
   
-  # Calculate statistic
+  # Calculate statistic and round
   data <- dplyr::group_by(data, !!!rlang::syms(c(by, "date")))
-  data <- daily_stat(data, val = val, thresh = pollutant_standard, stat = stat)
+  data <- dplyr::summarize(data, 
+                           stat = round_caaqs(stat(.data[[val]]), digits),
+                           exceed = .data$stat > pollutant_standard)
+  data$exceed[is.na(data$exceed)] <- FALSE
   
   # Join together
   data <- dplyr::left_join(validity, data, by = c(by, "date"))
-  data$exceed <- ifelse(is.na(data$exceed), FALSE, data$exceed)
+  
+  # Calculate data completeness
   data$flag <- data$exceed & !data$valid # Flag for data incomplete, but used
-  data$stat <- round_caaqs(data$stat, digits)
   data
 }
 
