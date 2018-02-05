@@ -20,6 +20,20 @@ yearly_stat <- function(data, dt = "date", val = "value",
                         pollutant_standard,
                         exclude_df, exclude_df_dt) {
   
+  # Check inputs
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
+            is.numeric(data[[val]]))
+  
+  data <- dplyr::mutate(data, year = lubridate::year(!!!rlang::syms(dt)))
+  
+  # Apply grouping
+  data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year")))
+  check_groups(data, "year")
+  
   # Get quarter validity
   quarter_valid <- valid_by_quarter(data, dt, by, quarter_units)
   
@@ -33,8 +47,6 @@ yearly_stat <- function(data, dt = "date", val = "value",
   }
 
   # Calculate yearly statistic
-  data <- dplyr::mutate(data, year = lubridate::year(!!!rlang::syms(dt)))
-  data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year")))
   if(!is.null(stat.opts)) {
     data <- dplyr::summarize(data, 
                              stat = stat(!!!rlang::syms(val), !!unlist(stat.opts)),
@@ -83,14 +95,7 @@ NULL
 
 pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, 
                          exclude_df = NULL, exclude_df_dt = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            lubridate::is.Date(data[[dt]]), 
-            is.numeric(data[[val]]))
-  
+
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.98, na.rm = TRUE), 
                       pollutant_standard = get_std("pm2.5_24h"),
@@ -117,14 +122,8 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL,
 #' @rdname yearly_stat_page
 #' @export
 
-so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            lubridate::is.Date(data[[dt]]), 
-            is.numeric(data[[val]]))
+so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, 
+                          exclude_df = NULL, exclude_df_dt = NULL) {
   
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.99, na.rm = TRUE), 
@@ -150,15 +149,9 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
 #' @rdname yearly_stat_page
 #' @export
 
-no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            lubridate::is.Date(data[[dt]]), 
-            is.numeric(data[[val]]))
-  
+no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, 
+                          exclude_df = NULL, exclude_df_dt = NULL) {
+
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.98, na.rm = TRUE), 
                       pollutant_standard = get_std("no2_3yr"),
@@ -182,15 +175,9 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
 #' @rdname yearly_stat_page
 #' @export
 
-pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            lubridate::is.Date(data[[dt]]), 
-            is.numeric(data[[val]]))
-  
+pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, 
+                          exclude_df = NULL, exclude_df_dt = NULL) {
+
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       pollutant_standard = get_std("pm2.5_annual"),
                       exclude_df = exclude_df, 
@@ -215,13 +202,6 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude
 
 o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL, 
                                exclude_df = NULL, exclude_df_dt = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            lubridate::is.Date(data[[dt]]), 
-            is.numeric(data[[val]]))
 
   data <- yearly_stat(data, dt, val, by, 
                       nth_highest, stat.opts = list(n = 4), 
