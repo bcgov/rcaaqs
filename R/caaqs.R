@@ -39,22 +39,15 @@ caaq <- function(data, year, val, by, metric, n) {
   # Order by date (within grouping if applied)
   data <- dplyr::arrange(data, !!! rlang::syms(c(by, "year")))
   
-  if(n == 1) {
-    # Round caaqs metric (already completed for 3yr, but necessary for 1yr)
-    data$metric_value <- round_caaqs(data$metric_value)
-  }
+  # Added details
   if(n == 3) {
     data <- dplyr::mutate(data, 
-                        year_lag1 = dplyr::lag(.data$year),
-                        year_lag2 = dplyr::lag(.data$year, 2),
-                        min_year = dplyr::case_when(!is.na(.data$year_lag2) ~ .data$year_lag2,
-                                                    !is.na(.data$year_lag1) ~ .data$year_lag1,
-                                                    TRUE ~ .data$year),
-                        max_year = .data$year,
-                        n_max = as.integer(max(.data$n_years, na.rm = TRUE)))
-    
-    # Extract 3-year average if 3 or more years in the data, otherwise, use 2-year average
-    data <- dplyr::filter(data, .data$n_years == .data$n_max)
+                          n_years = n_val,
+                          min_year = pmin(.data$year, 
+                                          dplyr::lag(.data$year, 1),
+                                          dplyr::lag(.data$year, 2), na.rm = TRUE),
+                          max_year = .data$year,
+                          n_max = as.integer(max(.data$n_years, na.rm = TRUE)))
     
     data <- dplyr::ungroup(data)
   }
