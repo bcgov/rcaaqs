@@ -151,9 +151,7 @@ o3_caaq <- function(data, year = "year", val = "ozone_metric", by = NULL) {
 }
 
 #' @export
-so2_1yr_caaq <- function(data, year = "year", val = "ann_99_percentile", by = NULL) {
-  
-  # CHECK VALIDITY
+so2_1yr_caaq <- function(data, year = "year", val = "avg_yearly", by = NULL) {
   caaq(data, year, val, by, metric = "so2_1yr", n = 1)
 }
 
