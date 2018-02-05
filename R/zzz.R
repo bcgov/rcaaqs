@@ -84,6 +84,18 @@ check_class <- function(var, data, c) {
   if(stp) stop("Column '", var, "' is not ", c, call. = FALSE)
 }
 
+check_groups <- function(data, dt) {
+  # Check for duplicates (considering grouping)
+  dup <- dplyr::group_by(data, !!rlang::sym(dt), add = TRUE)
+  dup <- dplyr::summarize(dup, n = length(.data[[dt]]))
+  if(any(dup$n > 1)) {
+    msg <- paste0("Duplicate values in '", dt, "'.")
+    if(is.null(by)) msg <- paste0(msg, " Consider using 'by' to specify grouping argument(s).")
+    if(!is.null(by)) msg <- paste0(msg, " Consider adding additional grouping variables to 'by'.")
+    stop(msg, call. = FALSE)
+  }
+}
+
 #' Defunct functions in rcaaqs
 #' 
 #' These functions have been removed from rcaaqs.

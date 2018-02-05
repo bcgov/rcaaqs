@@ -30,7 +30,10 @@ caaq <- function(data, year, val, by, metric, n) {
   # Group data if supplied
   if(!is.null(by)) {
     if(n == 1) message("Grouping doesn't apply to single year caaqs. 'by' ignored.")
-    if(n == 3) data <- dplyr::group_by_if(data, names(data) %in% by)
+    if(n == 3) {
+      data <- dplyr::group_by_if(data, names(data) %in% by)
+      check_groups(data, year)
+    }
   }
   
   # Order by date (within grouping if applied)
@@ -41,18 +44,6 @@ caaq <- function(data, year, val, by, metric, n) {
     data$metric_value <- round_caaqs(data$metric_value)
   }
   if(n == 3) {
-    
-    # Check for duplicates (considering grouping)
-    dup <- dplyr::group_by(data, .data$year, add = TRUE)
-    dup <- dplyr::summarize(dup, n = length(.data$year))
-    if(any(dup$n > 1)) {
-      msg <- paste0("Duplicate values in '", year, "'.")
-      if(is.null(by)) msg <- paste0(msg, " Consider using 'by' to specify grouping argument(s).")
-      if(!is.null(by)) msg <- paste0(msg, " Consider adding additional grouping variables to 'by'.")
-      stop(msg, call. = FALSE)
-    }
-
-    # Calculate min/max and total number of years in rolling averages
     data <- dplyr::mutate(data, 
                         year_lag1 = dplyr::lag(.data$year),
                         year_lag2 = dplyr::lag(.data$year, 2),

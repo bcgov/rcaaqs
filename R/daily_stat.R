@@ -73,10 +73,12 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
   # Add dates
   data <- dplyr::mutate(data, date = time_to_date(!!!rlang::syms(dt)))
   
-  # Validity checks
-  validity <- dplyr::group_by(data, !!!rlang::syms(c(by, "date")))
+  # Add grouping
+  data <- dplyr::group_by(data, !!!rlang::syms(c(by, "date")))
+  check_groups(data, "date")
   
-  validity <- dplyr::summarize(validity,
+  # Validity checks
+  validity <- dplyr::summarize(data,
                                n_readings = length(stats::na.omit(!!!rlang::syms(val))),
                                valid = .data$n_readings >= n_readings_min)
   
@@ -85,7 +87,6 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
   #                                               exclude_df, exclude_df_dt, val)
   
   # Calculate statistic and round
-  data <- dplyr::group_by(data, !!!rlang::syms(c(by, "date")))
   data <- dplyr::summarize(data, 
                            stat = round_caaqs(stat(.data[[val]]), digits),
                            exceed = .data$stat > pollutant_standard)
