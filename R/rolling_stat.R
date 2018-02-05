@@ -20,7 +20,19 @@
 rolling_value <- function(data, dt, val, interval, by, window, valid_thresh, 
                           flag_num = NULL) {
   
-  if (!is.null(by)) data <- dplyr::group_by(data, !!!rlang::syms(by))
+  # Check inputs
+  stopifnot(is.data.frame(data), 
+            is.character(dt),
+            is.character(val),
+            dt %in% names(data),
+            val %in% names(data),
+            is.numeric(data[[val]]))
+  
+  # Apply grouping
+  if (!is.null(by)) {
+    data <- dplyr::group_by(data, !!!rlang::syms(by))
+    check_groups(data, dt)
+  }
 
   # Determine validity
   validity <- dplyr::mutate(data, n_val = n_within_window(.data[[val]], window))
@@ -97,14 +109,6 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
 #' @export
 
 so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            is.numeric(data[[dt]]), 
-            is.numeric(data[[val]]))
-
   data <- data[data$valid_year | data$exceed,]
   data <- rolling_value(data,
                         dt = dt,
@@ -121,14 +125,6 @@ so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = 
 #' @export
 
 no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            is.numeric(data[[dt]]), 
-            is.numeric(data[[val]]))
-
   data <- data[data$valid_year,]
   data <- rolling_value(data,
                         dt = dt,
@@ -145,14 +141,6 @@ no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = 
 #' @export
 
 pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            is.numeric(data[[dt]]), 
-            is.numeric(data[[val]]))
-
   data <- data[data$valid_year,]
   data <- rolling_value(data,
                         dt = dt,
@@ -171,14 +159,6 @@ pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = N
 #' @export
 
 o3_three_yr_avg <- function(data, dt = "year", val = "max8hr", by = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            is.numeric(data[[dt]]), 
-            is.numeric(data[[val]]))
-
   data <- data[data$valid_year | data$flag_year_based_on_incomplete_data,]
   data <- rolling_value(data,
                         dt = dt,
