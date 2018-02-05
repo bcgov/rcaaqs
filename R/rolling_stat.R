@@ -17,8 +17,7 @@
 #' 
 #' @noRd
 
-rolling_value <- function(data, dt, val, interval, by, window, valid_thresh, 
-                          flag_num = NULL) {
+rolling_value <- function(data, dt, val, interval, by, window, valid_thresh) {
   
   # Check inputs
   stopifnot(is.data.frame(data), 
@@ -35,16 +34,11 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh,
   }
 
   # Determine validity
-  validity <- dplyr::mutate(data, n_val = n_within_window(.data[[val]], window))
+  validity <- dplyr::mutate(data, 
+                            n_val = n_within_window(.data[[val]], window))
   validity$valid <- validity$n_val >= valid_thresh
-  valid_cols <- c(by, dt, "valid")
-
-  if (!is.null(flag_num)) {
-    validity$flag <- validity$n_val %in% flag_num
-    valid_cols <- c(valid_cols, "n_val", "flag")
-  }
-  
-  validity <- validity[valid_cols]
+  validity$flag <- validity$valid & validity$n_val != window
+  validity <- validity[c(by, dt, "n_val", "valid", "flag")]
   validity <- dplyr::ungroup(validity)
   
   # Calcuate statistic
@@ -98,11 +92,10 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
                        window = 8, 
                        valid_thresh = 6)
   
-  # Data completeness done inside 'rolling_value'
+  # Data completeness performed inside 'rolling_value' (assign NA if < 6 hours)
   
   dplyr::rename(data, 
-                "rolling8" = "rolled_value", 
-                "flag_valid_8hr" = "valid")
+                "rolling8" = "rolled_value")
 }
 
 #' @rdname rolling_stat_page
@@ -116,9 +109,13 @@ so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = 
                         interval = 1,
                         by = by,
                         window = 3,
-                        valid_thresh = 2,
-                        flag_num = 2)
-  dplyr::rename(data, "so2_metric" = "rolled_value")
+                        valid_thresh = 2)
+  
+  # Data completeness performed inside 'rolling_value' (assign NA if < 2 years)
+  
+  dplyr::rename(data, 
+                "so2_metric" = "rolled_value",
+                "flag_two_of_three_years" = "flag")
 }
 
 #' @rdname rolling_stat_page
@@ -132,9 +129,13 @@ no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = 
                         interval = 1,
                         by = by,
                         window = 3,
-                        valid_thresh = 2,
-                        flag_num = 2)
-  dplyr::rename(data, "no2_metric" = "rolled_value")
+                        valid_thresh = 2)
+  
+  # Data completeness performed inside 'rolling_value' (assign NA if < 2 years)
+  
+  dplyr::rename(data, 
+                "no2_metric" = "rolled_value",
+                "flag_two_of_three_years" = "flag")
 }
 
 #' @rdname rolling_stat_page
@@ -148,11 +149,13 @@ pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = N
                         interval = 1,
                         by = by,
                         window = 3,
-                        valid_thresh = 2,
-                        flag_num = 2)
-  dplyr::rename(data,
-          "pm_metric" = "rolled_value",
-          "flag_two_of_three_years" = "flag")
+                        valid_thresh = 2)
+  
+  # Data completeness performed inside 'rolling_value' (assign NA if < 2 years)
+  
+  dplyr::rename(data, 
+                "pm_metric" = "rolled_value",
+                "flag_two_of_three_years" = "flag")
 }
 
 #' @rdname rolling_stat_page
@@ -166,10 +169,12 @@ o3_three_yr_avg <- function(data, dt = "year", val = "max8hr", by = NULL) {
                         interval = 1,
                         by = by,
                         window = 3,
-                        valid_thresh = 2,
-                        flag_num = 2) 
-  dplyr::rename(data,
-          "ozone_metric" = "rolled_value",
-          "flag_two_of_three_years" = "flag")
+                        valid_thresh = 2) 
+  
+  # Data completeness performed inside 'rolling_value' (assign NA if < 2 years)
+  
+  dplyr::rename(data, 
+                "ozone_metric" = "rolled_value",
+                "flag_two_of_three_years" = "flag")
 }
 

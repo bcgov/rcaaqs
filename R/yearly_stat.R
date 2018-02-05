@@ -50,11 +50,13 @@ yearly_stat <- function(data, dt = "date", val = "value",
   if(!is.null(stat.opts)) {
     data <- dplyr::summarize(data, 
                              stat = stat(!!!rlang::syms(val), !!unlist(stat.opts)),
-                             exclude = any(exclude))
+                             exclude = any(exclude),
+                             flag_daily_incomplete = any(flag_daily_incomplete))
   } else {
     data <- dplyr::summarize(data, 
                              stat = stat(!!!rlang::syms(val)),
-                             exclude = any(exclude))
+                             exclude = any(exclude),
+                             flag_daily_incomplete = any(flag_daily_incomplete))
   }
   
   # Round data / Exceeds threshold
@@ -114,7 +116,7 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL,
   # Remove data which invalid - Flag invalid data which exceeds (thus kept)
   data$ann_98_percentile[!data$valid_year] <- NA
   data$ann_98_percentile[data$valid_year & !data$valid_quarters & !data$exceed] <- NA
-  data$flag_year_based_on_incomplete_data <- data$valid_year & !data$valid_quarters & data$exceed
+  data$flag_yearly_incomplete <- data$valid_year & !data$valid_quarters & data$exceed
   
   data
 }
@@ -141,7 +143,7 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL,
                        data$quarter_4 >= 0.6
   
   data$ann_99_percentile[!data$valid_year & !data$exceed] <- NA
-  data$flag_year_based_on_incomplete_data <- !data$valid_year & data$exceed
+  data$flag_yearly_incomplete <- !data$valid_year & data$exceed
   
   data
 }
@@ -167,6 +169,8 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL,
                      data$quarter_4 >= 0.6
   
   data$ann_98_percentile[!data$valid_year] <- NA
+  
+  # No yearly incomplete flags for NO2
   
   data
 }
@@ -194,6 +198,9 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL,
   
   # Remove data which invalid
   data$ann_avg[!(data$valid_year & data$valid_quarters)] <- NA
+  
+  # No yearly incomplete flags for annual PM2.5
+  
   data
 }
 
@@ -218,7 +225,7 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
   
   # Remove data which invalid - Flag invalid data which exceeds (thus kept)
   data$max8hr[!data$valid_year & !data$exceed] <- NA
-  data$flag_year_based_on_incomplete_data <- !data$valid_year & data$exceed
+  data$flag_yearly_incomplete <- !data$valid_year & data$exceed
   
   data
 }
@@ -255,7 +262,7 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
                        data$quarter_4 >= 0.6
   
   data$avg_yearly[!data$valid_year & !data$exceed] <- NA
-  data$flag_year_based_on_incomplete_data <- !data$valid_year & data$exceed
+  data$flag_yearly_incomplete <- !data$valid_year & data$exceed
   
   data
 }
@@ -293,6 +300,8 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
                        data$quarter_4 >= 0.6
   
   data$avg_yearly[!data$valid_year] <- NA
+  
+  # No yearly incomplete flags for hourly NO2
   
   data
 }

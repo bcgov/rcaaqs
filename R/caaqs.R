@@ -59,18 +59,20 @@ caaq <- function(data, year, val, by, metric, n) {
     data <- dplyr::ungroup(data)
   }
 
-  # Consider flagging data based on incomplete?
-  
-  ## Determine station achievements
+  # Determine station achievements
   data$caaqs <- cut_achievement(data$metric_value, metric, output = "labels")
   data$mgmt <- cut_management(data$metric_value, metric)
-  data$metric = metric
-  data$caaq_year <- data$year
+  data$metric <- metric
   
   # Clean up
-  data <- dplyr::select(data, dplyr::one_of(by, "caaq_year", "min_year", 
-                                        "max_year", "n_years", "metric", 
-                                        "metric_value", "caaqs", "mgmt"))
+  data <- dplyr::rename(data, "caaq_year" = "year")
+  cols_keep <- c(by, "caaq_year", "min_year", "max_year", "n_years", "metric", 
+                 "metric_value", "caaqs", "mgmt",
+                 "flag_daily_incomplete", "flag_yearly_incomplete",
+                 "flag_two_of_three_years")
+  cols_keep <- cols_keep[cols_keep %in% names(data)]
+  
+  data <- dplyr::select(data, cols_keep)
   
   data
 }
