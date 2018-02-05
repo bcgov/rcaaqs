@@ -98,12 +98,19 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL,
                       exclude_df_dt = exclude_df_dt)
   
   data <- dplyr::rename(data, "ann_98_percentile" = "stat")
-  data$valid_year <- data$valid_in_year > 0.75 &
-                       data$quarter_1 > 0.6 &
-                       data$quarter_2 > 0.6 &
-                       data$quarter_3 > 0.6 &
-                       data$quarter_4 > 0.6
-  data$flag_year_based_on_incomplete_data <- data$exceed & !data$valid_year
+  
+  # Determine data completeness
+  data$valid_year <- data$valid_in_year >= 0.75
+  data$valid_quarters <- data$quarter_1 >= 0.6 &
+                         data$quarter_2 >= 0.6 &
+                         data$quarter_3 >= 0.6 &
+                         data$quarter_4 >= 0.6
+  
+  # Remove data which invalid - Flag invalid data which exceeds (thus kept)
+  data$ann_98_percentile[!data$valid_year] <- NA
+  data$ann_98_percentile[data$valid_year & !data$valid_quarters & !data$exceed] <- NA
+  data$flag_year_based_on_incomplete_data <- data$valid_year & !data$valid_quarters & data$exceed
+  
   data
 }
 
@@ -127,12 +134,16 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
   
   data <- dplyr::rename(data, "ann_99_percentile" = "stat")
   
-  data$valid_year <- data$valid_in_year > 0.75 &
-                       data$quarter_1 > 0.6 &
-                       data$quarter_2 > 0.6 &
-                       data$quarter_3 > 0.6 &
-                       data$quarter_4 > 0.6
-  data$flag_year_based_on_incomplete_data <- data$exceed & !data$valid_year
+  # Determine data completeness
+  data$valid_year <- data$valid_in_year >= 0.75 &
+                       data$quarter_1 >= 0.6 &
+                       data$quarter_2 >= 0.6 &
+                       data$quarter_3 >= 0.6 &
+                       data$quarter_4 >= 0.6
+  
+  data$ann_99_percentile[!data$valid_year & !data$exceed] <- NA
+  data$flag_year_based_on_incomplete_data <- !data$valid_year & data$exceed
+  
   data
 }
 
@@ -156,11 +167,13 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, exclude
   
   data <- dplyr::rename(data, "ann_98_percentile" = "stat")
   
-  data$valid_year <- data$valid_in_year > 0.75 &
-                       data$quarter_1 > 0.6 &
-                       data$quarter_2 > 0.6 &
-                       data$quarter_3 > 0.6 &
-                       data$quarter_4 > 0.6
+  data$valid_year <- data$valid_in_year >= 0.75 &
+                     data$quarter_1 >= 0.6 &
+                     data$quarter_2 >= 0.6 &
+                     data$quarter_3 >= 0.6 &
+                     data$quarter_4 >= 0.6
+  
+  data$ann_98_percentile[!data$valid_year] <- NA
   
   data
 }
@@ -185,11 +198,15 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, exclude
   
   data <- dplyr::rename(data, "ann_avg" = "stat")
   
-  data$valid_year <- data$valid_in_year > 0.75 &
-                       data$quarter_1 > 0.6 &
-                       data$quarter_2 > 0.6 &
-                       data$quarter_3 > 0.6 &
-                       data$quarter_4 > 0.6
+  # Determine data completeness
+  data$valid_year <- data$valid_in_year >= 0.75
+  data$valid_quarters <- data$quarter_1 >= 0.6 &
+                         data$quarter_2 >= 0.6 &
+                         data$quarter_3 >= 0.6 &
+                         data$quarter_4 >= 0.6
+  
+  # Remove data which invalid
+  data$ann_avg[!(data$valid_year & data$valid_quarters)] <- NA
   data
 }
 
@@ -205,8 +222,7 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
             val %in% names(data),
             lubridate::is.Date(data[[dt]]), 
             is.numeric(data[[val]]))
-  
-  data <- data[data$valid_max8hr | data$flag_max8hr_incomplete,]
+
   data <- yearly_stat(data, dt, val, by, 
                       nth_highest, stat.opts = list(n = 4), 
                       quarter_units = "days", 
@@ -215,10 +231,15 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
                       exclude_df_dt = exclude_df_dt)
   
   data <- dplyr::rename(data, "max8hr" = "stat")
-  days_in_quarter_2_and_3 <- 183 
   
+  # Determine data completeness
+  days_in_quarter_2_and_3 <- 183
   data$valid_year <- (data$quarter_2 + data$quarter_3) / days_in_quarter_2_and_3 > 0.75
-  data$flag_year_based_on_incomplete_data <- data$exceed & !data$valid_year
+  
+  # Remove data which invalid - Flag invalid data which exceeds (thus kept)
+  data$max8hr[!data$valid_year & !data$exceed] <- NA
+  data$flag_year_based_on_incomplete_data <- !data$valid_year & data$exceed
+  
   data
 }
 
@@ -243,20 +264,25 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
                       exclude_df = exclude_df, 
                       exclude_df_dt = exclude_df_dt) 
   
-  data <- dplyr::rename(data, "max_yearly" = "stat")
+  data <- dplyr::rename(data, "avg_yearly" = "stat")
   
+  # Determine data completeness
   data$valid_in_year <- data$valid_in_year / (days_in_year(data$year) * 24)
                           
   for (q in 1:4) {
     data[[paste0("quarter_",q)]] <- data[[paste0("quarter_",q)]] / (days_in_quarter(q, data$year) * 24)
   }
   
-  data$valid_year <- data$valid_in_year > 0.75 &
-                       data$quarter_1 > 0.6 &
-                       data$quarter_2 > 0.6 &
-                       data$quarter_3 > 0.6 &
-                       data$quarter_4 > 0.6
-  dplyr::rename(data, "avg_yearly" = "max_yearly")
+  data$valid_year <- data$valid_in_year >= 0.75 &
+                       data$quarter_1 >= 0.6 &
+                       data$quarter_2 >= 0.6 &
+                       data$quarter_3 >= 0.6 &
+                       data$quarter_4 >= 0.6
+  
+  data$avg_yearly[!data$valid_year & !data$exceed] <- NA
+  data$flag_year_based_on_incomplete_data <- !data$valid_year & data$exceed
+  
+  data
 }
 
 #' @rdname yearly_stat_page
@@ -280,20 +306,25 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
                       exclude_df = exclude_df, 
                       exclude_df_dt = exclude_df_dt) 
   
-  data <- dplyr::rename(data, "max_yearly" = "stat")
+  data <- dplyr::rename(data, "avg_yearly" = "stat")
   
+  # Determine data completeness
   data$valid_in_year <- data$valid_in_year / (days_in_year(data$year) * 24)
+  
   for (q in 1:4) {
     data[[paste0("quarter_",q)]] <- 
       data[[paste0("quarter_",q)]] / (days_in_quarter(q, data$year) * 24)
   }
-  data$valid_year <- data$valid_in_year > 0.75 &
-                       data$quarter_1 > 0.6 &
-                       data$quarter_2 > 0.6 &
-                       data$quarter_3 > 0.6 &
-                       data$quarter_4 > 0.6
   
-  dplyr::rename(data, "avg_yearly" = "max_yearly")
+  data$valid_year <- data$valid_in_year >= 0.75 &
+                       data$quarter_1 >= 0.6 &
+                       data$quarter_2 >= 0.6 &
+                       data$quarter_3 >= 0.6 &
+                       data$quarter_4 >= 0.6
+  
+  data$avg_yearly[!data$valid_year] <- NA
+  
+  data
 }
 
 #' Return the rank that should be used to determine the 98th percentile given a 
