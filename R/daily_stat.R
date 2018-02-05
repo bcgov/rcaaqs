@@ -15,8 +15,14 @@
 
 # Initial data check - When user first passes raw data to rcaaqs, check for
 # obvious problems
-initial_check <- function(data, dt, by) {
+initial_check <- function(data, dt, val, by) {
 
+  # Check inputs
+  if(!is.data.frame(data)) stop("'data' must be a data frame", call. = FALSE)
+  check_vars(list(by, dt, val), data)
+  check_class(dt, data, "POSIXct")
+  check_class(val, data, "numeric")
+  
   data <- dplyr::arrange(data, !!!rlang::syms(c(by, "date_time")))
   
   # Confirm that data is hourly sequential with no gaps
@@ -142,16 +148,9 @@ o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL) {
 #' @export
 
 no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            lubridate::is.POSIXt(data[[dt]]), 
-            is.numeric(data[[val]]))
-  
+
   # Initial data checks for first time raw data is passed to rcaaqs
-  data <- initial_check(data, dt = dt, by = by)
+  data <- initial_check(data, dt = dt, val = val, by = by)
   
   # Daily stat
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf)
@@ -169,16 +168,9 @@ no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
 #' @export
 
 so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            lubridate::is.POSIXt(data[[dt]]), 
-            is.numeric(data[[val]]))
-  
+
   # Initial data checks for first time raw data is passed to rcaaqs
-  data <- initial_check(data, dt = dt, by = by)
+  data <- initial_check(data, dt = dt, val = val, by = by)
   
   # Daily stat
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70)
@@ -196,16 +188,9 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
 #' @export
 
 pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            lubridate::is.POSIXt(data[[dt]]), 
-            is.numeric(data[[val]]))
-  
+
   # Initial data checks for first time raw data is passed to rcaaqs
-  data <- initial_check(data, dt = dt, by = by)
+  data <- initial_check(data, dt = dt, val = val, by = by)
   
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf, 
                                stat = mean_na)

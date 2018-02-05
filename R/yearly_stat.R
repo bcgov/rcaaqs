@@ -246,17 +246,12 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
 #' @rdname yearly_stat_page
 #' @export
 
-so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            lubridate::is.POSIXt(data[[dt]]), 
-            is.numeric(data[[val]]))
-  
+so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", 
+                                   by = NULL, exclude_df = NULL, 
+                                   exclude_df_dt = NULL) {
+
   # Initial data checks for first time raw data is passed to rcaaqs
-  data <- initial_check(data, dt = dt, by = by)
+  data <- initial_check(data, dt = dt, val = val, by = by)
   
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       quarter_units = "days", 
@@ -288,17 +283,12 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = N
 #' @rdname yearly_stat_page
 #' @export
 
-no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
-  stopifnot(is.data.frame(data), 
-            is.character(dt),
-            is.character(val),
-            dt %in% names(data),
-            val %in% names(data),
-            lubridate::is.POSIXt(data[[dt]]), 
-            is.numeric(data[[val]]))
-  
+no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", 
+                                   by = NULL, exclude_df = NULL, 
+                                   exclude_df_dt = NULL) {
+
   # Initial data checks for first time raw data is passed to rcaaqs
-  data <- initial_check(data, dt = dt, by = by)
+  data <- initial_check(data, dt = dt, val = val, by = by)
   
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       quarter_units = "days", 
