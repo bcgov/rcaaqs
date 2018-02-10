@@ -74,10 +74,10 @@ check_vars <- function(vars, data, name_data = "data") {
 
 check_class <- function(var, data, c) {
   stp <- FALSE
-  if(c == "numeric") {
-    if(mode(data[[var]]) != c) stp <- TRUE
-  } else if (c == "POSIXct") {
+  if (c == "POSIXct") {
     if(!lubridate::is.POSIXct(data[[var]])) stp <- TRUE
+  } else if(c == "numeric") {
+    if(!is.numeric(data[[var]])) stp <- TRUE
   } else {
     if(!any(class(data[[var]]) == c)) stp <- TRUE
   }
