@@ -13,7 +13,7 @@
 # the License.
 
 #' @importFrom rlang .data
-caaq <- function(data, year, val, by, metric, n) {
+caaq <- function(data, year = "year", val, by, metric, n) {
 
   # Check inputs
   check_vars(list(year, val, by), data)
@@ -29,7 +29,6 @@ caaq <- function(data, year, val, by, metric, n) {
   
   # Group data if supplied
   if(!is.null(by)) {
-    if(n == 1) message("Grouping doesn't apply to single year caaqs. 'by' ignored.")
     if(n == 3) {
       data <- dplyr::group_by_if(data, names(data) %in% by)
       check_groups(data, year)
@@ -89,9 +88,23 @@ caaq <- function(data, year, val, by, metric, n) {
 #'   metrics, achievement levels and management levels.
 #'   
 #' @export
-pm_24h_caaq <- function(data, year = "year", val = "pm_metric",
-                        by = NULL) {
-  caaq(data, year, val, by, metric = "pm2.5_24h", n = 3)
+pm_24h_caaq <- function(data, dt = "date_time", val = "value",
+                        by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
+                        quiet = FALSE) {
+  
+  if(!quiet) message("Calculating PM 2.5 daily average")
+  daily <- pm_daily_avg(data, dt = dt, val = val, by = by)
+  
+  message("Calculating PM 2.5 annual 98th percentile")
+  yearly <- pm_yearly_98(daily, by = by, 
+                         exclude_df = exclude_df, 
+                         exclude_df_dt = exclude_df_dt, 
+                         quiet = quiet)
+  
+  if(!quiet) message("Calculating PM 2.5 24h CAAQ metric")
+  yearly_roll <- pm_three_yr_avg(yearly, val = "ann_98_percentile", by = by)
+  
+  caaq(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_24h", n = 3)
 }
 
 #' Calculate the PM2.5 annaul CAAQ metric
@@ -112,9 +125,22 @@ pm_24h_caaq <- function(data, year = "year", val = "pm_metric",
 #' @return A data frame arranged by grouping variables (if present) with caaq
 #'   metrics, achievement levels and management levels.
 #' @export
-pm_annual_caaq <- function(data, year = "year", val = "pm_metric",
-                         by = NULL) {
-  caaq(data, year, val, by, metric = "pm2.5_annual", n = 3)
+pm_annual_caaq <- function(data, dt = "date_time", val = "value",
+                           by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
+                           quiet = FALSE) {
+  
+  if(!quiet) message("Calculating PM 2.5 daily average")
+  daily <- pm_daily_avg(data, dt = dt, val = val, by = by)
+  
+  if(!quiet) message("Calculating PM 2.5 annual average ")
+  yearly <- pm_yearly_avg(daily, by = by, 
+                          exclude_df = exclude_df, 
+                          exclude_df_dt = exclude_df_dt, 
+                          quiet = quiet)
+  
+  if(!quiet) message("Calculating PM 2.5 annual CAAQ metric")
+  yearly_roll <- pm_three_yr_avg(yearly, val = "ann_avg", by = by)
+  caaq(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_annual", n = 3)
 }
 
 #' Calculate the Ozone CAAQ metric
@@ -146,26 +172,86 @@ pm_annual_caaq <- function(data, year = "year", val = "pm_metric",
 #' o3_final_caaq <- o3_caaq(o3_avg, by = c("ems_id", "site"))
 #' 
 #' @export
-o3_caaq <- function(data, year = "year", val = "ozone_metric", by = NULL) {
-  caaq(data, year, val, by, metric = "o3", n = 3)
+o3_caaq <- function(data, dt = "date_time", val = "value",
+                    by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
+                    quiet = FALSE) {
+  
+  if(!quiet) message("Calculating O3 daily maximum of 8h average")
+  daily8 <- o3_rolling_8hr_avg(data, dt = dt, val = val, by = by)
+  daily <- o3_daily_max(daily8, by = by)
+  
+  if(!quiet) message("Calculating O3 annual 4th highest")
+  yearly <- o3_ann_4th_highest(daily, by = by, 
+                               exclude_df = exclude_df, 
+                               exclude_df_dt = exclude_df_dt, 
+                               quiet = quiet)
+  
+  if(!quiet) message("Calculating O3 CAAQ metric")
+  yearly_roll <- o3_three_yr_avg(yearly, by = by)
+  caaq(yearly_roll, val = "ozone_metric", by = by, metric = "o3", n = 3)
 }
 
 #' @export
-so2_1yr_caaq <- function(data, year = "year", val = "avg_yearly", by = NULL) {
-  caaq(data, year, val, by, metric = "so2_1yr", n = 1)
+so2_1yr_caaq <- function(data, dt = "date_time", val = "value",
+                         by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
+                         quiet = FALSE) {
+  
+  if(!quiet) message("Calculating SO2 annual average CAAQ metric")
+  yearly <- so2_avg_hourly_by_year(data, dt = dt, val = val, by = by, 
+                                   exclude_df = exclude_df, 
+                                   exclude_df_dt = exclude_df_dt, 
+                                   quiet = quiet)
+  
+  caaq(yearly, val = "avg_yearly", by = by, metric = "so2_1yr", n = 1)
 }
 
 #' @export
-so2_3yr_caaq <- function(data, year = "year", val = "so2_metric", by = NULL) {
-  caaq(data, year, val, by, metric = "so2_3yr", n = 3)
+so2_3yr_caaq <- function(data, dt = "date_time", val = "value",
+                         by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
+                         quiet = FALSE) {
+  
+  if(!quiet) message("Calculating SO2 daily maximum")
+  daily <- so2_daily_max(data, dt = dt, val = val, by = by)
+  
+  if(!quiet) message("Calculating SO2 annual 99th percentile")
+  yearly <- so2_yearly_99(daily, by = by, 
+                          exclude_df = exclude_df, 
+                          exclude_df_dt = exclude_df_dt, 
+                          quiet = quiet)
+  
+  if(!quiet) message("Calculating SO2 1h CAAQ metric")
+  yearly_roll <- so2_three_yr_avg(yearly, by = by)
+  caaq(yearly_roll, val = "so2_metric", by = by, metric = "so2_3yr", n = 3)
 }
 
 #' @export
-no2_1yr_caaq <- function(data, year = "year", val = "avg_yearly", by = NULL) {
-  caaq(data, year, val, by, metric = "no2_1yr", n = 1)
+no2_1yr_caaq <- function(data, dt = "date_time", val = "value",
+                         by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
+                         quiet = FALSE) {
+  
+  if(!quiet) message("Calculating NO2 annual average CAAQ metric")
+  yearly <- no2_avg_hourly_by_year(data, dt = dt, val = val, by = by, 
+                                   exclude_df = exclude_df, 
+                                   exclude_df_dt = exclude_df_dt, 
+                                   quiet = quiet)
+  caaq(yearly, val = "avg_yearly", by = by, metric = "no2_1yr", n = 1)
 }
 
 #' @export
-no2_3yr_caaq <- function(data, year = "year", val = "no2_metric", by = NULL) {
-  caaq(data, year, val, by, metric = "no2_3yr", n = 3)
+no2_3yr_caaq <- function(data, dt = "date_time", val = "value",
+                         by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
+                         quiet = FALSE) {
+  
+  if(!quiet) message("Calculating NO2 daily maximum")
+  daily <- no2_daily_max(data, dt = dt, val = val, by = by)
+  
+  if(!quiet) message("Calculating NO2 annual 98th percentile")
+  yearly <- no2_yearly_98(daily, by = by, 
+                          exclude_df = exclude_df, 
+                          exclude_df_dt = exclude_df_dt, 
+                          quiet = quiet)
+  
+  if(!quiet) message("Calculating NO2 1h CAAQ metric")
+  yearly_roll <- no2_three_yr_avg(yearly, by = by)
+  caaq(yearly_roll, val = "no2_metric", by = by, metric = "no2_3yr", n = 3)
 }
