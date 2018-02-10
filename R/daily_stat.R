@@ -27,13 +27,14 @@ initial_check <- function(data, dt, val, by) {
   
   # Confirm that data is hourly sequential with no gaps
   data <- dplyr::group_by(data, !!!rlang::syms(by))
+  check_groups(data, dt)
   data <- dplyr::mutate(data, diff = difftime(date_time, 
                                               dplyr::lag(date_time), 
                                               units = "hours"))
   
   # Fill out gaps with NA
   if(any(data$diff < 1, na.rm = TRUE)) {
-    stop("data resolution is less than hourly, summarize to hourly first", 
+    stop("Data resolution is less than hourly, summarize to hourly first", 
          call. = FALSE)
   } else if (any(data$diff > 1, na.rm = TRUE)) {
     data <- tidyr::complete(data,
