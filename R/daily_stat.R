@@ -148,7 +148,7 @@ o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL) {
 #' @rdname daily_stat_page
 #' @export
 
-no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL) {
 
   # Initial data checks for first time raw data is passed to rcaaqs
   data <- initial_check(data, dt = dt, val = val, by = by)
@@ -167,7 +167,7 @@ no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, excl
 #' @rdname daily_stat_page
 #' @export
 
-so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL, exclude_df = NULL, exclude_df_dt = NULL) {
+so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL) {
 
   # Initial data checks for first time raw data is passed to rcaaqs
   data <- initial_check(data, dt = dt, val = val, by = by)
