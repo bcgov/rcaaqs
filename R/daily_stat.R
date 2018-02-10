@@ -76,7 +76,7 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
   
   # Add grouping
   data <- dplyr::group_by(data, !!!rlang::syms(c(by, "date")))
-  check_groups(data, "date")
+  check_groups(data, dt)
   
   # Validity checks
   validity <- dplyr::summarize(data,
