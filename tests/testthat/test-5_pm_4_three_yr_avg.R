@@ -36,7 +36,7 @@ test_that("has correct classes", {
     expect_is(r$quarter_3, "numeric")
     expect_is(r$quarter_4, "numeric")
     expect_is(r$ann_avg, "numeric")
-    expect_is(r$exclude, "logical")
+    expect_is(r$excluded, "logical")
     expect_is(r$exceed, "logical")
     expect_is(r$flag_daily_incomplete, "logical")
     expect_is(r$pm_metric, "numeric")

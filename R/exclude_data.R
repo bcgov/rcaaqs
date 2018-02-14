@@ -19,9 +19,9 @@
 #' @param  data Dataframe
 #' @param  dt character the column containing date-times
 #' @param  by  an optional character vector specifying the columns to join on.
-#' @param  exclusion_df  the data.frame that has all the columns in the by 
+#' @param  exclude_df  the data.frame that has all the columns in the by 
 #'   parameter, in addition exactly one or two date columns.
-#' @param  exclusion_date_cols a character vector with exactly one or two date
+#' @param  exclude_df_dt a character vector with exactly one or two date
 #'   columns.
 #' 
 #' @return dataframe with the specified dates or date ranges excluded.
@@ -29,44 +29,29 @@
 #' @noRd
 
 exclude_data <- function(data, dt, by, 
-                         exclusion_df, exclusion_date_cols, 
+                         exclude_df, exclude_df_dt, 
                          val, quiet = FALSE) {
-  if (!all(by %in% names(exclusion_df))) 
-    stop(paste0(setdiff(by, names(exclusion_df)), " not found in exclusion data"))
-  if (!all(by %in% names(data))) 
-    stop(paste0(setdiff(by, names(data)), " not found in sample data"))
-  if(missing(dt))
-    stop("dt not specified")
-  if(length(dt) != 1)
-    stop("dt must be a character vector of length one specifying the column name")
-  
-  if(!lubridate::is.POSIXt(data[[dt]]) & !lubridate::is.Date(data[[dt]]))
-    stop(paste0(dt, " is not a date or time column"))
-  
-  if(missing(exclusion_date_cols) || 
-     !(length(exclusion_date_cols) %in% c(1,2))) 
-    stop("Length of exclusion_date_cols must be one or two")
-  
-  if(!all(exclusion_date_cols %in% names(exclusion_df))) {
-    stop("exclusion_date_cols must be column names in exclusion data")
-  }
-  
-  if(!lubridate::is.Date(exclusion_df[[exclusion_date_cols[1]]])) {
-    stop("Can only exclude whole days (not specific hours)")
-  }
-  
+
   if(!quiet) message("  Excluding data...")
   
-  if(length(exclusion_date_cols) == 1) {
-    exclusion_date_col <- exclusion_date_cols
+  exclude_df <- dplyr::ungroup(exclude_df)
+  
+  if(!is.null(by)) {
+    exclude_df <- dplyr::mutate_at(exclude_df, by, as.character)
+  }
+  
+  
+  if(length(exclude_df_dt) == 1) {
+    exclusion_date_col <- exclude_df_dt
     # If date_time exclusions, but date data, ambiguity results.
-    if(lubridate::is.POSIXt(exclusion_df[[exclusion_date_col]]) & 
-       lubridate::is.Date(data[[dt]])) 
+    if(lubridate::is.POSIXt(exclude_df[[exclusion_date_col]]) & 
+       lubridate::is.Date(data[[dt]])) {
       stop("Exclusion column is a time, but the data column is a date")
+    }
     # If date exclusions, but date_time data, need to convert
     # Need to find a new name for the column.
     dt_new_set <- FALSE
-    if(lubridate::is.Date(exclusion_df[[exclusion_date_col]]) & 
+    if(lubridate::is.Date(exclude_df[[exclusion_date_col]]) & 
        lubridate::is.POSIXt(data[[dt]])) {
       dt_new <- find_new_name("date", names(data))
       data[[dt_new]] <- time_to_date(data[[dt]])
@@ -75,22 +60,22 @@ exclude_data <- function(data, dt, by,
     by_vector <- c(by, stats::setNames(exclusion_date_col, 
                                 if (dt_new_set) dt_new else dt))
     
-    exclusion_df$exclude <- TRUE
+    exclude_df$excluded <- TRUE
     
-    ret_val <- dplyr::left_join(data, exclusion_df, by = by_vector)
+    ret_val <- dplyr::left_join(data, exclude_df, by = by_vector)
     ret_val <- dplyr::mutate(ret_val, 
-                             exclude = replace(exclude, is.na(exclude), FALSE))
-    ret_val[[val]][ret_val$exclude] <- NA
+                             excluded = replace(excluded, is.na(excluded), FALSE))
+    ret_val[[val]][ret_val$excluded] <- NA
 
     if(dt_new_set) ret_val <- dplyr::select(ret_val, - !!rlang::sym(dt_new))
     
   } else { # Must be a date range
     
-    names(exclusion_df)[names(exclusion_df) == exclusion_date_cols[1]] <- "start"
-    names(exclusion_df)[names(exclusion_df) == exclusion_date_cols[2]] <- "end"
+    names(exclude_df)[names(exclude_df) == exclude_df_dt[1]] <- "start"
+    names(exclude_df)[names(exclude_df) == exclude_df_dt[2]] <- "end"
 
-    start <- exclusion_df$start
-    end <- exclusion_df$end
+    start <- exclude_df$start
+    end <- exclude_df$end
     
     if (!((lubridate::is.Date(start) & lubridate::is.Date(end)) | 
           (lubridate::is.POSIXt(start) & lubridate::is.POSIXt(end)))) {
@@ -114,14 +99,14 @@ exclude_data <- function(data, dt, by,
       rmv <- c(rmv, dt)
     }
     
-    ret_val <- dplyr::left_join(data, exclusion_df, by = by)
+    ret_val <- dplyr::left_join(data, exclude_df, by = by)
     ret_val <- dplyr::mutate(ret_val, 
-                             exclude = !(is.na(.data$start) |
-                                           is.na(.data$end) |
-                                           .data[[dt]] < .data$start |
-                                           .data[[dt]] > .data$end))
+                             excluded = !(is.na(.data$start) |
+                                            is.na(.data$end) |
+                                            .data[[dt]] < .data$start |
+                                            .data[[dt]] > .data$end))
     ret_val <- dplyr::select(ret_val, -dplyr::one_of(rmv))
-    ret_val[[val]][ret_val$exclude] <- NA
+    ret_val[[val]][ret_val$excluded] <- NA
   }
   return(ret_val)
 }

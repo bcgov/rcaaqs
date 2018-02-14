@@ -36,7 +36,7 @@ test_that("has correct classes", {
     expect_is(r$quarter_3, "numeric")
     expect_is(r$quarter_4, "numeric")
     expect_is(r$ann_avg, "numeric")
-    expect_is(r$exclude, "logical")
+    expect_is(r$excluded, "logical")
     expect_is(r$exceed, "logical")
     expect_is(r$flag_daily_incomplete, "logical")
   }
@@ -97,7 +97,7 @@ test_that("can exclude data rows", {
   
   expect_false(all(ret2$ann_avg == ret3$ann_avg, na.rm = TRUE))
   expect_true(all(ret2$ann_avg >= ret3$ann_avg, na.rm = TRUE))
-  expect_equal(ret3$exclude, c(FALSE, TRUE, TRUE, TRUE, TRUE, TRUE))
+  expect_equal(ret3$excluded, c(FALSE, TRUE, TRUE, TRUE, TRUE, TRUE))
   expect_equivalent(ret3$ann_avg, c(NA, 2.60, NA, 4.50, NA, 5.60))
 })
 

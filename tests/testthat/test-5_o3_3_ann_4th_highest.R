@@ -35,7 +35,7 @@ test_that("has correct classes", {
     expect_is(r$quarter_3, "integer")
     expect_is(r$quarter_4, "integer")
     expect_is(r$max8hr, "numeric")
-    expect_is(r$exclude, "logical")
+    expect_is(r$excluded, "logical")
     expect_is(r$exceed, "logical")
     expect_is(r$flag_daily_incomplete, "logical")
     expect_is(r$flag_yearly_incomplete, "logical")
@@ -97,6 +97,6 @@ test_that("can exclude data rows", {
   
   expect_false(all(ret2$max8hr == ret3$max8hr, na.rm = TRUE))
   expect_true(all(ret2$max8hr >= ret3$max8hr, na.rm = TRUE))
-  expect_equal(ret3$exclude, c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE))
+  expect_equal(ret3$excluded, c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE))
   expect_equivalent(ret3$max8hr, c(NA, NA, 54.6, 44.1, 46.9, 45.0))
 })

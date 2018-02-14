@@ -59,7 +59,7 @@ caaq <- function(data, year = "year", val, by, metric, n) {
   # Clean up
   data <- dplyr::rename(data, "caaq_year" = "year")
   cols_keep <- c(by, "caaq_year", "min_year", "max_year", "n_years", "metric", 
-                 "metric_value", "caaqs", "mgmt",
+                 "metric_value", "caaqs", "mgmt", "excluded",
                  "flag_daily_incomplete", "flag_yearly_incomplete",
                  "flag_two_of_three_years")
   cols_keep <- cols_keep[cols_keep %in% names(data)]
@@ -91,6 +91,9 @@ caaq <- function(data, year = "year", val, by, metric, n) {
 pm_24h_caaq <- function(data, dt = "date_time", val = "value",
                         by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
                         quiet = FALSE) {
+
+  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+                                         exclude_df, exclude_df_dt)
   
   if(!quiet) message("Calculating PM 2.5 daily average")
   daily <- pm_daily_avg(data, dt = dt, val = val, by = by)

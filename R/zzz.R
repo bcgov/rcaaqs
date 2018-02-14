@@ -96,6 +96,47 @@ check_groups <- function(data, dt) {
   }
 }
 
+# Confirm that exclude_df has correct structure
+check_exclude <- function(data, dt, by, exclude_df, exclude_df_dt) {
+
+  if (!all(by %in% names(exclude_df))) {
+    stop(paste0(paste0("'", setdiff(by, names(exclude_df)), "'", collapse = ", "),
+                       " not found in exclusion data"), 
+         call. = FALSE)
+  }
+  if (!all(by %in% names(data))) {
+    stop(paste0(paste0("'", setdiff(by, names(data)), "'", collapse = ", "),
+                " not found in sample data"),
+         .call = FALSE)
+  }
+  if(missing(dt)) stop("dt not specified")
+  if(length(dt) != 1) {
+    stop("dt must be a character vector of length one specifying the column name",
+         call. = FALSE)
+  }
+  
+  if(!lubridate::is.POSIXt(data[[dt]]) & !lubridate::is.Date(data[[dt]])) {
+    stop(paste0(dt, " is not a date or time column"),
+         call. = FALSE)
+  }
+  
+  if(missing(exclude_df_dt) || 
+     !(length(exclude_df_dt) %in% c(1,2))) {
+    stop("Length of exclude_df_dt must be one or two",
+         call. = FALSE)
+  }
+  
+  if(!all(exclude_df_dt %in% names(exclude_df))) {
+    stop("exclude_df_dt must be column names in exclusion data",
+         call. = FALSE)
+  }
+  
+  if(!lubridate::is.Date(exclude_df[[exclude_df_dt[1]]])) {
+    stop("Can only exclude whole days (not specific hours)",
+         call. = FALSE)
+  }
+}
+
 #' Defunct functions in rcaaqs
 #' 
 #' These functions have been removed from rcaaqs.
