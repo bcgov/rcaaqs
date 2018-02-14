@@ -122,11 +122,10 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
 #'   exclude_df data.frame.
 #' @return data frame with the daily averages, can be input into 
 #' @name daily_stat_page
+#' 
+#' @noRd
 NULL
 #> NULL
-
-#' @rdname daily_stat_page
-#' @export
 
 o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL) {
   stopifnot(is.data.frame(data), 
@@ -148,9 +147,6 @@ o3_daily_max <- function(data, dt = "date_time", val = "rolling8", by = NULL) {
                 "flag_daily_incomplete" = "flag")
 }
 
-#' @rdname daily_stat_page
-#' @export
-
 no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL) {
 
   # Initial data checks for first time raw data is passed to rcaaqs
@@ -167,9 +163,6 @@ no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL) {
                 "flag_daily_incomplete" = "flag")
 }
 
-#' @rdname daily_stat_page
-#' @export
-
 so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL) {
 
   # Initial data checks for first time raw data is passed to rcaaqs
@@ -185,9 +178,6 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL) {
                 "max_24h" = "stat", 
                 "flag_daily_incomplete" = "flag")
 }
-
-#' @rdname daily_stat_page
-#' @export
 
 pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL) {
 

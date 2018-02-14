@@ -28,8 +28,7 @@
 #'   0.32*base_size
 #'   
 #' @return a ggplot2 object
-#' 
-#' @export
+#' @noRd
 
 plot_ts <- function(daily_data, caaqs_data = NULL, parameter, 
                     rep_yr, plot_exceedances = FALSE, base_size = 10, 
@@ -198,7 +197,7 @@ mid_breaks <- function(width = "1 year") {
 #' @import ggplot2
 #'   
 #' @return ggplot2 object
-#' @export
+#' @noRd
 #' 
 summary_plot <- function(data, metric_val, station, airzone, parameter, 
                          base_size = 12, pt_size = 4, ...) {
@@ -280,7 +279,7 @@ achievement_plot <- function(data, parameter = NULL) {
 #' @param instrument column in data containing instrument type
 #'
 #' @return a ggplot2 opbject
-#' @export
+#' @noRd
 plot_station_instruments <- function(data, dt = "date_time", station = "station_name", instrument = "instrument") {
   
   data$date <- as.Date(data[[dt]])

@@ -23,6 +23,7 @@ rcaaqs_env <- new.env(parent = emptyenv())
 #' @param x vector of dates/datetimes
 #'
 #' @return character
+#' @noRd
 test_time_interval <- function(x) {
   len <- min(100, length(x))
   test_x <- sort(x[1:len])
@@ -37,6 +38,9 @@ test_time_interval <- function(x) {
 #' @param x vector of numbers
 #'
 #' @return vector of length 1
+#' 
+#' @noRd
+
 Mode <- function(x) {
   ux <- unique(x)
   ux[which.max(tabulate(match(x, ux)))]

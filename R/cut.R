@@ -23,7 +23,7 @@
 #'  (\code{"breaks_h"}), or colour values (\code{"colour"} or \code{"color"})?
 #'@param  drop_na Should NA values be dropped, or retained as factor level
 #'  "Insufficient Data" (default)?
-#'@export
+#'@noRd
 #'@return factor
 
 cut_management <- function(x, parameter, output = "labels", drop_na = FALSE) {
@@ -42,7 +42,7 @@ cut_management <- function(x, parameter, output = "labels", drop_na = FALSE) {
 #'  (\code{"breaks_h"}), or colour values (\code{"colour"} or \code{"color"})?
 #'@param  drop_na Should NA values be dropped, or retained as factor level
 #'  "Insufficient Data" (default)?
-#'@export
+#'@noRd
 #'@return factor
 
 cut_achievement <- function(x, parameter, output = "labels", drop_na = FALSE) {

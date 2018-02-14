@@ -70,13 +70,12 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh) {
 #'   
 #' @return dataframe with rolling 8-hour averages.
 #' 
+#' @noRd
+#' 
 #' @name rolling_stat_page
 NULL
 #> NULL
 
-
-#' @rdname rolling_stat_page
-#' @export
 
 o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value", 
                                by = NULL){
@@ -101,9 +100,6 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
                 "rolling8" = "rolled_value")
 }
 
-#' @rdname rolling_stat_page
-#' @export
-
 so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = NULL) {
   data <- rolling_value(data,
                         dt = dt,
@@ -119,9 +115,6 @@ so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = 
                 "so2_metric" = "rolled_value",
                 "flag_two_of_three_years" = "flag")
 }
-
-#' @rdname rolling_stat_page
-#' @export
 
 no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = NULL) {
   data <- rolling_value(data,
@@ -139,9 +132,6 @@ no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = 
                 "flag_two_of_three_years" = "flag")
 }
 
-#' @rdname rolling_stat_page
-#' @export
-
 pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = NULL) {
   data <- rolling_value(data,
                         dt = dt,
@@ -157,9 +147,6 @@ pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = N
                 "pm_metric" = "rolled_value",
                 "flag_two_of_three_years" = "flag")
 }
-
-#' @rdname rolling_stat_page
-#' @export
 
 o3_three_yr_avg <- function(data, dt = "year", val = "max8hr", by = NULL) {
   data <- rolling_value(data,

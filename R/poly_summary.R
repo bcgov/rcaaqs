@@ -22,7 +22,9 @@
 #' 
 #' @return A data frame with the same number of rows as the SpatialPolygonsDataFrame.
 #' 
+#' @noRd
 
+# NOT CURRENTLY USED - This functionality is applied directly in assign_airzones
 poly_summary <- function(polys, points, fn, ...) {
   
   if (!requireNamespace("sp", quietly = TRUE)) {

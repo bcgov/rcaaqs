@@ -81,6 +81,8 @@ n_within_window <- function(x, window) {
 #' 
 #' @noRd
 
+# NOT CURRENTLY USED - Data filled with NAs in earlier step
+# so don't need to fill with this function
 filled_rolling_mean <- function(dat, val, interval = 3600, 
                                 width = 8, valid_thresh = 6, digits = 1) {
   dat_val_padded <- pad_date_time(dat, val, interval)

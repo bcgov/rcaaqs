@@ -21,7 +21,7 @@
 #' 
 #' @return a character vector with simplified PM2.5 monitor names
 #' 
-#' @export
+#' @noRd
 
 parse_pm_monitors <- function(...) {
   cols <- list(...)

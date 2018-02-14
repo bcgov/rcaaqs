@@ -86,14 +86,12 @@ yearly_stat <- function(data, dt = "date", val = "value",
 #'   
 #' @return data frame with the yearly summary (typically the 98th percentile)
 #' 
+#' @noRd
+#' 
 #' @name yearly_stat_page
 #' 
 NULL
 #> NULL
-
-
-#' @rdname yearly_stat_page
-#' @export
 
 pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, 
                          exclude_df = NULL, exclude_df_dt = NULL, 
@@ -123,8 +121,6 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL,
   data
 }
 
-#' @rdname yearly_stat_page
-#' @export
 
 so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, 
                           exclude_df = NULL, exclude_df_dt = NULL, 
@@ -151,9 +147,6 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL,
   
   data
 }
-
-#' @rdname yearly_stat_page
-#' @export
 
 no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, 
                           exclude_df = NULL, exclude_df_dt = NULL, 
@@ -183,9 +176,6 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL,
 }
 
 
-#' @rdname yearly_stat_page
-#' @export
-
 pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, 
                           exclude_df = NULL, exclude_df_dt = NULL, 
                           quiet = FALSE) {
@@ -213,9 +203,6 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL,
   data
 }
 
-#' @rdname yearly_stat_page
-#' @export
-
 o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL, 
                                exclude_df = NULL, exclude_df_dt = NULL, 
                                quiet = FALSE) {
@@ -240,9 +227,6 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
   
   data
 }
-
-#' @rdname yearly_stat_page
-#' @export
 
 so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", 
                                    by = NULL, exclude_df = NULL, 
@@ -282,9 +266,6 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
   
   data
 }
-
-#' @rdname yearly_stat_page
-#' @export
 
 no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", 
                                    by = NULL, exclude_df = NULL, 
