@@ -28,7 +28,9 @@
 #' 
 #' @noRd
 
-exclude_data <- function(data, dt, by, exclusion_df, exclusion_date_cols, val) {
+exclude_data <- function(data, dt, by, 
+                         exclusion_df, exclusion_date_cols, 
+                         val, quiet = FALSE) {
   if (!all(by %in% names(exclusion_df))) 
     stop(paste0(setdiff(by, names(exclusion_df)), " not found in exclusion data"))
   if (!all(by %in% names(data))) 
@@ -52,6 +54,8 @@ exclude_data <- function(data, dt, by, exclusion_df, exclusion_date_cols, val) {
   if(!is.Date(exclusion_df[[exclusion_date_cols[1]]])) {
     stop("Can only exclude whole days (not specific hours)")
   }
+  
+  if(!quiet) message("  Excluding data...")
   
   if(length(exclusion_date_cols) == 1) {
     exclusion_date_col <- exclusion_date_cols

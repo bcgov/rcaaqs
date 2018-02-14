@@ -18,7 +18,7 @@ yearly_stat <- function(data, dt = "date", val = "value",
                         by = c("ems_id", "site"), 
                         stat, stat.opts = NULL, quarter_units = "prop",
                         pollutant_standard,
-                        exclude_df, exclude_df_dt) {
+                        exclude_df, exclude_df_dt, quiet = FALSE) {
   
   # Check inputs
   stopifnot(is.data.frame(data), 
@@ -41,7 +41,7 @@ yearly_stat <- function(data, dt = "date", val = "value",
   if(!is.null(exclude_df)) {
     data <- exclude_data(data, dt, by, 
                          exclude_df, exclude_df_dt,
-                         val = val)
+                         val = val, quiet = quiet)
   } else {
     data$exclude <- FALSE
   }
@@ -96,13 +96,15 @@ NULL
 #' @export
 
 pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, 
-                         exclude_df = NULL, exclude_df_dt = NULL) {
+                         exclude_df = NULL, exclude_df_dt = NULL, 
+                         quiet = FALSE) {
 
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.98, na.rm = TRUE), 
                       pollutant_standard = get_std("pm2.5_24h"),
                       exclude_df = exclude_df, 
-                      exclude_df_dt = exclude_df_dt)
+                      exclude_df_dt = exclude_df_dt, 
+                      quiet = quiet)
   
   data <- dplyr::rename(data, "ann_98_percentile" = "stat")
   
@@ -125,13 +127,15 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL,
 #' @export
 
 so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, 
-                          exclude_df = NULL, exclude_df_dt = NULL) {
+                          exclude_df = NULL, exclude_df_dt = NULL, 
+                          quiet = FALSE) {
   
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.99, na.rm = TRUE), 
                       pollutant_standard = get_std("so2_3yr"),
                       exclude_df = exclude_df, 
-                      exclude_df_dt = exclude_df_dt)
+                      exclude_df_dt = exclude_df_dt, 
+                      quiet = quiet)
   
   data <- dplyr::rename(data, "ann_99_percentile" = "stat")
   
@@ -152,13 +156,15 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL,
 #' @export
 
 no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, 
-                          exclude_df = NULL, exclude_df_dt = NULL) {
+                          exclude_df = NULL, exclude_df_dt = NULL, 
+                          quiet = FALSE) {
 
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.98, na.rm = TRUE), 
                       pollutant_standard = get_std("no2_3yr"),
                       exclude_df = exclude_df, 
-                      exclude_df_dt = exclude_df_dt)
+                      exclude_df_dt = exclude_df_dt, 
+                      quiet = quiet)
   
   data <- dplyr::rename(data, "ann_98_percentile" = "stat")
   
@@ -181,12 +187,14 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL,
 #' @export
 
 pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, 
-                          exclude_df = NULL, exclude_df_dt = NULL) {
+                          exclude_df = NULL, exclude_df_dt = NULL, 
+                          quiet = FALSE) {
 
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       pollutant_standard = get_std("pm2.5_annual"),
                       exclude_df = exclude_df, 
-                      exclude_df_dt = exclude_df_dt)
+                      exclude_df_dt = exclude_df_dt, 
+                      quiet = quiet)
   
   data <- dplyr::rename(data, "ann_avg" = "stat")
   
@@ -209,14 +217,16 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL,
 #' @export
 
 o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL, 
-                               exclude_df = NULL, exclude_df_dt = NULL) {
+                               exclude_df = NULL, exclude_df_dt = NULL, 
+                               quiet = FALSE) {
 
   data <- yearly_stat(data, dt, val, by, 
                       nth_highest, stat.opts = list(n = 4), 
                       quarter_units = "days", 
                       pollutant_standard = get_std("o3"),
                       exclude_df = exclude_df, 
-                      exclude_df_dt = exclude_df_dt)
+                      exclude_df_dt = exclude_df_dt, 
+                      quiet = quiet)
   
   data <- dplyr::rename(data, "max8hr" = "stat")
   
@@ -236,7 +246,8 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
 
 so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", 
                                    by = NULL, exclude_df = NULL, 
-                                   exclude_df_dt = NULL) {
+                                   exclude_df_dt = NULL, 
+                                   quiet = FALSE) {
 
   # Initial data checks for first time raw data is passed to rcaaqs
   data <- initial_check(data, dt = dt, val = val, by = by)
@@ -248,7 +259,8 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
                       quarter_units = "days", 
                       pollutant_standard = get_std("so2_1yr"),
                       exclude_df = exclude_df, 
-                      exclude_df_dt = exclude_df_dt) 
+                      exclude_df_dt = exclude_df_dt, 
+                      quiet = quiet) 
   
   data <- dplyr::rename(data, "avg_yearly" = "stat")
   
@@ -276,7 +288,8 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
 
 no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", 
                                    by = NULL, exclude_df = NULL, 
-                                   exclude_df_dt = NULL) {
+                                   exclude_df_dt = NULL, 
+                                   quiet = FALSE) {
 
   # Initial data checks for first time raw data is passed to rcaaqs
   data <- initial_check(data, dt = dt, val = val, by = by)
@@ -288,7 +301,8 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
                       quarter_units = "days", 
                       pollutant_standard = get_std("no2_1yr"),
                       exclude_df = exclude_df, 
-                      exclude_df_dt = exclude_df_dt) 
+                      exclude_df_dt = exclude_df_dt, 
+                      quiet = quiet) 
   
   data <- dplyr::rename(data, "avg_yearly" = "stat")
   
