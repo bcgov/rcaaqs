@@ -32,11 +32,11 @@ yearly_stat <- function(data, dt = "date", val = "value",
   
   # Apply grouping
   data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year")))
-  check_groups(data, "year")
-  
+  check_groups(data, dt)
+
   # Get quarter validity
-  quarter_valid <- valid_by_quarter(data, dt, by, quarter_units)
-  
+  quarter_valid <- valid_by_quarter(data, dt, by, val, quarter_units)
+
   # Exclude data
   if(!is.null(exclude_df)) {
     data <- exclude_data(data, dt, by, 
@@ -232,7 +232,7 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
   
   # Determine data completeness
   days_in_quarter_2_and_3 <- 183
-  data$valid_year <- (data$quarter_2 + data$quarter_3) / days_in_quarter_2_and_3 > 0.75
+  data$valid_year <- (data$quarter_2 + data$quarter_3) / days_in_quarter_2_and_3 >= 0.75
   
   # Remove data which invalid - Flag invalid data which exceeds (thus kept)
   data$max8hr[!data$valid_year & !data$exceed] <- NA
