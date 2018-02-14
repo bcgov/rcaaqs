@@ -51,7 +51,7 @@ exclude_data <- function(data, dt, by,
     stop("exclusion_date_cols must be column names in exclusion data")
   }
   
-  if(!is.Date(exclusion_df[[exclusion_date_cols[1]]])) {
+  if(!lubridate::is.Date(exclusion_df[[exclusion_date_cols[1]]])) {
     stop("Can only exclude whole days (not specific hours)")
   }
   
@@ -81,7 +81,8 @@ exclude_data <- function(data, dt, by,
     ret_val <- dplyr::mutate(ret_val, 
                              exclude = replace(exclude, is.na(exclude), FALSE))
     ret_val[[val]][ret_val$exclude] <- NA
-    if(dt_new_set) ret_val[[dt_new]] <- NULL
+
+    if(dt_new_set) ret_val <- dplyr::select(ret_val, - !!rlang::sym(dt_new))
     
   } else { # Must be a date range
     
@@ -119,7 +120,7 @@ exclude_data <- function(data, dt, by,
                                            is.na(.data$end) |
                                            .data[[dt]] < .data$start |
                                            .data[[dt]] > .data$end))
-    ret_val <- dplyr::select(ret_val, - dplyr::one_of(rmv))
+    ret_val <- dplyr::select(ret_val, -dplyr::one_of(rmv))
     ret_val[[val]][ret_val$exclude] <- NA
   }
   return(ret_val)
