@@ -69,24 +69,64 @@ caaq <- function(data, year = "year", val, by, metric, n) {
   data
 }
 
-#' Calculate the PM2.5 24 hour CAAQ metric
+#' Compute specific CAAQ metrics
 #' 
-#' Calculates and returns the PM2.5 24 hour CAAQ metric based on a rolling
-#' three-year average.
+#' Compte specific CAAQ metrics for different forms of air pollution.
 #'
-#' @param data Data frame. Contains three year PM2.5 24hr average data output from
-#'   \code{pm_three_yr_avg}
-#' @param year Character. The name of the data column containing years. Defaults
-#'   to 'year'.
-#' @param val Character. The name of the data column containing the pm metric.
-#'   Defaults to 'pm_metric'.
-#' @param by Character. The name(s) of the data column(s) specifying the data
-#'   grouping variables (i.e. site_id, etc.). Even if not using multiple sites,
-#'   you shoud specfify the id column so that it is retained in the output.
-#'
-#' @return A data frame arranged by grouping variables (if present) with caaq
-#'   metrics, achievement levels and management levels.
+#' @param data Data frame. Hourly raw pollution data with at least date and
+#'   value columns
+#' @param dt Character. The name of the date-time column. Default \code{"date"}
+#' @param val Character. The name of the value column. Default \code{"value"}
+#' @param by Character vector. Grouping variables in data, probably an id if 
+#'   using multiple sites. Even if not using multiple sites, you shoud specify 
+#'   the id column so that it is retained in the output.
+#' @param exclude_df Data frame. The dates over which data should be excluded 
+#'   (see details). Data should be arranged either with one column of dates to 
+#'   omit, or two columns specifying a series of start and end date ranges to 
+#'   omit.
+#' @param exclude_df_dt Character vector. The names of the date columns in 
+#'   \code{exclude_df}. Must specify either one (a series of dates), or two (the
+#'   start and end columns specifying dates ranges).
+#' @param quite Logical. Suppress progress messages (default FALSE)
 #'   
+#' @details To omit days which are suspected to be influenced by Transboundary
+#'   FLows or Exceptional Events create a data frame that either a) contains a
+#'   column listing all the days which are to be omitted, or b) contains two
+#'   columns listing the start and end dates of all the date periods which are
+#'   to be omitted. This is suppled as \code{exclude_df}. Use
+#'   \code{exlcude_df_dt} to specify the name of the column containing the
+#'   dates, or the names of the columns containing the start and end of the date
+#'   ranges.
+#'   
+#' @return Data frame with CAAQ metrics
+#' 
+#' @references CCME Guidance document on achievement determination Canadian ambient air quality standards for fine particulate matter and ozone \url{https://www.ccme.ca/files/Resources/air/aqms/pn_1483_gdad_eng.pdf}.
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' # Normal run
+#' pm <- pm_24h_caaq(pm25_sample_data, by = c("ems_id", "site"))
+#' 
+#' # Exclude dates
+#' high_dates <- data.frame(ems_id = "0310162",
+#'                          site = "Port Moody Rocky Point Park", 
+#'                          date = seq(as.Date("2012-06-11"),
+#'                                     as.Date("2012-06-30"), by = "1 day"))
+#'                                     
+#' pm_ex <- pm_24h_caaq(pm25_sample_data, 
+#'                      by = c("ems_id", "site"),
+#'                      exclude_df = high_dates,
+#'                      exclude_df_dt = "date")
+#' }
+#' 
+#' @name caaqs_metric
+#' 
+NULL
+#> NULL
+
+
+#' @rdname caaqs_metric
 #' @export
 pm_24h_caaq <- function(data, dt = "date_time", val = "value",
                         by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
@@ -110,23 +150,7 @@ pm_24h_caaq <- function(data, dt = "date_time", val = "value",
   caaq(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_24h", n = 3)
 }
 
-#' Calculate the PM2.5 annaul CAAQ metric
-#' 
-#' Calculates and returns the PM2.5 annual CAAQ metric based on a rolling
-#' three-year average.
-#'
-#' @param data Data frame. Contains PM2.5 annual three year average data output
-#'   from \code{pm_three_yr_avg}
-#' @param year Character. The name of the data column containing years. Defaults
-#'   to 'year'.
-#' @param val Character. The name of the data column containing the pm metric.
-#'   Defaults to 'pm_metric'.
-#' @param by Character. The name(s) of the data column(s) specifying the data
-#'   grouping variables (i.e. site_id, etc.). Even if not using multiple sites,
-#'   you shoud specfify the id column so that it is retained in the output.
-#'
-#' @return A data frame arranged by grouping variables (if present) with caaq
-#'   metrics, achievement levels and management levels.
+#' @rdname caaqs_metric
 #' @export
 pm_annual_caaq <- function(data, dt = "date_time", val = "value",
                            by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
@@ -146,34 +170,7 @@ pm_annual_caaq <- function(data, dt = "date_time", val = "value",
   caaq(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_annual", n = 3)
 }
 
-#' Calculate the Ozone CAAQ metric
-#' 
-#' Calculates and returns the Ozone CAAQ metric based on a rolling three-year 
-#' average.
-#'
-#' @param data Data frame. Contains three year average data output from
-#'   \code{o3_three_yr_avg}
-#' @param year Character. The name of the data column containing years. Defaults
-#'   to 'year'.
-#' @param val Character. The name of the data column containing the ozone metric.
-#'   Defaults to 'ozone_metric'.
-#' @param by Character. The name(s) of the data column(s) specifying the data
-#'   grouping variables (i.e. site_id, etc.). Even if not using multiple sites,
-#'   you shoud specfify the id column so that it is retained in the output.
-#'
-#' @return A data frame arranged by grouping variables (if present) with caaq
-#'   metrics, achievement levels and management levels.
-#'
-#' @examples
-#' 
-#' data(o3_sample_data)
-#' o3_rolling <- o3_rolling_8hr_avg(o3_sample_data, by = c("ems_id", "site"))
-#' o3_daily <- o3_daily_max(o3_rolling, by = c("ems_id", "site"))
-#' o3_4th_highest <- o3_ann_4th_highest(o3_daily, by = c("ems_id", "site"))
-#' o3_avg <- o3_three_yr_avg(o3_4th_highest, by = c("ems_id", "site"))
-#' 
-#' o3_final_caaq <- o3_caaq(o3_avg, by = c("ems_id", "site"))
-#' 
+#' @rdname caaqs_metric
 #' @export
 o3_caaq <- function(data, dt = "date_time", val = "value",
                     by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
@@ -194,6 +191,7 @@ o3_caaq <- function(data, dt = "date_time", val = "value",
   caaq(yearly_roll, val = "ozone_metric", by = by, metric = "o3", n = 3)
 }
 
+#' @rdname caaqs_metric
 #' @export
 so2_1yr_caaq <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
@@ -208,6 +206,7 @@ so2_1yr_caaq <- function(data, dt = "date_time", val = "value",
   caaq(yearly, val = "avg_yearly", by = by, metric = "so2_1yr", n = 1)
 }
 
+#' @rdname caaqs_metric
 #' @export
 so2_3yr_caaq <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
@@ -227,6 +226,7 @@ so2_3yr_caaq <- function(data, dt = "date_time", val = "value",
   caaq(yearly_roll, val = "so2_metric", by = by, metric = "so2_3yr", n = 3)
 }
 
+#' @rdname caaqs_metric
 #' @export
 no2_1yr_caaq <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
@@ -240,6 +240,7 @@ no2_1yr_caaq <- function(data, dt = "date_time", val = "value",
   caaq(yearly, val = "avg_yearly", by = by, metric = "no2_1yr", n = 1)
 }
 
+#' @rdname caaqs_metric
 #' @export
 no2_3yr_caaq <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
