@@ -234,13 +234,14 @@ time_to_date <- function(date_time) {
 #' 
 #' @noRd
 
-valid_by_quarter <- function(data, date, by, units = c("prop", "days")) {
+valid_by_quarter <- function(data, date, by, val, units = c("prop", "days")) {
+  data <- dplyr::ungroup(data)
   data <- dplyr::mutate(data,
                         year = lubridate::year(!!!rlang::syms(date)),
                         quarter = lubridate::quarter(!!!rlang::syms(date)))
 
   data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year", "quarter")))
-  data <- dplyr::summarise(data, days = length(.data$year))
+  data <- dplyr::summarise(data, days = length(.data$year[!is.na(.data[[val]])]))
   data <- dplyr::ungroup(data)
   
   # Cheap way to fill in quarters
