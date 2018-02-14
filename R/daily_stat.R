@@ -198,8 +198,9 @@ pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL) {
   data$stat[!data$valid] <- as.numeric(NA)
   
   # Remove flag (not applicable to pm)
-  data$flag <- NULL
+  data$flag <- NA
   
   dplyr::rename(data, 
-                "avg_24h" = "stat")
+                "avg_24h" = "stat", 
+                "flag_daily_incomplete" = "flag")
 }

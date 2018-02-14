@@ -94,6 +94,9 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
   
   # Data completeness performed inside 'rolling_value' (assign NA if < 6 hours)
   
+  # Don't need a flag
+  data$flag <- NULL
+  
   dplyr::rename(data, 
                 "rolling8" = "rolled_value")
 }

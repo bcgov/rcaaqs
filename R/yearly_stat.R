@@ -171,6 +171,7 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL,
   data$ann_98_percentile[!data$valid_year] <- NA
   
   # No yearly incomplete flags for NO2
+  data$flag_yearly_incomplete <- NA
   
   data
 }
@@ -240,6 +241,9 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
   # Initial data checks for first time raw data is passed to rcaaqs
   data <- initial_check(data, dt = dt, val = val, by = by)
   
+  # Add flag placeholder
+  data$flag_daily_incomplete <- NA
+  
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       quarter_units = "days", 
                       pollutant_standard = get_std("so2_1yr"),
@@ -276,7 +280,10 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
 
   # Initial data checks for first time raw data is passed to rcaaqs
   data <- initial_check(data, dt = dt, val = val, by = by)
-  
+ 
+  # Add flag placeholder
+  data$flag_daily_incomplete <- NA
+   
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       quarter_units = "days", 
                       pollutant_standard = get_std("no2_1yr"),
@@ -300,6 +307,7 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
                        data$quarter_4 >= 0.6
   
   data$avg_yearly[!data$valid_year] <- NA
+  data$flag_yearly_incomplete <- NA
   
   # No yearly incomplete flags for hourly NO2
   
