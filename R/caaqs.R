@@ -37,15 +37,11 @@ caaq <- function(data, year = "year", val, by, metric, n) {
   
   # Order by date (within grouping if applied)
   data <- dplyr::arrange(data, !!! rlang::syms(c(by, "year")))
-  
+
   # Added details
   if(n == 3) {
     data <- dplyr::mutate(data, 
-                          n_years = n_val,
-                          min_year = pmin(.data$year, 
-                                          dplyr::lag(.data$year, 1),
-                                          dplyr::lag(.data$year, 2), na.rm = TRUE),
-                          max_year = .data$year,
+                          n_years = .data$n_val,
                           n_max = as.integer(max(.data$n_years, na.rm = TRUE)))
     
     data <- dplyr::ungroup(data)

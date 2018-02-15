@@ -47,6 +47,21 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh) {
                                                                 width = window, 
                                                                 valid_thresh), 
                                                    digits = 1))
+  
+  # Calculate extra details for three_yr_avgs, not for o3_rolling_8hr_avg
+  if(dt == "year") {
+    data <- dplyr::mutate(data,
+                          year_na = dplyr::if_else(!is.na(.data[[val]]), 
+                                                   .data$year, as.numeric(NA)),
+                          min_year = pmin(.data$year_na,
+                                          dplyr::lag(.data$year_na, 1),
+                                          dplyr::lag(.data$year_na, 2), 
+                                          na.rm = TRUE),
+                          min_year = dplyr::if_else(is.na(.data$min_year), 
+                                                    .data$year, .data$min_year), 
+                          max_year = .data$year)
+  }
+  
 
   data <- dplyr::ungroup(data)
   
