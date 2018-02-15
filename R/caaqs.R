@@ -67,14 +67,14 @@ caaq <- function(data, year = "year", val, by, metric, n) {
 
 #' Compute specific CAAQ metrics
 #' 
-#' Compte specific CAAQ metrics for different forms of air pollution.
+#' Compute specific CAAQ metrics for different forms of air pollution.
 #'
-#' @param data Data frame. Hourly raw pollution data with at least date and
+#' @param data Data frame. Hourly raw pollution data with at least date-time and
 #'   value columns
 #' @param dt Character. The name of the date-time column. Default \code{"date"}
 #' @param val Character. The name of the value column. Default \code{"value"}
 #' @param by Character vector. Grouping variables in data, probably an id if 
-#'   using multiple sites. Even if not using multiple sites, you shoud specify 
+#'   using multiple sites. Even if not using multiple sites, you should specify 
 #'   the id column so that it is retained in the output.
 #' @param exclude_df Data frame. The dates over which data should be excluded 
 #'   (see details). Data should be arranged either with one column of dates to 
@@ -83,24 +83,45 @@ caaq <- function(data, year = "year", val, by, metric, n) {
 #' @param exclude_df_dt Character vector. The names of the date columns in 
 #'   \code{exclude_df}. Must specify either one (a series of dates), or two (the
 #'   start and end columns specifying dates ranges).
-#' @param quite Logical. Suppress progress messages (default FALSE)
+#' @param return_all Logical. Return all data frames from intermediate steps as
+#'   nested dataframes? (default FALSE)
+#' @param quiet Logical. Suppress progress messages (default FALSE)
 #'   
 #' @details To omit days which are suspected to be influenced by Transboundary
-#'   FLows or Exceptional Events create a data frame that either a) contains a
+#'   Flows or Exceptional Events create a data frame that either a) contains a
 #'   column listing all the days which are to be omitted, or b) contains two
 #'   columns listing the start and end dates of all the date periods which are
-#'   to be omitted. This is suppled as \code{exclude_df}. Use
+#'   to be omitted. This is supplied as \code{exclude_df}. Use
 #'   \code{exlcude_df_dt} to specify the name of the column containing the
 #'   dates, or the names of the columns containing the start and end of the date
-#'   ranges.
+#'   ranges (see examples and vignette for more details).
 #'   
-#' @return Data frame with CAAQ metrics
+#'   To return data from each intermediate step, specify \code{return_all = 
+#'   TRUE}. This results in a nested data from which individual data sets can be
+#'   extracted (see examples and vignette for more details).
+#'   
+#' @return Data frame with CAAQ metrics. 
+#'   \itemize{
+#'     \item caaq_year The year corresponding to the CAAQ metric
+#'     \item metric The type of CAAQ metric calculated
+#'     \item metric_value The CAAQ metric value, rounded to appropriate digits
+#'     \item caaqs The CAAQ status, Achieved, Not Achieved, or Insufficient Data
+#'     \item mgmt The management status actions
+#'     \item excluded Logical value indicating whether any of the underlying
+#'     data was excluded due to transboundary flows or exceptional events
+#'     \item flag_daily_incomplete Logical value indicating whether any of the
+#'     daily data was flagged as incomplete (see CAAQ guidelines for more
+#'     details). If NA, indicates that this particular metric is never flagged.
+#'     \item flag_yearly_incomplete Logical value indicating whether any of the
+#'     yearly data was flagged as incomplete (see CAAQ guidelines for more
+#'     details). If NA, indicates that this particular metric is never flagged.}
 #' 
-#' @references CCME Guidance document on achievement determination Canadian ambient air quality standards for fine particulate matter and ozone \url{https://www.ccme.ca/files/Resources/air/aqms/pn_1483_gdad_eng.pdf}.
+#' @references CCME Guidance document on achievement determination Canadian
+#'   ambient air quality standards for fine particulate matter and ozone
+#'   \url{https://www.ccme.ca/files/Resources/air/aqms/pn_1483_gdad_eng.pdf}.
 #' 
 #' @examples 
 #' 
-#' \dontrun{
 #' # Normal run
 #' pm <- pm_24h_caaq(pm25_sample_data, by = c("ems_id", "site"))
 #' 
@@ -114,7 +135,16 @@ caaq <- function(data, year = "year", val, by, metric, n) {
 #'                      by = c("ems_id", "site"),
 #'                      exclude_df = high_dates,
 #'                      exclude_df_dt = "date")
-#' }
+#'                      
+#' # Return all intermediate data
+#' 
+#' pm_all <- pm_24h_caaq(pm25_sample_data, 
+#'                      by = c("ems_id", "site"), 
+#'                      return_all = TRUE)
+#' pm_all
+#' 
+#' pm_all$daily
+#' pm_all$caaqs
 #' 
 #' @name caaqs_metric
 #' 
@@ -126,7 +156,7 @@ NULL
 #' @export
 pm_24h_caaq <- function(data, dt = "date_time", val = "value",
                         by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                        quiet = FALSE) {
+                        return_all = FALSE, quiet = FALSE) {
 
   if(!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
@@ -143,14 +173,31 @@ pm_24h_caaq <- function(data, dt = "date_time", val = "value",
   if(!quiet) message("Calculating PM 2.5 24h CAAQ metric")
   yearly_roll <- pm_three_yr_avg(yearly, val = "ann_98_percentile", by = by)
   
-  caaq(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_24h", n = 3)
+  caaq <- caaq(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_24h", n = 3)
+
+  if(return_all & !is.null(by)) {
+    all <- tidyr::nest(daily, -by, .key = "daily_avg")
+    all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "yearly_98"), by = by)
+    all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
+    all <- dplyr::left_join(all, tidyr::nest(caaq, -by, .key = "caaqs"), by = by)
+  } else if(return_all & is.null(by)) {
+    all <- tidyr::nest(daily, .key = "daily_avg")
+    all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "yearly_98"))
+    all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
+    all <- dplyr::bind_cols(all, tidyr::nest(caaq, .key = "caaqs"))
+  } else all <- caaq
+  
+  all
 }
 
 #' @rdname caaqs_metric
 #' @export
 pm_annual_caaq <- function(data, dt = "date_time", val = "value",
                            by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                           quiet = FALSE) {
+                           return_all = FALSE, quiet = FALSE) {
+  
+  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+                                         exclude_df, exclude_df_dt)
   
   if(!quiet) message("Calculating PM 2.5 daily average")
   daily <- pm_daily_avg(data, dt = dt, val = val, by = by)
@@ -163,14 +210,31 @@ pm_annual_caaq <- function(data, dt = "date_time", val = "value",
   
   if(!quiet) message("Calculating PM 2.5 annual CAAQ metric")
   yearly_roll <- pm_three_yr_avg(yearly, val = "ann_avg", by = by)
-  caaq(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_annual", n = 3)
+  caaq <- caaq(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_annual", n = 3)
+  
+  if(return_all & !is.null(by)) {
+    all <- tidyr::nest(daily, -by, .key = "daily_avg")
+    all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "yearly_avg"), by = by)
+    all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
+    all <- dplyr::left_join(all, tidyr::nest(caaq, -by, .key = "caaqs"), by = by)
+  } else if (return_all & is.null(by)) {
+    all <- tidyr::nest(daily, .key = "daily_avg")
+    all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "yearly_avg"))
+    all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
+    all <- dplyr::bind_cols(all, tidyr::nest(caaq, .key = "caaqs"))
+  } else all <- caaq
+  
+  all
 }
 
 #' @rdname caaqs_metric
 #' @export
 o3_caaq <- function(data, dt = "date_time", val = "value",
                     by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                    quiet = FALSE) {
+                    return_all = FALSE, quiet = FALSE) {
+  
+  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+                                         exclude_df, exclude_df_dt)
   
   if(!quiet) message("Calculating O3 daily maximum of 8h average")
   daily8 <- o3_rolling_8hr_avg(data, dt = dt, val = val, by = by)
@@ -184,14 +248,33 @@ o3_caaq <- function(data, dt = "date_time", val = "value",
   
   if(!quiet) message("Calculating O3 CAAQ metric")
   yearly_roll <- o3_three_yr_avg(yearly, by = by)
-  caaq(yearly_roll, val = "ozone_metric", by = by, metric = "o3", n = 3)
+  caaq <- caaq(yearly_roll, val = "ozone_metric", by = by, metric = "o3", n = 3)
+  
+  if(return_all & !is.null(by)) {
+    all <- tidyr::nest(daily8, -by, .key = "daily_roll8")
+    all <- dplyr::left_join(all, tidyr::nest(daily, -by, .key = "daily_max"), by = by)
+    all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "ann_4th_highest"), by = by)
+    all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
+    all <- dplyr::left_join(all, tidyr::nest(caaq, -by, .key = "caaqs"), by = by)
+  } else if(return_all & is.null(by)){
+    all <- tidyr::nest(daily8, .key = "daily_roll8")
+    all <- dplyr::bind_cols(all, tidyr::nest(daily, .key = "daily_max"))
+    all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "ann_4th_highest"))
+    all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
+    all <- dplyr::bind_cols(all, tidyr::nest(caaq, .key = "caaqs"))
+  } else all <- caaq
+  
+  all
 }
 
 #' @rdname caaqs_metric
 #' @export
 so2_1yr_caaq <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                         quiet = FALSE) {
+                         return_all = FALSE, quiet = FALSE) {
+  
+  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+                                         exclude_df, exclude_df_dt)
   
   if(!quiet) message("Calculating SO2 annual average CAAQ metric")
   yearly <- so2_avg_hourly_by_year(data, dt = dt, val = val, by = by, 
@@ -199,14 +282,27 @@ so2_1yr_caaq <- function(data, dt = "date_time", val = "value",
                                    exclude_df_dt = exclude_df_dt, 
                                    quiet = quiet)
   
-  caaq(yearly, val = "avg_yearly", by = by, metric = "so2_1yr", n = 1)
+  caaq <- caaq(yearly, val = "avg_yearly", by = by, metric = "so2_1yr", n = 1)
+  
+  if(return_all & !is.null(by)) {
+    all <- tidyr::nest(yearly, -by, .key = "yearly_hr")
+    all <- dplyr::left_join(all, tidyr::nest(caaq, -by, .key = "caaqs"), by = by)
+  } else if(return_all & is.null(by)) {
+    all <- tidyr::nest(yearly, .key = "yearly_hr")
+    all <- dplyr::bind_cols(all, tidyr::nest(caaq, .key = "caaqs"))
+  } else all <- caaq
+  
+  all
 }
 
 #' @rdname caaqs_metric
 #' @export
 so2_3yr_caaq <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                         quiet = FALSE) {
+                         return_all = FALSE, quiet = FALSE) {
+  
+  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+                                         exclude_df, exclude_df_dt)
   
   if(!quiet) message("Calculating SO2 daily maximum")
   daily <- so2_daily_max(data, dt = dt, val = val, by = by)
@@ -219,28 +315,58 @@ so2_3yr_caaq <- function(data, dt = "date_time", val = "value",
   
   if(!quiet) message("Calculating SO2 1h CAAQ metric")
   yearly_roll <- so2_three_yr_avg(yearly, by = by)
-  caaq(yearly_roll, val = "so2_metric", by = by, metric = "so2_3yr", n = 3)
+  caaq <- caaq(yearly_roll, val = "so2_metric", by = by, metric = "so2_3yr", n = 3)
+  
+  if(return_all & !is.null(by)) {
+    all <- tidyr::nest(daily, -by, .key = "daily_max")
+    all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "yearly_99"), by = by)
+    all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
+    all <- dplyr::left_join(all, tidyr::nest(caaq, -by, .key = "caaqs"), by = by)
+  } else if(return_all & is.null(by)) {
+    all <- tidyr::nest(daily, .key = "daily_max")
+    all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "yearly_99"))
+    all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
+    all <- dplyr::bind_cols(all, tidyr::nest(caaq, .key = "caaqs"))
+  } else all <- caaq
+  
+  all
 }
 
 #' @rdname caaqs_metric
 #' @export
 no2_1yr_caaq <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                         quiet = FALSE) {
+                         return_all = FALSE, quiet = FALSE) {
+  
+  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+                                         exclude_df, exclude_df_dt)
   
   if(!quiet) message("Calculating NO2 annual average CAAQ metric")
   yearly <- no2_avg_hourly_by_year(data, dt = dt, val = val, by = by, 
                                    exclude_df = exclude_df, 
                                    exclude_df_dt = exclude_df_dt, 
                                    quiet = quiet)
-  caaq(yearly, val = "avg_yearly", by = by, metric = "no2_1yr", n = 1)
+  caaq <- caaq(yearly, val = "avg_yearly", by = by, metric = "no2_1yr", n = 1)
+  
+  if(return_all & !is.null(by)) {
+    all <- tidyr::nest(yearly, -by, .key = "yearly_hr")
+    all <- dplyr::left_join(all, tidyr::nest(caaq, -by, .key = "caaqs"), by = by)
+  } else if(return_all & is.null(by)) {
+    all <- tidyr::nest(yearly, .key = "yearly_hr")
+    all <- dplyr::bind_cols(all, tidyr::nest(caaq, .key = "caaqs"))
+  } else all <- caaq
+  
+  all
 }
 
 #' @rdname caaqs_metric
 #' @export
 no2_3yr_caaq <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                         quiet = FALSE) {
+                         return_all = FALSE, quiet = FALSE) {
+  
+  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+                                         exclude_df, exclude_df_dt)
   
   if(!quiet) message("Calculating NO2 daily maximum")
   daily <- no2_daily_max(data, dt = dt, val = val, by = by)
@@ -253,5 +379,19 @@ no2_3yr_caaq <- function(data, dt = "date_time", val = "value",
   
   if(!quiet) message("Calculating NO2 1h CAAQ metric")
   yearly_roll <- no2_three_yr_avg(yearly, by = by)
-  caaq(yearly_roll, val = "no2_metric", by = by, metric = "no2_3yr", n = 3)
+  caaq <- caaq(yearly_roll, val = "no2_metric", by = by, metric = "no2_3yr", n = 3)
+  
+  if(return_all & !is.null(by)) {
+    all <- tidyr::nest(daily, -by, .key = "daily_max")
+    all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "yearly_98"), by = by)
+    all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
+    all <- dplyr::left_join(all, tidyr::nest(caaq, -by, .key = "caaqs"), by = by)
+  } else if(return_all & is.null(by)) {
+    all <- tidyr::nest(daily, .key = "daily_max")
+    all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "yearly_98"))
+    all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
+    all <- dplyr::bind_cols(all, tidyr::nest(caaq, .key = "caaqs"))
+  } else all <- caaq
+  
+  all
 }
