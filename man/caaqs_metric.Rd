@@ -122,8 +122,8 @@ pm_all <- pm_24h_caaq(pm25_sample_data,
                      return_all = TRUE)
 pm_all
 
-pm_all$daily
-pm_all$caaqs
+tidyr::unnest(pm_all, daily)
+tidyr::unnest(pm_all, caaqs)
 
 }
 \references{
