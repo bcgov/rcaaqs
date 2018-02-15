@@ -23,7 +23,12 @@ Imports:
     scales (>= 0.4.0),
     tidyr (>= 0.6.0)
 Suggests:
+    bcmaps,
+    knitr,
+    magrittr,
     rgdal (>= 1.2),
+    rmarkdown,
     sp (>= 1.2),
     testthat (>= 1.0.0)
 RoxygenNote: 6.0.1
+VignetteBuilder: knitr
