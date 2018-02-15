@@ -1,3 +1,14 @@
+# rcaaqs 0.3.1.9000
+
+* Finalized methods for SO2 and NO2
+* Output CAAQ status and managment status for each metric
+* Created function wrappers for each CAAQ metric
+* New function, `assign_airzone` to determine where sites are located in airzone shapefiles
+* Removed airzone map, use maps from `bcmaps` package instead
+* Updates to documentation
+* Improved coding consistency with respect to argument names
+* Use lubridate functions rather than internal date/time functions
+
 # rcaaqs 0.3.1
 
 * Fixed plotting functions to more reliably plot special characters (e.g., mu and superscript)
