@@ -7,11 +7,22 @@ test_that("Runs silently", {
   pm1$ann_98_percentile <- pm1$ann_avg
   pm2$ann_98_percentile <- pm2$ann_avg
   
+  # Annual
   expect_silent(r1 <- pm_three_yr_avg(pm1, val = "ann_avg"))
   expect_silent(r2 <- pm_three_yr_avg(pm2, val = "ann_avg",
                                       by = c("ems_id", "site")))
+  
+  # 98th percentile
   expect_silent(r3 <- pm_three_yr_avg(pm1))
   expect_silent(r4 <- pm_three_yr_avg(pm2, by = c("ems_id", "site")))
+  
+  # Expect whole numbers for 98_percentile
+  expect_true(all(r3$pm_metric %% 1 == 0 | is.na(r3$pm_metric)))
+  expect_true(all(r4$pm_metric %% 1 == 0 | is.na(r3$pm_metric)))
+  
+  # Expect equal if all rounded
+  r1$pm_metric <- round_caaqs(r1$pm_metric, 0)
+  r2$pm_metric <- round_caaqs(r2$pm_metric, 0)
   
   expect_equal(r1, r3)
   expect_equal(r2, r4)
