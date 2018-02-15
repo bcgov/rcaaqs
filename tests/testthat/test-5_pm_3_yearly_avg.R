@@ -44,13 +44,13 @@ test_that("has correct classes", {
 
 test_that("has correct dimensions", {
   nrows <- length(unique(format(pm1$date, "%Y")))
-  expect_equal(dim(ret1), c(nrows, 12))
+  expect_equal(dim(ret1), c(nrows, 13))
   
   nrows <- dplyr::mutate(pm2, year = format(date, "%Y")) %>%
     dplyr::summarize(n = length(unique(year))) %>%
     dplyr::pull(n) %>%
     sum(.)
-  expect_equal(dim(ret2), c(nrows, 14))
+  expect_equal(dim(ret2), c(nrows, 15))
 })
 
 test_that("has correct data", {
@@ -107,3 +107,4 @@ test_that("Only accepts date objects", {
 
   expect_error(pm_yearly_98(test, "posix", "val"))
 })
+

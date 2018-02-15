@@ -35,10 +35,10 @@ test_that("has correct classes", {
 
 test_that("has correct dimensions", {
   nrows <- nrow(so1)
-  expect_equal(dim(ret1), c(nrows, 16))
+  expect_equal(dim(ret1), c(nrows, 19))
   
   nrows <- nrow(so2)
-  expect_equal(dim(ret2), c(nrows, 18))
+  expect_equal(dim(ret2), c(nrows, 21))
 })
 
 test_that("has correct data", {

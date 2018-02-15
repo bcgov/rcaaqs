@@ -35,10 +35,10 @@ test_that("has correct classes", {
 
 test_that("has correct dimensions", {
   nrows <- nrow(no1)
-  expect_equal(dim(ret1), c(nrows, 16))
+  expect_equal(dim(ret1), c(nrows, 19))
   
   nrows <- nrow(no2)
-  expect_equal(dim(ret2), c(nrows, 18))
+  expect_equal(dim(ret2), c(nrows, 21))
 })
 
 test_that("has correct data", {
@@ -52,6 +52,8 @@ test_that("has correct data", {
     expect_equivalent(r$n_val[1:3], c(1, 2, 3))
     expect_equal(r$flag_two_of_three_years[1:3], c(FALSE, TRUE, FALSE))
     expect_equal(r$no2_metric[1:3], as.numeric(c(NA, 36.1, 36.5)))
+    expect_equal(r$min_year, c(2013, 2013, 2013))
+    expect_equal(r$max_year, c(2013, 2014, 2015))
   }
 })
 
