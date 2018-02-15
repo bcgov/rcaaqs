@@ -27,9 +27,9 @@ station belongs to. Requires a Spatial Polygons Data Frame object from the
 \code{sp} package containing the airzone names and locations (polygons).
 }
 \details{
-For British Columbia, consider using the \link[bcmaps]{airzones("sp")}
-function to extract a Spatial Polygons Data Frame of BC airzones from the 
-\code{\link{bcmaps}} package.
+For British Columbia, consider using the \code{airzones("sp")} function to
+extract a Spatial Polygons Data Frame of BC airzones from the 
+\code{\link[bcmaps]{bcmaps}} package.
 }
 \examples{
 

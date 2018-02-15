@@ -20,7 +20,6 @@
 #' @param format defunct function. do not use 
 #' @param lt defunct function. do not use
 #'
-#' @noRd
 format_date <- function(dates, format, lt) {
   .Defunct(new = "format_caaqs_dt", 
            msg = paste("This function has been removed from the package and been", 
