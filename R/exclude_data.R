@@ -64,7 +64,8 @@ exclude_data <- function(data, dt, by,
     
     ret_val <- dplyr::left_join(data, exclude_df, by = by_vector)
     ret_val <- dplyr::mutate(ret_val, 
-                             excluded = replace(excluded, is.na(excluded), FALSE))
+                             excluded = replace(.data$excluded, 
+                                                is.na(.data$excluded), FALSE))
     ret_val[[val]][ret_val$excluded] <- NA
 
     if(dt_new_set) ret_val <- dplyr::select(ret_val, - !!rlang::sym(dt_new))

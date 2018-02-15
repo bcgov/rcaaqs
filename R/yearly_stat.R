@@ -50,13 +50,13 @@ yearly_stat <- function(data, dt = "date", val = "value",
   if(!is.null(stat.opts)) {
     data <- dplyr::summarize(data, 
                              stat = stat(!!!rlang::syms(val), !!unlist(stat.opts)),
-                             excluded = any(excluded),
-                             flag_daily_incomplete = any(flag_daily_incomplete))
+                             excluded = any(.data$excluded),
+                             flag_daily_incomplete = any(.data$flag_daily_incomplete))
   } else {
     data <- dplyr::summarize(data, 
                              stat = stat(!!!rlang::syms(val)),
-                             excluded = any(excluded),
-                             flag_daily_incomplete = any(flag_daily_incomplete))
+                             excluded = any(.data$excluded),
+                             flag_daily_incomplete = any(.data$flag_daily_incomplete))
   }
   
   # Round data / Exceeds threshold

@@ -31,8 +31,8 @@ initial_check <- function(data, dt, val, by) {
   # Confirm that data is hourly sequential with no gaps
   data <- dplyr::group_by(data, !!!rlang::syms(by))
   check_groups(data, dt)
-  data <- dplyr::mutate(data, diff = difftime(date_time, 
-                                              dplyr::lag(date_time), 
+  data <- dplyr::mutate(data, diff = difftime(.data$date_time, 
+                                              dplyr::lag(.data$date_time), 
                                               units = "hours"))
   
   # Fill out gaps with NA
