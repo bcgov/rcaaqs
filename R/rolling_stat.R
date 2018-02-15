@@ -17,7 +17,8 @@
 #' 
 #' @noRd
 
-rolling_value <- function(data, dt, val, interval, by, window, valid_thresh) {
+rolling_value <- function(data, dt, val, interval, by, window, 
+                          valid_thresh, digits) {
   
   # Check inputs
   stopifnot(is.data.frame(data), 
@@ -46,7 +47,7 @@ rolling_value <- function(data, dt, val, interval, by, window, valid_thresh) {
                         rolled_value = round_caaqs(rolling_mean(.data[[val]], 
                                                                 width = window, 
                                                                 valid_thresh), 
-                                                   digits = 1))
+                                                   digits = digits))
   
   # Calculate extra details for three_yr_avgs, not for o3_rolling_8hr_avg
   if(dt == "year") {
@@ -104,7 +105,8 @@ o3_rolling_8hr_avg <- function(data, dt = "date_time", val = "value",
                        by = by, 
                        interval = 3600,
                        window = 8, 
-                       valid_thresh = 6)
+                       valid_thresh = 6,
+                       digits = 1)
   
   # Data completeness performed inside 'rolling_value' (assign NA if < 6 hours)
   
@@ -122,7 +124,8 @@ so2_three_yr_avg <- function(data, dt = "year", val = "ann_99_percentile", by = 
                         interval = 1,
                         by = by,
                         window = 3,
-                        valid_thresh = 2)
+                        valid_thresh = 2,
+                        digits = 1)
   
   # Data completeness performed inside 'rolling_value' (assign NA if < 2 years)
   
@@ -138,7 +141,8 @@ no2_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = 
                         interval = 1,
                         by = by,
                         window = 3,
-                        valid_thresh = 2)
+                        valid_thresh = 2,
+                        digits = 1)
   
   # Data completeness performed inside 'rolling_value' (assign NA if < 2 years)
   
@@ -154,7 +158,8 @@ pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = N
                         interval = 1,
                         by = by,
                         window = 3,
-                        valid_thresh = 2)
+                        valid_thresh = 2,
+                        digits = ifelse(val == "ann_98_percentile", 0, 1))
   
   # Data completeness performed inside 'rolling_value' (assign NA if < 2 years)
   
@@ -170,7 +175,8 @@ o3_three_yr_avg <- function(data, dt = "year", val = "max8hr", by = NULL) {
                         interval = 1,
                         by = by,
                         window = 3,
-                        valid_thresh = 2) 
+                        valid_thresh = 2,
+                        digits = 0) 
   
   # Data completeness performed inside 'rolling_value' (assign NA if < 2 years)
   
