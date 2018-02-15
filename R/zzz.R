@@ -89,10 +89,13 @@ check_class <- function(var, data, c) {
 }
 
 check_groups <- function(data, dt) {
+
   # Check for duplicates (considering grouping)
-  dup <- dplyr::group_by(data, !!rlang::sym(dt), add = TRUE)
-  dup <- dplyr::summarize(dup, n = length(.data[[dt]]))
-  if(any(dup$n > 1)) {
+  dup <- dplyr::summarize(data, 
+                          n = length(.data[[dt]]), 
+                          n1 = length(unique(.data[[dt]])),
+                          dup = .data$n != .data$n1)
+  if(any(dup$dup)) {
     msg <- paste0("Duplicate values in '", dt, "'.")
     if(is.null(by)) msg <- paste0(msg, " Consider using 'by' to specify grouping argument(s).")
     if(!is.null(by)) msg <- paste0(msg, " Consider adding additional grouping variables to 'by'.")
