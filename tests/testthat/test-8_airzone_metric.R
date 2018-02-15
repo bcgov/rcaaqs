@@ -64,7 +64,9 @@ test_that("assign_airzone catches incorrect input", {
   
   expect_error(assign_airzone(p, coords = c("latitude", "longitude")), "argument \"airzones\" is missing, with no default")
   
-  skip_if_not_installed("bcmaps")
+  skip_on_appveyor()
+  skip_on_cran()
+  skip_on_travis()
   expect_error(assign_airzone(p, coords = c("latitude", "longitude"),
                               airzones = bcmaps::airzones("sp"), az = "az"), 
                "'az' is not a column in the airzones Spatial Polygons Data Frame")
