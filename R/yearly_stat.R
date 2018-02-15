@@ -199,6 +199,7 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL,
   data$ann_avg[!(data$valid_year & data$valid_quarters)] <- NA
   
   # No yearly incomplete flags for annual PM2.5
+  data$flag_yearly_incomplete <- NA
   
   data
 }
