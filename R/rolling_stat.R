@@ -48,6 +48,12 @@ rolling_value <- function(data, dt, val, interval, by, window,
                                                                 width = window, 
                                                                 valid_thresh), 
                                                    digits = digits))
+  if("excluded" %in% names(data)) {
+    data <- dplyr::mutate(data, 
+                          excluded = rolling_sum(.data$excluded, 
+                                                 width = window),
+                          excluded = .data$excluded > 0)
+  }
   
   # Calculate extra details for three_yr_avgs, not for o3_rolling_8hr_avg
   if(dt == "year") {
