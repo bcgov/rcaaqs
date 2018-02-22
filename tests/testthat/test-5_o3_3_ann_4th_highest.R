@@ -3,16 +3,16 @@ context("o3 annual 4th highest")
 o1 <- readRDS("o3_daily1.rds")
 o2 <- readRDS("o3_daily2.rds") %>%
   dplyr::mutate(max8hr = replace(max8hr, ems_id == "0500886" & 
-                                   date > as.POSIXct("2013-06-01") &
-                                   date < as.POSIXct("2013-08-01"),
+                                   date > as.Date("2013-06-01") &
+                                   date < as.Date("2013-08-01"),
                                  NA),
                 max8hr = replace(max8hr, ems_id == "0500886" & 
-                                   date > as.POSIXct("2014-06-01") &
-                                   date < as.POSIXct("2014-06-21"),
+                                   date > as.Date("2014-06-01") &
+                                   date < as.Date("2014-06-21"),
                                  NA),
                 max8hr = replace(max8hr, ems_id == "0500886" & 
-                                   date > as.POSIXct("2014-07-16") &
-                                   date < as.POSIXct("2014-08-01"),
+                                   date > as.Date("2014-07-16") &
+                                   date < as.Date("2014-08-01"),
                                  get_std("o3") + 1))
                                  
 test_that("Runs with silently", {
@@ -77,7 +77,7 @@ test_that("can exclude data rows", {
   
   high_dates <- dplyr::group_by(o2, ems_id, site, year = lubridate::year(date)) %>%
     dplyr::filter(max8hr == max(max8hr, na.rm = TRUE)) %>%
-    dplyr::ungroup()%>%
+    dplyr::ungroup() %>%
     dplyr::select(ems_id, site, date) %>%
     dplyr::slice(1:25)
   
