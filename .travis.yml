@@ -2,17 +2,38 @@ language: r
 cran: https://cran.rstudio.com
 # cache: packages
 sudo: required
-dist: trusty
 
 before_install:
   - sudo add-apt-repository ppa:ubuntugis/ppa --yes
   - sudo apt-get --yes --force-yes update -qq
   - sudo apt-get install --yes libudunits2-dev libproj-dev libgeos-dev libgdal-dev
 
-r:
-  - release
-  - devel
-  - oldrel
+matrix:
+  include:
+    - os: linux
+      r: devel
+
+    - os: linux
+      r: release
+
+    - os: linux
+      r: oldrel
+
+    - os: osx
+      r: devel
+      
+    - os: osx
+      r: release
+    
+    - os: osx
+      r: oldrel
+
+  allow_failures:
+    - os: linux
+      r: devel
+      
+    - os: osx
+      r: devel
 
 notifications:
   email:
