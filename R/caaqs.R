@@ -12,59 +12,6 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-#' @importFrom rlang .data
-caaq <- function(data, year = "year", val, by, metric, n) {
-
-  # Check inputs
-  check_vars(list(year, val, by), data)
-  check_class(year, data, "numeric")
-  check_class(val, data, "numeric")
-  
-  # Rename to standard
-  names(data)[names(data) == year] <- "year"
-  names(data)[names(data) == val] <- "metric_value"
-  
-  # Start with ungrouped data
-  data <- dplyr::ungroup(data)
-  
-  # Group data if supplied
-  if(!is.null(by)) {
-    if(n == 3) {
-      data <- dplyr::group_by_if(data, names(data) %in% by)
-      check_groups(data, year)
-    }
-  }
-  
-  # Order by date (within grouping if applied)
-  data <- dplyr::arrange(data, !!! rlang::syms(c(by, "year")))
-
-  # Added details
-  if(n == 3) {
-    data <- dplyr::mutate(data, 
-                          n_years = .data$n_val,
-                          n_max = as.integer(max(.data$n_years, na.rm = TRUE)))
-    
-    data <- dplyr::ungroup(data)
-  }
-
-  # Determine station achievements
-  data$caaqs <- cut_achievement(data$metric_value, metric, output = "labels")
-  data$mgmt <- cut_management(data$metric_value, metric)
-  data$metric <- metric
-  
-  # Clean up
-  data <- dplyr::rename(data, "caaq_year" = "year")
-  cols_keep <- c(by, "caaq_year", "min_year", "max_year", "n_years", "metric", 
-                 "metric_value", "caaqs", "mgmt", "excluded",
-                 "flag_daily_incomplete", "flag_yearly_incomplete",
-                 "flag_two_of_three_years")
-  cols_keep <- cols_keep[cols_keep %in% names(data)]
-  
-  data <- dplyr::select(data, cols_keep)
-  
-  data
-}
-
 #' Compute specific CAAQ metrics
 #' 
 #' Compute specific CAAQ metrics for different forms of air pollution.
@@ -143,7 +90,7 @@ caaq <- function(data, year = "year", val, by, metric, n) {
 #'                      return_all = TRUE)
 #' pm_all
 #' 
-#' tidyr::unnest(pm_all, daily)
+#' tidyr::unnest(pm_all, daily_avg)
 #' tidyr::unnest(pm_all, caaqs)
 #' 
 #' @name caaqs_metric
@@ -151,6 +98,59 @@ caaq <- function(data, year = "year", val, by, metric, n) {
 NULL
 #> NULL
 
+
+#' @importFrom rlang .data
+caaq <- function(data, year = "year", val, by, metric, n) {
+
+  # Check inputs
+  check_vars(list(year, val, by), data)
+  check_class(year, data, "numeric")
+  check_class(val, data, "numeric")
+  
+  # Rename to standard
+  names(data)[names(data) == year] <- "year"
+  names(data)[names(data) == val] <- "metric_value"
+  
+  # Start with ungrouped data
+  data <- dplyr::ungroup(data)
+  
+  # Group data if supplied
+  if(!is.null(by)) {
+    if(n == 3) {
+      data <- dplyr::group_by_if(data, names(data) %in% by)
+      check_groups(data, year)
+    }
+  }
+  
+  # Order by date (within grouping if applied)
+  data <- dplyr::arrange(data, !!! rlang::syms(c(by, "year")))
+
+  # Added details
+  if(n == 3) {
+    data <- dplyr::mutate(data, 
+                          n_years = .data$n_val,
+                          n_max = as.integer(max(.data$n_years, na.rm = TRUE)))
+    
+    data <- dplyr::ungroup(data)
+  }
+
+  # Determine station achievements
+  data$caaqs <- cut_achievement(data$metric_value, metric, output = "labels")
+  data$mgmt <- cut_management(data$metric_value, metric)
+  data$metric <- metric
+  
+  # Clean up
+  data <- dplyr::rename(data, "caaq_year" = "year")
+  cols_keep <- c(by, "caaq_year", "min_year", "max_year", "n_years", "metric", 
+                 "metric_value", "caaqs", "mgmt", "excluded",
+                 "flag_daily_incomplete", "flag_yearly_incomplete",
+                 "flag_two_of_three_years")
+  cols_keep <- cols_keep[cols_keep %in% names(data)]
+  
+  data <- dplyr::select(data, cols_keep)
+  
+  data
+}
 
 #' @rdname caaqs_metric
 #' @export
