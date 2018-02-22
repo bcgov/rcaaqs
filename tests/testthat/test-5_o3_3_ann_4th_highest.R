@@ -75,12 +75,18 @@ test_that("performs data completeness accurately", {
 
 test_that("can exclude data rows", {
   
-  high_dates <- dplyr::group_by(o2, ems_id, site, year = lubridate::year(date)) %>%
-    dplyr::filter(max8hr == max(max8hr, na.rm = TRUE)) %>%
-    dplyr::ungroup() %>%
-    dplyr::select(ems_id, site, date) %>%
-    dplyr::slice(1:25)
+  # Following causes errors on travis ci?? Save file to disk to ensure it's the same
   
+  # high_dates <- dplyr::group_by(o2, ems_id, site, year = lubridate::year(date)) %>%
+  #   dplyr::filter(max8hr == max(max8hr, na.rm = TRUE)) %>%
+  #   dplyr::ungroup() %>%
+  #   dplyr::select(ems_id, site, date) %>%
+  #   dplyr::slice(1:25) %>%
+  #   write.csv("o2_ann_4th_exclude.csv", row.names = FALSE)
+  
+  high_dates <- read.csv("o2_ann_4th_exclude.csv", 
+                         colClasses = c("character", "character", "Date"))
+                                
   expect_silent(ret3 <- o3_ann_4th_highest(o2, by = c("ems_id", "site"),
                                            exclude_df = high_dates, 
                                            exclude_df_dt = c("date"), 
