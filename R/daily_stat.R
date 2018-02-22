@@ -34,14 +34,14 @@ initial_check <- function(data, dt, val, by) {
   data <- dplyr::mutate(data, diff = difftime(.data$date_time, 
                                               dplyr::lag(.data$date_time), 
                                               units = "hours"))
-  
+
   # Fill out gaps with NA
   if(any(data$diff < 1, na.rm = TRUE)) {
     stop("Data resolution is less than hourly, summarize to hourly first", 
          call. = FALSE)
   } else if (any(data$diff > 1, na.rm = TRUE)) {
     data <- tidyr::complete(data,
-                            !!!rlang::syms(dt) := tidyr::full_seq(!!!rlang::syms(dt), 3600),
+                            !!rlang::sym(dt) := tidyr::full_seq(!!!rlang::syms(dt), 3600),
                             tidyr::nesting(!!!rlang::syms(by)))
   }
   
