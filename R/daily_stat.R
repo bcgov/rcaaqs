@@ -22,6 +22,7 @@ initial_check <- function(data, dt, val, by) {
   check_vars(list(by, dt, val), data)
   check_class(dt, data, "POSIXct")
   check_class(val, data, "numeric")
+  check_one(dt, val)
   
   data <- dplyr::arrange(data, !!!rlang::syms(c(by, "date_time")))
 
@@ -41,7 +42,7 @@ initial_check <- function(data, dt, val, by) {
          call. = FALSE)
   } else if (any(data$diff > 1, na.rm = TRUE)) {
     data <- tidyr::complete(data,
-                            !!rlang::sym(dt) := tidyr::full_seq(!!!rlang::syms(dt), 3600),
+                            !!rlang::sym(dt) := tidyr::full_seq(!!rlang::sym(dt), 3600),
                             tidyr::nesting(!!!rlang::syms(by)))
   }
   
@@ -75,7 +76,7 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
   data <- dplyr::ungroup(data)
   
   # Add dates
-  data <- dplyr::mutate(data, date = time_to_date(!!!rlang::syms(dt)))
+  data <- dplyr::mutate(data, date = time_to_date(!!rlang::sym(dt)))
   
   # Add grouping
   data <- dplyr::group_by(data, !!!rlang::syms(c(by, "date")))
@@ -83,7 +84,7 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
   
   # Validity checks
   validity <- dplyr::summarize(data,
-                               n_readings = length(stats::na.omit(!!!rlang::syms(val))),
+                               n_readings = length(stats::na.omit(!!rlang::sym(val))),
                                valid = .data$n_readings >= n_readings_min)
   
   # Exclude data before stat calculation - THIS SHOULD HAPPEN IN NEXT STEP, NOT HERE

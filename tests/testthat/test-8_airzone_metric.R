@@ -56,8 +56,8 @@ test_that("assign_airzone catches incorrect input", {
                   longitude = c(rep(-119, 3), rep(-123, 3)))
   
   expect_error(assign_airzone(""), "'data' is not a data frame")
-  expect_error(assign_airzone(p), "'lat' is not a column in data")
-  expect_error(assign_airzone(p, coords = c("latitude", "lon")), "'lon' is not a column in data")
+  expect_error(assign_airzone(p), "'lat' is not a column in 'data'")
+  expect_error(assign_airzone(p, coords = c("latitude", "lon")), "'lon' is not a column in 'data'")
   
   expect_error(assign_airzone(p, coords = c("ems_id", "site")), "Column 'ems_id' is not numeric")
   expect_error(assign_airzone(p, coords = c("latitude", "site")), "Column 'site' is not numeric")
@@ -69,7 +69,7 @@ test_that("assign_airzone catches incorrect input", {
   skip_on_travis()
   expect_error(assign_airzone(p, coords = c("latitude", "longitude"),
                               airzones = bcmaps::airzones("sp"), az = "az"), 
-               "'az' is not a column in the airzones Spatial Polygons Data Frame")
+               "'az' is not a column in 'airzones@data'")
   
   expect_error(assign_airzone(p, coords = c("longitude", "latitude"),
                               airzones = bcmaps::airzones("sp")),

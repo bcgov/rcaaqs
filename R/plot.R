@@ -282,10 +282,13 @@ achievement_plot <- function(data, parameter = NULL) {
 #' @noRd
 plot_station_instruments <- function(data, dt = "date_time", station = "station_name", instrument = "instrument") {
   
+  check_vars(vars = list(dt, station, instrument), data)
+  check_one(dt, station, instrument)
+  
   data$date <- as.Date(data[[dt]])
   
   ## conversation here discussing quosing strings: https://github.com/tidyverse/rlang/issues/116
-  data <- dplyr::group_by(data, date, !!!rlang::syms(station), !!!rlang::syms(instrument))
+  data <- dplyr::group_by(data, date, !!rlang::sym(station), !!rlang::sym(instrument))
   data <- dplyr::summarize(data)
   
   ggplot(data, aes_string(x = "date", y = instrument, colour = instrument)) + 

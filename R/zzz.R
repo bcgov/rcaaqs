@@ -68,11 +68,24 @@ round_caaqs <- function(x, digits = 0) {
   trunc(scaled_x + sign(x) * 0.5) / scale
 }
 
-check_vars <- function(vars, data, name_data = "data") {
-  if(!is.data.frame(data)) stop("'", deparse(substitute(data)), "' is not a data frame", call. = FALSE)
+check_vars <- function(vars, data) {
+  if(!is.data.frame(data)) stop("'", deparse(substitute(data)), 
+                                "' is not a data frame", call. = FALSE)
   for(var in vars) {
-    if(!is.character(var) && !is.null(var)) stop("'", var, "' is not a character vector", call. = FALSE)
-    if(!(var %in% names(data)) && !is.null(var)) stop("'", var, "' is not a column in ", name_data, call. = FALSE)
+    if(!is.character(var) && !is.null(var)) stop("'", var, 
+                                                 "' is not a character vector", 
+                                                 call. = FALSE)
+    if(!all(var %in% names(data)) && !is.null(var)) {
+      stop("'", var, "' is not a column in '", 
+           deparse(substitute(data)), "'", call. = FALSE)
+    }
+  }
+}
+
+check_one <- function(...) {
+  for(a in list(...)) {
+    if(length(a) > 1) stop("'", deparse(substitute(a)), 
+                           "' takes only one argument", call. = FALSE)
   }
 }
 

@@ -237,8 +237,8 @@ time_to_date <- function(date_time) {
 valid_by_quarter <- function(data, date, by, val, units = c("prop", "days")) {
   data <- dplyr::ungroup(data)
   data <- dplyr::mutate(data,
-                        year = lubridate::year(!!!rlang::syms(date)),
-                        quarter = lubridate::quarter(!!!rlang::syms(date)))
+                        year = lubridate::year(!!rlang::sym(date)),
+                        quarter = lubridate::quarter(!!rlang::sym(date)))
 
   data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year", "quarter")))
   data <- dplyr::summarise(data, days = length(.data$year[!is.na(.data[[val]])]))

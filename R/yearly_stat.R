@@ -28,7 +28,7 @@ yearly_stat <- function(data, dt = "date", val = "value",
             val %in% names(data),
             is.numeric(data[[val]]))
   
-  data <- dplyr::mutate(data, year = lubridate::year(!!!rlang::syms(dt)))
+  data <- dplyr::mutate(data, year = lubridate::year(!!rlang::sym(dt)))
   
   # Apply grouping
   data <- dplyr::group_by(data, !!!rlang::syms(c(by, "year")))
@@ -49,12 +49,12 @@ yearly_stat <- function(data, dt = "date", val = "value",
   # Calculate yearly statistic
   if(!is.null(stat.opts)) {
     data <- dplyr::summarize(data, 
-                             stat = stat(!!!rlang::syms(val), !!unlist(stat.opts)),
+                             stat = stat(!!rlang::sym(val), !!unlist(stat.opts)),
                              excluded = any(.data$excluded),
                              flag_daily_incomplete = any(.data$flag_daily_incomplete))
   } else {
     data <- dplyr::summarize(data, 
-                             stat = stat(!!!rlang::syms(val)),
+                             stat = stat(!!rlang::sym(val)),
                              excluded = any(.data$excluded),
                              flag_daily_incomplete = any(.data$flag_daily_incomplete))
   }

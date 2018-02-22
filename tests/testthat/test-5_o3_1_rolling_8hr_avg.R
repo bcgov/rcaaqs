@@ -71,7 +71,7 @@ test_that("performs data completeness accurately", {
 
 test_that("errors correctly", {
   expect_error(o3_rolling_8hr_avg(o1, dt = "foo", val = "value"),
-               "'foo' is not a column in data", fixed = TRUE)
+               "'foo' is not a column in 'data'", fixed = TRUE)
   expect_error(o3_rolling_8hr_avg(o1, dt = "date_time", val = "foo"),
-               "'foo' is not a column in data", fixed = TRUE)
+               "'foo' is not a column in 'data'", fixed = TRUE)
 })

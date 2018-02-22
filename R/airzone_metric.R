@@ -38,17 +38,18 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   
   # Check inputs
   check_vars(c(n_years, az, caaq), data)
-  if (!is.numeric(data[[n_years]])) stop("Data column ", n_years, " must be numeric")
-  if (!is.numeric(data[[caaq]])) stop("Data column", caaq, " must be numeric")
+  check_one(n_years, az, caaq)
+  check_class(n_years, data, "numeric")
+  check_class(caaq, data, "numeric")
   
   # set caaq column to NA if n_years < 3 (unless only have 2 years)
-  data <- tidyr::nest(data, - !!!rlang::syms(az))
+  data <- tidyr::nest(data, - !!rlang::sym(az))
   data <- dplyr::mutate(data, data = purrr::map(.data$data, ~ parse_incomplete(., n_years, caaq)))
   
   # Take station with max caaq for each airzone
   data <- dplyr::mutate(data, data = purrr::map(.data$data, ~ dplyr::slice(.x, which.max(.x[[caaq]]))))
   data <- tidyr::unnest(data)
-  data <- dplyr::arrange(data, !!!rlang::syms(az))
+  data <- dplyr::arrange(data, !!rlang::sym(az))
   
   # Arrange column order
   data <- data[, c(az, n_years, caaq,
@@ -109,6 +110,7 @@ assign_airzone <- function(data, airzones, az = "Airzone",
                            coords = c("lat", "lon")) {
   # Check inputs
   check_vars(c(station_id, coords), data)
+  check_one(az, station_id)
   check_class(coords[1], data, "numeric")
   check_class(coords[2], data, "numeric")
   
@@ -116,7 +118,7 @@ assign_airzone <- function(data, airzones, az = "Airzone",
     stop("airzones must be a SpatialPolygonsDataFrame (from the 'sp' package)")
   }
 
-  check_vars(az, airzones@data, name_data = "the airzones Spatial Polygons Data Frame")
+  check_vars(az, airzones@data)
   
   if(!(az %in% names(airzones@data))) {
     stop("'", az, "' is not a column in the Spatial Polygons Data Frame")
