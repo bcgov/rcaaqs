@@ -3,7 +3,7 @@ context("pm three year rolling average")
 pm1 <- readRDS("pm_yearlyavg_1.rds")
 pm2 <- readRDS("pm_yearlyavg_2.rds")
 
-test_that("Runs silently", {
+test_that("Runs silently and same for both metrics", {
   pm1$ann_98_percentile <- pm1$ann_avg
   pm2$ann_98_percentile <- pm2$ann_avg
   
@@ -24,8 +24,8 @@ test_that("Runs silently", {
   r1$pm_metric <- round_caaqs(r1$pm_metric, 0)
   r2$pm_metric <- round_caaqs(r2$pm_metric, 0)
   
-  expect_equal(r1, r3)
-  expect_equal(r2, r4)
+  for(n in names(r1)) expect_equal(r1[[n]], r3[[n]], info = paste0("Column: ", n))
+  for(n in names(r2)) expect_equal(r2[[n]], r4[[n]], info = paste0("Column: ", n))
   
   r1$ann_98_percentile <- NULL
   r2$ann_98_percentile <- NULL
