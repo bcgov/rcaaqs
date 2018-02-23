@@ -242,6 +242,7 @@ pm_az2
 
 ```{r, fig.width = 8, fig.asp = 1.5}
 library(sp)
+library(maptools)
 library(gridExtra)
 
 az_plot <- spTransform(az, CRS("+proj=longlat")) %>%
