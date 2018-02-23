@@ -136,7 +136,8 @@ get_labels <- function(x, output, drop_na) {
   
   if (!drop_na) {
     if (output %in% c("colour", "color")) {
-      labels <- c("#CCCCCC", labels)
+      labels <- c("#E8D3D3", labels) # pale grey-pink
+      #labels <- c("#0900FF", labels) #blue
     } else {
       labels <- c("Insufficient Data", labels)
     }
