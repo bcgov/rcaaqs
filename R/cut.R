@@ -27,7 +27,7 @@
 #'@return factor
 
 cut_management <- function(x, parameter, output = "labels", drop_na = FALSE) {
-  cut_caaq(type = "management", x = x, parameter = parameter, output = output, 
+  cut_caaqs(type = "management", x = x, parameter = parameter, output = output, 
            drop_na = drop_na)
 }
 
@@ -46,12 +46,12 @@ cut_management <- function(x, parameter, output = "labels", drop_na = FALSE) {
 #'@return factor
 
 cut_achievement <- function(x, parameter, output = "labels", drop_na = FALSE) {
-  cut_caaq(type = "achievement", x = x, parameter = parameter, output = output, 
+  cut_caaqs(type = "achievement", x = x, parameter = parameter, output = output, 
            drop_na = drop_na)
 }
 
 #' @keywords internal
-cut_caaq <- function(type, x, parameter, output, drop_na) {
+cut_caaqs <- function(type, x, parameter, output, drop_na) {
   levels <- get_levels(type, parameter)
 
   breaks <- c(levels$lower_breaks, Inf)

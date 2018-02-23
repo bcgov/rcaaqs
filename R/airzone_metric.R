@@ -43,7 +43,7 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   check_class(n_years, data, "numeric")
   check_class(caaqs_val, data, "numeric")
   
-  # Take station with max caaq for each airzone
+  # Take station with max caaqs for each airzone
   data <- tidyr::nest(data, - !!rlang::sym(az))
   data <- dplyr::mutate(data, data = purrr::map(.data$data, ~ dplyr::slice(.x, which.max(.x[[caaqs_val]]))))
   data <- tidyr::unnest(data)

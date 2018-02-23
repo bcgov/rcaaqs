@@ -27,8 +27,11 @@ Imports:
 Suggests:
     bcmaps,
     bcmaps.rdata,
+    broom,
+    gridExtra,
     knitr,
     magrittr,
+    readr,
     rgdal (>= 1.2),
     rmarkdown,
     sp (>= 1.2),

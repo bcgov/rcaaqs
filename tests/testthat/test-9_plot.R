@@ -1,7 +1,7 @@
 context("plotting")
 
 daily_data <- readRDS("pm_daily1.rds")
-annual_data <- readRDS("pm_24h_caaq1.rds")
+annual_data <- readRDS("pm_24h_caaqs1.rds")
 
 test_that("mid_breaks works", {
   expect_is(mid_breaks(), "function")
@@ -49,9 +49,9 @@ test_that("plot_ts works without caaqs_data (ozone)", {
 
 test_that("works with caaqs_data (ozone)", {
   o3_daily <- readRDS("o3_daily1.rds")
-  o3_caaq <- readRDS("o3_caaq1.rds")
+  o3_caaqs <- readRDS("o3_caaqs1.rds")
   
-  p <- plot_ts(o3_daily, caaqs_data = o3_caaq[3,], parameter = "o3",
+  p <- plot_ts(o3_daily, caaqs_data = o3_caaqs[3,], parameter = "o3",
                rep_yr = 2013, plot_exceedances = FALSE)
   expect_is(p, "ggplot")
   expect_is(ggplot2::ggplot_build(p), "list")
@@ -65,7 +65,7 @@ test_that("plot_ts works without caaqs_data (pm_24h)", {
 })
 
 test_that("works with caaqs_data (pm24h)", {
-  caaqs_data <- readRDS("pm_24h_caaq2.rds")
+  caaqs_data <- readRDS("pm_24h_caaqs2.rds")
   p <- plot_ts(daily_data, caaqs_data = caaqs_data[6,], parameter = "pm2.5_24h", 
                rep_yr = 2013, plot_exceedances = FALSE)
   expect_is(p, "ggplot")
@@ -80,7 +80,7 @@ test_that("plot_ts works without caaqs_data (pm_annual)", {
 })
 
 test_that("works with caaqs_data (pm_annual)", {
-  caaqs_data <- readRDS("pm_annual_caaq2.rds")
+  caaqs_data <- readRDS("pm_annual_caaqs2.rds")
   p <- plot_ts(daily_data, caaqs_data = caaqs_data[6,], 
                parameter = "pm2.5_annual", rep_yr = 2013, plot_exceedances = FALSE)
   expect_is(p, "ggplot")

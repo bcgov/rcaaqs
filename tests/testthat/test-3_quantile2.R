@@ -10,7 +10,7 @@ test_that("type is either 'caaqs' or 0:10", {
   expect_error(quantile2(1:5, type = 10))
 })
 
-test_that("percentiles are correct with type = 'caaq'", {
+test_that("percentiles are correct with type = 'caaqs'", {
   expect_true(all.equal(quantile2(1:25, probs = 0.98, type = "caaqs"), 25))
   expect_true(all.equal(quantile2(1:50, probs = 0.98, type = "caaqs"), 50))
   expect_true(all.equal(quantile2(1:51, probs = 0.98, type = "caaqs"), 50))

@@ -2,40 +2,40 @@
 % Please edit documentation in R/caaqs.R
 \name{caaqs_metric}
 \alias{caaqs_metric}
-\alias{pm_24h_caaq}
-\alias{pm_annual_caaq}
-\alias{o3_caaq}
-\alias{so2_1yr_caaq}
-\alias{so2_3yr_caaq}
-\alias{no2_1yr_caaq}
-\alias{no2_3yr_caaq}
-\title{Compute specific CAAQ metrics}
+\alias{pm_24h_caaqs}
+\alias{pm_annual_caaqs}
+\alias{o3_caaqs}
+\alias{so2_1yr_caaqs}
+\alias{so2_3yr_caaqs}
+\alias{no2_1yr_caaqs}
+\alias{no2_3yr_caaqs}
+\title{Compute specific CAAQS metrics}
 \usage{
-pm_24h_caaq(data, dt = "date_time", val = "value", by = NULL,
+pm_24h_caaqs(data, dt = "date_time", val = "value", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
   quiet = FALSE)
 
-pm_annual_caaq(data, dt = "date_time", val = "value", by = NULL,
+pm_annual_caaqs(data, dt = "date_time", val = "value", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
   quiet = FALSE)
 
-o3_caaq(data, dt = "date_time", val = "value", by = NULL,
+o3_caaqs(data, dt = "date_time", val = "value", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
   quiet = FALSE)
 
-so2_1yr_caaq(data, dt = "date_time", val = "value", by = NULL,
+so2_1yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
   quiet = FALSE)
 
-so2_3yr_caaq(data, dt = "date_time", val = "value", by = NULL,
+so2_3yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
   quiet = FALSE)
 
-no2_1yr_caaq(data, dt = "date_time", val = "value", by = NULL,
+no2_1yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
   quiet = FALSE)
 
-no2_3yr_caaq(data, dt = "date_time", val = "value", by = NULL,
+no2_3yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
   quiet = FALSE)
 }
@@ -66,24 +66,24 @@ nested dataframes? (default FALSE)}
 \item{quiet}{Logical. Suppress progress messages (default FALSE)}
 }
 \value{
-Data frame with CAAQ metrics. 
+Data frame with CAAQS metrics. 
   \itemize{
-    \item caaq_year The year corresponding to the CAAQ metric
-    \item metric The type of CAAQ metric calculated
-    \item metric_value The CAAQ metric value, rounded to appropriate digits
-    \item caaqs The CAAQ status, Achieved, Not Achieved, or Insufficient Data
+    \item caaqs_year The year corresponding to the CAAQS metric
+    \item metric The type of CAAQS metric calculated
+    \item metric_value The CAAQS metric value, rounded to appropriate digits
+    \item caaqs The CAAQS status, Achieved, Not Achieved, or Insufficient Data
     \item mgmt The management status actions
     \item excluded Logical value indicating whether any of the underlying
     data was excluded due to transboundary flows or exceptional events
     \item flag_daily_incomplete Logical value indicating whether any of the
-    daily data was flagged as incomplete (see CAAQ guidelines for more
+    daily data was flagged as incomplete (see CAAQS guidelines for more
     details). If NA, indicates that this particular metric is never flagged.
     \item flag_yearly_incomplete Logical value indicating whether any of the
-    yearly data was flagged as incomplete (see CAAQ guidelines for more
+    yearly data was flagged as incomplete (see CAAQS guidelines for more
     details). If NA, indicates that this particular metric is never flagged.}
 }
 \description{
-Compute specific CAAQ metrics for different forms of air pollution.
+Compute specific CAAQS metrics for different forms of air pollution.
 }
 \details{
 To omit days which are suspected to be influenced by Transboundary
@@ -102,7 +102,7 @@ To omit days which are suspected to be influenced by Transboundary
 \examples{
 
 # Normal run
-pm <- pm_24h_caaq(pm25_sample_data, by = c("ems_id", "site"))
+pm <- pm_24h_caaqs(pm25_sample_data, by = c("ems_id", "site"))
 
 # Exclude dates
 high_dates <- data.frame(ems_id = "0310162",
@@ -110,14 +110,14 @@ high_dates <- data.frame(ems_id = "0310162",
                          date = seq(as.Date("2012-06-11"),
                                     as.Date("2012-06-30"), by = "1 day"))
                                     
-pm_ex <- pm_24h_caaq(pm25_sample_data, 
+pm_ex <- pm_24h_caaqs(pm25_sample_data, 
                      by = c("ems_id", "site"),
                      exclude_df = high_dates,
                      exclude_df_dt = "date")
                      
 # Return all intermediate data
 
-pm_all <- pm_24h_caaq(pm25_sample_data, 
+pm_all <- pm_24h_caaqs(pm25_sample_data, 
                      by = c("ems_id", "site"), 
                      return_all = TRUE)
 pm_all

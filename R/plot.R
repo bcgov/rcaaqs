@@ -45,8 +45,8 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
   line_col <- "#9ecae1"
   plot_std <- TRUE
   draw_caaqs <- FALSE
-  caaq_metric <- "metric_value"
-  caaq_status <- "caaqs"
+  caaqs_metric <- "metric_value"
+  caaqs_status <- "caaqs"
   
   if (parameter == "pm2.5_annual") {
     val <- "avg_24h"
@@ -108,7 +108,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
   
   if (!is.null(caaqs_data) && !nrow(caaqs_data) == 0) {
     stopifnot(nrow(caaqs_data) == 1)
-    if (is.na(caaqs_data[[caaq_metric]])) {
+    if (is.na(caaqs_data[[caaqs_metric]])) {
       warning("caaqs not added to plot: Insufficient Data")
     } else {
       draw_caaqs <- TRUE
@@ -120,20 +120,20 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
       label_pos_x <- mean(c(mindate, maxdate))
       # Put y label at higher of 98th percentile of data, or caaqs_data + 5
       high_val_in_min_year <- stats::quantile(daily_data[[val]][daily_data$date < label_pos_x], 0.98, na.rm = TRUE)
-      label_pos_y <- max(high_val_in_min_year + 2, caaqs_data[[caaq_metric]] + 5)
+      label_pos_y <- max(high_val_in_min_year + 2, caaqs_data[[caaqs_metric]] + 5)
       seg_x <- label_pos_x + 5
       seg_xend <- seg_x + 50
       
       p <- p + geom_segment(data = caaqs_data, 
                             mapping = aes_string(x = "b_date", xend = "e_date", 
-                                                 y = caaq_metric, yend = caaq_metric, 
-                                                 colour = caaq_status), size = 1.5)
+                                                 y = caaqs_metric, yend = caaqs_metric, 
+                                                 colour = caaqs_status), size = 1.5)
       p <- p + annotate("text", x = label_pos_x, y = label_pos_y, 
                         label = paste0(min_year, "-", max_year, "~", param_name, "~Metric"), 
                         parse = TRUE,
                         size = annot_size, hjust = 1, colour = "grey45")
       p <- p + geom_segment(data = caaqs_data, colour = "grey45", x = as.numeric(seg_x), y = label_pos_y, 
-                            xend = as.numeric(seg_xend), yend = caaqs_data[[caaq_metric]])
+                            xend = as.numeric(seg_xend), yend = caaqs_data[[caaqs_metric]])
       p <- p + scale_colour_manual(values = c("Achieved" = "#377eb8", "Not Achieved" = "#e41a1c"), 
                                    labels = expression(paste0(min_year, "-", max_year, "~", param_name, "~Metric")), 
                                    name = element_blank(), guide = "none")
@@ -144,7 +144,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
     p <- p + geom_hline(aes_string(yintercept = std), linetype = 2, colour = "#e41a1c")
     # Set y label position dependent on if and where caaqs line is drawn
     if (draw_caaqs) {
-      if (caaqs_data[[caaq_metric]][1] < std || caaqs_data[[caaq_metric]][1] - std > 5) {
+      if (caaqs_data[[caaqs_metric]][1] < std || caaqs_data[[caaqs_metric]][1] - std > 5) {
         label_pos_y <- std + (base_size / 2)
       } else {
         label_pos_y <- std - (base_size / 10)

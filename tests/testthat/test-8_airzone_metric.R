@@ -81,7 +81,7 @@ test_that("assign_airzone returns expected input", {
   skip_on_cran()
   skip_on_travis()
   
-  p <- readRDS("pm_24h_caaq2.rds") %>%
+  p <- readRDS("pm_24h_caaqs2.rds") %>%
     dplyr::mutate(latitude = c(rep(49.9, 3), rep(48.4, 3)),
                   longitude = c(rep(-119, 3), rep(-123, 3)))
   
