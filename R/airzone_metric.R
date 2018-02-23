@@ -34,26 +34,24 @@
 #' @export
 
 airzone_metric <- function(data, n_years = "n_years", az = "airzone", 
-                           caaq = "caaq_metric", keep = NULL) {
+                           caaqs_val = "metric_value", caaqs = "caaqs", 
+                           mgmt = "mgmt", keep = NULL) {
   
   # Check inputs
-  check_vars(c(n_years, az, caaq), data)
-  check_one(n_years, az, caaq)
+  check_vars(c(n_years, az, caaqs_val, caaqs), data)
+  check_one(n_years, az, caaqs_val, caaqs)
   check_class(n_years, data, "numeric")
-  check_class(caaq, data, "numeric")
-  
-  # set caaq column to NA if n_years < 3 (unless only have 2 years)
-  data <- tidyr::nest(data, - !!rlang::sym(az))
-  data <- dplyr::mutate(data, data = purrr::map(.data$data, ~ parse_incomplete(., n_years, caaq)))
+  check_class(caaqs_val, data, "numeric")
   
   # Take station with max caaq for each airzone
-  data <- dplyr::mutate(data, data = purrr::map(.data$data, ~ dplyr::slice(.x, which.max(.x[[caaq]]))))
+  data <- tidyr::nest(data, - !!rlang::sym(az))
+  data <- dplyr::mutate(data, data = purrr::map(.data$data, ~ dplyr::slice(.x, which.max(.x[[caaqs_val]]))))
   data <- tidyr::unnest(data)
   data <- dplyr::arrange(data, !!rlang::sym(az))
   
   # Arrange column order
-  data <- data[, c(az, n_years, caaq,
-               setdiff(keep, c(az, n_years, caaq)))]
+  data <- data[, c(az, n_years, caaqs_val, caaqs, mgmt,
+               setdiff(keep, c(az, n_years, caaqs_val, caaqs, mgmt)))]
   
   # Rename keep columns if asked to
   if (!is.null(names(keep))) {
@@ -131,7 +129,6 @@ assign_airzone <- function(data, airzones, az = "Airzone",
   
   if(min(data$lat, na.rm = TRUE) < -90 | max(data$lat, na.rm = TRUE) > 90) stop("latitude can only range from -90 to +90")
   if(min(data$lon, na.rm = TRUE) < -180 | max(data$lon, na.rm = TRUE) > 180) stop("longitude can only range from -180 to +180")
-  
   
   # Get stations data
   st <- dplyr::select(data, station_id, "lat", "lon")
