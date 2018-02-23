@@ -28,6 +28,7 @@ Suggests:
     bcmaps,
     bcmaps.rdata,
     broom,
+    gpclib,
     gridExtra,
     knitr,
     magrittr,
