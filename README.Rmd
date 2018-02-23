@@ -54,139 +54,59 @@ This is a simple example using the included sample data set for PM<sub>2.5</sub>
 library(rcaaqs)
 library(dplyr, warn.conflicts = FALSE)
 
-## Load sample data:
-data("pm25_sample_data")
+# Look at the sample data:
 glimpse(pm25_sample_data)
 
-# Compute the daily average
-avgdaily <- 
-  pm_daily_avg(pm25_sample_data, 
-               by = c("ems_id", "site"))
-glimpse(avgdaily)
+# Compute the PM2.5 Annual CAAQS
+pm_annual <- pm_annual_caaqs(pm25_sample_data, by = c("ems_id", "site"))
+glimpse(pm_annual)
 
-## Compute yearly 98 percentiles of daily average by station 
-pm_98 <- 
-  pm_yearly_98(avgdaily, 
-               by = c("ems_id", "site"))
-glimpse(pm_98)
-
-## Compute annual averages by station 
-annual_avg  <- 
-  pm_yearly_avg(avgdaily, 
-                by = c("ems_id", "site"))
-glimpse(annual_avg)
-
-## Calculate the Annual CAAQS metric: The 3-year average of the
-## percentiles average concentrations. 
-pm_98_just_valid <- pm_98[pm_98$exceed | pm_98$valid_year,]
-pm_caaq_daily <- 
-  pm_24h_caaq(pm_98_just_valid, by = "ems_id", cyear = 2013)
-glimpse(pm_caaq_daily)
-
-## Finally, calculate the Annual CAAQS metric: The 3-year average of the
-## annual average concentrations. 
-annual_avg_just_valid <- annual_avg[annual_avg$valid_year,]
-pm_caaq_annual <- pm_annual_caaq(annual_avg_just_valid, by = "ems_id", cyear = 2013)
-glimpse(pm_caaq_annual)
+# Compute the PM2.5 24hr CAAQS
+pm_24h <- pm_24h_caaqs(pm25_sample_data, by = c("ems_id", "site"))
+glimpse(pm_24h)
 ```
 
 This is a simple example using the included sample data set for O<sub>3</sub>. 
 ```{r}
-library(rcaaqs)
-library(dplyr, warn.conflicts = FALSE)
-
-## Load sample data:
-data(o3_sample_data)
+# Look at the sample data:
 glimpse(o3_sample_data)
 
-# Compute the daily rolling 8 hour average
-rolling_avg <- o3_rolling_8hr_avg(o3_sample_data, by = c("ems_id", "site"))
-glimpse(rolling_avg)
-
-# Compute the daily maximum
-daily_max_o3 <- o3_daily_max(rolling_avg, by = c("ems_id", "site"))
-glimpse(daily_max_o3)
-
-# Compute the 4th highest daily maximum
-ann_4th_highest <- o3_ann_4th_highest(daily_max_o3, by = c("ems_id", "site"))
-glimpse(ann_4th_highest)
-
-# Compute the rolling three year average.
-three_yr_avg <- o3_three_yr_avg(ann_4th_highest, by = c("ems_id", "site"))
-glimpse(three_yr_avg)
+# Compute the Ozone CAAQS
+o3 <- o3_caaqs(o3_sample_data, by = c("ems_id", "site"))
+glimpse(o3)
 ```
 
 This is a simple example using the included sample data set for SO<sub>2</sub>. 
 
 ```{r}
-library(rcaaqs)
-library(dplyr, warn.conflicts = FALSE)
-
-## Load sample data:
-data("so2_sample_data")
+# Look at the sample data:
 glimpse(so2_sample_data)
 
-# Compute the daily average
-so2_maxdaily <- 
-  so2_daily_max(so2_sample_data, 
-                by = c("ems_id", "site"))
-glimpse(so2_maxdaily)
+# Compute the SO2 1-hr CAAQS (3-yr rolling average of 1hr measures)
+so2_3yr <- so2_3yr_caaqs(so2_sample_data, by = c("ems_id", "site"))
+glimpse(so2_3yr)
 
-## Compute yearly 98 percentiles of daily average by station 
-so2_99 <- 
-  so2_yearly_99(so2_maxdaily, 
-               by = c("ems_id", "site"))
-glimpse(so2_99)
-
-# Caclulate the three year statistics.
-so2_three_yr <- 
-  so2_three_yr_avg(so2_99,
-                   by = c("ems_id", "site"))
-glimpse(so2_three_yr)
-
-# Compute the yearly average of all one-hour readings.
-so2_yearly_avg <- 
-  so2_avg_hourly_by_year(so2_sample_data,
-                         by = c("ems_id", "site"))
-glimpse(so2_yearly_avg)
+# Compute the SO2 annual CAAQS (1-yr average across all hourly measures)
+so2_1yr <- so2_1yr_caaqs(so2_sample_data, by = c("ems_id", "site"))
+glimpse(so2_1yr)
 ```
 
 This is a simple example using the included sample data set for NO<sub>2</sub>. 
 ```{r}
-library(rcaaqs)
-library(dplyr, warn.conflicts = FALSE)
-
-## Load sample data:
-data("no2_sample_data")
+# Look at the sample data:
 glimpse(no2_sample_data)
 
-# Compute the daily average
-no2_maxdaily <- 
-  no2_daily_max(no2_sample_data, 
-                by = c("ems_id", "site"))
-glimpse(no2_maxdaily)
+# Compute the NO2 1-hr CAAQS (3-yr rolling average of 1hr measures)
+no2_3yr <- no2_3yr_caaqs(no2_sample_data, by = c("ems_id", "site"))
+glimpse(no2_3yr)
 
-## Compute yearly 98 percentiles of daily average by station 
-no2_98 <- 
-  no2_yearly_98(no2_maxdaily, 
-               by = c("ems_id", "site"))
-glimpse(no2_98)
-
-# Caclulate the three year statistics.
-no2_three_yr <- 
-  no2_three_yr_avg(no2_98,
-                   by = c("ems_id", "site"))
-glimpse(no2_three_yr)
-
-# Compute the yearly average of all one-hour readings.
-no2_yearly_avg <- 
-  no2_avg_hourly_by_year(no2_sample_data,
-                         by = c("ems_id", "site"))
-glimpse(no2_yearly_avg)
+# Compute the NO2 annual CAAQS (1-yr average across all hourly measures)
+no2_1yr <- no2_1yr_caaqs(no2_sample_data, by = c("ems_id", "site"))
+glimpse(no2_1yr)
 ```
 
 
-You can view the CAAQS Achievement Levels as well as Management Levels in the included data frames. These are used internally in `pm_annual_caaq()` and `pm_24hr_caaq()` to assign metric values at each station to the appropriate CAAQS Achievement Level and Management Level:
+You can view the CAAQS Achievement Levels as well as Management Levels in the included data frames. These are used internally in `rcaaqs` CAAQS functions to assign metric values at each station to the appropriate CAAQS Achievement Level and Management Level:
 
 ```{r}
 achievement_levels
