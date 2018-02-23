@@ -21,15 +21,19 @@
 #' @param n_years The column containing the number of years each 3yr avg is
 #'   based on
 #' @param az Airzone column
-#' @param caaq the column containing the caaq metric for individual stations
-#' @param keep columns in the input data that you would like to retain in the 
+#' @param caaqs_val Column containing the CAAQS metric for individual stations
+#' @param caaqs Column containing the CAAQS achievement levels for individual
+#'   stations
+#' @param mgmt Column containing the CAAQS management levels for individual
+#'   stations
+#' @param keep Columns in the input data that you would like to retain in the 
 #'   output data frame. You can make it a named vector to rename the column in 
 #'   the output. Use the form \code{keep = c(new_name = "existing_name")}. This 
 #'   can also be used to rename any of the columns specified by n_years, az, or 
 #'   val.
 #'  
-#' @return A dataframe with four columns: airzone, number of years in
-#'  calculation, and caaq metric value
+#' @return A dataframe with 6 columns: airzone, number of years in calculation,
+#'   CAAQS metric value, CAAQS achievement levels, and CAAQS management levels
 #'
 #' @export
 
