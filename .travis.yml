@@ -1,7 +1,9 @@
 language: r
-cran: https://cran.rstudio.com
 # cache: packages
 sudo: required
+repos:
+  CRAN: https://cloud.r-project.org
+  bcgov: https://bcgov.github.io/drat
 
 #before_install:
 #  - sudo add-apt-repository ppa:ubuntugis/ppa --yes
@@ -17,6 +19,9 @@ addons:
       - libproj-dev
       - libgeos-dev
       - libgdal-dev
+      
+r_packages: 
+  - bcmaps.rdata
 
 matrix:
   include:
