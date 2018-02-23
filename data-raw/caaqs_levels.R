@@ -26,7 +26,7 @@ label_colours <- c("Achieved" = "#009900",
                    "Not Achieved" = "#FF0000", 
                    "Actions for Keeping Clean Areas Clean" = "#009900", 
                    "Actions for Preventing Air Quality Deterioration" = "#FFDA21", 
-                   "Actions for Preventing CAAQS Exceedance" = "#FF9900", 
+                   "Actions for Preventing CAAQS Exceedance" = "#FF9500", 
                    "Actions for Achieving Air Zone CAAQS" = "#FF0000")
 
 ## A function factory that creates a function that takes one argument (an operator)
