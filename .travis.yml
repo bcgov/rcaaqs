@@ -21,6 +21,7 @@ addons:
       - libgdal-dev
       
 r_packages: 
+  - devtools
   - bcmaps.rdata
 
 matrix:
@@ -38,9 +39,6 @@ matrix:
       r: release
 
   allow_failures:
-    - os: linux
-      r: devel
-      
     - os: osx
       r: devel
 
