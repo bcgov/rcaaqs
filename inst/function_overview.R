@@ -4,12 +4,12 @@ grViz("
 digraph boxes_and_circles {
 
   # a 'graph' statement
-  graph [overlap = true, fontsize = 10]
+  graph [overlap = true, fontsize = 14]
 
 
   node [shape = none,
         fontname = Helvetica,
-        fontsize = 8]
+        fontsize = 12]
   a0[label = 'Starting data'];
   a1[label = 'rolling_stat.R\\l - Round \\l - Completeness \\l'];
   a2[label = 'daily_stat.R\\l - Round \\l - Exceedances \\l - Completeness \\l'];
@@ -129,3 +129,12 @@ digraph boxes_and_circles {
   a4 -> a5
 }
 ")
+
+## In the RStudio viewer, export as a inst/function_overview_prelim.png. 
+## Then resize with magick:
+# library(magick)
+# image_read("inst/function_overview_prelim.png") %>% 
+#   image_resize(geometry = geometry_size_pixels(width = 1600)) %>% 
+#   image_write("inst/function_overview.png")
+# unlink("inst/function_overview_prelim.png")
+
