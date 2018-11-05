@@ -28,6 +28,12 @@ head(pm25_sample_data)
 pm25_sample_data <- pm25_sample_data %>% 
   mutate(value = clean_neg(value, type = "pm25"))
 
+pm25_sample_data <- do(pm25_sample_data,
+                       date_fill(., date_col = "date_time",
+                                 fill_cols = c("ems_id", "station_name"),
+                                 interval = "1 hour"))
+
+
 ## ------------------------------------------------------------------------
 pm <- pm_annual_caaqs(pm25_sample_data, 
                      by = c("ems_id", "site"))
