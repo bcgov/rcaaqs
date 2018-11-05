@@ -14,7 +14,9 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   out.width = "100%",
-  fig.width = 8
+  fig.width = 8,
+  warning = FALSE,
+  message = FALSE
 )
 library(ggplot2)
 ```
@@ -56,6 +58,13 @@ library(rcaaqs)
 The `rcaaqs` package contains several sample data sets, let's take a look at the PM2.5 sample data:
 ```{r}
 head(pm25_sample_data)
+```
+
+
+The `clean_neg()` function is useful for ensuring all the values are either 0 or positive values:
+```{r}
+pm25_sample_data <- pm25_sample_data %>% 
+  mutate(value = clean_neg(value, type = "pm25"))
 ```
 
 
