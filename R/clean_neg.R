@@ -28,7 +28,7 @@
 #' @return a vector of the same length as x with negative values replaced with 
 #'   CAAQS compliant values
 #'
-#' @noRd
+#'@export
 
 clean_neg <- function(x, type = c("pm25", "ozone", "so2", "nox")) {
   type <- tolower(type)
