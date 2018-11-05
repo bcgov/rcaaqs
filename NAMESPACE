@@ -3,6 +3,7 @@
 export(airzone_metric)
 export(assign_airzone)
 export(clean_neg)
+export(date_fill)
 export(format_caaqs_dt)
 export(get_colours)
 export(no2_1yr_caaqs)

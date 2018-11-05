@@ -21,12 +21,12 @@
 #' timestamp is associated with the previous hour as dictated in caaqs guidance
 #' manual.
 #'
-#' @param  x vector of date-times as character or POSIXlt/ct.
-#' @param format the format of the character dates
-#' @param prev_hour should the timestamp be assigned to the previous hour as
+#' @param  x Vector of date-times as character or POSIXlt/ct.
+#' @param format The format of the character dates
+#' @param prev_hour Should the timestamp be assigned to the previous hour as
 #'   dictated by the CAAQS guidance document? Default \code{TRUE}. This is
 #'   accomplished by subtracting one second off the times.
-#' @param tz the timezone of the date-times. See Details below.
+#' @param tz The timezone of the date-times. See Details below.
 #' 
 #' @details You can set the timezone that you are working with in two different
 #'   ways. You can set it globally with: \code{options("rcaaqs.timezone" =
@@ -72,11 +72,11 @@ format_caaqs_dt <- function(x, format="%Y-%m-%d %H:%M:%S", prev_hour = TRUE,
 
 #' Fill gaps in a date sequence
 #'
-#' Given a dataframe with one column as a date sequence, fill gaps in the dat 
+#' Given a dataframe with one column as a date sequence, fill gaps in the date 
 #' sequence.
 #' 
 #' @param  data Dataframe
-#' @param  date_col the column containing dates
+#' @param  date_col The column containing dates
 #' @param  interval The interval in the date sequence. If \code{NULL}, calculated
 #'  automatically.
 #' @param  fill_cols Columns to fill with the value in the column (should be
@@ -84,7 +84,7 @@ format_caaqs_dt <- function(x, format="%Y-%m-%d %H:%M:%S", prev_hour = TRUE,
 #' @param  add_ymd logical. Should the date be split into year, month, and day
 #'  columns and added to the output?
 #'  
-#' @return dataframe with filled in dates
+#' @return Dataframe with filled in dates
 #' 
 #' @examples \dontrun{
 #' foo <- data.frame(Date = seq(as.Date("2008-01-01"), as.Date("2008-12-01"), by = "month"), 
@@ -93,7 +93,7 @@ format_caaqs_dt <- function(x, format="%Y-%m-%d %H:%M:%S", prev_hour = TRUE,
 #' date_fill(bar, "Date", interval = "1 month", fill_cols = "label")
 #' }
 #' 
-#' @noRd
+#' @export
 
 date_fill <- function(data, date_col, interval = NULL, fill_cols = NULL, add_ymd = FALSE) {
   
@@ -176,7 +176,7 @@ add_ymd <- function(data, datecol, tz = getOption("rcaaqs.timezone", default = "
   data
 }
 
-#' Calcuate number of days in quarter
+#' Calculate number of days in quarter
 #'
 #' @param  quarter the quarter of the year (1-4)
 #' @param year the year as a numeric
@@ -188,7 +188,7 @@ add_ymd <- function(data, datecol, tz = getOption("rcaaqs.timezone", default = "
 days_in_quarter <- function(quarter, year) 
   c(90,91,92,92)[quarter] + (lubridate::leap_year(year) & quarter == 1)
 
-#' Calcuate number of days in year
+#' Calculate number of days in year
 #'
 #' @param year the year as a numeric
 #' 
@@ -222,7 +222,7 @@ time_to_date <- function(date_time) {
   as.Date(date_time, attr(date_time, "tzone"))
 }
 
-#' Calcuate number (or proportion) of valid days in each year and quarter
+#' Calculate number (or proportion) of valid days in each year and quarter
 #'
 #' @param data the input data.frame
 #' @param date the date

@@ -9,15 +9,15 @@ format_caaqs_dt(x, format = "\%Y-\%m-\%d \%H:\%M:\%S",
   "Etc/GMT+8"))
 }
 \arguments{
-\item{x}{vector of date-times as character or POSIXlt/ct.}
+\item{x}{Vector of date-times as character or POSIXlt/ct.}
 
-\item{format}{the format of the character dates}
+\item{format}{The format of the character dates}
 
-\item{prev_hour}{should the timestamp be assigned to the previous hour as
+\item{prev_hour}{Should the timestamp be assigned to the previous hour as
 dictated by the CAAQS guidance document? Default \code{TRUE}. This is
 accomplished by subtracting one second off the times.}
 
-\item{tz}{the timezone of the date-times. See Details below.}
+\item{tz}{The timezone of the date-times. See Details below.}
 }
 \value{
 POSIXct vector
