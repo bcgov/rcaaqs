@@ -61,16 +61,19 @@ head(pm25_sample_data)
 ```
 
 
-The `clean_neg()` and `date_fill()` are useful helper functions for ensuring all the values are either 0 or positive and that you have a complete dataframe with no missing hourly readings:
+The `clean_neg()` and `date_fill()` are useful helper functions for ensuring all the pollutant values are positive or zero, and that you are starting with a complete dataframe (i.e. no missing hourly readings):
 ```{r}
 pm25_sample_data <- pm25_sample_data %>% 
   mutate(value = clean_neg(value, type = "pm25"))
 
-pm25_sample_data <- do(pm25_sample_data,
-                       date_fill(., date_col = "date_time",
-                                 fill_cols = c("ems_id", "station_name"),
-                                 interval = "1 hour"))
+pm25_sample_data <- pm25_sample_data %>% 
+  group_by(ems_id, site) %>% 
+  do(., date_fill(., date_col = "date_time",
+                  fill_cols = c("ems_id", "site"),
+                  interval = "1 hour")) %>% 
+  ungroup()
 
+head(pm25_sample_data)
 ```
 
 
