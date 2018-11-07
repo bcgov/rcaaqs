@@ -219,12 +219,14 @@ class(az)
 az@data
 ```
 
+For the purposes of this vignette, we'll get our stations coordinates from a 
+file included in the package. You can obtain the most up to date stations data 
+from [the BC Data Catalogue](https://catalogue.data.gov.bc.ca/dataset/01867404-ba2a-470e-94b7-0604607cfa30/resource/7fd21841-b133-4f39-b9b2-6bfa34a7cf6c).
 
-We'll get our stations coordinates from an online list
 ```{r}
-url <- "ftp://ftp.env.gov.bc.ca/pub/outgoing/AIR/Air_Monitoring_Stations/bc_air_monitoring_stations.csv"
+stations_file <- system.file("air_stations_2018-11-07.csv", package = "rcaaqs")
 
-stations <- readr::read_csv(url, na = "N/A") %>%  # Download csv file
+stations <- readr::read_csv(stations_file, na = "N/A") %>%  # Read csv file
   rename_all(tolower) %>%                         # Rename columns to lower case
   filter(ems_id %in% unique(pm$ems_id)) %>%       # Filter to ids in our pm data
   select(ems_id, latitude, longitude) %>%         # Select only the important columns
