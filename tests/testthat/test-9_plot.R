@@ -44,7 +44,7 @@ test_that("plot_ts works without caaqs_data (ozone)", {
   p <- plot_ts(temp, caaqs_data = NULL, parameter = "o3",
                rep_yr = 2013, plot_exceedances = FALSE)
   expect_is(p, "ggplot")
-  expect_is(ggplot2::ggplot_build(p), "list")
+  expect_is(ggplot2::ggplot_build(p), "ggplot_built")
 })
 
 test_that("works with caaqs_data (ozone)", {
@@ -54,14 +54,14 @@ test_that("works with caaqs_data (ozone)", {
   p <- plot_ts(o3_daily, caaqs_data = o3_caaqs[3,], parameter = "o3",
                rep_yr = 2013, plot_exceedances = FALSE)
   expect_is(p, "ggplot")
-  expect_is(ggplot2::ggplot_build(p), "list")
+  expect_is(ggplot2::ggplot_build(p), "ggplot_built")
 })
 
 test_that("plot_ts works without caaqs_data (pm_24h)", {
   p <- plot_ts(daily_data, caaqs_data = NULL, parameter = "pm2.5_24h", 
                rep_yr = 2013, plot_exceedances = FALSE)
   expect_is(p, "ggplot")
-  expect_is(ggplot2::ggplot_build(p), "list")
+  expect_is(ggplot2::ggplot_build(p), "ggplot_built")
 })
 
 test_that("works with caaqs_data (pm24h)", {
@@ -69,14 +69,14 @@ test_that("works with caaqs_data (pm24h)", {
   p <- plot_ts(daily_data, caaqs_data = caaqs_data[6,], parameter = "pm2.5_24h", 
                rep_yr = 2013, plot_exceedances = FALSE)
   expect_is(p, "ggplot")
-  expect_is(ggplot2::ggplot_build(p), "list")
+  expect_is(ggplot2::ggplot_build(p), "ggplot_built")
 })
 
 test_that("plot_ts works without caaqs_data (pm_annual)", {
   p <- plot_ts(daily_data, caaqs_data = NULL, parameter = "pm2.5_annual", 
                rep_yr = 2013, plot_exceedances = FALSE)
   expect_is(p, "ggplot")
-  expect_is(ggplot2::ggplot_build(p), "list")
+  expect_is(ggplot2::ggplot_build(p), "ggplot_built")
 })
 
 test_that("works with caaqs_data (pm_annual)", {
@@ -84,6 +84,6 @@ test_that("works with caaqs_data (pm_annual)", {
   p <- plot_ts(daily_data, caaqs_data = caaqs_data[6,], 
                parameter = "pm2.5_annual", rep_yr = 2013, plot_exceedances = FALSE)
   expect_is(p, "ggplot")
-  expect_is(ggplot2::ggplot_build(p), "list")
+  expect_is(ggplot2::ggplot_build(p), "ggplot_built")
 })
 

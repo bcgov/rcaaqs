@@ -1,7 +1,7 @@
 context("utility functions")
 
 test_that("Mode works", {
-  
+  expect_equal(Mode(c(1,2,2)), 2)
 })
 
 test_that("round_caaqs works", {
