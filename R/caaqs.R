@@ -30,8 +30,6 @@
 #' @param exclude_df_dt Character vector. The names of the date columns in 
 #'   \code{exclude_df}. Must specify either one (a series of dates), or two (the
 #'   start and end columns specifying dates ranges).
-#' @param return_all Logical. Return all data frames from intermediate steps as
-#'   nested dataframes? (default FALSE)
 #' @param quiet Logical. Suppress progress messages (default FALSE)
 #'   
 #' @details To omit days which are suspected to be influenced by Transboundary
@@ -156,7 +154,7 @@ caaqs <- function(data, year = "year", val, by, metric, n) {
 #' @export
 pm_24h_caaqs <- function(data, dt = "date_time", val = "value",
                         by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                        return_all = FALSE, quiet = FALSE) {
+                        quiet = FALSE) {
 
   if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
@@ -176,28 +174,21 @@ pm_24h_caaqs <- function(data, dt = "date_time", val = "value",
 
   caaqs <- caaqs(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_24h", n = 3)
   
-  if (!return_all) return(caaqs)
-
-  if (!is.null(by)) {
-    all <- tidyr::nest(daily, -by, .key = "daily_avg")
-    all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "yearly_98"), by = by)
-    all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
-    all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else {
-    all <- tidyr::nest(daily, .key = "daily_avg")
-    all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "yearly_98"))
-    all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
-    all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  }
-  
-  all
+  as.caaqs(
+    list(daily_avg = daily, 
+         yearly_98 = yearly, 
+         three_yr_rolling = yearly_roll, 
+         caaqs = caaqs
+         ), 
+    "pm_24h"
+  )
 }
 
 #' @rdname caaqs_metric
 #' @export
 pm_annual_caaqs <- function(data, dt = "date_time", val = "value",
                            by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                           return_all = FALSE, quiet = FALSE) {
+                           quiet = FALSE) {
   
   if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
@@ -216,28 +207,21 @@ pm_annual_caaqs <- function(data, dt = "date_time", val = "value",
   yearly_roll <- pm_three_yr_avg(yearly, val = "ann_avg", by = by)
   caaqs <- caaqs(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_annual", n = 3)
   
-  if (!return_all) return(caaqs)
-  
-  if (!is.null(by)) {
-    all <- tidyr::nest(daily, -by, .key = "daily_avg")
-    all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "yearly_avg"), by = by)
-    all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
-    all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else {
-    all <- tidyr::nest(daily, .key = "daily_avg")
-    all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "yearly_avg"))
-    all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
-    all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  }
-  
-  all
+  as.caaqs(
+    list(daily_avg = daily,
+         yearly_avg = yearly,
+         three_yr_rolling = yearly_roll,
+         caaqs = caaqs
+         ),
+    "pm_annual"
+  )
 }
 
 #' @rdname caaqs_metric
 #' @export
 o3_caaqs <- function(data, dt = "date_time", val = "value",
                     by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                    return_all = FALSE, quiet = FALSE) {
+                    quiet = FALSE) {
   
   if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
@@ -256,30 +240,22 @@ o3_caaqs <- function(data, dt = "date_time", val = "value",
   yearly_roll <- o3_three_yr_avg(yearly, by = by)
   caaqs <- caaqs(yearly_roll, val = "ozone_metric", by = by, metric = "o3", n = 3)
   
-  if (!return_all) return(caaqs)
-  
-  if (!is.null(by)) {
-    all <- tidyr::nest(daily8, -by, .key = "daily_roll8")
-    all <- dplyr::left_join(all, tidyr::nest(daily, -by, .key = "daily_max"), by = by)
-    all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "ann_4th_highest"), by = by)
-    all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
-    all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else {
-    all <- tidyr::nest(daily8, .key = "daily_roll8")
-    all <- dplyr::bind_cols(all, tidyr::nest(daily, .key = "daily_max"))
-    all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "ann_4th_highest"))
-    all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
-    all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  }
-  
-  all
+  as.caaqs(
+    list(
+      daily_max = daily,
+      ann_4th_highest = yearly,
+      three_yr_rolling = yearly_roll,
+      caaqs = caaqs
+    ),
+    "o3"
+  )
 }
 
 #' @rdname caaqs_metric
 #' @export
 so2_1yr_caaqs <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                         return_all = FALSE, quiet = FALSE) {
+                         quiet = FALSE) {
   
   if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
@@ -292,24 +268,20 @@ so2_1yr_caaqs <- function(data, dt = "date_time", val = "value",
   
   caaqs <- caaqs(yearly, val = "avg_yearly", by = by, metric = "so2_1yr", n = 1)
   
-  if (!return_all) return(caaqs)
-  
-  if (!is.null(by)) {
-    all <- tidyr::nest(yearly, -by, .key = "yearly_hr")
-    all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else {
-    all <- tidyr::nest(yearly, .key = "yearly_hr")
-    all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  }
-  
-  all
+  as.caaqs(
+    list(
+      yearly_hr = yearly,
+      caaqs = caaqs
+    ),
+    "so2_1yr"
+  )
 }
 
 #' @rdname caaqs_metric
 #' @export
 so2_3yr_caaqs <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                         return_all = FALSE, quiet = FALSE) {
+                         quiet = FALSE) {
   
   if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
@@ -327,28 +299,22 @@ so2_3yr_caaqs <- function(data, dt = "date_time", val = "value",
   yearly_roll <- so2_three_yr_avg(yearly, by = by)
   caaqs <- caaqs(yearly_roll, val = "so2_metric", by = by, metric = "so2_3yr", n = 3)
   
-  if (!return_all) return(caaqs)
-  
-  if (!is.null(by)) {
-    all <- tidyr::nest(daily, -by, .key = "daily_max")
-    all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "yearly_99"), by = by)
-    all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
-    all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else {
-    all <- tidyr::nest(daily, .key = "daily_max")
-    all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "yearly_99"))
-    all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
-    all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  }
-  
-  all
+  as.caaqs(
+    list(
+      daily_max = daily,
+      yearly_99 = yearly,
+      three_yr_rolling = yearly_roll,
+      caaqs = caaqs
+      ), 
+    "so2_3yr"
+  )
 }
 
 #' @rdname caaqs_metric
 #' @export
 no2_1yr_caaqs <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                         return_all = FALSE, quiet = FALSE) {
+                         quiet = FALSE) {
   
   if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
@@ -360,24 +326,21 @@ no2_1yr_caaqs <- function(data, dt = "date_time", val = "value",
                                    quiet = quiet)
   caaqs <- caaqs(yearly, val = "avg_yearly", by = by, metric = "no2_1yr", n = 1)
   
-  if (!return_all) return(caaqs)
-  
-  if (!is.null(by)) {
-    all <- tidyr::nest(yearly, -by, .key = "yearly_hr")
-    all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else {
-    all <- tidyr::nest(yearly, .key = "yearly_hr")
-    all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  }
-  
-  all
+  as.caaqs(
+    list(
+      yearly_hr = yearly,
+      caaqs = caaqs
+    ),
+    "no2_1yr"
+  )
+
 }
 
 #' @rdname caaqs_metric
 #' @export
 no2_3yr_caaqs <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                         return_all = FALSE, quiet = FALSE) {
+                         quiet = FALSE) {
   
   if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
@@ -395,19 +358,14 @@ no2_3yr_caaqs <- function(data, dt = "date_time", val = "value",
   yearly_roll <- no2_three_yr_avg(yearly, by = by)
   caaqs <- caaqs(yearly_roll, val = "no2_metric", by = by, metric = "no2_3yr", n = 3)
   
-  if (!return_all) return(caaqs)
-  
-  if (!is.null(by)) {
-    all <- tidyr::nest(daily, -by, .key = "daily_max")
-    all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "yearly_98"), by = by)
-    all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
-    all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else {
-    all <- tidyr::nest(daily, .key = "daily_max")
-    all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "yearly_98"))
-    all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
-    all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  }
-  
-  all
+  as.caaqs(
+    list(
+      daily_max = daily,
+      yearly_98 = yearly,
+      three_yr_rolling = yearly_roll,
+      caaqs = caaqs
+    ), 
+    "no2_3yr"
+  )
+
 }
