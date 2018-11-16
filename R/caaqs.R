@@ -158,10 +158,10 @@ pm_24h_caaqs <- function(data, dt = "date_time", val = "value",
                         by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
                         return_all = FALSE, quiet = FALSE) {
 
-  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+  if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
   
-  if(!quiet) message("Calculating PM 2.5 daily average")
+  if (!quiet) message("Calculating PM 2.5 daily average")
   daily <- pm_daily_avg(data, dt = dt, val = val, by = by)
   
   message("Calculating PM 2.5 annual 98th percentile")
@@ -170,23 +170,25 @@ pm_24h_caaqs <- function(data, dt = "date_time", val = "value",
                          exclude_df_dt = exclude_df_dt, 
                          quiet = quiet)
   
-  if(!quiet) message("Calculating PM 2.5 24h CAAQS metric")
+  if (!quiet) message("Calculating PM 2.5 24h CAAQS metric")
 
   yearly_roll <- pm_three_yr_avg(yearly, val = "ann_98_percentile", by = by)
 
   caaqs <- caaqs(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_24h", n = 3)
+  
+  if (!return_all) return(caaqs)
 
-  if(return_all & !is.null(by)) {
+  if (!is.null(by)) {
     all <- tidyr::nest(daily, -by, .key = "daily_avg")
     all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "yearly_98"), by = by)
     all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
     all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else if(return_all & is.null(by)) {
+  } else {
     all <- tidyr::nest(daily, .key = "daily_avg")
     all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "yearly_98"))
     all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
     all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  } else all <- caaqs
+  }
   
   all
 }
@@ -197,33 +199,36 @@ pm_annual_caaqs <- function(data, dt = "date_time", val = "value",
                            by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
                            return_all = FALSE, quiet = FALSE) {
   
-  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+  if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
   
-  if(!quiet) message("Calculating PM 2.5 daily average")
+  if (!quiet) message("Calculating PM 2.5 daily average")
   daily <- pm_daily_avg(data, dt = dt, val = val, by = by)
   
-  if(!quiet) message("Calculating PM 2.5 annual average ")
+  if (!quiet) message("Calculating PM 2.5 annual average ")
   yearly <- pm_yearly_avg(daily, by = by, 
                           exclude_df = exclude_df, 
                           exclude_df_dt = exclude_df_dt, 
                           quiet = quiet)
   
-  if(!quiet) message("Calculating PM 2.5 annual CAAQS metric")
+  if (!quiet) message("Calculating PM 2.5 annual CAAQS metric")
+  
   yearly_roll <- pm_three_yr_avg(yearly, val = "ann_avg", by = by)
   caaqs <- caaqs(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_annual", n = 3)
   
-  if(return_all & !is.null(by)) {
+  if (!return_all) return(caaqs)
+  
+  if (!is.null(by)) {
     all <- tidyr::nest(daily, -by, .key = "daily_avg")
     all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "yearly_avg"), by = by)
     all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
     all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else if (return_all & is.null(by)) {
+  } else {
     all <- tidyr::nest(daily, .key = "daily_avg")
     all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "yearly_avg"))
     all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
     all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  } else all <- caaqs
+  }
   
   all
 }
@@ -234,36 +239,38 @@ o3_caaqs <- function(data, dt = "date_time", val = "value",
                     by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
                     return_all = FALSE, quiet = FALSE) {
   
-  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+  if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
   
-  if(!quiet) message("Calculating O3 daily maximum of 8h average")
+  if (!quiet) message("Calculating O3 daily maximum of 8h average")
   daily8 <- o3_rolling_8hr_avg(data, dt = dt, val = val, by = by)
   daily <- o3_daily_max(daily8, by = by)
   
-  if(!quiet) message("Calculating O3 annual 4th highest")
+  if (!quiet) message("Calculating O3 annual 4th highest")
   yearly <- o3_ann_4th_highest(daily, by = by, 
                                exclude_df = exclude_df, 
                                exclude_df_dt = exclude_df_dt, 
                                quiet = quiet)
   
-  if(!quiet) message("Calculating O3 CAAQS metric")
+  if (!quiet) message("Calculating O3 CAAQS metric")
   yearly_roll <- o3_three_yr_avg(yearly, by = by)
   caaqs <- caaqs(yearly_roll, val = "ozone_metric", by = by, metric = "o3", n = 3)
   
-  if(return_all & !is.null(by)) {
+  if (!return_all) return(caaqs)
+  
+  if (!is.null(by)) {
     all <- tidyr::nest(daily8, -by, .key = "daily_roll8")
     all <- dplyr::left_join(all, tidyr::nest(daily, -by, .key = "daily_max"), by = by)
     all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "ann_4th_highest"), by = by)
     all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
     all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else if(return_all & is.null(by)){
+  } else {
     all <- tidyr::nest(daily8, .key = "daily_roll8")
     all <- dplyr::bind_cols(all, tidyr::nest(daily, .key = "daily_max"))
     all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "ann_4th_highest"))
     all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
     all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  } else all <- caaqs
+  }
   
   all
 }
@@ -274,10 +281,10 @@ so2_1yr_caaqs <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
                          return_all = FALSE, quiet = FALSE) {
   
-  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+  if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
   
-  if(!quiet) message("Calculating SO2 annual average CAAQS metric")
+  if (!quiet) message("Calculating SO2 annual average CAAQS metric")
   yearly <- so2_avg_hourly_by_year(data, dt = dt, val = val, by = by, 
                                    exclude_df = exclude_df, 
                                    exclude_df_dt = exclude_df_dt, 
@@ -285,13 +292,15 @@ so2_1yr_caaqs <- function(data, dt = "date_time", val = "value",
   
   caaqs <- caaqs(yearly, val = "avg_yearly", by = by, metric = "so2_1yr", n = 1)
   
-  if(return_all & !is.null(by)) {
+  if (!return_all) return(caaqs)
+  
+  if (!is.null(by)) {
     all <- tidyr::nest(yearly, -by, .key = "yearly_hr")
     all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else if(return_all & is.null(by)) {
+  } else {
     all <- tidyr::nest(yearly, .key = "yearly_hr")
     all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  } else all <- caaqs
+  }
   
   all
 }
@@ -302,33 +311,35 @@ so2_3yr_caaqs <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
                          return_all = FALSE, quiet = FALSE) {
   
-  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+  if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
   
-  if(!quiet) message("Calculating SO2 daily maximum")
+  if (!quiet) message("Calculating SO2 daily maximum")
   daily <- so2_daily_max(data, dt = dt, val = val, by = by)
   
-  if(!quiet) message("Calculating SO2 annual 99th percentile")
+  if (!quiet) message("Calculating SO2 annual 99th percentile")
   yearly <- so2_yearly_99(daily, by = by, 
                           exclude_df = exclude_df, 
                           exclude_df_dt = exclude_df_dt, 
                           quiet = quiet)
   
-  if(!quiet) message("Calculating SO2 1h CAAQS metric")
+  if (!quiet) message("Calculating SO2 1h CAAQS metric")
   yearly_roll <- so2_three_yr_avg(yearly, by = by)
   caaqs <- caaqs(yearly_roll, val = "so2_metric", by = by, metric = "so2_3yr", n = 3)
   
-  if(return_all & !is.null(by)) {
+  if (!return_all) return(caaqs)
+  
+  if (!is.null(by)) {
     all <- tidyr::nest(daily, -by, .key = "daily_max")
     all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "yearly_99"), by = by)
     all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
     all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else if(return_all & is.null(by)) {
+  } else {
     all <- tidyr::nest(daily, .key = "daily_max")
     all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "yearly_99"))
     all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
     all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  } else all <- caaqs
+  }
   
   all
 }
@@ -339,23 +350,25 @@ no2_1yr_caaqs <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
                          return_all = FALSE, quiet = FALSE) {
   
-  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+  if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
   
-  if(!quiet) message("Calculating NO2 annual average CAAQS metric")
+  if (!quiet) message("Calculating NO2 annual average CAAQS metric")
   yearly <- no2_avg_hourly_by_year(data, dt = dt, val = val, by = by, 
                                    exclude_df = exclude_df, 
                                    exclude_df_dt = exclude_df_dt, 
                                    quiet = quiet)
   caaqs <- caaqs(yearly, val = "avg_yearly", by = by, metric = "no2_1yr", n = 1)
   
-  if(return_all & !is.null(by)) {
+  if (!return_all) return(caaqs)
+  
+  if (!is.null(by)) {
     all <- tidyr::nest(yearly, -by, .key = "yearly_hr")
     all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else if(return_all & is.null(by)) {
+  } else {
     all <- tidyr::nest(yearly, .key = "yearly_hr")
     all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  } else all <- caaqs
+  }
   
   all
 }
@@ -366,33 +379,35 @@ no2_3yr_caaqs <- function(data, dt = "date_time", val = "value",
                          by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
                          return_all = FALSE, quiet = FALSE) {
   
-  if(!is.null(exclude_df)) check_exclude(data, dt, by,
+  if (!is.null(exclude_df)) check_exclude(data, dt, by,
                                          exclude_df, exclude_df_dt)
   
-  if(!quiet) message("Calculating NO2 daily maximum")
+  if (!quiet) message("Calculating NO2 daily maximum")
   daily <- no2_daily_max(data, dt = dt, val = val, by = by)
   
-  if(!quiet) message("Calculating NO2 annual 98th percentile")
+  if (!quiet) message("Calculating NO2 annual 98th percentile")
   yearly <- no2_yearly_98(daily, by = by, 
                           exclude_df = exclude_df, 
                           exclude_df_dt = exclude_df_dt, 
                           quiet = quiet)
   
-  if(!quiet) message("Calculating NO2 1h CAAQS metric")
+  if (!quiet) message("Calculating NO2 1h CAAQS metric")
   yearly_roll <- no2_three_yr_avg(yearly, by = by)
   caaqs <- caaqs(yearly_roll, val = "no2_metric", by = by, metric = "no2_3yr", n = 3)
   
-  if(return_all & !is.null(by)) {
+  if (!return_all) return(caaqs)
+  
+  if (!is.null(by)) {
     all <- tidyr::nest(daily, -by, .key = "daily_max")
     all <- dplyr::left_join(all, tidyr::nest(yearly, -by, .key = "yearly_98"), by = by)
     all <- dplyr::left_join(all, tidyr::nest(yearly_roll, -by, .key = "three_yr_rolling"), by = by)
     all <- dplyr::left_join(all, tidyr::nest(caaqs, -by, .key = "caaqs"), by = by)
-  } else if(return_all & is.null(by)) {
+  } else {
     all <- tidyr::nest(daily, .key = "daily_max")
     all <- dplyr::bind_cols(all, tidyr::nest(yearly, .key = "yearly_98"))
     all <- dplyr::bind_cols(all, tidyr::nest(yearly_roll, .key = "three_yr_rolling"))
     all <- dplyr::bind_cols(all, tidyr::nest(caaqs, .key = "caaqs"))
-  } else all <- caaqs
+  }
   
   all
 }
