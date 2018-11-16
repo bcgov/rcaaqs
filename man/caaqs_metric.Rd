@@ -12,32 +12,25 @@
 \title{Compute specific CAAQS metrics}
 \usage{
 pm_24h_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
-  quiet = FALSE)
+  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
 
 pm_annual_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
-  quiet = FALSE)
+  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
 
 o3_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
-  quiet = FALSE)
+  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
 
 so2_1yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
-  quiet = FALSE)
+  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
 
 so2_3yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
-  quiet = FALSE)
+  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
 
 no2_1yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
-  quiet = FALSE)
+  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
 
 no2_3yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, return_all = FALSE,
-  quiet = FALSE)
+  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
 }
 \arguments{
 \item{data}{Data frame. Hourly raw pollution data with at least date-time and
@@ -47,57 +40,57 @@ value columns}
 
 \item{val}{Character. The name of the value column. Default \code{"value"}}
 
-\item{by}{Character vector. Grouping variables in data, probably an id if 
-using multiple sites. Even if not using multiple sites, you should specify 
+\item{by}{Character vector. Grouping variables in data, probably an id if
+using multiple sites. Even if not using multiple sites, you should specify
 the id column so that it is retained in the output.}
 
-\item{exclude_df}{Data frame. The dates over which data should be excluded 
-(see details). Data should be arranged either with one column of dates to 
-omit, or two columns specifying a series of start and end date ranges to 
+\item{exclude_df}{Data frame. The dates over which data should be excluded
+(see details). Data should be arranged either with one column of dates to
+omit, or two columns specifying a series of start and end date ranges to
 omit.}
 
-\item{exclude_df_dt}{Character vector. The names of the date columns in 
+\item{exclude_df_dt}{Character vector. The names of the date columns in
 \code{exclude_df}. Must specify either one (a series of dates), or two (the
 start and end columns specifying dates ranges).}
 
+\item{quiet}{Logical. Suppress progress messages (default FALSE)}
+
 \item{return_all}{Logical. Return all data frames from intermediate steps as
 nested dataframes? (default FALSE)}
-
-\item{quiet}{Logical. Suppress progress messages (default FALSE)}
 }
 \value{
-Data frame with CAAQS metrics. 
-  \itemize{
-    \item caaqs_year The year corresponding to the CAAQS metric
-    \item metric The type of CAAQS metric calculated
-    \item metric_value The CAAQS metric value, rounded to appropriate digits
-    \item caaqs The CAAQS status, Achieved, Not Achieved, or Insufficient Data
-    \item mgmt The management status actions
-    \item excluded Logical value indicating whether any of the underlying
-    data was excluded due to transboundary flows or exceptional events
-    \item flag_daily_incomplete Logical value indicating whether any of the
-    daily data was flagged as incomplete (see CAAQS guidelines for more
-    details). If NA, indicates that this particular metric is never flagged.
-    \item flag_yearly_incomplete Logical value indicating whether any of the
-    yearly data was flagged as incomplete (see CAAQS guidelines for more
-    details). If NA, indicates that this particular metric is never flagged.}
+Data frame with CAAQS metrics.
+\itemize{
+\item caaqs_year The year corresponding to the CAAQS metric
+\item metric The type of CAAQS metric calculated
+\item metric_value The CAAQS metric value, rounded to appropriate digits
+\item caaqs The CAAQS status, Achieved, Not Achieved, or Insufficient Data
+\item mgmt The management status actions
+\item excluded Logical value indicating whether any of the underlying
+data was excluded due to transboundary flows or exceptional events
+\item flag_daily_incomplete Logical value indicating whether any of the
+daily data was flagged as incomplete (see CAAQS guidelines for more
+details). If NA, indicates that this particular metric is never flagged.
+\item flag_yearly_incomplete Logical value indicating whether any of the
+yearly data was flagged as incomplete (see CAAQS guidelines for more
+details). If NA, indicates that this particular metric is never flagged.}
 }
 \description{
 Compute specific CAAQS metrics for different forms of air pollution.
 }
 \details{
 To omit days which are suspected to be influenced by Transboundary
-  Flows or Exceptional Events create a data frame that either a) contains a
-  column listing all the days which are to be omitted, or b) contains two
-  columns listing the start and end dates of all the date periods which are
-  to be omitted. This is supplied as \code{exclude_df}. Use
-  \code{exlcude_df_dt} to specify the name of the column containing the
-  dates, or the names of the columns containing the start and end of the date
-  ranges (see examples and vignette for more details).
-  
-  To return data from each intermediate step, specify \code{return_all = 
+Flows or Exceptional Events create a data frame that either a) contains a
+column listing all the days which are to be omitted, or b) contains two
+columns listing the start and end dates of all the date periods which are
+to be omitted. This is supplied as \code{exclude_df}. Use
+\code{exlcude_df_dt} to specify the name of the column containing the
+dates, or the names of the columns containing the start and end of the date
+ranges (see examples and vignette for more details).
+
+To return data from each intermediate step, specify \code{return_all = 
   TRUE}. This results in a nested data from which individual data sets can be
-  extracted (see examples and vignette for more details).
+extracted (see examples and vignette for more details).
 }
 \examples{
 
@@ -128,6 +121,6 @@ tidyr::unnest(pm_all, caaqs)
 }
 \references{
 CCME Guidance document on achievement determination Canadian
-  ambient air quality standards for fine particulate matter and ozone
-  \url{https://www.ccme.ca/files/Resources/air/aqms/pn_1483_gdad_eng.pdf}.
+ambient air quality standards for fine particulate matter and ozone
+\url{https://www.ccme.ca/files/Resources/air/aqms/pn_1483_gdad_eng.pdf}.
 }

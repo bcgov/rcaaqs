@@ -18,17 +18,17 @@ SpatialPolygonsDataFrame object}
 
 \item{station_id}{Character. Name of the station_id column in 'data'}
 
-\item{coords}{Character vector. Names of the columns containing latitude and 
+\item{coords}{Character vector. Names of the columns containing latitude and
 longitude (respectively) for each station. Defaults to 'lat' and 'lon'}
 }
 \description{
-With a data set containing station locations, calculate which airzones each 
+With a data set containing station locations, calculate which airzones each
 station belongs to. Requires a Spatial Polygons Data Frame object from the
 \code{sp} package containing the airzone names and locations (polygons).
 }
 \details{
 For British Columbia, consider using the \code{airzones("sp")} function to
-extract a Spatial Polygons Data Frame of BC airzones from the 
+extract a Spatial Polygons Data Frame of BC airzones from the
 \code{\link[bcmaps]{bcmaps}} package.
 }
 \examples{

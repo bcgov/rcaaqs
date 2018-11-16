@@ -50,3 +50,6 @@ VignetteBuilder:
 Additional_repositories: https://bcgov.github.io/drat
 LazyData: true
 RoxygenNote: 6.1.1
+Roxygen: list(markdown = TRUE)
+Encoding: UTF-8
+
