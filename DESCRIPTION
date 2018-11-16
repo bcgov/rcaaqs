@@ -37,5 +37,5 @@ Suggests:
     sp (>= 1.2),
     testthat (>= 1.0.0)
 Additional_repositories: https://bcgov.github.io/drat
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr

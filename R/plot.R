@@ -279,7 +279,7 @@ achievement_plot <- function(data, parameter = NULL) {
 #' @param instrument column in data containing instrument type
 #'
 #' @return a ggplot2 opbject
-#' @noRd
+#' @export
 plot_station_instruments <- function(data, dt = "date_time", station = "station_name", instrument = "instrument") {
   
   check_vars(vars = list(dt, station, instrument), data)
