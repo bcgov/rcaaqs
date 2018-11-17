@@ -36,13 +36,13 @@ test_that("no2_3yr_caaqs single", {
                               "Calculating NO2 daily maximum"),
                NA)
   caaqs <- extract_caaqs(no2_caaqs)
+  expect_length(caaqs$caaqs, 3)
   expect_true(all(is.na(caaqs$metric_value[caaqs$caaqs == "Insufficient Data"])))
   expect_true(all(!is.na(caaqs$metric_value[caaqs$caaqs != "Insufficient Data"])))
   expect_true(all(caaqs$caaqs[caaqs$metric_value <= get_std("no2_3yr")] 
                   == "Achieved", na.rm = TRUE))  
   expect_true(all(caaqs$caaqs[caaqs$metric_value > get_std("no2_3yr")] 
-                  == "Not Achieved", na.rm = TRUE))  
-  saveRDS(caaqs, "no2_3yr_caaqs1.rds")
+                  == "Not Achieved", na.rm = TRUE))
 })
 
 test_that("no2_3yr_caaqs groups", {
@@ -51,36 +51,14 @@ test_that("no2_3yr_caaqs groups", {
   expect_error(expect_message(no2_caaqs <- no2_3yr_caaqs(d, by = c("ems_id", "site")), 
                  "Calculating NO2 daily maximum"), NA)
   caaqs <- extract_caaqs(no2_caaqs)
+  expect_length(caaqs$caaqs, 6)
   expect_true(all(is.na(caaqs$metric_value[caaqs$caaqs == "Insufficient Data"])))
   expect_true(all(!is.na(caaqs$metric_value[caaqs$caaqs != "Insufficient Data"])))
   expect_true(all(caaqs$caaqs[caaqs$metric_value <= get_std("no2_3yr")] 
                   == "Achieved", na.rm = TRUE))
   expect_true(all(caaqs$caaqs[caaqs$metric_value > get_std("no2_3yr")] 
                   == "Not Achieved", na.rm = TRUE)) 
-  saveRDS(caaqs, "no2_3yr_caaqs2.rds")
 })
-
-test_that("no2_3yr_caaqs single returns all", {
-  d <- readRDS("no2_raw1.rds")
-  
-  expect_error(expect_message(no2_caaqs <- no2_3yr_caaqs(d), 
-                              "Calculating NO2 daily maximum"),
-               NA)
-  expect_equivalent(extract_caaqs(no2_caaqs), readRDS("no2_3yr_caaqs1.rds"))
-})
-
-test_that("no2_3yr_caaqs group returns all", {
-  d <- readRDS("no2_raw2.rds")
-  
-  expect_error(expect_message(no2_caaqs <- no2_3yr_caaqs(d, 
-                                                   by = c("ems_id", "site")), 
-                              "Calculating NO2 daily maximum"),
-               NA)
-  caaqs <- extract_caaqs(no2_caaqs)
-  expect_length(caaqs$caaqs, 6)
-  expect_equivalent(caaqs, readRDS("no2_3yr_caaqs2.rds"))
-})
-
 
 test_that("no2_1yr_caaqs single", {
   d <- readRDS("no2_raw1.rds")
@@ -94,8 +72,9 @@ test_that("no2_1yr_caaqs single", {
   expect_true(all(caaqs$caaqs[caaqs$metric_value <= get_std("no2_1yr")] 
                   == "Achieved", na.rm = TRUE))  
   expect_true(all(caaqs$caaqs[caaqs$metric_value > get_std("no2_1yr")] 
-                  == "Not Achieved", na.rm = TRUE))  
-  saveRDS(caaqs, "no2_1yr_caaqs1.rds")
+                  == "Not Achieved", na.rm = TRUE))
+  expect_is(caaqs, "data.frame")
+  expect_length(caaqs$caaqs, 3)
 })
 
 test_that("no2_1yr_caaqs groups", {
@@ -111,31 +90,6 @@ test_that("no2_1yr_caaqs groups", {
                   == "Achieved", na.rm = TRUE))
   expect_true(all(caaqs$caaqs[caaqs$metric_value > get_std("no2_1yr")] 
                   == "Not Achieved", na.rm = TRUE))  
-  saveRDS(caaqs, "no2_1yr_caaqs2.rds")
-})
-
-test_that("no2_1yr_caaqs single returns all", {
-  d <- readRDS("no2_raw1.rds")
-  
-  expect_error(expect_message(no2_caaqs <- no2_1yr_caaqs(d), 
-                              "Calculating NO2 annual average"),
-               NA)
-  caaqs <- extract_caaqs(no2_caaqs)
-  expect_is(caaqs, "data.frame")
-  expect_length(caaqs$caaqs, 2)
-  expect_equivalent(caaqs, readRDS("o2_1yr_caaqs1.rds"))
-})
-
-test_that("no2_1yr_caaqs group returns all", {
-  d <- readRDS("no2_raw2.rds")
-  
-  expect_error(expect_message(no2_caaqs <- no2_1yr_caaqs(d, 
-                                                   by = c("ems_id", "site")), 
-                              "Calculating NO2 annual average"),
-               NA)
-  caaqs <- extract_caaqs(no2_caaqs)
   expect_is(caaqs, "data.frame")
   expect_length(caaqs$caaqs, 6)
-  expect_equivalent(caaqs, readRDS("no2_1yr_caaqs2.rds"))
 })
-
