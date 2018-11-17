@@ -54,9 +54,6 @@ omit.}
 start and end columns specifying dates ranges).}
 
 \item{quiet}{Logical. Suppress progress messages (default FALSE)}
-
-\item{return_all}{Logical. Return all data frames from intermediate steps as
-nested dataframes? (default FALSE)}
 }
 \value{
 Data frame with CAAQS metrics.
