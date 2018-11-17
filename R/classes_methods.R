@@ -4,6 +4,7 @@ as.caaqs <- function(x, param) {
   structure(x, class = c(param, "caaqs", class(x)))
 }
 
+#' @export
 summary.caaqs <- function(x) {
   cat("CAAQS results for", class(x)[1], "\n")
   cat("--------------------------------------\n")
@@ -11,9 +12,10 @@ summary.caaqs <- function(x) {
   for (n in names(x)) {
     cat("      *", n, "(", nrow(x[[n]]), "rows x", ncol(x[[n]]), "columns )\n")
   }
-  cat("Access them directly using `$` notation or use the extract_ functions (see ?extract)\n")
+  cat("Access them directly using `$` notation or use the extract_ functions (see ?caaqs_extractors)\n")
 }
 
+#' @export
 print.caaqs <- summary.caaqs
 
 # Generics + defaults -------------------------------------------------
