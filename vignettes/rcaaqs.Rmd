@@ -84,6 +84,20 @@ pm <- pm_annual_caaqs(pm25_sample_data,
 pm
 ```
 
+The resulting object is of class `caaqs` plus an additional class denoting the 
+parameter analyzed:
+
+```{r}
+class(pm)
+```
+
+The object contains all of the intermediate results as well as the final caaqs. 
+There are accessor/extractor functions to get the different components. We can 
+get the caaqs results using the `extract_caaqs()` function:
+
+```{r}
+extract_caaqs(pm)
+```
 
 Besides the actual CAAQS metric values (`metric_value`), there are several important columns.
 
@@ -119,16 +133,16 @@ First let's take a look at the daily averages, to do this, we need to re-run our
 
 ```{r}
 pm <- pm_annual_caaqs(pm25_sample_data, 
-                     by = c("ems_id", "site"),
-                     return_all = TRUE)
+                     by = c("ems_id", "site"))
 
-pm
+extract_caaqs(pm)
 ```
 
-To explore any of these sub-data sets individually you can unnest the data (using the `unnest()` function from the `tidyr` package):
+To explore any of these sub-data sets individually you can use the extractor 
+functions:
 
 ```{r}
-pm_daily_avg <- unnest(pm, daily_avg)
+pm_daily_avg <- extract_daily(pm)
 pm_daily_avg
 ```
 
@@ -155,11 +169,10 @@ Now we can pass this on to our caaqs function with the `exclude_df` argument, wh
 ```{r}
 pm_excl <- pm_annual_caaqs(pm25_sample_data, 
                           by = c("ems_id", "site"),
-                          return_all = TRUE,
                           exclude_df = high_dates,
                           exclude_df_dt = "date")
 
-pm_excl_caaqs <- unnest(pm_excl, caaqs)
+pm_excl_caaqs <- extract_caaqs(pm_excl)
 pm_excl_caaqs
 ```
 
@@ -177,11 +190,10 @@ high_dates
 
 pm_excl <- pm_annual_caaqs(pm25_sample_data, 
                           by = c("ems_id", "site"),
-                          return_all = TRUE,
                           exclude_df = high_dates,
                           exclude_df_dt = c("start", "end"))
 
-pm_excl_caaqs <- unnest(pm_excl, caaqs)
+pm_excl_caaqs <- extract_caaqs(pm_excl)
 pm_excl_caaqs
 ```
 
@@ -204,7 +216,7 @@ We can match our data to an airzone by using the `assign_airzones()` function bu
 
 For the following examples, we'll use our `pm` CAAQS data, but only for 2013
 ```{r}
-pm_caaqs <- unnest(pm, caaqs) %>%
+pm_caaqs <- extract_caaqs(pm) %>%
   filter(caaqs_year == 2013)
 ```
 
@@ -228,7 +240,7 @@ stations_file <- system.file("air_stations_2018-11-07.csv", package = "rcaaqs")
 
 stations <- readr::read_csv(stations_file, na = "N/A") %>%  # Read csv file
   rename_all(tolower) %>%                         # Rename columns to lower case
-  filter(ems_id %in% unique(pm$ems_id)) %>%       # Filter to ids in our pm data
+  filter(ems_id %in% unique(pm_caaqs$ems_id)) %>%       # Filter to ids in our pm data
   select(ems_id, latitude, longitude) %>%         # Select only the important columns
   mutate(latitude = as.numeric(latitude),         # Transform lat and lon to numeric
          longitude = as.numeric(longitude)) %>%
