@@ -92,8 +92,9 @@ class(pm)
 ```
 
 The object contains all of the intermediate results as well as the final caaqs. 
-There are accessor/extractor functions to get the different components. We can 
-get the caaqs results using the `extract_caaqs()` function:
+There are accessor/extractor functions to get the different components. See
+`?caaqs_extractors` for the different functions. We can get the caaqs results 
+using the `extract_caaqs()` function:
 
 ```{r}
 extract_caaqs(pm)
