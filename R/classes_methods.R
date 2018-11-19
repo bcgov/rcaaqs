@@ -5,7 +5,16 @@ as.caaqs <- function(x, param) {
 }
 
 #' @export
-summary.caaqs <- function(x) {
+print.caaqs <- function(x, ...) {
+  print_summary(x, ...)
+}
+
+#' @export
+summary.caaqs <- function(object, ...) {
+  print_summary(object, ...)
+}
+
+print_summary <- function(x, ...) {
   cat("CAAQS results for", class(x)[1], "\n")
   cat("--------------------------------------\n")
   cat(length(x), "elements:\n")
@@ -14,9 +23,6 @@ summary.caaqs <- function(x) {
   }
   cat("Access them directly using `$` notation or use the extract_ functions (see ?caaqs_extractors)\n")
 }
-
-#' @export
-print.caaqs <- summary.caaqs
 
 # Generics + defaults -------------------------------------------------
 
