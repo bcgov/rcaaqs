@@ -41,11 +41,9 @@
 #'   dates, or the names of the columns containing the start and end of the date
 #'   ranges (see examples and vignette for more details).
 #'   
-#'   To return data from each intermediate step, specify \code{return_all = 
-#'   TRUE}. This results in a nested data from which individual data sets can be
-#'   extracted (see examples and vignette for more details).
-#'   
-#' @return Data frame with CAAQS metrics. 
+#' @return `caaqs` object with results of the caaqs analysis, including results 
+#' from intermediate steps. The final `caaqs` results can be extracted with the 
+#' [extract_caaqs()] function and contains the following columns:
 #'   \itemize{
 #'     \item caaqs_year The year corresponding to the CAAQS metric
 #'     \item metric The type of CAAQS metric calculated
@@ -60,6 +58,9 @@
 #'     \item flag_yearly_incomplete Logical value indicating whether any of the
 #'     yearly data was flagged as incomplete (see CAAQS guidelines for more
 #'     details). If NA, indicates that this particular metric is never flagged.}
+#'  
+#'  To obtain any of the intermediate results data frames, use the 
+#'  `caaqs_extractor` family of functions. See `?caaqs_extractors`
 #' 
 #' @references CCME Guidance document on achievement determination Canadian
 #'   ambient air quality standards for fine particulate matter and ozone
@@ -69,6 +70,10 @@
 #' 
 #' # Normal run
 #' pm <- pm_24h_caaqs(pm25_sample_data, by = c("ems_id", "site"))
+#' 
+#' pm
+#' 
+#' extract_caaqs(pm)
 #' 
 #' # Exclude dates
 #' high_dates <- data.frame(ems_id = "0310162",
@@ -81,15 +86,13 @@
 #'                      exclude_df = high_dates,
 #'                      exclude_df_dt = "date")
 #'                      
-#' # Return all intermediate data
+#' extract_caaqs(pm_ex)
 #' 
-#' pm_all <- pm_24h_caaqs(pm25_sample_data, 
-#'                      by = c("ems_id", "site"), 
-#'                      return_all = TRUE)
-#' pm_all
+#' # Extract intermediate objects:
 #' 
-#' tidyr::unnest(pm_all, daily_avg)
-#' tidyr::unnest(pm_all, caaqs)
+#' extract_daily(pm_ex)
+#' extract_yearly(pm_ex)
+#' extract_three_yr_rolling(pm_ex)
 #' 
 #' @name caaqs_metric
 #' 

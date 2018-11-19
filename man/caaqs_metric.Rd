@@ -56,7 +56,9 @@ start and end columns specifying dates ranges).}
 \item{quiet}{Logical. Suppress progress messages (default FALSE)}
 }
 \value{
-Data frame with CAAQS metrics.
+\code{caaqs} object with results of the caaqs analysis, including results
+from intermediate steps. The final \code{caaqs} results can be extracted with the
+\code{\link[=extract_caaqs]{extract_caaqs()}} function and contains the following columns:
 \itemize{
 \item caaqs_year The year corresponding to the CAAQS metric
 \item metric The type of CAAQS metric calculated
@@ -71,6 +73,9 @@ details). If NA, indicates that this particular metric is never flagged.
 \item flag_yearly_incomplete Logical value indicating whether any of the
 yearly data was flagged as incomplete (see CAAQS guidelines for more
 details). If NA, indicates that this particular metric is never flagged.}
+
+To obtain any of the intermediate results data frames, use the
+\code{caaqs_extractor} family of functions. See \code{?caaqs_extractors}
 }
 \description{
 Compute specific CAAQS metrics for different forms of air pollution.
@@ -84,15 +89,15 @@ to be omitted. This is supplied as \code{exclude_df}. Use
 \code{exlcude_df_dt} to specify the name of the column containing the
 dates, or the names of the columns containing the start and end of the date
 ranges (see examples and vignette for more details).
-
-To return data from each intermediate step, specify \code{return_all = 
-  TRUE}. This results in a nested data from which individual data sets can be
-extracted (see examples and vignette for more details).
 }
 \examples{
 
 # Normal run
 pm <- pm_24h_caaqs(pm25_sample_data, by = c("ems_id", "site"))
+
+pm
+
+extract_caaqs(pm)
 
 # Exclude dates
 high_dates <- data.frame(ems_id = "0310162",
@@ -105,15 +110,13 @@ pm_ex <- pm_24h_caaqs(pm25_sample_data,
                      exclude_df = high_dates,
                      exclude_df_dt = "date")
                      
-# Return all intermediate data
+extract_caaqs(pm_ex)
 
-pm_all <- pm_24h_caaqs(pm25_sample_data, 
-                     by = c("ems_id", "site"), 
-                     return_all = TRUE)
-pm_all
+# Extract intermediate objects:
 
-tidyr::unnest(pm_all, daily_avg)
-tidyr::unnest(pm_all, caaqs)
+extract_daily(pm_ex)
+extract_yearly(pm_ex)
+extract_three_yr_rolling(pm_ex)
 
 }
 \references{
