@@ -212,7 +212,7 @@ Each step from the documentation has a corresponding function (or functions) in 
 
 We can match our data to an airzone by using the `assign_airzones()` function but you must have the following:
 
-- A map file reflecting airzones, specifically a SpatialPolygonsDataFrame
+- A map file reflecting airzones, specifically an sf POLYGON (or MULTIPOLYGON) object
 - CAAQS data with latitude and longitude for each station/site
 
 For the following examples, we'll use our `pm` CAAQS data, but only for 2013
@@ -227,9 +227,9 @@ We will get our map file from the [`bcmaps` package](https://github.com/bcgov/bc
 
 ```{r}
 library(bcmaps)
-az <- bcmaps::airzones(class = "sp")
+az <- bcmaps::airzones()
 class(az)
-az@data
+az
 ```
 
 For the purposes of this vignette, we'll get our stations coordinates from a 
@@ -260,7 +260,7 @@ pm_caaqs
 Now we have our airzones map and our station coordinates, we can match stations to airzones:
 
 ```{r}
-pm_az <- assign_airzone(pm_caaqs, airzones = az, coords = c("latitude", "longitude"))
+pm_az <- assign_airzone(pm_caaqs, airzones = az, coords = c("longitude", "latitude"))
 pm_az
 ```
 
@@ -273,35 +273,28 @@ pm_az2
 ## Mapping airzones
 
 
-```{r, fig.width = 8, fig.asp = 1.5, eval = require("maptools")}
-library(sp)
+```{r, fig.width = 8, fig.asp = 1.5}
+library(sf)
 library(gridExtra)
 
-az_plot <- spTransform(az, CRS("+proj=longlat"))
-az_plot <- fortify(az_plot, region = "Airzone") %>%
-  left_join(pm_az2, by = c("id" = "airzone"))
+az_plot <- st_transform(az, crs = "+proj=longlat") %>%
+  left_join(pm_az2, by = c("Airzone" = "airzone"))
 
-g1 <- ggplot(data = az_plot, aes(x = long, y = lat, group = group)) +
-  theme(legend.position = c(0.85, 0.85)) +
-  coord_map() +
-  geom_polygon(aes(fill = caaqs)) +
-  geom_path(colour = "black") +
-  geom_point(data = pm_az, shape = 21, colour = "black",
-             aes(x = lon, y = lat, fill = caaqs), 
-             inherit.aes = FALSE) +
+g1 <- ggplot() +
+  geom_sf(data = az_plot, aes(fill = caaqs)) +
+  geom_sf(data = st_as_sf(pm_az, coords = c("lon", "lat"), crs = "+proj=longlat"),
+          shape = 21, colour = "black", aes(fill = caaqs)) +
   scale_fill_manual(values = get_colours(type = "achievement"), drop = FALSE) +
-  labs(title = "Achievement Status: PM2.5 Annual CAAQS")
+  labs(title = "Achievement Status: PM2.5 Annual CAAQS") +
+  theme(legend.position = c(0.85, 0.85))
 
-g2 <- ggplot(data = az_plot, aes(x = long, y = lat, group = group)) +
-  theme(legend.position = c(0.85, 0.85)) +
-  coord_map() +
-  geom_polygon(aes(fill = mgmt)) +
-  geom_path(colour = "black") +
-  geom_point(data = pm_az, shape = 21, colour = "black",
-             aes(x = lon, y = lat, fill = mgmt), 
-             inherit.aes = FALSE) +
+g2 <- ggplot() +
+  geom_sf(data = az_plot, aes(fill = mgmt)) +
+  geom_sf(data = st_as_sf(pm_az, coords = c("lon", "lat"), crs = "+proj=longlat"),
+          shape = 21, colour = "black", aes(fill = mgmt)) +
   scale_fill_manual(values = get_colours(type = "management"), drop = FALSE) +
-  labs(title = "Management Status: PM2.5 Annual CAAQS")
+  labs(title = "Management Status: PM2.5 Annual CAAQS") + 
+  theme(legend.position = c(0.85, 0.85))
 
 grid.arrange(g1, g2, ncol = 1)
 ```
