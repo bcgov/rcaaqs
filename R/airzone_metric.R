@@ -81,27 +81,26 @@ parse_incomplete <- function(data, n_years, val) {
 #' Assign locations to airzones
 #' 
 #' With a data set containing station locations, calculate which airzones each 
-#' station belongs to. Requires a Spatial Polygons Data Frame object from the
-#' \code{sp} package containing the airzone names and locations (polygons).
+#' station belongs to. Requires an sf object from the
+#' \code{sf} package containing the airzone names and locations (polygons).
 #' 
-#' For British Columbia, consider using the \code{airzones("sp")} function to
-#' extract a Spatial Polygons Data Frame of BC airzones from the 
-#' \code{\link[bcmaps]{bcmaps}} package.
+#' For British Columbia, consider using the \code{airzones()} function to
+#' get an sf object of BC airzones from the \code{\link[bcmaps]{bcmaps}} package.
 #' 
 #' @param data Data frame. Contains station ids and air quality data
-#' @param airzones SpatialPolygonsDataFrame. Polygons reflecting airzone
+#' @param airzones sf PPOLYGON or MULTIPOLYGON reflecting airzone
 #'   locations
 #' @param az Character. Name of airzones column in the 'airzones'
-#'   SpatialPolygonsDataFrame object
+#'   sf object
 #' @param station_id Character. Name of the station_id column in 'data'
-#' @param coords Character vector. Names of the columns containing latitude and 
-#'   longitude (respectively) for each station. Defaults to 'lat' and 'lon'
+#' @param coords Character vector. Names of the columns containing longitude and 
+#'   latitude (respectively) for each station. Defaults to 'lon' and 'lat'
 #' 
 #' @examples 
 #' 
 #' \dontrun{
-#' # Using the airzone spatial dataframe from the bcmaps package
-#' bc_airzones <- bcmaps::airzones("sp")
+#' # Using the airzones function from the bcmaps package
+#' bc_airzones <- bcmaps::airzones()
 #' 
 #' by_airzones <- assign_airzone(data, bc_airzones)
 #' }
@@ -110,45 +109,45 @@ parse_incomplete <- function(data, n_years, val) {
 assign_airzone <- function(data, airzones, az = "Airzone", 
                            station_id = "ems_id",
                            coords = c("lat", "lon")) {
+  if (!requireNamespace("sf", quietly = TRUE)) {
+    stop("sf package is required for this function. Please install it.", 
+         call. = FALSE)
+  }
   # Check inputs
   check_vars(c(station_id, coords), data)
   check_one(az, station_id)
   check_class(coords[1], data, "numeric")
   check_class(coords[2], data, "numeric")
   
-  if(all(class(airzones) != "SpatialPolygonsDataFrame")) {
-    stop("airzones must be a SpatialPolygonsDataFrame (from the 'sp' package)")
+  if (!inherits(airzones, "sf") || 
+                !all(sf::st_is(airzones, c("POLYGON", "MULTIPOLYGON")))) {
+    stop("airzones must be an sf object of POLYGONs or MULTIPOLYGONs")
   }
 
-  check_vars(az, airzones@data)
+  check_vars(az, airzones)
   
-  if(!(az %in% names(airzones@data))) {
-    stop("'", az, "' is not a column in the Spatial Polygons Data Frame")
+  if (!(az %in% names(airzones))) {
+    stop("'", az, "' is not a column in the airzones object")
   }
   
   # Rename to standard
-  names(airzones@data)[names(airzones@data) == az] <- "airzone"
-  names(data)[names(data) == coords[1]] <- "lat"
-  names(data)[names(data) == coords[2]] <- "lon"
+  names(airzones)[names(airzones) == az] <- "airzone"
+  names(data)[names(data) == coords[1]] <- "lon"
+  names(data)[names(data) == coords[2]] <- "lat"
   
-  if(min(data$lat, na.rm = TRUE) < -90 | max(data$lat, na.rm = TRUE) > 90) stop("latitude can only range from -90 to +90")
-  if(min(data$lon, na.rm = TRUE) < -180 | max(data$lon, na.rm = TRUE) > 180) stop("longitude can only range from -180 to +180")
+  if (min(data$lat, na.rm = TRUE) < -90 | max(data$lat, na.rm = TRUE) > 90) 
+    stop("latitude can only range from -90 to +90")
+  if (min(data$lon, na.rm = TRUE) < -180 | max(data$lon, na.rm = TRUE) > 180) 
+    stop("longitude can only range from -180 to +180")
+
+  # Convert data to sf
+  data <- sf::st_as_sf(data, coords = c("lon", "lat"), crs = 4326, 
+                           remove = FALSE)
   
-  # Get stations data
-  st <- dplyr::select(data, station_id, "lat", "lon")
-  st <- dplyr::distinct(st)
+  # convert data to same projection as airzones
+  data <- sf::st_transform(data, sf::st_crs(airzones))
+  data <- sf::st_join(data, airzones[, "airzone", drop = FALSE])
   
-  # Convert all to long/lat
-  st_coord <- st
-  sp::coordinates(st_coord) <- c("lon", "lat")
-  sp::proj4string(st_coord) <- "+proj=longlat +datum=WGS84"
-  
-  airzones <- sp::spTransform(airzones, sp::CRS("+proj=longlat +datum=WGS84"))
-  
-  # Calculate overlap between stations and airzones
-  st <- cbind(st, sp::`%over%`(st_coord, airzones))
-  
-  # Merge with dataframe
-  data <- dplyr::left_join(data, st[, c(station_id, "airzone")], by = station_id)
-  data
+  # return without sfc geometry column
+  sf::st_set_geometry(data, NULL)
 }

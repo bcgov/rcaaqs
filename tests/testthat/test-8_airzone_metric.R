@@ -64,22 +64,22 @@ test_that("assign_airzone catches incorrect input", {
   
   expect_error(assign_airzone(""), "'data' is not a data frame")
   expect_error(assign_airzone(p), "'lat' is not a column in 'data'")
-  expect_error(assign_airzone(p, coords = c("latitude", "lon")), "'lon' is not a column in 'data'")
+  expect_error(assign_airzone(p, coords = c("longitude", "lat")), "'lat' is not a column in 'data'")
   
   expect_error(assign_airzone(p, coords = c("ems_id", "site")), "Column 'ems_id' is not numeric")
-  expect_error(assign_airzone(p, coords = c("latitude", "site")), "Column 'site' is not numeric")
+  expect_error(assign_airzone(p, coords = c("longitude", "site")), "Column 'site' is not numeric")
   
-  expect_error(assign_airzone(p, coords = c("latitude", "longitude")), "argument \"airzones\" is missing, with no default")
+  expect_error(assign_airzone(p, coords = c("longitude", "latitude")), "argument \"airzones\" is missing, with no default")
   
   skip_on_appveyor()
   skip_on_cran()
   skip_on_travis()
-  expect_error(assign_airzone(p, coords = c("latitude", "longitude"),
-                              airzones = bcmaps::airzones("sp"), az = "az"), 
-               "'az' is not a column in 'airzones@data'")
-  
   expect_error(assign_airzone(p, coords = c("longitude", "latitude"),
-                              airzones = bcmaps::airzones("sp")),
+                              airzones = bcmaps::airzones(), az = "az"), 
+               "'az' is not a column in 'airzones'")
+  
+  expect_error(assign_airzone(p, coords = c("latitude", "longitude"),
+                              airzones = bcmaps::airzones()),
                "latitude can only range from -90 to \\+90")
 })
 
@@ -92,8 +92,8 @@ test_that("assign_airzone returns expected input", {
     dplyr::mutate(latitude = c(rep(49.9, 3), rep(48.4, 3)),
                   longitude = c(rep(-119, 3), rep(-123, 3)))
   
-  expect_silent(a <- assign_airzone(p, coords = c("latitude", "longitude"),
-                                    airzones = bcmaps::airzones("sp")))
+  expect_silent(a <- assign_airzone(p, coords = c("longitude", "latitude"),
+                                    airzones = bcmaps::airzones()))
   
   expect_is(a, "data.frame")
   expect_length(a, 17)
