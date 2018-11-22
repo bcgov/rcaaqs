@@ -90,13 +90,17 @@ join_management_caaqs <- function(caaqs, mgmt_caaqs, by) {
                 dplyr::everything())
 }
 
-join_management_yearly <- function(yearly, mgmt_yearly, by) {
+## this is for pm2.5 only right now
+join_management_yearly <- function(yearly, mgmt_yearly, parameter, by) {
+  annual_stat <- switch(parameter, 
+                        "pm2.5_24h" = "ann_98_percentile", 
+                        "pm2.5_annual" = "ann_avg")
   mgmt_yearly <- dplyr::select(mgmt_yearly, by, "year", "excluded", 
-                               "ann_98_percentile_mgmt" = "ann_98_percentile", 
-                               "exceed_mgmt" = "exceed")
+                               annual_stat, "exceed_mgmt" = "exceed")
+  names(mgmt_yearly)[names(mgmt_yearly) == annual_stat] <- paste0(annual_stat, "_mgmt")
   
   ret <- dplyr::left_join(yearly, mgmt_yearly, by = c(by, "year"))
   dplyr::select(ret, by, "year", "valid_in_year", dplyr::starts_with("quarter"), 
-                "ann_98_percentile", "exceed", "excluded", 
-                "ann_98_percentile_mgmt", "exceed_mgmt", dplyr::everything())
+                annual_stat, "exceed", "excluded", 
+                paste0(annual_stat, "_mgmt"), "exceed_mgmt", dplyr::everything())
 }
