@@ -146,7 +146,7 @@ caaqs <- function(data, year = "year", val, by, metric, n) {
                  "metric_value", "caaqs", "mgmt", "excluded",
                  "flag_daily_incomplete", "flag_yearly_incomplete",
                  "flag_two_of_three_years")
-  cols_keep <- cols_keep[cols_keep %in% names(data)]
+  cols_keep <- intersect(cols_keep, names(data))
   
   data <- dplyr::select(data, cols_keep)
   
