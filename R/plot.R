@@ -13,23 +13,22 @@
 # the License.
 
 
-#' Plot daily time series data with exceedances
+#' Plot daily time series data with exceedances and optionally caaqs for a 
+#' particular station
 #'   
-#' @param daily_data a dataframe of daily aggregated air quality readings with 
-#'   columns: date, avg_24h (if pm25), max8hr (if o3)
-#' @param caaqs_data (optional) a one-row dataframe with columns "min_year", 
-#'   "max_year" and columns for caaqs achievement status and mangaement status
-#' @param parameter air pollutant ("o3", "pm2.5_annual", "pm2.5_24h")
+#' @param x an object of class `caaqs`
+#' @param id the id of the station you would like to plot
+#' @param id_col the column in which to look for `id`
 #' @param rep_yr The reporting year
 #' @param plot_exceedances logical. Should exceedances be plotted?
 #' @param base_size base font size for the plot
 #' @param annot_size size of annotations. Scaling of this size is not the same 
 #'   as the rest of the font sizes, so you will have to experiment. Defaults to 
 #'   0.32*base_size
+#' @param plot_caaqs Should the caaqs be plotted?
 #'   
 #' @return a ggplot2 object
-#' @noRd
-
+#' @export
 plot_ts <- function(x, id = NULL, id_col = NULL, rep_yr, plot_caaqs = TRUE,
                     plot_exceedances = FALSE, base_size = 10, 
                     annot_size = NULL) {

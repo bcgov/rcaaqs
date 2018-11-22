@@ -29,15 +29,15 @@ Varies according to the function and the parameter being analyzed:
 
 \code{extract_daily()}:
 \itemize{
-\item pm_24h, pm_annual: Daily average
+\item pm2.5_24h, pm2.5_annual: Daily average
 \item o3, so2_3yr, no2_3yr: Daily maximum
 \item so2_1yr, no2_1yr: None
 }
 
 \code{extract_yearly()}:
 \itemize{
-\item pm_24h: Annual 98th percentile daily average
-\item pm_annual: Annual average of daily averages
+\item pm2.5_24h: Annual 98th percentile daily average
+\item pm2.5_annual: Annual average of daily averages
 \item o3: Annual 4th highest daily maximum
 \item so2_1yr, no2_1yr: Annual average of hourly values
 \item so2_3yr: Annual 99th percentile or daily maximums
@@ -46,7 +46,7 @@ Varies according to the function and the parameter being analyzed:
 
 \code{extract_three_yr_rolling()}
 \itemize{
-\item pm_24h, pm_annual, o3, so2_3yr, no2_3yr: Three-year rolling average of the
+\item pm2.5_24h, pm2.5_annual, o3, so2_3yr, no2_3yr: Three-year rolling average of the
 yearly value.
 \item so2_1yr, no2_1yr: None
 }

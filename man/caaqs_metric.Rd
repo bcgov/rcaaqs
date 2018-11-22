@@ -12,7 +12,7 @@
 \title{Compute specific CAAQS metrics}
 \usage{
 pm_24h_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
+  quiet = FALSE)
 
 pm_annual_caaqs(data, dt = "date_time", val = "value", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
@@ -44,6 +44,8 @@ value columns}
 using multiple sites. Even if not using multiple sites, you should specify
 the id column so that it is retained in the output.}
 
+\item{quiet}{Logical. Suppress progress messages (default FALSE)}
+
 \item{exclude_df}{Data frame. The dates over which data should be excluded
 (see details). Data should be arranged either with one column of dates to
 omit, or two columns specifying a series of start and end date ranges to
@@ -52,8 +54,6 @@ omit.}
 \item{exclude_df_dt}{Character vector. The names of the date columns in
 \code{exclude_df}. Must specify either one (a series of dates), or two (the
 start and end columns specifying dates ranges).}
-
-\item{quiet}{Logical. Suppress progress messages (default FALSE)}
 }
 \value{
 \code{caaqs} object with results of the caaqs analysis, including results
