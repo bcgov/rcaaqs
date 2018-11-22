@@ -239,7 +239,9 @@ o3_caaqs <- function(data, dt = "date_time", val = "value",
   
   if (!quiet) message("Calculating O3 CAAQS metric")
   yearly_roll <- o3_three_yr_avg(yearly, by = by)
-  caaqs <- caaqs(yearly_roll, val = "ozone_metric", by = by, metric = "o3", n = 3)
+  # TODO - when caaqs_management is finished, remove management = TRUE
+  caaqs <- caaqs(yearly_roll, val = "ozone_metric", by = by, metric = "o3", 
+                 n = 3, management = TRUE)
   
   as.caaqs(
     list(
