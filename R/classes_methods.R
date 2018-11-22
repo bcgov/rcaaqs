@@ -100,62 +100,62 @@ extract_three_yr_rolling.default <- function(x) {
 
 ## caaqs (all) -------------------------------------------------
 #' @export
-extract_caaqs.caaqs <- function(x) x$caaqs
+extract_caaqs.caaqs <- function(x) x[["caaqs"]]
 
 ## PM 24hr -------------------------------------------------
 #' @export
-extract_daily.pm_24h <- function(x) x$daily_avg
+extract_daily.pm_24h <- function(x) x[["daily_avg"]]
 
 #' @export
-extract_yearly.pm_24h <- function(x) x$yearly_98
+extract_yearly.pm_24h <- function(x) x[["yearly_98"]]
 
 #' @export
-extract_three_yr_rolling.pm_24h <- function(x) x$three_yr_rolling
+extract_three_yr_rolling.pm_24h <- function(x) x[["three_yr_rolling"]]
 
 ## PM annual -------------------------------------------------
 #' @export
-extract_daily.pm_annual <- function(x) x$daily_avg
+extract_daily.pm_annual <- function(x) x[["daily_avg"]]
 
 #' @export
-extract_yearly.pm_annual <- function(x) x$yearly_avg
+extract_yearly.pm_annual <- function(x) x[["yearly_avg"]]
 
 #' @export
-extract_three_yr_rolling.pm_annual <- function(x) x$three_yr_rolling
+extract_three_yr_rolling.pm_annual <- function(x) x[["three_yr_rolling"]]
 
 ## Ozone -------------------------------------------------
 #' @export
-extract_daily.o3 <- function(x) x$daily_max
+extract_daily.o3 <- function(x) x[["daily_max"]]
 
 #' @export
-extract_yearly.o3 <- function(x) x$ann_4th_highest
+extract_yearly.o3 <- function(x) x[["ann_4th_highest"]]
 
 #' @export
-extract_three_yr_rolling.o3 <- function(x)x$three_yr_rolling
+extract_three_yr_rolling.o3 <- function(x)x[["three_yr_rolling"]]
 
 ## SO2 1yr -------------------------------------------------
 #' @export
-extract_yearly.so2_1yr <- function(x) x$yearly_hr
+extract_yearly.so2_1yr <- function(x) x[["yearly_hr"]]
 
 ## SO2 3yr -------------------------------------------------
 #' @export
-extract_daily.so2_3yr <- function(x) x$daily_max
+extract_daily.so2_3yr <- function(x) x[["daily_max"]]
 
 #' @export
-extract_yearly.so2_3yr <- function(x) x$yearly_99
+extract_yearly.so2_3yr <- function(x) x[["yearly_99"]]
 
 #' @export
-extract_three_yr_rolling.so2_3yr <- function(x) x$three_yr_rolling
+extract_three_yr_rolling.so2_3yr <- function(x) x[["three_yr_rolling"]]
 
 ## NO2 1yr -------------------------------------------------
 #' @export
-extract_yearly.no2_1yr <- function(x) x$yearly_hr
+extract_yearly.no2_1yr <- function(x) x[["yearly_hr"]]
 
 ## NO2 3yr -------------------------------------------------
 #' @export
-extract_daily.no2_3yr <- function(x) x$daily_max
+extract_daily.no2_3yr <- function(x) x[["daily_max"]]
 
 #' @export
-extract_yearly.no2_3yr <- function(x) x$yearly_98
+extract_yearly.no2_3yr <- function(x) x[["yearly_98"]]
 
 #' @export
-extract_three_yr_rolling.no2_3yr <- function(x) x$three_yr_rolling
+extract_three_yr_rolling.no2_3yr <- function(x) x[["three_yr_rolling"]]
