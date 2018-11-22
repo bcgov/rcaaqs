@@ -77,3 +77,15 @@ caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NUL
             yearly_roll_mgmt = yearly_roll_mgmt, 
             caaqs_mgmt = caaqs_mgmt))
 }
+
+join_management_caaqs <- function(caaqs, mgmt, by) {
+  mgmt <- dplyr::select(mgmt, by, "caaqs_year", "metric", 
+                        "mgmt_metric_value" = "metric_value", 
+                        "mgmt", "excluded")
+  ret <- dplyr::left_join(caaqs, mgmt, by = c(by, "caaqs_year", "metric"))
+  dplyr::select(ret, by, "caaqs_year", "metric", 
+                "ambient_metric_value" = "metric_value", 
+                "ambient_caaqs" = "caaqs", 
+                "excluded", "mgmt_metric_value", "mgmt_level" = "mgmt", 
+                dplyr::everything())
+}
