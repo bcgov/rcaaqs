@@ -78,14 +78,25 @@ caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NUL
             caaqs_mgmt = caaqs_mgmt))
 }
 
-join_management_caaqs <- function(caaqs, mgmt, by) {
-  mgmt <- dplyr::select(mgmt, by, "caaqs_year", "metric", 
+join_management_caaqs <- function(caaqs, mgmt_caaqs, by) {
+  mgmt_caaqs <- dplyr::select(mgmt_caaqs, by, "caaqs_year", "metric", 
                         "mgmt_metric_value" = "metric_value", 
                         "mgmt", "excluded")
-  ret <- dplyr::left_join(caaqs, mgmt, by = c(by, "caaqs_year", "metric"))
+  ret <- dplyr::left_join(caaqs, mgmt_caaqs, by = c(by, "caaqs_year", "metric"))
   dplyr::select(ret, by, "caaqs_year", "metric", 
                 "ambient_metric_value" = "metric_value", 
                 "ambient_caaqs" = "caaqs", 
                 "excluded", "mgmt_metric_value", "mgmt_level" = "mgmt", 
                 dplyr::everything())
+}
+
+join_management_yearly <- function(yearly, mgmt_yearly, by) {
+  mgmt_yearly <- dplyr::select(mgmt_yearly, by, "year", "excluded", 
+                               "ann_98_percentile_mgmt" = "ann_98_percentile", 
+                               "exceed_mgmt" = "exceed")
+  
+  ret <- dplyr::left_join(yearly, mgmt_yearly, by = c(by, "year"))
+  dplyr::select(ret, by, "year", "valid_in_year", dplyr::starts_with("quarter"), 
+                "ann_98_percentile", "exceed", "excluded", 
+                "ann_98_percentile_mgmt", "exceed_mgmt", dplyr::everything())
 }
