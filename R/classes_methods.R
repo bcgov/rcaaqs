@@ -1,8 +1,8 @@
 as.caaqs <- function(x, param, dt, val, by) {
-  param <- match.arg(param, c("pm_annual", "pm_24h", "o3", "so2_1yr", 
+  param <- match.arg(param, c("pm2.5_annual", "pm2.5_24h", "o3", "so2_1yr", 
                                     "so2_3yr", "no2_1yr", "no2_3yr"))
   structure(x, class = unique(c(param, "caaqs", class(x))),
-            vars = list(dt = dt, val = val, by = by))
+            vars = list(param = param, dt = dt, val = val, by = by))
 }
 
 #' @export
@@ -38,20 +38,20 @@ print_summary <- function(x, ...) {
 #' - caaqs results
 #' 
 #' `extract_daily()`:
-#' - pm_24h, pm_annual: Daily average
+#' - pm2.5_24h, pm2.5_annual: Daily average
 #' - o3, so2_3yr, no2_3yr: Daily maximum
 #' - so2_1yr, no2_1yr: None
 #' 
 #' `extract_yearly()`:
-#' - pm_24h: Annual 98th percentile daily average
-#' - pm_annual: Annual average of daily averages
+#' - pm2.5_24h: Annual 98th percentile daily average
+#' - pm2.5_annual: Annual average of daily averages
 #' - o3: Annual 4th highest daily maximum
 #' - so2_1yr, no2_1yr: Annual average of hourly values
 #' - so2_3yr: Annual 99th percentile or daily maximums
 #' - no2_3yr: Annual 98th percentile or daily maximums
 #' 
 #' `extract_three_yr_rolling()`
-#'  - pm_24h, pm_annual, o3, so2_3yr, no2_3yr: Three-year rolling average of the 
+#'  - pm2.5_24h, pm2.5_annual, o3, so2_3yr, no2_3yr: Three-year rolling average of the 
 #'  yearly value.
 #'  - so2_1yr, no2_1yr: None
 #' 
@@ -104,23 +104,23 @@ extract_caaqs.caaqs <- function(x) x[["caaqs"]]
 
 ## PM 24hr -------------------------------------------------
 #' @export
-extract_daily.pm_24h <- function(x) x[["daily_avg"]]
+extract_daily.pm2.5_24h <- function(x) x[["daily_avg"]]
 
 #' @export
-extract_yearly.pm_24h <- function(x) x[["yearly_98"]]
+extract_yearly.pm2.5_24h <- function(x) x[["yearly_98"]]
 
 #' @export
-extract_three_yr_rolling.pm_24h <- function(x) x[["three_yr_rolling"]]
+extract_three_yr_rolling.pm2.5_24h <- function(x) x[["three_yr_rolling"]]
 
 ## PM annual -------------------------------------------------
 #' @export
-extract_daily.pm_annual <- function(x) x[["daily_avg"]]
+extract_daily.pm2.5_annual <- function(x) x[["daily_avg"]]
 
 #' @export
-extract_yearly.pm_annual <- function(x) x[["yearly_avg"]]
+extract_yearly.pm2.5_annual <- function(x) x[["yearly_avg"]]
 
 #' @export
-extract_three_yr_rolling.pm_annual <- function(x) x[["three_yr_rolling"]]
+extract_three_yr_rolling.pm2.5_annual <- function(x) x[["three_yr_rolling"]]
 
 ## Ozone -------------------------------------------------
 #' @export

@@ -179,7 +179,7 @@ pm_24h_caaqs <- function(data, dt = "date_time", val = "value",
          three_yr_rolling = yearly_roll, 
          caaqs = caaqs
          ), 
-    param = "pm_24h", 
+    param = "pm2.5_24h", 
     dt = dt, val = val, by = by
   )
 }
@@ -213,7 +213,7 @@ pm_annual_caaqs <- function(data, dt = "date_time", val = "value",
          three_yr_rolling = yearly_roll,
          caaqs = caaqs
          ),
-    param = "pm_annual", 
+    param = "pm2.5_annual", 
     dt = dt, val = val, by = by
   )
 }
@@ -417,7 +417,7 @@ caaqs_management.default <- function(x, exclude_df = NULL, exclude_df_dt = NULL,
        paste(class(x), collapse = ", "), call. = FALSE)
 }
 
-caaqs_management.pm_24h <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
+caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                               quiet = FALSE) {
   
   daily <- extract_daily(x)
