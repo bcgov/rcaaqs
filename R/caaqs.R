@@ -137,15 +137,16 @@ caaqs <- function(data, year = "year", val, by, metric, n, management = FALSE) {
 
   # Determine station achievements
   data$caaqs <- cut_achievement(data$metric_value, metric, output = "labels")
-  if (management) {
-    data$mgmt <- cut_management(data$metric_value, metric)
-  }
+
+  data$mgmt <- cut_management(data$metric_value, metric)
   data$metric <- metric
   
   # Clean up
   data <- dplyr::rename(data, "caaqs_year" = "year")
   cols_keep <- c(by, "caaqs_year", "min_year", "max_year", "n_years", "metric", 
-                 "metric_value", "caaqs", "mgmt", "excluded",
+                 "metric_value", "caaqs", 
+                 # Only include management columns if management
+                 if (management) c("mgmt", "excluded"),
                  "flag_daily_incomplete", "flag_yearly_incomplete",
                  "flag_two_of_three_years")
   cols_keep <- intersect(cols_keep, names(data))
