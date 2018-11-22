@@ -38,7 +38,7 @@ yearly_stat <- function(data, dt = "date", val = "value",
   quarter_valid <- valid_by_quarter(data, dt, by, val, quarter_units)
 
   # Exclude data
-  if(!is.null(exclude_df)) {
+  if (!is.null(exclude_df)) {
     data <- exclude_data(data, dt, by, 
                          exclude_df, exclude_df_dt,
                          val = val, quiet = quiet)
@@ -47,7 +47,7 @@ yearly_stat <- function(data, dt = "date", val = "value",
   }
 
   # Calculate yearly statistic
-  if(!is.null(stat.opts)) {
+  if (!is.null(stat.opts)) {
     data <- dplyr::summarize(data, 
                              stat = stat(!!rlang::sym(val), !!unlist(stat.opts)),
                              excluded = any(.data$excluded),
@@ -65,7 +65,9 @@ yearly_stat <- function(data, dt = "date", val = "value",
                         exceed = .data$stat > pollutant_standard)
   
   data <- dplyr::ungroup(data)
-  dplyr::left_join(quarter_valid, data, by = c(by, "year"))
+  ret <- dplyr::left_join(quarter_valid, data, by = c(by, "year"))
+  if (is.null(exclude_df)) ret$excluded <- NULL
+  ret
 }
 
 
