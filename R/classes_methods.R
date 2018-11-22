@@ -1,7 +1,8 @@
-as.caaqs <- function(x, param) {
+as.caaqs <- function(x, param, dt, val, by) {
   param <- match.arg(param, c("pm_annual", "pm_24h", "o3", "so2_1yr", 
                                     "so2_3yr", "no2_1yr", "no2_3yr"))
-  structure(x, class = c(param, "caaqs", class(x)))
+  structure(x, class = unique(c(param, "caaqs", class(x))),
+            vars = list(dt = dt, val = val, by = by))
 }
 
 #' @export
