@@ -72,10 +72,12 @@ caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NUL
                       n = 3, management = TRUE)
   # Add new columns or objects to caaqs object, update class, return modified 
   # caaqs object
-  list(x, 
-       list(yearly_mgmt = yearly_mgmt, 
-            yearly_roll_mgmt = yearly_roll_mgmt, 
-            caaqs_mgmt = caaqs_mgmt))
+  x[["yearly_98"]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, "pm2.5_24h", by)
+  ## TODO: 
+  # x[["three_year_rolling"]] = join_management_rolling(extract_yearly(x), yearly_roll_mgmt, ...)
+  x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by)
+  # TODO: add management class and eetf df to object
+  x
 }
 
 join_management_caaqs <- function(caaqs, mgmt_caaqs, by) {
