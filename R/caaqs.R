@@ -101,7 +101,7 @@ NULL
 
 
 #' @importFrom rlang .data
-caaqs <- function(data, year = "year", val, by, metric, n) {
+caaqs <- function(data, year = "year", val, by, metric, n, management = FALSE) {
 
   # Check inputs
   check_vars(list(year, val, by), data)
@@ -116,8 +116,8 @@ caaqs <- function(data, year = "year", val, by, metric, n) {
   data <- dplyr::ungroup(data)
   
   # Group data if supplied
-  if(!is.null(by)) {
-    if(n == 3) {
+  if (!is.null(by)) {
+    if (n == 3) {
       data <- dplyr::group_by_if(data, names(data) %in% by)
       check_groups(data, year)
     }
@@ -127,7 +127,7 @@ caaqs <- function(data, year = "year", val, by, metric, n) {
   data <- dplyr::arrange(data, !!! rlang::syms(c(by, "year")))
 
   # Added details
-  if(n == 3) {
+  if (n == 3) {
     data <- dplyr::mutate(data, 
                           n_years = .data$n_val,
                           n_max = as.integer(max(.data$n_years, na.rm = TRUE)))
@@ -137,7 +137,9 @@ caaqs <- function(data, year = "year", val, by, metric, n) {
 
   # Determine station achievements
   data$caaqs <- cut_achievement(data$metric_value, metric, output = "labels")
-  data$mgmt <- cut_management(data$metric_value, metric)
+  if (management) {
+    data$mgmt <- cut_management(data$metric_value, metric)
+  }
   data$metric <- metric
   
   # Clean up
@@ -168,7 +170,8 @@ pm_24h_caaqs <- function(data, dt = "date_time", val = "value",
 
   yearly_roll <- pm_three_yr_avg(yearly, val = "ann_98_percentile", by = by)
 
-  caaqs <- caaqs(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_24h", n = 3)
+  caaqs <- caaqs(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_24h", 
+                 n = 3)
   
   as.caaqs(
     list(daily_avg = daily, 
@@ -345,7 +348,7 @@ no2_3yr_caaqs <- function(data, dt = "date_time", val = "value",
                          quiet = FALSE) {
   
   if (!is.null(exclude_df)) check_exclude(data, dt, by,
-                                         exclude_df, exclude_df_dt)
+                                          exclude_df, exclude_df_dt)
   
   if (!quiet) message("Calculating NO2 daily maximum")
   daily <- no2_daily_max(data, dt = dt, val = val, by = by)
@@ -399,34 +402,44 @@ no2_3yr_caaqs <- function(data, dt = "date_time", val = "value",
 #' @export
 #'
 #' @examples
-caaqs_eetf <- function(x, exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE) {
-  if (!is.null(exclude_df)) check_exclude(data, dt, by,
-                                          exclude_df, exclude_df_dt)
+caaqs_management <- function(x, exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE) {
+  if (!is.null(exclude_df)) {
+    check_exclude(extract_daily(x), dt = "date",
+                  by = attr(x, "vars")[["by"]],
+                  exclude_df, exclude_df_dt)
+  }
   UseMethod("caaqs_management")
 }
 
-caaqs_eetf.default <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
+caaqs_management.default <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                quiet = FALSE) {
   stop("No method defined for object of type ", 
        paste(class(x), collapse = ", "), call. = FALSE)
 }
 
-caaqs_eetf.pm_24h <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
+caaqs_management.pm_24h <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                               quiet = FALSE) {
   
   daily <- extract_daily(x)
   if (!quiet) message("Calculating PM 2.5 annual 98th percentile")
 
-  yearly <- pm_yearly_98(daily, 
-                         by = attr(x, "vars")[["by"]], 
+  by <- attr(x, "vars")[["by"]]
+  
+  yearly_mgmt <- pm_yearly_98(daily, 
+                         by = by, 
                          exclude_df = exclude_df, 
                          exclude_df_dt = exclude_df_dt, 
                          quiet = quiet)
   
   if (!quiet) message("Calculating PM 2.5 24h CAAQS metric")
   
-  yearly_roll <- pm_three_yr_avg(yearly, val = "ann_98_percentile", by = by)
-  caaqs <- caaqs(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_24h", n = 3)
+  yearly_roll_mgmt <- pm_three_yr_avg(yearly_mgmt, val = "ann_98_percentile", by = by)
+  caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "pm_metric", by = by, metric = "pm2.5_24h", 
+                 n = 3, management = TRUE)
   # Add new columns or objects to caaqs object, update class, return modified 
   # caaqs object
+  list(x, 
+       list(yearly_mgmt = yearly_mgmt, 
+            yearly_roll_mgmt = yearly_roll_mgmt, 
+            caaqs_mgmt = caaqs_mgmt))
 }
