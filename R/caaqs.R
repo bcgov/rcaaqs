@@ -156,20 +156,13 @@ caaqs <- function(data, year = "year", val, by, metric, n) {
 #' @rdname caaqs_metric
 #' @export
 pm_24h_caaqs <- function(data, dt = "date_time", val = "value",
-                        by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                        quiet = FALSE) {
+                        by = NULL, quiet = FALSE) {
 
-  if (!is.null(exclude_df)) check_exclude(data, dt, by,
-                                         exclude_df, exclude_df_dt)
-  
   if (!quiet) message("Calculating PM 2.5 daily average")
   daily <- pm_daily_avg(data, dt = dt, val = val, by = by)
   
-  message("Calculating PM 2.5 annual 98th percentile")
-  yearly <- pm_yearly_98(daily, by = by, 
-                         exclude_df = exclude_df, 
-                         exclude_df_dt = exclude_df_dt, 
-                         quiet = quiet)
+  if (!quiet) message("Calculating PM 2.5 annual 98th percentile")
+  yearly <- pm_yearly_98(daily, by = by, quiet = quiet)
   
   if (!quiet) message("Calculating PM 2.5 24h CAAQS metric")
 
@@ -183,7 +176,8 @@ pm_24h_caaqs <- function(data, dt = "date_time", val = "value",
          three_yr_rolling = yearly_roll, 
          caaqs = caaqs
          ), 
-    "pm_24h"
+    param = "pm_24h", 
+    dt = dt, val = val, by = by
   )
 }
 
@@ -216,7 +210,8 @@ pm_annual_caaqs <- function(data, dt = "date_time", val = "value",
          three_yr_rolling = yearly_roll,
          caaqs = caaqs
          ),
-    "pm_annual"
+    param = "pm_annual", 
+    dt = dt, val = val, by = by
   )
 }
 
@@ -250,7 +245,8 @@ o3_caaqs <- function(data, dt = "date_time", val = "value",
       three_yr_rolling = yearly_roll,
       caaqs = caaqs
     ),
-    "o3"
+    param = "o3", 
+    dt = dt, val = val, by = by
   )
 }
 
@@ -276,7 +272,8 @@ so2_1yr_caaqs <- function(data, dt = "date_time", val = "value",
       yearly_hr = yearly,
       caaqs = caaqs
     ),
-    "so2_1yr"
+    param = "so2_1yr", 
+    dt = dt, val = val, by = by
   )
 }
 
@@ -309,7 +306,8 @@ so2_3yr_caaqs <- function(data, dt = "date_time", val = "value",
       three_yr_rolling = yearly_roll,
       caaqs = caaqs
       ), 
-    "so2_3yr"
+    param = "so2_3yr", 
+    dt = dt, val = val, by = by
   )
 }
 
@@ -334,7 +332,8 @@ no2_1yr_caaqs <- function(data, dt = "date_time", val = "value",
       yearly_hr = yearly,
       caaqs = caaqs
     ),
-    "no2_1yr"
+    param = "no2_1yr", 
+    dt = dt, val = val, by = by
   )
 
 }
@@ -368,7 +367,66 @@ no2_3yr_caaqs <- function(data, dt = "date_time", val = "value",
       three_yr_rolling = yearly_roll,
       caaqs = caaqs
     ), 
-    "no2_3yr"
+    param = "no2_3yr", 
+    dt = dt, val = val, by = by
   )
 
+}
+
+#' Calculate CAAQS management levels excluding days with Exceptional Events 
+#' or Transboundary Flows
+#'
+#' @param x an object of class `caaqs`
+#' @param exclude_df Data frame. The dates over which data should be excluded 
+#'   (see details). Data should be arranged either with one column of dates to 
+#'   omit, or two columns specifying a series of start and end date ranges to 
+#'   omit.
+#' @param exclude_df_dt Character vector. The names of the date columns in 
+#'   \code{exclude_df}. Must specify either one (a series of dates), or two (the
+#'   start and end columns specifying dates ranges).
+#' @param quiet Logical. Suppress progress messages (default FALSE)
+#' 
+#' @details To omit days which are suspected to be influenced by Transboundary
+#'   Flows or Exceptional Events create a data frame that either a) contains a
+#'   column listing all the days which are to be omitted, or b) contains two
+#'   columns listing the start and end dates of all the date periods which are
+#'   to be omitted. This is supplied as \code{exclude_df}. Use
+#'   \code{exlcude_df_dt} to specify the name of the column containing the
+#'   dates, or the names of the columns containing the start and end of the date
+#'   ranges (see examples and vignette for more details).
+#'
+#' @return object of class `caaqs`
+#' @export
+#'
+#' @examples
+caaqs_eetf <- function(x, exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE) {
+  if (!is.null(exclude_df)) check_exclude(data, dt, by,
+                                          exclude_df, exclude_df_dt)
+  UseMethod("caaqs_management")
+}
+
+caaqs_eetf.default <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
+                               quiet = FALSE) {
+  stop("No method defined for object of type ", 
+       paste(class(x), collapse = ", "), call. = FALSE)
+}
+
+caaqs_eetf.pm_24h <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
+                              quiet = FALSE) {
+  
+  daily <- extract_daily(x)
+  if (!quiet) message("Calculating PM 2.5 annual 98th percentile")
+
+  yearly <- pm_yearly_98(daily, 
+                         by = attr(x, "vars")[["by"]], 
+                         exclude_df = exclude_df, 
+                         exclude_df_dt = exclude_df_dt, 
+                         quiet = quiet)
+  
+  if (!quiet) message("Calculating PM 2.5 24h CAAQS metric")
+  
+  yearly_roll <- pm_three_yr_avg(yearly, val = "ann_98_percentile", by = by)
+  caaqs <- caaqs(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_24h", n = 3)
+  # Add new columns or objects to caaqs object, update class, return modified 
+  # caaqs object
 }
