@@ -73,8 +73,19 @@ get_dt(o3_caaqs)
 get_param(o3_caaqs)
 plot_ts(o3_caaqs, "E229797", "ems_id", 2015)
 
-o3_caaqs_mgmt <- caaqs_management(o3_caaqs, exclude_df = high_dates, 
+o3_high_dates <- extract_daily(o3_caaqs) %>%
+  filter(date >= as.Date("2015-05-01"),
+         date < as.Date("2015-10-01"),
+         max8hr > 50) %>%
+  select(ems_id, site, date)
+
+o3_caaqs_mgmt <- caaqs_management(o3_caaqs, exclude_df = o3_high_dates, 
                                   exclude_df_dt = "date")
+o3_caaqs_mgmt
+extract_caaqs(o3_caaqs_mgmt)
+extract_daily(o3_caaqs_mgmt)
+extract_yearly(o3_caaqs_mgmt)
+extract_three_yr_rolling(o3_caaqs_mgmt)
 
 
 ## SO2 1yr
@@ -83,7 +94,14 @@ extract_hourly(so2_1yr_caaqs)
 extract_yearly(so2_1yr_caaqs)
 extract_caaqs(so2_1yr_caaqs)
 
-so2_1yr_caaqs_mgmt <- caaqs_management(so2_1yr_caaqs)
+so2_high_dates <- extract_hourly(so2_1yr_caaqs) %>%
+  filter(date_time >= as.POSIXct("2014-05-01"),
+         date_time < as.POSIXct("2014-10-01"),
+         value > 5) %>%
+  select(ems_id, site, date_time)
+
+so2_1yr_caaqs_mgmt <- caaqs_management(so2_1yr_caaqs, exclude_df = so2_high_dates, 
+                                       exclude_df_dt = "date_time")
 so2_1yr_caaqs_mgmt
 extract_hourly(so2_1yr_caaqs_mgmt)
 extract_yearly(so2_1yr_caaqs_mgmt)
