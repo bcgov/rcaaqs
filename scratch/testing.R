@@ -83,6 +83,11 @@ extract_hourly(so2_1yr_caaqs)
 extract_yearly(so2_1yr_caaqs)
 extract_caaqs(so2_1yr_caaqs)
 
+so2_1yr_caaqs_mgmt <- caaqs_management(so2_1yr_caaqs)
+so2_1yr_caaqs_mgmt
+extract_hourly(so2_1yr_caaqs_mgmt)
+extract_yearly(so2_1yr_caaqs_mgmt)
+extract_caaqs(so2_1yr_caaqs_mgmt)
 
 ## SO2 3yr
 so2_3yr_caaqs <- so2_3yr_caaqs(so2_sample_data, by = c("ems_id", "site"))
@@ -93,6 +98,12 @@ no2_1yr_caaqs <- no2_1yr_caaqs(no2_sample_data, by = c("ems_id", "site"))
 extract_hourly(no2_1yr_caaqs)
 extract_yearly(no2_1yr_caaqs)
 extract_caaqs(no2_1yr_caaqs)
+
+no2_1yr_caaqs_mgmt <- caaqs_management(no2_1yr_caaqs)
+no2_1yr_caaqs_mgmt
+extract_hourly(no2_1yr_caaqs_mgmt)
+extract_yearly(no2_1yr_caaqs_mgmt)
+extract_caaqs(no2_1yr_caaqs_mgmt)
 
 ## NO2 3yr
 no2_3yr_caaqs <- no2_3yr_caaqs(no2_sample_data, by = c("ems_id", "site"))
