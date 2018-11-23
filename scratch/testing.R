@@ -109,7 +109,17 @@ extract_caaqs(so2_1yr_caaqs_mgmt)
 
 ## SO2 3yr
 so2_3yr_caaqs <- so2_3yr_caaqs(so2_sample_data, by = c("ems_id", "site"))
+extract_daily(so2_3yr_caaqs)
 extract_yearly(so2_3yr_caaqs)
+extract_caaqs(so2_3yr_caaqs)
+
+so2_high_dates <- extract_daily(so2_3yr_caaqs) %>%
+  filter(date >= as.Date("2014-05-01"),
+         date < as.Date("2014-10-01"),s
+         max_24h > 30) %>%
+  select(ems_id, site, date)
+
+caaqs_management(so2_3yr_caaqs, exclude_df = so2_high_dates, exclude_df_dt = "date")
 
 ## NO2 1yr
 no2_1yr_caaqs <- no2_1yr_caaqs(no2_sample_data, by = c("ems_id", "site"))
@@ -127,4 +137,12 @@ extract_caaqs(no2_1yr_caaqs_mgmt)
 no2_3yr_caaqs <- no2_3yr_caaqs(no2_sample_data, by = c("ems_id", "site"))
 extract_yearly(no2_3yr_caaqs)
 
+no2_high_dates <- extract_daily(no2_3yr_caaqs) %>%
+  filter(date >= as.Date("2014-05-01"),
+         date < as.Date("2014-10-01"),
+         max_24h > 30) %>%
+  select(ems_id, site, date)
+
+caaqs_management(no2_3yr_caaqs)
+caaqs_management(no2_3yr_caaqs, exclude_df = no2_high_dates, exclude_df_dt = "date")
 
