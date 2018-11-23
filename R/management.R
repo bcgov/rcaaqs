@@ -63,13 +63,42 @@ caaqs_management.default <- function(x, exclude_df = NULL, exclude_df_dt = NULL,
 
 caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                        quiet = FALSE) {
-  
   caaqs_management_pm(x, exclude_df, exclude_df_dt, quiet)
 }
 
 caaqs_management.pm2.5_annual <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                        quiet = FALSE) {
   caaqs_management_pm(x, exclude_df, exclude_df_dt, quiet)
+}
+
+caaqs_management.o3 <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
+                                quiet = FALSE) {
+  daily <- extract_daily(x)
+  by <- get_by(x)
+  
+  if (!quiet) message("Calculating O3 annual 4th highest")
+  yearly_mgmt <- o3_ann_4th_highest(daily, by = by, 
+                               exclude_df = exclude_df, 
+                               exclude_df_dt = exclude_df_dt, 
+                               quiet = quiet)
+  
+  if (!quiet) message("Calculating O3 CAAQS metric")
+  yearly_roll_mgmt <- o3_three_yr_avg(yearly_mgmt, by = by)
+  
+  caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "ozone_metric", by = by, metric = "o3", 
+                 n = 3, management = TRUE)
+  
+  x[["ann_4th_highest"]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, 
+                                            parameter = "o3", by)
+  
+  x[["three_yr_rolling"]] = join_management_yearly(extract_three_yr_rolling(x), 
+                                                   yearly_roll_mgmt, 
+                                                   parameter = "o3", 
+                                                   by = by)
+  
+  x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by)
+  
+  as.caaqs_mgmt(x, eetf = exclude_df)
 }
 
 caaqs_management_pm <- function(x, exclude_df, exclude_df_dt, quiet) {
@@ -82,26 +111,29 @@ caaqs_management_pm <- function(x, exclude_df, exclude_df_dt, quiet) {
                        "pm2.5_annual" = pm_yearly_avg, 
                        "pm2.5_24h" = pm_yearly_98)
   
+  yearly_roll_fun <- switch(parameter, 
+                            "pm2.5_annual" = pm_three_yr_avg, 
+                            "pm2.5_24h" = pm_three_yr_avg)
+  
   yearly_obj <- switch(parameter, 
                        "pm2.5_annual" = "yearly_avg", 
                        "pm2.5_24h" = "yearly_98")
   
   if (!quiet) message("Calculating ", get_annual_stat(parameter, "long"))
   yearly_mgmt <- yearly_fun(daily, 
-                              by = by, 
-                              exclude_df = exclude_df, 
-                              exclude_df_dt = exclude_df_dt, 
-                              quiet = quiet)
+                            by = by, 
+                            exclude_df = exclude_df, 
+                            exclude_df_dt = exclude_df_dt, 
+                            quiet = quiet)
   
   if (!quiet) message("Calculating, " , params()[parameter], " CAAQS metric")
   
-  yearly_roll_mgmt <- pm_three_yr_avg(yearly_mgmt, 
+  yearly_roll_mgmt <- yearly_roll_fun(yearly_mgmt, 
                                       val = get_annual_stat(parameter), 
                                       by = by)
   
   caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "pm_metric", by = by, 
-                      metric = parameter, 
-                      n = 3, management = TRUE)
+                      metric = parameter, n = 3, management = TRUE)
   # Add new columns or objects to caaqs object, update class, return modified 
   # caaqs object
   

@@ -188,25 +188,19 @@ pm_24h_caaqs <- function(data, dt = "date_time", val = "value",
 #' @rdname caaqs_metric
 #' @export
 pm_annual_caaqs <- function(data, dt = "date_time", val = "value",
-                           by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                           quiet = FALSE) {
-  
-  if (!is.null(exclude_df)) check_exclude(data, dt, by,
-                                         exclude_df, exclude_df_dt)
-  
+                           by = NULL, quiet = FALSE) {
+
   if (!quiet) message("Calculating PM 2.5 daily average")
   daily <- pm_daily_avg(data, dt = dt, val = val, by = by)
   
   if (!quiet) message("Calculating PM 2.5 annual average ")
-  yearly <- pm_yearly_avg(daily, by = by, 
-                          exclude_df = exclude_df, 
-                          exclude_df_dt = exclude_df_dt, 
-                          quiet = quiet)
+  yearly <- pm_yearly_avg(daily, by = by, quiet = quiet)
   
   if (!quiet) message("Calculating PM 2.5 annual CAAQS metric")
   
   yearly_roll <- pm_three_yr_avg(yearly, val = "ann_avg", by = by)
-  caaqs <- caaqs(yearly_roll, val = "pm_metric", by = by, metric = "pm2.5_annual", n = 3)
+  caaqs <- caaqs(yearly_roll, val = "pm_metric", by = by, 
+                 metric = "pm2.5_annual", n = 3)
   
   as.caaqs(
     list(daily_avg = daily,
@@ -222,27 +216,20 @@ pm_annual_caaqs <- function(data, dt = "date_time", val = "value",
 #' @rdname caaqs_metric
 #' @export
 o3_caaqs <- function(data, dt = "date_time", val = "value",
-                    by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                    quiet = FALSE) {
-  
-  if (!is.null(exclude_df)) check_exclude(data, dt, by,
-                                         exclude_df, exclude_df_dt)
-  
+                    by = NULL, quiet = FALSE) {
+
   if (!quiet) message("Calculating O3 daily maximum of 8h average")
   daily8 <- o3_rolling_8hr_avg(data, dt = dt, val = val, by = by)
   daily <- o3_daily_max(daily8, by = by)
   
   if (!quiet) message("Calculating O3 annual 4th highest")
-  yearly <- o3_ann_4th_highest(daily, by = by, 
-                               exclude_df = exclude_df, 
-                               exclude_df_dt = exclude_df_dt, 
-                               quiet = quiet)
+  yearly <- o3_ann_4th_highest(daily, by = by, quiet = quiet)
   
   if (!quiet) message("Calculating O3 CAAQS metric")
   yearly_roll <- o3_three_yr_avg(yearly, by = by)
   # TODO - when caaqs_management is finished, remove management = TRUE
   caaqs <- caaqs(yearly_roll, val = "ozone_metric", by = by, metric = "o3", 
-                 n = 3, management = TRUE)
+                 n = 3)
   
   as.caaqs(
     list(
