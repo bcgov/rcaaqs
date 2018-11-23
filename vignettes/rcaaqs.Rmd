@@ -153,6 +153,15 @@ ggplot(data = pm_daily_avg, aes(x = date, y = avg_24h)) +
   facet_wrap(~ site)
 ```
 
+We can also plot the time series with CAAQS results using the built-in `plot_ts`
+function, providing an id (and the column in which to look) of the station we 
+wish to plot:
+
+```{r}
+plot_ts(pm, id = "0310172", id_col = "ems_id", rep_yr = 2013)
+```
+
+
 Let's say, for illustration purposes, that all high values in the summer of 2012 were due to forest fires and we want to exclude them.
 
 We'll `filter()` the daily data to just these dates and `select()` only the columns that reflect the grouping of our data and the dates.
@@ -165,20 +174,21 @@ high_dates <- pm_daily_avg %>%
 high_dates
 ```
 
-Now we can pass this on to our caaqs function with the `exclude_df` argument, which specifies the data frame, and the `exclude_df_dt` which specifies the name of the column holding the dates.
+Now we can pass this on to the `caaqs_management()`function via the `exclude_df` 
+argument, which specifies the data frame, and the `exclude_df_dt` which 
+specifies the name of the column holding the dates.
 
 ```{r}
-pm_excl <- pm_annual_caaqs(pm25_sample_data, 
-                          by = c("ems_id", "site"),
-                          exclude_df = high_dates,
-                          exclude_df_dt = "date")
-
+pm_excl <- caaqs_management(pm, exclude_df = high_dates, exclude_df_dt = "date")
+pm_excl
 pm_excl_caaqs <- extract_caaqs(pm_excl)
 pm_excl_caaqs
 ```
 
-Note that the `excluded` column now has some `TRUE` values, reflect the fact that some dates in that metric have been excluded. (Note that excluding data in this manner does not influence the evaluation of data completeness).
-
+Note that there are some new columns in the caaqs data frame: `excluded`, 
+`mgmt_metric_value`, and `mgmt_level`. The `excluded` column has some `TRUE` 
+values, reflecting the fact that some dates in that metric have been excluded. 
+(Note that excluding data in this manner does not influence the evaluation of data completeness).
 
 We can also define excluded dates with date ranges, but here we must specify both start and end column names:
 
@@ -189,10 +199,8 @@ high_dates <- data.frame(ems_id = "0310162",
                          end = as.Date(c("2012-06-25", "2012-08-14")))
 high_dates
 
-pm_excl <- pm_annual_caaqs(pm25_sample_data, 
-                          by = c("ems_id", "site"),
-                          exclude_df = high_dates,
-                          exclude_df_dt = c("start", "end"))
+pm_excl <- caaqs_management(pm, exclude_df = high_dates,
+                            exclude_df_dt = c("start", "end"))
 
 pm_excl_caaqs <- extract_caaqs(pm_excl)
 pm_excl_caaqs
@@ -215,8 +223,13 @@ We can match our data to an airzone by using the `assign_airzones()` function bu
 - A map file reflecting airzones, specifically an sf POLYGON (or MULTIPOLYGON) object
 - CAAQS data with latitude and longitude for each station/site
 
-For the following examples, we'll use our `pm` CAAQS data, but only for 2013
+For the following examples, we'll use our `pm` CAAQS data, but only for 2013. To 
+get the management levels, we must run `caaqs_management()` on the `caaqs` object, 
+even if we are not adding a data frame of dates to exclude.
+
 ```{r}
+pm <- caaqs_management(pm)
+
 pm_caaqs <- extract_caaqs(pm) %>%
   filter(caaqs_year == 2013)
 ```
@@ -266,7 +279,8 @@ pm_az
 
 
 ```{r}
-pm_az2 <- airzone_metric(pm_az)
+pm_az2 <- airzone_metric(pm_az, caaqs_val = "ambient_metric_value", 
+                         caaqs = "ambient_caaqs", mgmt = "mgmt_level")
 pm_az2
 ```
 
@@ -281,17 +295,17 @@ az_plot <- st_transform(az, crs = "+proj=longlat") %>%
   left_join(pm_az2, by = c("Airzone" = "airzone"))
 
 g1 <- ggplot() +
-  geom_sf(data = az_plot, aes(fill = caaqs)) +
+  geom_sf(data = az_plot, aes(fill = ambient_caaqs)) +
   geom_sf(data = st_as_sf(pm_az, coords = c("lon", "lat"), crs = "+proj=longlat"),
-          shape = 21, colour = "black", aes(fill = caaqs)) +
+          shape = 21, colour = "black", aes(fill = ambient_caaqs)) +
   scale_fill_manual(values = get_colours(type = "achievement"), drop = FALSE) +
   labs(title = "Achievement Status: PM2.5 Annual CAAQS") +
   theme(legend.position = c(0.85, 0.85))
 
 g2 <- ggplot() +
-  geom_sf(data = az_plot, aes(fill = mgmt)) +
+  geom_sf(data = az_plot, aes(fill = mgmt_level)) +
   geom_sf(data = st_as_sf(pm_az, coords = c("lon", "lat"), crs = "+proj=longlat"),
-          shape = 21, colour = "black", aes(fill = mgmt)) +
+          shape = 21, colour = "black", aes(fill = mgmt_level)) +
   scale_fill_manual(values = get_colours(type = "management"), drop = FALSE) +
   labs(title = "Management Status: PM2.5 Annual CAAQS") + 
   theme(legend.position = c(0.85, 0.85))
