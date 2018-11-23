@@ -3,12 +3,15 @@
 \name{caaqs_extractors}
 \alias{caaqs_extractors}
 \alias{extract_caaqs}
+\alias{extract_hourly}
 \alias{extract_daily}
 \alias{extract_yearly}
 \alias{extract_three_yr_rolling}
 \title{Extract results from a caaqs analysis}
 \usage{
 extract_caaqs(x)
+
+extract_hourly(x)
 
 extract_daily(x)
 
@@ -25,6 +28,12 @@ Varies according to the function and the parameter being analyzed:
 \code{extract_caaqs()}:
 \itemize{
 \item caaqs results
+}
+
+\code{extract_hourly()}:
+\itemize{
+\item so2_1yr, no2_1yr: Hourly values used for annual average
+\item pm2.5_24h, pm2.5_annual, o3, so2_3yr, no2_3yr: None
 }
 
 \code{extract_daily()}:

@@ -15,19 +15,19 @@ pm_24h_caaqs(data, dt = "date_time", val = "value", by = NULL,
   quiet = FALSE)
 
 pm_annual_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
+  quiet = FALSE)
 
 o3_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
+  quiet = FALSE)
 
 so2_1yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
+  quiet = FALSE)
 
 so2_3yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
 
 no2_1yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
+  quiet = FALSE)
 
 no2_3yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
   exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
@@ -98,19 +98,6 @@ pm <- pm_24h_caaqs(pm25_sample_data, by = c("ems_id", "site"))
 pm
 
 extract_caaqs(pm)
-
-# Exclude dates
-high_dates <- data.frame(ems_id = "0310162",
-                         site = "Port Moody Rocky Point Park", 
-                         date = seq(as.Date("2012-06-11"),
-                                    as.Date("2012-06-30"), by = "1 day"))
-                                    
-pm_ex <- pm_24h_caaqs(pm25_sample_data, 
-                     by = c("ems_id", "site"),
-                     exclude_df = high_dates,
-                     exclude_df_dt = "date")
-                     
-extract_caaqs(pm_ex)
 
 # Extract intermediate objects:
 

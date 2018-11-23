@@ -46,6 +46,22 @@ get_eetf <- function(x) {
 #' @export
 #'
 #' @examples
+#' 
+#' pm <- pm_24h_caaqs(pm25_sample_data, by = c("ems_id", "site"))
+#' 
+#' pm
+#' 
+#' extract_caaqs(pm)
+#' 
+#' # Exclude dates
+#' high_dates <- data.frame(ems_id = "0310162",
+#'                          site = "Port Moody Rocky Point Park", 
+#'                          date = seq(as.Date("2012-06-11"),
+#'                                     as.Date("2012-06-30"), by = "1 day"))
+#'                                     
+#' pm_ex <- caaqs_management(pm, exclude_df = high_dates, exclude_df_dt = "date")
+#' 
+#' pm_ex
 caaqs_management <- function(x, exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE) {
   UseMethod("caaqs_management")
 }

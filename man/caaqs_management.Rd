@@ -39,3 +39,21 @@ to be omitted. This is supplied as \code{exclude_df}. Use
 dates, or the names of the columns containing the start and end of the date
 ranges (see examples and vignette for more details).
 }
+\examples{
+
+pm <- pm_24h_caaqs(pm25_sample_data, by = c("ems_id", "site"))
+
+pm
+
+extract_caaqs(pm)
+
+# Exclude dates
+high_dates <- data.frame(ems_id = "0310162",
+                         site = "Port Moody Rocky Point Park", 
+                         date = seq(as.Date("2012-06-11"),
+                                    as.Date("2012-06-30"), by = "1 day"))
+                                    
+pm_ex <- caaqs_management(pm, exclude_df = high_dates, exclude_df_dt = "date")
+
+pm_ex
+}
