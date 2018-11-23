@@ -47,11 +47,6 @@ get_eetf <- function(x) {
 #'
 #' @examples
 caaqs_management <- function(x, exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE) {
-  if (!is.null(exclude_df)) {
-    check_exclude(extract_daily(x), dt = "date",
-                  by = get_by(x),
-                  exclude_df, exclude_df_dt)
-  }
   UseMethod("caaqs_management")
 }
 
@@ -73,8 +68,14 @@ caaqs_management.pm2.5_annual <- function(x, exclude_df = NULL, exclude_df_dt = 
 
 caaqs_management_pm <- function(x, exclude_df, exclude_df_dt, quiet) {
   daily <- extract_daily(x)
-  
   by <- get_by(x)
+  
+  if (!is.null(exclude_df)) {
+    check_exclude(daily, dt = "date",
+                  by = by,
+                  exclude_df, exclude_df_dt)
+  }
+  
   parameter <- get_param(x)
   
   yearly_fun <- switch(parameter, 
@@ -127,6 +128,12 @@ caaqs_management.o3 <- function(x, exclude_df = NULL, exclude_df_dt = NULL,
   daily <- extract_daily(x)
   by <- get_by(x)
   
+  if (!is.null(exclude_df)) {
+    check_exclude(daily, dt = "date",
+                  by = by,
+                  exclude_df, exclude_df_dt)
+  }
+  
   if (!quiet) message("Calculating O3 annual 4th highest")
   yearly_mgmt <- o3_ann_4th_highest(daily, by = by, 
                                     exclude_df = exclude_df, 
@@ -168,17 +175,17 @@ caaqs_management.no2_1yr <- function(x, exclude_df = NULL, exclude_df_dt = NULL,
 caaqs_management_so2_no2_1yr <- function(x, exclude_df, exclude_df_dt, 
                                 quiet) {
   
+  hourly <- extract_hourly(x)
   by <- get_by(x)
+  
   parameter <- get_param(x)
   
   yearly_fun <- switch(parameter, 
                        "so2_1yr" = so2_avg_hourly_by_year, 
                        "no2_1yr" = no2_avg_hourly_by_year)
   
-  
-  
   if (!quiet) message("Calculating, " , params()[parameter], " CAAQS metric")
-  yearly_mgmt <- yearly_fun(extract_hourly(x), dt = get_dt(x), 
+  yearly_mgmt <- yearly_fun(hourly, dt = get_dt(x), 
                             val = get_val(x), by = by, 
                             exclude_df = exclude_df, 
                             exclude_df_dt = exclude_df_dt, 
