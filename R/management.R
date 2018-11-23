@@ -65,11 +65,11 @@ caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NUL
                                        quiet = FALSE) {
   
   daily <- extract_daily(x)
-  if (!quiet) message("Calculating PM 2.5 annual 98th percentile")
   
   by <- get_by(x)
-  metric <- get_param(x)
+  parameter <- get_param(x)
   
+  if (!quiet) message("Calculating PM 2.5 annual 98th percentile")
   yearly_mgmt <- pm_yearly_98(daily, 
                               by = by, 
                               exclude_df = exclude_df, 
@@ -79,16 +79,20 @@ caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NUL
   if (!quiet) message("Calculating PM 2.5 24h CAAQS metric")
   
   yearly_roll_mgmt <- pm_three_yr_avg(yearly_mgmt, val = "ann_98_percentile", by = by)
-  caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "pm_metric", by = by, metric = metric, 
+  caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "pm_metric", by = by, metric = parameter, 
                       n = 3, management = TRUE)
   # Add new columns or objects to caaqs object, update class, return modified 
   # caaqs object
   x[["yearly_98"]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, 
-                                             parameter = metric, by)
-  ## TODO: 
-  # x[["three_year_rolling"]] = join_management_rolling(extract_yearly(x), yearly_roll_mgmt, ...)
+                                             parameter = parameter, by)
+  
+  x[["three_yr_rolling"]] = join_management_yearly(extract_three_yr_rolling(x), 
+                                                     yearly_roll_mgmt, 
+                                                     parameter = parameter, 
+                                                     by = by)
+  
   x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by)
-  # TODO: add management class and eetf df to object
+
   as.caaqs_mgmt(x, eetf = exclude_df)
 }
 
@@ -106,9 +110,7 @@ join_management_caaqs <- function(caaqs, mgmt_caaqs, by) {
 
 ## this is for pm2.5 only right now
 join_management_yearly <- function(yearly, mgmt_yearly, parameter, by) {
-  annual_stat <- switch(parameter, 
-                        "pm2.5_24h" = "ann_98_percentile", 
-                        "pm2.5_annual" = "ann_avg")
+  annual_stat <- get_annual_stat(parameter)
   mgmt_yearly <- dplyr::select(mgmt_yearly, by, "year", "excluded", 
                                annual_stat, "exceed_mgmt" = "exceed")
   names(mgmt_yearly)[names(mgmt_yearly) == annual_stat] <- paste0(annual_stat, "_mgmt")
@@ -117,4 +119,10 @@ join_management_yearly <- function(yearly, mgmt_yearly, parameter, by) {
   dplyr::select(ret, by, "year", "valid_in_year", dplyr::starts_with("quarter"), 
                 annual_stat, "exceed", "excluded", 
                 paste0(annual_stat, "_mgmt"), "exceed_mgmt", dplyr::everything())
+}
+
+get_annual_stat <- function(parameter) {
+  switch(parameter, 
+         "pm2.5_24h" = "ann_98_percentile", 
+         "pm2.5_annual" = "ann_avg")
 }
