@@ -63,10 +63,20 @@ caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NUL
 
 caaqs_management.pm2.5_annual <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                        quiet = FALSE) {
-  caaqs_management_pm(x, exclude_df, exclude_df_dt, quiet)
+  caaqs_management_pm_no2_so2_3yr(x, exclude_df, exclude_df_dt, quiet)
 }
 
-caaqs_management_pm <- function(x, exclude_df, exclude_df_dt, quiet) {
+caaqs_management.so2_3yr <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
+                                     quiet = FALSE) {
+  caaqs_management_pm_no2_so2_3yr(x, exclude_df, exclude_df_dt, quiet)
+}
+
+caaqs_management.no2_3yr <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
+                                     quiet = FALSE) {
+  caaqs_management_pm_no2_so2_3yr(x, exclude_df, exclude_df_dt, quiet)
+}
+
+caaqs_management_pm_no2_so2_3yr <- function(x, exclude_df, exclude_df_dt, quiet) {
   daily <- extract_daily(x)
   by <- get_by(x)
   
@@ -80,15 +90,27 @@ caaqs_management_pm <- function(x, exclude_df, exclude_df_dt, quiet) {
   
   yearly_fun <- switch(parameter, 
                        "pm2.5_annual" = pm_yearly_avg, 
-                       "pm2.5_24h" = pm_yearly_98)
+                       "pm2.5_24h" = pm_yearly_98, 
+                       "so2_3yr" = so2_yearly_99, 
+                       "no2_3yr" = no2_yearly_98)
   
   yearly_roll_fun <- switch(parameter, 
                             "pm2.5_annual" = pm_three_yr_avg, 
-                            "pm2.5_24h" = pm_three_yr_avg)
+                            "pm2.5_24h" = pm_three_yr_avg, 
+                            "so2_3yr" = so2_three_yr_avg,
+                            "no2_3yr" = no2_three_yr_avg)
+  
+  caaqs_val <- switch(parameter, 
+                      "pm2.5_annual" = "pm_metric", 
+                      "pm2.5_24h" = "pm_metric", 
+                      "so2_3yr" = "so2_metric",
+                      "no2_3yr" = "no2_metric")
   
   yearly_obj <- switch(parameter, 
                        "pm2.5_annual" = "yearly_avg", 
-                       "pm2.5_24h" = "yearly_98")
+                       "pm2.5_24h" = "yearly_98", 
+                       "so2_3yr" = "yearly_99",
+                       "no2_3yr" = "yearly_98")
   
   if (!quiet) message("Calculating ", get_annual_stat(parameter, "long"))
   yearly_mgmt <- yearly_fun(daily, 
@@ -103,7 +125,7 @@ caaqs_management_pm <- function(x, exclude_df, exclude_df_dt, quiet) {
                                       val = get_annual_stat(parameter), 
                                       by = by)
   
-  caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "pm_metric", by = by, 
+  caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = caaqs_val, by = by, 
                       metric = parameter, n = 3, management = TRUE)
   # Add new columns or objects to caaqs object, update class, return modified 
   # caaqs object
@@ -216,7 +238,6 @@ join_management_caaqs <- function(caaqs, mgmt_caaqs, by, eetf) {
                 dplyr::everything())
 }
 
-## this is for pm2.5 only right now
 join_management_yearly <- function(yearly, mgmt_yearly, parameter, by, eetf) {
   annual_stat <- get_annual_stat(parameter)
   mgmt_yearly <- dplyr::select(mgmt_yearly, by, "year", if (eetf) "excluded", 
