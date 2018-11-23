@@ -71,36 +71,6 @@ caaqs_management.pm2.5_annual <- function(x, exclude_df = NULL, exclude_df_dt = 
   caaqs_management_pm(x, exclude_df, exclude_df_dt, quiet)
 }
 
-caaqs_management.o3 <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
-                                quiet = FALSE) {
-  daily <- extract_daily(x)
-  by <- get_by(x)
-  
-  if (!quiet) message("Calculating O3 annual 4th highest")
-  yearly_mgmt <- o3_ann_4th_highest(daily, by = by, 
-                               exclude_df = exclude_df, 
-                               exclude_df_dt = exclude_df_dt, 
-                               quiet = quiet)
-  
-  if (!quiet) message("Calculating O3 CAAQS metric")
-  yearly_roll_mgmt <- o3_three_yr_avg(yearly_mgmt, by = by)
-  
-  caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "ozone_metric", by = by, metric = "o3", 
-                 n = 3, management = TRUE)
-  
-  x[["ann_4th_highest"]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, 
-                                            parameter = "o3", by)
-  
-  x[["three_yr_rolling"]] = join_management_yearly(extract_three_yr_rolling(x), 
-                                                   yearly_roll_mgmt, 
-                                                   parameter = "o3", 
-                                                   by = by)
-  
-  x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by)
-  
-  as.caaqs_mgmt(x, eetf = exclude_df)
-}
-
 caaqs_management_pm <- function(x, exclude_df, exclude_df_dt, quiet) {
   daily <- extract_daily(x)
   
@@ -138,40 +108,98 @@ caaqs_management_pm <- function(x, exclude_df, exclude_df_dt, quiet) {
   # caaqs object
   
   x[[yearly_obj]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, 
-                                             parameter = parameter, by)
+                                             parameter = parameter, by, 
+                                            eetf = !is.null(exclude_df))
   
   x[["three_yr_rolling"]] = join_management_yearly(extract_three_yr_rolling(x), 
                                                    yearly_roll_mgmt, 
                                                    parameter = parameter, 
-                                                   by = by)
+                                                   by = by, eetf = !is.null(exclude_df))
   
-  x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by)
+  x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by, 
+                                        eetf = !is.null(exclude_df))
   
   as.caaqs_mgmt(x, eetf = exclude_df)
 }
 
-join_management_caaqs <- function(caaqs, mgmt_caaqs, by) {
+caaqs_management.o3 <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
+                                quiet = FALSE) {
+  daily <- extract_daily(x)
+  by <- get_by(x)
+  
+  if (!quiet) message("Calculating O3 annual 4th highest")
+  yearly_mgmt <- o3_ann_4th_highest(daily, by = by, 
+                                    exclude_df = exclude_df, 
+                                    exclude_df_dt = exclude_df_dt, 
+                                    quiet = quiet)
+  
+  if (!quiet) message("Calculating O3 CAAQS metric")
+  yearly_roll_mgmt <- o3_three_yr_avg(yearly_mgmt, by = by)
+  
+  caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "ozone_metric", by = by, metric = "o3", 
+                      n = 3, management = TRUE)
+  
+  x[["ann_4th_highest"]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, 
+                                                   parameter = "o3", by, 
+                                                   eetf = !is.null(exclude_df))
+  
+  x[["three_yr_rolling"]] = join_management_yearly(extract_three_yr_rolling(x), 
+                                                   yearly_roll_mgmt, 
+                                                   parameter = "o3", 
+                                                   by = by, 
+                                                   eetf = !is.null(exclude_df))
+  
+  x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by, 
+                                        eetf = !is.null(exclude_df))
+  
+  as.caaqs_mgmt(x, eetf = exclude_df)
+}
+
+caaqs_management.so2_1yr <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
+                                quiet = FALSE) {
+  
+  if (!quiet) message("Calculating SO2 annual average CAAQS metric")
+  yearly_mgmt <- so2_avg_hourly_by_year(extract_hourly(x), dt = get_dt(x), 
+                                        val = get_val(x), by = get_by(x), 
+                                        exclude_df = exclude_df, 
+                                        exclude_df_dt = exclude_df_dt, 
+                                        quiet = quiet)
+  
+  caaqs_mgmt <- caaqs(yearly_mgmt, val = "avg_yearly", by = get_by(by), 
+                      metric = "so2_1yr", n = 1, management = TRUE)
+  
+  x[["yearly_hr"]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, 
+                                                   parameter = "so2_1yr", by, 
+                                             eetf = !is.null(exclude_df))
+  
+  x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by, 
+                                        eetf = !is.null(exclude_df))
+  
+  as.caaqs_mgmt(x, eetf = exclude_df)
+}
+
+join_management_caaqs <- function(caaqs, mgmt_caaqs, by, eetf) {
   mgmt_caaqs <- dplyr::select(mgmt_caaqs, by, "caaqs_year", "metric", 
                         "mgmt_metric_value" = "metric_value", 
-                        "mgmt", "excluded")
+                        "mgmt", if (eetf) "excluded")
   ret <- dplyr::left_join(caaqs, mgmt_caaqs, by = c(by, "caaqs_year", "metric"))
   dplyr::select(ret, by, "caaqs_year", "metric", 
                 "ambient_metric_value" = "metric_value", 
                 "ambient_caaqs" = "caaqs", 
-                "excluded", "mgmt_metric_value", "mgmt_level" = "mgmt", 
+                if (eetf) "excluded", "mgmt_metric_value", "mgmt_level" = "mgmt", 
                 dplyr::everything())
 }
 
 ## this is for pm2.5 only right now
-join_management_yearly <- function(yearly, mgmt_yearly, parameter, by) {
+join_management_yearly <- function(yearly, mgmt_yearly, parameter, by, eetf) {
   annual_stat <- get_annual_stat(parameter)
-  mgmt_yearly <- dplyr::select(mgmt_yearly, by, "year", "excluded", 
+  mgmt_yearly <- dplyr::select(mgmt_yearly, by, "year", if (eetf) "excluded", 
                                annual_stat, "exceed_mgmt" = "exceed")
   names(mgmt_yearly)[names(mgmt_yearly) == annual_stat] <- paste0(annual_stat, "_mgmt")
   
   ret <- dplyr::left_join(yearly, mgmt_yearly, by = c(by, "year"))
   dplyr::select(ret, by, "year", "valid_in_year", dplyr::starts_with("quarter"), 
-                annual_stat, "exceed", "excluded", 
+                annual_stat, "exceed", if (eetf) "excluded", 
                 paste0(annual_stat, "_mgmt"), "exceed_mgmt", dplyr::everything())
 }
 
