@@ -156,20 +156,39 @@ caaqs_management.o3 <- function(x, exclude_df = NULL, exclude_df_dt = NULL,
 }
 
 caaqs_management.so2_1yr <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
-                                quiet = FALSE) {
+                                     quiet = FALSE) {
+  caaqs_management_so2_no2_1yr(x, exclude_df, exclude_df_dt, quiet)
+}
+
+caaqs_management.no2_1yr <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
+                                     quiet = FALSE) {
+  caaqs_management_so2_no2_1yr(x, exclude_df, exclude_df_dt, quiet)
+}
+
+caaqs_management_so2_no2_1yr <- function(x, exclude_df, exclude_df_dt, 
+                                quiet) {
   
-  if (!quiet) message("Calculating SO2 annual average CAAQS metric")
-  yearly_mgmt <- so2_avg_hourly_by_year(extract_hourly(x), dt = get_dt(x), 
-                                        val = get_val(x), by = get_by(x), 
-                                        exclude_df = exclude_df, 
-                                        exclude_df_dt = exclude_df_dt, 
-                                        quiet = quiet)
+  by <- get_by(x)
+  parameter <- get_param(x)
   
-  caaqs_mgmt <- caaqs(yearly_mgmt, val = "avg_yearly", by = get_by(by), 
-                      metric = "so2_1yr", n = 1, management = TRUE)
+  yearly_fun <- switch(parameter, 
+                       "so2_1yr" = so2_avg_hourly_by_year, 
+                       "no2_1yr" = no2_avg_hourly_by_year)
+  
+  
+  
+  if (!quiet) message("Calculating, " , params()[parameter], " CAAQS metric")
+  yearly_mgmt <- yearly_fun(extract_hourly(x), dt = get_dt(x), 
+                            val = get_val(x), by = by, 
+                            exclude_df = exclude_df, 
+                            exclude_df_dt = exclude_df_dt, 
+                            quiet = quiet)
+  
+  caaqs_mgmt <- caaqs(yearly_mgmt, val = "avg_yearly", by = by, 
+                      metric = parameter, n = 1, management = TRUE)
   
   x[["yearly_hr"]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, 
-                                                   parameter = "so2_1yr", by, 
+                                             parameter = parameter, by = by, 
                                              eetf = !is.null(exclude_df))
   
   x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by, 
