@@ -22,12 +22,12 @@ units_tbl <- tibble(
   units_html = c("ppb", "&mu;g/m&sup3;")
 )
 
-label_colours <- c("Achieved" = "#009900", 
-                   "Not Achieved" = "#FF0000", 
-                   "Actions for Keeping Clean Areas Clean" = "#009900", 
-                   "Actions for Preventing Air Quality Deterioration" = "#FFDA21", 
-                   "Actions for Preventing CAAQS Exceedance" = "#FF9500", 
-                   "Actions for Achieving Air Zone CAAQS" = "#FF0000")
+label_colours <- c("Achieved" = "#377eb8", 
+                   "Not Achieved" = "#e41a1c", 
+                   "Actions for Keeping Clean Areas Clean" = "#A6D96A", 
+                   "Actions for Preventing Air Quality Deterioration" = "#FEE08B", 
+                   "Actions for Preventing CAAQS Exceedance" = "#F46D43", 
+                   "Actions for Achieving Air Zone CAAQS" = "#A50026")
 
 ## A function factory that creates a function that takes one argument (an operator)
 ## and converts it to the unicode or html version 
