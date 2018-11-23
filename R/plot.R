@@ -36,11 +36,11 @@ plot_ts <- function(x, id = NULL, id_col = NULL, rep_yr, plot_caaqs = TRUE,
   if (!inherits(x, "caaqs")) stop("x must be an object of class 'caaqs.", 
                                   call. = FALSE)
   
-  if (!id_col %in% names(extract_daily(x))) {
+  if (!id_col %in% get_by(x)) {
     stop(id_col, " is not a column in the data", call. = FALSE)
   }
   
-  if (!id %in% unique(extract_daily(x)[[id_col]])) {
+  if (!id %in% unique(get_by_vals(x)[[id_col]])) {
     stop(id, " is not a value in ", id_col, call. = FALSE)
   }
   
@@ -56,7 +56,7 @@ plot_ts <- function(x, id = NULL, id_col = NULL, rep_yr, plot_caaqs = TRUE,
   caaqs_metric <- "metric_value"
   caaqs_status <- "caaqs"
   
-  parameter <- attr(x, "vars")[["param"]]
+  parameter <- get_param(x)
   
   if (parameter == "pm2.5_annual") {
     val <- "avg_24h"

@@ -39,7 +39,7 @@
 caaqs_management <- function(x, exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE) {
   if (!is.null(exclude_df)) {
     check_exclude(extract_daily(x), dt = "date",
-                  by = attr(x, "vars")[["by"]],
+                  by = get_by(x),
                   exclude_df, exclude_df_dt)
   }
   UseMethod("caaqs_management")
@@ -57,7 +57,8 @@ caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NUL
   daily <- extract_daily(x)
   if (!quiet) message("Calculating PM 2.5 annual 98th percentile")
   
-  by <- attr(x, "vars")[["by"]]
+  by <- get_by(x)
+  metric <- get_param(x)
   
   yearly_mgmt <- pm_yearly_98(daily, 
                               by = by, 
@@ -68,11 +69,12 @@ caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NUL
   if (!quiet) message("Calculating PM 2.5 24h CAAQS metric")
   
   yearly_roll_mgmt <- pm_three_yr_avg(yearly_mgmt, val = "ann_98_percentile", by = by)
-  caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "pm_metric", by = by, metric = "pm2.5_24h", 
+  caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "pm_metric", by = by, metric = metric, 
                       n = 3, management = TRUE)
   # Add new columns or objects to caaqs object, update class, return modified 
   # caaqs object
-  x[["yearly_98"]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, "pm2.5_24h", by)
+  x[["yearly_98"]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, 
+                                             parameter = metric, by)
   ## TODO: 
   # x[["three_year_rolling"]] = join_management_rolling(extract_yearly(x), yearly_roll_mgmt, ...)
   x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by)

@@ -11,11 +11,20 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 as.caaqs <- function(x, param, dt, val, by) {
-  param <- match.arg(param, c("pm2.5_annual", "pm2.5_24h", "o3", "so2_1yr", 
-                                    "so2_3yr", "no2_1yr", "no2_3yr"))
+  param <- match.arg(param, params())
   structure(x, class = unique(c(param, "caaqs", class(x))),
-            vars = list(param = param, dt = dt, val = val, by = by))
+            vars = list(dt = dt, val = val, by = by), 
+            by_vals = unique(x$caaqs[, by]))
 }
+
+get_by_vals <- function(x) attr(x, "by_vals")
+get_by <- function(x) attr(x, "vars")[["by"]]
+get_val <- function(x) attr(x, "vars")[["val"]]
+get_dt <- function(x) attr(x, "vars")[["dt"]]
+get_param <- function(x) intersect(class(x), params())
+
+params <- function() c("pm2.5_annual", "pm2.5_24h", "o3", "so2_1yr", 
+                       "so2_3yr", "no2_1yr", "no2_3yr")
 
 #' @export
 print.caaqs <- function(x, ...) {
