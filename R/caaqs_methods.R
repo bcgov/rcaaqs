@@ -44,7 +44,7 @@ summary.caaqs <- function(object, ...) {
 print_summary <- function(x, ...) {
   cat("\nCAAQS results for", params()[get_param(x)], "\n")
   if (inherits(x, "caaqs_mgmt")) {
-    cat("  * Includes CAAQS managment results\n")
+    cat("  * Includes CAAQS management results\n")
     if (!is.null(get_eetf(x))) {
       cat("  * Exclusions have been made due to EETFs\n")
     }
