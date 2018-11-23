@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 as.caaqs <- function(x, param, dt, val, by) {
-  param <- match.arg(param, params())
+  param <- match.arg(param, names(params()))
   structure(x, class = unique(c(param, "caaqs", class(x))),
             vars = list(dt = dt, val = val, by = by), 
             by_vals = unique(x$caaqs[, by]))
@@ -21,10 +21,15 @@ get_by_vals <- function(x) attr(x, "by_vals")
 get_by <- function(x) attr(x, "vars")[["by"]]
 get_val <- function(x) attr(x, "vars")[["val"]]
 get_dt <- function(x) attr(x, "vars")[["dt"]]
-get_param <- function(x) intersect(class(x), params())
+get_param <- function(x) intersect(class(x), names(params()))
 
-params <- function() c("pm2.5_annual", "pm2.5_24h", "o3", "so2_1yr", 
-                       "so2_3yr", "no2_1yr", "no2_3yr")
+params <- function() c("pm2.5_annual" = "PM2.5 annual", 
+                       "pm2.5_24h" = "PM2.5 24h", 
+                       "o3" = "Ozone", 
+                       "so2_1yr" = "SO2 annual average", 
+                       "so2_3yr" = "SO2 1 hr", 
+                       "no2_1yr" = "NO2 annual average", 
+                       "no2_3yr" = "NO2 1 hr" )
 
 #' @export
 print.caaqs <- function(x, ...) {
@@ -37,7 +42,7 @@ summary.caaqs <- function(object, ...) {
 }
 
 print_summary <- function(x, ...) {
-  cat("\nCAAQS results for", get_param(x), "\n")
+  cat("\nCAAQS results for", params()[get_param(x)], "\n")
   if (inherits(x, "caaqs_mgmt")) {
     cat("  * Includes CAAQS managment results\n")
     if (!is.null(get_eetf(x))) {

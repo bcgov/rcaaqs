@@ -64,28 +64,48 @@ caaqs_management.default <- function(x, exclude_df = NULL, exclude_df_dt = NULL,
 caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                        quiet = FALSE) {
   
+  caaqs_management_pm(x, exclude_df, exclude_df_dt, quiet)
+}
+
+caaqs_management.pm2.5_annual <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
+                                       quiet = FALSE) {
+  caaqs_management_pm(x, exclude_df, exclude_df_dt, quiet)
+}
+
+caaqs_management_pm <- function(x, exclude_df, exclude_df_dt, quiet) {
   daily <- extract_daily(x)
   
   by <- get_by(x)
   parameter <- get_param(x)
   
-  if (!quiet) message("Calculating PM 2.5 annual 98th percentile")
-  yearly_mgmt <- pm_yearly_98(daily, 
+  yearly_fun <- switch(parameter, 
+                       "pm2.5_annual" = pm_yearly_avg, 
+                       "pm2.5_24h" = pm_yearly_98)
+  
+  yearly_obj <- switch(parameter, 
+                       "pm2.5_annual" = "yearly_avg", 
+                       "pm2.5_24h" = "yearly_98")
+  
+  if (!quiet) message("Calculating ", get_annual_stat(parameter, "long"))
+  yearly_mgmt <- yearly_fun(daily, 
                               by = by, 
                               exclude_df = exclude_df, 
                               exclude_df_dt = exclude_df_dt, 
                               quiet = quiet)
   
-  if (!quiet) message("Calculating PM 2.5 24h CAAQS metric")
+  if (!quiet) message("Calculating, " , params()[parameter], " CAAQS metric")
   
-  yearly_roll_mgmt <- pm_three_yr_avg(yearly_mgmt, val = "ann_98_percentile", 
+  yearly_roll_mgmt <- pm_three_yr_avg(yearly_mgmt, 
+                                      val = get_annual_stat(parameter), 
                                       by = by)
+  
   caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "pm_metric", by = by, 
                       metric = parameter, 
                       n = 3, management = TRUE)
   # Add new columns or objects to caaqs object, update class, return modified 
   # caaqs object
-  x[["yearly_98"]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, 
+  
+  x[[yearly_obj]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, 
                                              parameter = parameter, by)
   
   x[["three_yr_rolling"]] = join_management_yearly(extract_three_yr_rolling(x), 
@@ -94,7 +114,7 @@ caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NUL
                                                    by = by)
   
   x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by)
-
+  
   as.caaqs_mgmt(x, eetf = exclude_df)
 }
 
@@ -125,13 +145,13 @@ join_management_yearly <- function(yearly, mgmt_yearly, parameter, by) {
 
 get_annual_stat <- function(parameter, which = "short") {
   annual_stat <- switch(parameter, 
-         "pm2.5_24h" = c("ann_98_percentile" = "annual 98th percentile"), 
-         "pm2.5_annual" = c("ann_avg" = "annual average"), 
-         "o3" = c("ann_4th_highest" = "annual 4th highest"), 
-         "so2_1yr" = c("avg_yearly" = "annual average"), 
-         "so2_3yr" = c("ann_99_percentile" = "annual 99th percentile"),
-         "no2_1yr" = c("avg_yearly" = "annual average"), 
-         "no2_3yr" = c("ann_98_percentile" = "annual 98th percentile"))
+         "pm2.5_24h" = c("ann_98_percentile" = "PM 2.5 annual 98th percentile"), 
+         "pm2.5_annual" = c("ann_avg" = "PM 2.5 annual average"), 
+         "o3" = c("ann_4th_highest" = "O3 annual 4th highest"), 
+         "so2_1yr" = c("avg_yearly" = "SO2 annual average"), 
+         "so2_3yr" = c("ann_99_percentile" = "SO2 annual 99th percentile"),
+         "no2_1yr" = c("avg_yearly" = "NO2 annual average"), 
+         "no2_3yr" = c("ann_98_percentile" = "NO2 annual 98th percentile"))
   switch(which, 
          "short" = names(annual_stat), 
          "long" = unname(annual_stat))
