@@ -236,9 +236,6 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
                                    exclude_df_dt = NULL, 
                                    quiet = FALSE) {
 
-  # Initial data checks for first time raw data is passed to rcaaqs
-  data <- initial_check(data, dt = dt, val = val, by = by)
-  
   # Add flag placeholder
   data$flag_daily_incomplete <- NA
   
@@ -275,9 +272,6 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
                                    exclude_df_dt = NULL, 
                                    quiet = FALSE) {
 
-  # Initial data checks for first time raw data is passed to rcaaqs
-  data <- initial_check(data, dt = dt, val = val, by = by)
- 
   # Add flag placeholder
   data$flag_daily_incomplete <- NA
    

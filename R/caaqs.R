@@ -246,22 +246,20 @@ o3_caaqs <- function(data, dt = "date_time", val = "value",
 #' @rdname caaqs_metric
 #' @export
 so2_1yr_caaqs <- function(data, dt = "date_time", val = "value",
-                         by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                         quiet = FALSE) {
+                         by = NULL, quiet = FALSE) {
   
-  if (!is.null(exclude_df)) check_exclude(data, dt, by,
-                                         exclude_df, exclude_df_dt)
-  
+  # Initial data checks for first time raw data is passed to rcaaqs
+  data <- initial_check(data, dt = dt, val = val, by = by)
+
   if (!quiet) message("Calculating SO2 annual average CAAQS metric")
   yearly <- so2_avg_hourly_by_year(data, dt = dt, val = val, by = by, 
-                                   exclude_df = exclude_df, 
-                                   exclude_df_dt = exclude_df_dt, 
                                    quiet = quiet)
   
   caaqs <- caaqs(yearly, val = "avg_yearly", by = by, metric = "so2_1yr", n = 1)
   
   as.caaqs(
     list(
+      hourly = data,
       yearly_hr = yearly,
       caaqs = caaqs
     ),
@@ -307,21 +305,19 @@ so2_3yr_caaqs <- function(data, dt = "date_time", val = "value",
 #' @rdname caaqs_metric
 #' @export
 no2_1yr_caaqs <- function(data, dt = "date_time", val = "value",
-                         by = NULL, exclude_df = NULL, exclude_df_dt = NULL,
-                         quiet = FALSE) {
+                         by = NULL, quiet = FALSE) {
   
-  if (!is.null(exclude_df)) check_exclude(data, dt, by,
-                                         exclude_df, exclude_df_dt)
+  # Initial data checks for first time raw data is passed to rcaaqs
+  data <- initial_check(data, dt = dt, val = val, by = by)
   
   if (!quiet) message("Calculating NO2 annual average CAAQS metric")
   yearly <- no2_avg_hourly_by_year(data, dt = dt, val = val, by = by, 
-                                   exclude_df = exclude_df, 
-                                   exclude_df_dt = exclude_df_dt, 
                                    quiet = quiet)
   caaqs <- caaqs(yearly, val = "avg_yearly", by = by, metric = "no2_1yr", n = 1)
   
   as.caaqs(
     list(
+      hourly = data,
       yearly_hr = yearly,
       caaqs = caaqs
     ),

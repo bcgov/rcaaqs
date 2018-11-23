@@ -71,6 +71,10 @@ print_summary <- function(x, ...) {
 #' `extract_caaqs()`:
 #' - caaqs results
 #' 
+#' `extract_hourly()`:
+#' - so2_1yr, no2_1yr: Hourly values used for annual average
+#' - pm2.5_24h, pm2.5_annual, o3, so2_3yr, no2_3yr: None
+#' 
 #' `extract_daily()`:
 #' - pm2.5_24h, pm2.5_annual: Daily average
 #' - o3, so2_3yr, no2_3yr: Daily maximum
@@ -99,6 +103,15 @@ extract_caaqs <- function(x) UseMethod("extract_caaqs")
 
 #' @export
 extract_caaqs.default <- function(x) {
+  stop("No method defined for object of type ", 
+       paste(class(x), collapse = ", "), call. = FALSE)
+}
+
+#' @rdname caaqs_extractors
+#' @export
+extract_hourly <- function(x) UseMethod("extract_hourly")
+
+extract_hourly.default <- function(x) {
   stop("No method defined for object of type ", 
        paste(class(x), collapse = ", "), call. = FALSE)
 }
@@ -168,6 +181,9 @@ extract_three_yr_rolling.o3 <- function(x)x[["three_yr_rolling"]]
 
 ## SO2 1yr -------------------------------------------------
 #' @export
+extract_hourly.so2_1yr <- function(x) x[["hourly"]]
+
+#' @export
 extract_yearly.so2_1yr <- function(x) x[["yearly_hr"]]
 
 ## SO2 3yr -------------------------------------------------
@@ -181,6 +197,9 @@ extract_yearly.so2_3yr <- function(x) x[["yearly_99"]]
 extract_three_yr_rolling.so2_3yr <- function(x) x[["three_yr_rolling"]]
 
 ## NO2 1yr -------------------------------------------------
+#' @export
+extract_hourly.no2_1yr <- function(x) x[["hourly"]]
+
 #' @export
 extract_yearly.no2_1yr <- function(x) x[["yearly_hr"]]
 
