@@ -174,7 +174,7 @@ pm_three_yr_avg <- function(data, dt = "year", val = "ann_98_percentile", by = N
                 "flag_two_of_three_years" = "flag")
 }
 
-o3_three_yr_avg <- function(data, dt = "year", val = "max8hr", by = NULL) {
+o3_three_yr_avg <- function(data, dt = "year", val = "ann_4th_highest", by = NULL) {
   data <- rolling_value(data,
                         dt = dt,
                         val = val,

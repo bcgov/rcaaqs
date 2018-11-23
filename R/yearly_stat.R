@@ -218,14 +218,14 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet)
   
-  data <- dplyr::rename(data, "max8hr" = "stat")
+  data <- dplyr::rename(data, "ann_4th_highest" = "stat")
   
   # Determine data completeness
   days_in_quarter_2_and_3 <- 183
   data$valid_year <- (data$quarter_2 + data$quarter_3) / days_in_quarter_2_and_3 >= 0.75
   
   # Remove data which invalid - Flag invalid data which exceeds (thus kept)
-  data$max8hr[!data$valid_year & !data$exceed] <- NA
+  data$ann_4th_highest[!data$valid_year & !data$exceed] <- NA
   data$flag_yearly_incomplete <- !data$valid_year & data$exceed
   
   data
