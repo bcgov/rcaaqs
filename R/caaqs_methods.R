@@ -37,13 +37,21 @@ summary.caaqs <- function(object, ...) {
 }
 
 print_summary <- function(x, ...) {
-  cat("CAAQS results for", class(x)[1], "\n")
+  cat("\nCAAQS results for", get_param(x), "\n")
+  if (inherits(x, "caaqs_mgmt")) {
+    cat("  * Includes CAAQS managment results\n")
+    if (!is.null(get_eetf(x))) {
+      cat("  * Exclusions have been made due to EETFs\n")
+    }
+  } else {
+    cat("  * Includes CAAQS ambient results only\n")
+  }
   cat("--------------------------------------\n")
   cat(length(x), "elements:\n")
   for (n in names(x)) {
     cat("      *", n, "(", nrow(x[[n]]), "rows x", ncol(x[[n]]), "columns )\n")
   }
-  cat("Access them directly using `$` notation or use the extract_ functions (see ?caaqs_extractors)\n")
+  cat("Access them with the extract_ functions (see ?caaqs_extractors)\n\n")
 }
 
 # Generics + defaults -------------------------------------------------

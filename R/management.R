@@ -10,6 +10,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+as.caaqs_mgmt <- function(x, eetf = NULL) {
+  class(x) <- unique(c("caaqs_mgmt", class(x)))
+  attr(x, "eetf") <- eetf
+  x
+}
+
+get_eetf <- function(x) {
+  attr(x, "eetf")
+}
+
 #' Calculate CAAQS management levels excluding days with Exceptional Events 
 #' or Transboundary Flows
 #'
@@ -79,7 +89,7 @@ caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NUL
   # x[["three_year_rolling"]] = join_management_rolling(extract_yearly(x), yearly_roll_mgmt, ...)
   x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by)
   # TODO: add management class and eetf df to object
-  x
+  as.caaqs_mgmt(x, eetf = exclude_df)
 }
 
 join_management_caaqs <- function(caaqs, mgmt_caaqs, by) {
