@@ -111,6 +111,7 @@ extract_caaqs.default <- function(x) {
 #' @export
 extract_hourly <- function(x) UseMethod("extract_hourly")
 
+#' @export
 extract_hourly.default <- function(x) {
   stop("No method defined for object of type ", 
        paste(class(x), collapse = ", "), call. = FALSE)
@@ -120,6 +121,7 @@ extract_hourly.default <- function(x) {
 #' @export
 extract_daily <- function(x) UseMethod("extract_daily")
 
+#' @export
 extract_daily.default <- function(x) {
   stop("No method defined for object of type ", 
        paste(class(x), collapse = ", "), call. = FALSE)
@@ -129,6 +131,7 @@ extract_daily.default <- function(x) {
 #' @export
 extract_yearly <- function(x) UseMethod("extract_yearly")
 
+#' @export
 extract_yearly.default <- function(x) {
   stop("No method defined for object of type ", 
        paste(class(x), collapse = ", "), call. = FALSE)
@@ -138,6 +141,7 @@ extract_yearly.default <- function(x) {
 #' @export
 extract_three_yr_rolling <- function(x) UseMethod("extract_three_yr_rolling")
 
+#' @export
 extract_three_yr_rolling.default <- function(x) {
   stop("No method defined for object of type ", 
        paste(class(x), collapse = ", "), call. = FALSE)

@@ -50,27 +50,32 @@ caaqs_management <- function(x, exclude_df = NULL, exclude_df_dt = NULL, quiet =
   UseMethod("caaqs_management")
 }
 
+#' @export
 caaqs_management.default <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                      quiet = FALSE) {
   stop("No method defined for object of type ", 
        paste(class(x), collapse = ", "), call. = FALSE)
 }
 
+#' @export
 caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                        quiet = FALSE) {
-  caaqs_management_pm(x, exclude_df, exclude_df_dt, quiet)
+  caaqs_management_pm_no2_so2_3yr(x, exclude_df, exclude_df_dt, quiet)
 }
 
+#' @export
 caaqs_management.pm2.5_annual <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                        quiet = FALSE) {
   caaqs_management_pm_no2_so2_3yr(x, exclude_df, exclude_df_dt, quiet)
 }
 
+#' @export
 caaqs_management.so2_3yr <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                      quiet = FALSE) {
   caaqs_management_pm_no2_so2_3yr(x, exclude_df, exclude_df_dt, quiet)
 }
 
+#' @export
 caaqs_management.no2_3yr <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                      quiet = FALSE) {
   caaqs_management_pm_no2_so2_3yr(x, exclude_df, exclude_df_dt, quiet)
@@ -145,6 +150,7 @@ caaqs_management_pm_no2_so2_3yr <- function(x, exclude_df, exclude_df_dt, quiet)
   as.caaqs_mgmt(x, eetf = exclude_df)
 }
 
+#' @export
 caaqs_management.o3 <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                 quiet = FALSE) {
   daily <- extract_daily(x)
@@ -184,11 +190,13 @@ caaqs_management.o3 <- function(x, exclude_df = NULL, exclude_df_dt = NULL,
   as.caaqs_mgmt(x, eetf = exclude_df)
 }
 
+#' @export
 caaqs_management.so2_1yr <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                      quiet = FALSE) {
   caaqs_management_so2_no2_1yr(x, exclude_df, exclude_df_dt, quiet)
 }
 
+#' @export
 caaqs_management.no2_1yr <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                      quiet = FALSE) {
   caaqs_management_so2_no2_1yr(x, exclude_df, exclude_df_dt, quiet)
