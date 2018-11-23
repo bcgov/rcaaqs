@@ -78,8 +78,10 @@ caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NUL
   
   if (!quiet) message("Calculating PM 2.5 24h CAAQS metric")
   
-  yearly_roll_mgmt <- pm_three_yr_avg(yearly_mgmt, val = "ann_98_percentile", by = by)
-  caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "pm_metric", by = by, metric = parameter, 
+  yearly_roll_mgmt <- pm_three_yr_avg(yearly_mgmt, val = "ann_98_percentile", 
+                                      by = by)
+  caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "pm_metric", by = by, 
+                      metric = parameter, 
                       n = 3, management = TRUE)
   # Add new columns or objects to caaqs object, update class, return modified 
   # caaqs object
@@ -87,9 +89,9 @@ caaqs_management.pm2.5_24h <- function(x, exclude_df = NULL, exclude_df_dt = NUL
                                              parameter = parameter, by)
   
   x[["three_yr_rolling"]] = join_management_yearly(extract_three_yr_rolling(x), 
-                                                     yearly_roll_mgmt, 
-                                                     parameter = parameter, 
-                                                     by = by)
+                                                   yearly_roll_mgmt, 
+                                                   parameter = parameter, 
+                                                   by = by)
   
   x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by)
 
@@ -121,8 +123,16 @@ join_management_yearly <- function(yearly, mgmt_yearly, parameter, by) {
                 paste0(annual_stat, "_mgmt"), "exceed_mgmt", dplyr::everything())
 }
 
-get_annual_stat <- function(parameter) {
-  switch(parameter, 
-         "pm2.5_24h" = "ann_98_percentile", 
-         "pm2.5_annual" = "ann_avg")
+get_annual_stat <- function(parameter, which = "short") {
+  annual_stat <- switch(parameter, 
+         "pm2.5_24h" = c("ann_98_percentile" = "annual 98th percentile"), 
+         "pm2.5_annual" = c("ann_avg" = "annual average"), 
+         "o3" = c("ann_4th_highest" = "annual 4th highest"), 
+         "so2_1yr" = c("avg_yearly" = "annual average"), 
+         "so2_3yr" = c("ann_99_percentile" = "annual 99th percentile"),
+         "no2_1yr" = c("avg_yearly" = "annual average"), 
+         "no2_3yr" = c("ann_98_percentile" = "annual 98th percentile"))
+  switch(which, 
+         "short" = names(annual_stat), 
+         "long" = unname(annual_stat))
 }
