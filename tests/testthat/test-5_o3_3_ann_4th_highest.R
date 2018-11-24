@@ -35,7 +35,6 @@ test_that("has correct classes", {
     expect_is(r$quarter_3, "integer")
     expect_is(r$quarter_4, "integer")
     expect_is(r$ann_4th_highest, "numeric")
-    expect_is(r$excluded, "logical")
     expect_is(r$exceed, "logical")
     expect_is(r$flag_daily_incomplete, "logical")
     expect_is(r$flag_yearly_incomplete, "logical")
@@ -44,13 +43,13 @@ test_that("has correct classes", {
 
 test_that("has correct dimensions", {
   nrows <- length(unique(format(o1$date, "%Y")))
-  expect_equal(dim(ret1), c(nrows, 12))
+  expect_equal(dim(ret1), c(nrows, 11))
   
   nrows <- dplyr::summarize(o2, n = length(unique(format(date, "%Y")))) %>%
     dplyr::ungroup() %>%
     dplyr::summarize(n = sum(n)) %>%
     dplyr::pull(n)
-  expect_equal(dim(ret2), c(nrows, 14))
+  expect_equal(dim(ret2), c(nrows, 13))
 })
 
 test_that("has correct data", {
@@ -103,6 +102,7 @@ test_that("can exclude data rows", {
   
   expect_false(all(ret2$ann_4th_highest == ret3$ann_4th_highest, na.rm = TRUE))
   expect_true(all(ret2$ann_4th_highest >= ret3$ann_4th_highest, na.rm = TRUE))
+  expect_is(ret3$excluded, "logical")
   expect_equal(ret3$excluded, c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE))
   expect_equivalent(ret3$ann_4th_highest, c(NA, NA, 54.6, 44.1, 46.9, 45.0))
 })

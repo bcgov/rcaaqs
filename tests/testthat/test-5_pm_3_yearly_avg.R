@@ -36,7 +36,6 @@ test_that("has correct classes", {
     expect_is(r$quarter_3, "numeric")
     expect_is(r$quarter_4, "numeric")
     expect_is(r$ann_avg, "numeric")
-    expect_is(r$excluded, "logical")
     expect_is(r$exceed, "logical")
     expect_is(r$flag_daily_incomplete, "logical")
   }
@@ -44,13 +43,13 @@ test_that("has correct classes", {
 
 test_that("has correct dimensions", {
   nrows <- length(unique(format(pm1$date, "%Y")))
-  expect_equal(dim(ret1), c(nrows, 13))
+  expect_equal(dim(ret1), c(nrows, 12))
   
   nrows <- dplyr::mutate(pm2, year = format(date, "%Y")) %>%
     dplyr::summarize(n = length(unique(year))) %>%
     dplyr::pull(n) %>%
     sum(.)
-  expect_equal(dim(ret2), c(nrows, 15))
+  expect_equal(dim(ret2), c(nrows, 14))
 })
 
 test_that("has correct data", {
@@ -97,6 +96,7 @@ test_that("can exclude data rows", {
   
   expect_false(all(ret2$ann_avg == ret3$ann_avg, na.rm = TRUE))
   expect_true(all(ret2$ann_avg >= ret3$ann_avg, na.rm = TRUE))
+  expect_is(ret3$excluded, "logical")
   expect_equal(ret3$excluded, c(FALSE, TRUE, TRUE, TRUE, TRUE, TRUE))
   expect_equivalent(ret3$ann_avg, c(NA, 2.60, NA, 4.50, NA, 5.60))
 })
