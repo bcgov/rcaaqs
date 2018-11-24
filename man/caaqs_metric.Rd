@@ -101,9 +101,9 @@ extract_caaqs(pm)
 
 # Extract intermediate objects:
 
-extract_daily(pm_ex)
-extract_yearly(pm_ex)
-extract_three_yr_rolling(pm_ex)
+extract_daily(pm)
+extract_yearly(pm)
+extract_three_yr_rolling(pm)
 
 }
 \references{
