@@ -14,7 +14,7 @@ as.caaqs <- function(x, param, dt, val, by) {
   param <- match.arg(param, names(params()))
   structure(x, class = unique(c(param, "caaqs", class(x))),
             vars = list(dt = dt, val = val, by = by), 
-            by_vals = unique(x$caaqs[, by]))
+            by_vals = if (!is.null(by)) unique(x$caaqs[, by]) else by)
 }
 
 get_by_vals <- function(x) attr(x, "by_vals")
