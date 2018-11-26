@@ -36,11 +36,15 @@ plot_ts <- function(x, id = NULL, id_col = NULL, rep_yr, plot_caaqs = TRUE,
   if (!inherits(x, "caaqs")) stop("x must be an object of class 'caaqs.", 
                                   call. = FALSE)
   
-  if (!id_col %in% get_by(x)) {
+  if (is.null(id) && !is.null(get_by(x))) {
+    stop("id and id_col required when more than one monitoring station is present")
+  }
+  
+  if (!is.null(id_col) && !id_col %in% get_by(x)) {
     stop(id_col, " is not a column in the data", call. = FALSE)
   }
   
-  if (!id %in% unique(get_by_vals(x)[[id_col]])) {
+  if (!is.null(id) && !id %in% unique(get_by_vals(x)[[id_col]])) {
     stop(id, " is not a value in ", id_col, call. = FALSE)
   }
   
@@ -77,7 +81,8 @@ plot_ts <- function(x, id = NULL, id_col = NULL, rep_yr, plot_caaqs = TRUE,
   
   # Get daily data from caaqs object and subset to the station of interest
   daily_data <- extract_daily(x)
-  daily_data <- daily_data[daily_data[[id_col]] == id, ]
+  
+  if (!is.null(id)) daily_data <- daily_data[daily_data[[id_col]] == id, ]
 
   std <- get_std(parameter)
   par_units <- plot_units(parameter)
@@ -116,9 +121,11 @@ plot_ts <- function(x, id = NULL, id_col = NULL, rep_yr, plot_caaqs = TRUE,
 
   if (plot_caaqs) {
     caaqs_data <- extract_caaqs(x)
-    caaqs_data <- caaqs_data[caaqs_data[[id_col]] == id & 
-                               caaqs_data[["caaqs_year"]] == rep_yr, ]
     
+    if (!is.null(id)) caaqs_data <- caaqs_data[caaqs_data[[id_col]] == id, ]
+    
+    caaqs_data <- caaqs_data[caaqs_data[["caaqs_year"]] == rep_yr, ]
+
     stopifnot(nrow(caaqs_data) == 1)
     if (is.na(caaqs_data[[caaqs_metric]])) {
       warning("caaqs not added to plot: Insufficient Data")
