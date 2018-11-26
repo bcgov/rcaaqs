@@ -96,7 +96,7 @@ test_that("assign_airzone returns expected input", {
                                     airzones = bcmaps::airzones()))
   
   expect_is(a, "data.frame")
-  expect_length(a, 17)
+  expect_length(a, 15)
   expect_equal(nrow(a), 6)
   expect_true("airzone" %in% names(a))
   expect_is(a$airzone, "character")

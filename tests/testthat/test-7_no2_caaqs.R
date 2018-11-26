@@ -19,8 +19,8 @@ test_that("classes and extractors for no2 1yr", {
   d <- readRDS("no2_raw1.rds")
   no2_caaqs <- no2_1yr_caaqs(d)
   expect_is(no2_caaqs, c("caaqs", "no2_1yr"))
-  expect_length(no2_caaqs, 2)
-  expect_named(no2_caaqs, c("yearly_hr", "caaqs"))
+  expect_length(no2_caaqs, 3)
+  expect_named(no2_caaqs, c("hourly", "yearly_hr", "caaqs"))
   for (d in no2_caaqs) {
     expect_is(d, "data.frame")
   }
