@@ -9,10 +9,10 @@ test_that("classes and extractors for no2 3yr", {
   for (d in no2_caaqs) {
     expect_is(d, "data.frame")
   }
-  expect_is(extract_caaqs(no2_caaqs), "data.frame")
-  expect_is(extract_daily(no2_caaqs), "data.frame")
-  expect_is(extract_yearly(no2_caaqs), "data.frame")
-  expect_is(extract_three_yr_rolling(no2_caaqs), "data.frame")
+  expect_is(get_caaqs(no2_caaqs), "data.frame")
+  expect_is(get_daily(no2_caaqs), "data.frame")
+  expect_is(get_yearly(no2_caaqs), "data.frame")
+  expect_is(get_three_yr_rolling(no2_caaqs), "data.frame")
 })
 
 test_that("classes and extractors for no2 1yr", {
@@ -24,10 +24,10 @@ test_that("classes and extractors for no2 1yr", {
   for (d in no2_caaqs) {
     expect_is(d, "data.frame")
   }
-  expect_is(extract_caaqs(no2_caaqs), "data.frame")
-  expect_error(extract_daily(no2_caaqs))
-  expect_is(extract_yearly(no2_caaqs), "data.frame")
-  expect_error(extract_three_yr_rolling(no2_caaqs))
+  expect_is(get_caaqs(no2_caaqs), "data.frame")
+  expect_error(get_daily(no2_caaqs))
+  expect_is(get_yearly(no2_caaqs), "data.frame")
+  expect_error(get_three_yr_rolling(no2_caaqs))
 })
 
 test_that("no2_3yr_caaqs single", {
@@ -35,7 +35,7 @@ test_that("no2_3yr_caaqs single", {
   expect_error(expect_message(no2_caaqs <- no2_3yr_caaqs(d), 
                               "Calculating NO2 daily maximum"),
                NA)
-  caaqs <- extract_caaqs(no2_caaqs)
+  caaqs <- get_caaqs(no2_caaqs)
   expect_length(caaqs$caaqs, 3)
   expect_true(all(is.na(caaqs$metric_value[caaqs$caaqs == "Insufficient Data"])))
   expect_true(all(!is.na(caaqs$metric_value[caaqs$caaqs != "Insufficient Data"])))
@@ -48,9 +48,9 @@ test_that("no2_3yr_caaqs single", {
 test_that("no2_3yr_caaqs groups", {
   d <- readRDS("no2_raw2.rds")
   
-  expect_error(expect_message(no2_caaqs <- no2_3yr_caaqs(d, by = c("ems_id", "site")), 
-                 "Calculating NO2 daily maximum"), NA)
-  caaqs <- extract_caaqs(no2_caaqs)
+  expect_message(no2_caaqs <- no2_3yr_caaqs(d, by = c("ems_id", "site")), 
+                 "Calculating NO2 daily maximum")
+  caaqs <- get_caaqs(no2_caaqs)
   expect_length(caaqs$caaqs, 6)
   expect_true(all(is.na(caaqs$metric_value[caaqs$caaqs == "Insufficient Data"])))
   expect_true(all(!is.na(caaqs$metric_value[caaqs$caaqs != "Insufficient Data"])))
@@ -66,7 +66,7 @@ test_that("no2_1yr_caaqs single", {
   expect_error(expect_message(no2_caaqs <- no2_1yr_caaqs(d), 
                               "Calculating NO2 annual average"),
                NA)
-  caaqs <- extract_caaqs(no2_caaqs)
+  caaqs <- get_caaqs(no2_caaqs)
   expect_true(all(is.na(caaqs$metric_value[caaqs$caaqs == "Insufficient Data"])))
   expect_true(all(!is.na(caaqs$metric_value[caaqs$caaqs != "Insufficient Data"])))
   expect_true(all(caaqs$caaqs[caaqs$metric_value <= get_std("no2_1yr")] 
@@ -83,7 +83,7 @@ test_that("no2_1yr_caaqs groups", {
   expect_error(expect_message(no2_caaqs <- no2_1yr_caaqs(d, by = c("ems_id", "site")), 
                               "Calculating NO2 annual average"), NA)
   
-  caaqs <- extract_caaqs(no2_caaqs)
+  caaqs <- get_caaqs(no2_caaqs)
   expect_true(all(is.na(caaqs$metric_value[caaqs$caaqs == "Insufficient Data"])))
   expect_true(all(!is.na(caaqs$metric_value[caaqs$caaqs != "Insufficient Data"])))
   expect_true(all(caaqs$caaqs[caaqs$metric_value <= get_std("no2_1yr")] 
@@ -93,3 +93,5 @@ test_that("no2_1yr_caaqs groups", {
   expect_is(caaqs, "data.frame")
   expect_length(caaqs$caaqs, 6)
 })
+
+

@@ -45,7 +45,7 @@ pm <- pm_24h_caaqs(pm25_sample_data, by = c("ems_id", "site"))
 
 pm
 
-extract_caaqs(pm)
+get_caaqs(pm)
 
 # Exclude dates
 high_dates <- data.frame(ems_id = "0310162",

@@ -43,7 +43,7 @@
 #'   
 #' @return `caaqs` object with results of the caaqs analysis, including results 
 #' from intermediate steps. The final `caaqs` results can be extracted with the 
-#' [extract_caaqs()] function and contains the following columns:
+#' [get_caaqs()] function and contains the following columns:
 #'   \itemize{
 #'     \item caaqs_year The year corresponding to the CAAQS metric
 #'     \item metric The type of CAAQS metric calculated
@@ -60,7 +60,7 @@
 #'     details). If NA, indicates that this particular metric is never flagged.}
 #'  
 #'  To obtain any of the intermediate results data frames, use the 
-#'  `caaqs_extractor` family of functions. See `?caaqs_extractors`
+#'  `get_*` family of functions. See `?get_caaqs
 #' 
 #' @references CCME Guidance document on achievement determination Canadian
 #'   ambient air quality standards for fine particulate matter and ozone
@@ -73,13 +73,13 @@
 #' 
 #' pm
 #' 
-#' extract_caaqs(pm)
+#' get_caaqs(pm)
 #' 
 #' # Extract intermediate objects:
 #' 
-#' extract_daily(pm)
-#' extract_yearly(pm)
-#' extract_three_yr_rolling(pm)
+#' get_daily(pm)
+#' get_yearly(pm)
+#' get_three_yr_rolling(pm)
 #' 
 #' @name caaqs_metric
 #' 

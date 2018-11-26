@@ -51,7 +51,7 @@ get_eetf <- function(x) {
 #' 
 #' pm
 #' 
-#' extract_caaqs(pm)
+#' get_caaqs(pm)
 #' 
 #' # Exclude dates
 #' high_dates <- data.frame(ems_id = "0310162",
@@ -98,7 +98,7 @@ caaqs_management.no2_3yr <- function(x, exclude_df = NULL, exclude_df_dt = NULL,
 }
 
 caaqs_management_pm_no2_so2_3yr <- function(x, exclude_df, exclude_df_dt, quiet) {
-  daily <- extract_daily(x)
+  daily <- get_daily(x)
   by <- get_by(x)
   
   if (!is.null(exclude_df)) {
@@ -151,16 +151,16 @@ caaqs_management_pm_no2_so2_3yr <- function(x, exclude_df, exclude_df_dt, quiet)
   # Add new columns or objects to caaqs object, update class, return modified 
   # caaqs object
   
-  x[[yearly_obj]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, 
+  x[[yearly_obj]] <- join_management_yearly(get_yearly(x), yearly_mgmt, 
                                              parameter = parameter, by, 
                                             eetf = !is.null(exclude_df))
   
-  x[["three_yr_rolling"]] = join_management_yearly(extract_three_yr_rolling(x), 
+  x[["three_yr_rolling"]] = join_management_yearly(get_three_yr_rolling(x), 
                                                    yearly_roll_mgmt, 
                                                    parameter = parameter, 
                                                    by = by, eetf = !is.null(exclude_df))
   
-  x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by, 
+  x[["caaqs"]] <- join_management_caaqs(get_caaqs(x), caaqs_mgmt, by = by, 
                                         eetf = !is.null(exclude_df))
   
   as.caaqs_mgmt(x, eetf = exclude_df)
@@ -169,7 +169,7 @@ caaqs_management_pm_no2_so2_3yr <- function(x, exclude_df, exclude_df_dt, quiet)
 #' @export
 caaqs_management.o3 <- function(x, exclude_df = NULL, exclude_df_dt = NULL, 
                                 quiet = FALSE) {
-  daily <- extract_daily(x)
+  daily <- get_daily(x)
   by <- get_by(x)
   
   if (!is.null(exclude_df)) {
@@ -190,17 +190,17 @@ caaqs_management.o3 <- function(x, exclude_df = NULL, exclude_df_dt = NULL,
   caaqs_mgmt <- caaqs(yearly_roll_mgmt, val = "ozone_metric", by = by, metric = "o3", 
                       n = 3, management = TRUE)
   
-  x[["ann_4th_highest"]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, 
+  x[["ann_4th_highest"]] <- join_management_yearly(get_yearly(x), yearly_mgmt, 
                                                    parameter = "o3", by, 
                                                    eetf = !is.null(exclude_df))
   
-  x[["three_yr_rolling"]] = join_management_yearly(extract_three_yr_rolling(x), 
+  x[["three_yr_rolling"]] = join_management_yearly(get_three_yr_rolling(x), 
                                                    yearly_roll_mgmt, 
                                                    parameter = "o3", 
                                                    by = by, 
                                                    eetf = !is.null(exclude_df))
   
-  x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by, 
+  x[["caaqs"]] <- join_management_caaqs(get_caaqs(x), caaqs_mgmt, by = by, 
                                         eetf = !is.null(exclude_df))
   
   as.caaqs_mgmt(x, eetf = exclude_df)
@@ -221,7 +221,7 @@ caaqs_management.no2_1yr <- function(x, exclude_df = NULL, exclude_df_dt = NULL,
 caaqs_management_so2_no2_1yr <- function(x, exclude_df, exclude_df_dt, 
                                 quiet) {
   
-  hourly <- extract_hourly(x)
+  hourly <- get_hourly(x)
   by <- get_by(x)
   
   parameter <- get_param(x)
@@ -240,11 +240,11 @@ caaqs_management_so2_no2_1yr <- function(x, exclude_df, exclude_df_dt,
   caaqs_mgmt <- caaqs(yearly_mgmt, val = "avg_yearly", by = by, 
                       metric = parameter, n = 1, management = TRUE)
   
-  x[["yearly_hr"]] <- join_management_yearly(extract_yearly(x), yearly_mgmt, 
+  x[["yearly_hr"]] <- join_management_yearly(get_yearly(x), yearly_mgmt, 
                                              parameter = parameter, by = by, 
                                              eetf = !is.null(exclude_df))
   
-  x[["caaqs"]] <- join_management_caaqs(extract_caaqs(x), caaqs_mgmt, by = by, 
+  x[["caaqs"]] <- join_management_caaqs(get_caaqs(x), caaqs_mgmt, by = by, 
                                         eetf = !is.null(exclude_df))
   
   as.caaqs_mgmt(x, eetf = exclude_df)
