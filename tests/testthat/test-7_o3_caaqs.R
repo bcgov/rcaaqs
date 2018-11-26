@@ -28,7 +28,7 @@ test_that("o3_caaqs single", {
                   == "Achieved", na.rm = TRUE))  
   expect_true(all(caaqs$caaqs[caaqs$metric_value > get_std("o3")] 
                   == "Not Achieved", na.rm = TRUE))
-  saveRDS(caaqs, "o3_caaqs1.rds")
+  saveRDS(o3_caaqs, "o3_caaqs1.rds")
 })
 
 test_that("o3_caaqs groups", {

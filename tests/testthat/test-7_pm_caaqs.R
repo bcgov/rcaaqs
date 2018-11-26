@@ -43,7 +43,7 @@ test_that("pm_24h_caaqs single", {
                   == "Achieved", na.rm = TRUE))  
   expect_true(all(caaqs$caaqs[caaqs$metric_value > get_std("pm2.5_24h")] 
                   == "Not Achieved", na.rm = TRUE))  
-  saveRDS(caaqs, "pm_24h_caaqs1.rds")
+  saveRDS(pm_caaqs, "pm_24h_caaqs1.rds")
 })
 
 test_that("pm_24h_caaqs groups", {
@@ -58,7 +58,7 @@ test_that("pm_24h_caaqs groups", {
                   == "Achieved", na.rm = TRUE))
   expect_true(all(caaqs$caaqs[caaqs$metric_value > get_std("pm2.5_24h")] 
                   == "Not Achieved", na.rm = TRUE))  
-  saveRDS(caaqs, "pm_24h_caaqs2.rds")
+  saveRDS(pm_caaqs, "pm_24h_caaqs2.rds")
 })
 
 test_that("pm_annual_caaqs single", {
@@ -74,7 +74,7 @@ test_that("pm_annual_caaqs single", {
                   == "Achieved", na.rm = TRUE))  
   expect_true(all(caaqs$caaqs[caaqs$metric_value > get_std("pm2.5_annual")] 
                   == "Not Achieved", na.rm = TRUE))  
-  saveRDS(caaqs, "pm_annual_caaqs1.rds")
+  saveRDS(pm_caaqs, "pm_annual_caaqs1.rds")
 })
 
 test_that("pm_annual_caaqs groups", {
@@ -89,5 +89,5 @@ test_that("pm_annual_caaqs groups", {
                   == "Achieved", na.rm = TRUE))
   expect_true(all(caaqs$caaqs[caaqs$metric_value > get_std("pm2.5_annual")] 
                   == "Not Achieved", na.rm = TRUE))  
-  saveRDS(caaqs, "pm_annual_caaqs2.rds")
+  saveRDS(pm_caaqs, "pm_annual_caaqs2.rds")
 })
