@@ -59,6 +59,7 @@ test_that("renaming keep cols works", {
 
 test_that("assign_airzone catches incorrect input", {
   p <- readRDS("pm_24h_caaqs2.rds") %>%
+    extract_caaqs() %>% 
     dplyr::mutate(latitude = c(rep(49.9, 3), rep(48.4, 3)),
                   longitude = c(rep(-119, 3), rep(-123, 3)))
   
@@ -89,6 +90,7 @@ test_that("assign_airzone returns expected input", {
   skip_on_travis()
   
   p <- readRDS("pm_24h_caaqs2.rds") %>%
+    extract_caaqs() %>% 
     dplyr::mutate(latitude = c(rep(49.9, 3), rep(48.4, 3)),
                   longitude = c(rep(-119, 3), rep(-123, 3)))
   
