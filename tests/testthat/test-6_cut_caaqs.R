@@ -47,16 +47,16 @@ test_that("management breaks are correct for o3: value labels (unicode)", {
 })
 
 test_that("management breaks are correct for o3: colour", {
-  expected <- c(rep("#009900", 3), 
-                rep("#FFDA21", 2), 
-                rep("#FF9500", 2), 
-                rep("#FF0000", 2))
+  expected <- c(rep("#A6D96A", 3), 
+                rep("#FEE08B", 2), 
+                rep("#F46D43", 2), 
+                rep("#A50026", 2))
   
   res <- cut_management(o3_vec, "o3", output = "colour", drop_na = TRUE)
   expect_equal(as.character(res), c(expected, NA))
   
   res <- cut_management(o3_vec, "o3", output = "colour", drop_na = FALSE)
-  expect_equal(as.character(res), c(expected, "#E8D3D3"))
+  expect_equal(as.character(res), c(expected, "grey80"))
 })
 
 test_that("get_std works", {
