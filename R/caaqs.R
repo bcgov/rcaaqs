@@ -18,8 +18,8 @@
 #'
 #' @param data Data frame. Hourly raw pollution data with at least date-time and
 #'   value columns
-#' @param dt Character. The name of the date-time column. Default \code{"date"}
-#' @param val Character. The name of the value column. Default \code{"value"}
+#' @param dt Character. The name of the date-time column. Default `"date"`
+#' @param val Character. The name of the value column. Default `"value"`
 #' @param by Character vector. Grouping variables in data, probably an id if 
 #'   using multiple sites. Even if not using multiple sites, you should specify 
 #'   the id column so that it is retained in the output.
@@ -28,7 +28,7 @@
 #'   omit, or two columns specifying a series of start and end date ranges to 
 #'   omit.
 #' @param exclude_df_dt Character vector. The names of the date columns in 
-#'   \code{exclude_df}. Must specify either one (a series of dates), or two (the
+#'   `exclude_df`. Must specify either one (a series of dates), or two (the
 #'   start and end columns specifying dates ranges).
 #' @param quiet Logical. Suppress progress messages (default FALSE)
 #'   
@@ -36,8 +36,8 @@
 #'   Flows or Exceptional Events create a data frame that either a) contains a
 #'   column listing all the days which are to be omitted, or b) contains two
 #'   columns listing the start and end dates of all the date periods which are
-#'   to be omitted. This is supplied as \code{exclude_df}. Use
-#'   \code{exlcude_df_dt} to specify the name of the column containing the
+#'   to be omitted. This is supplied as `exclude_df`. Use
+#'   `exlcude_df_dt` to specify the name of the column containing the
 #'   dates, or the names of the columns containing the start and end of the date
 #'   ranges (see examples and vignette for more details).
 #'   
@@ -64,7 +64,7 @@
 #' 
 #' @references CCME Guidance document on achievement determination Canadian
 #'   ambient air quality standards for fine particulate matter and ozone
-#'   \url{https://www.ccme.ca/files/Resources/air/aqms/pn_1483_gdad_eng.pdf}.
+#'   <https://www.ccme.ca/files/Resources/air/aqms/pn_1483_gdad_eng.pdf>.
 #' 
 #' @examples 
 #' 

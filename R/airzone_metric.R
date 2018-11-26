@@ -28,7 +28,7 @@
 #'   stations
 #' @param keep Columns in the input data that you would like to retain in the 
 #'   output data frame. You can make it a named vector to rename the column in 
-#'   the output. Use the form \code{keep = c(new_name = "existing_name")}. This 
+#'   the output. Use the form `keep = c(new_name = "existing_name")`. This 
 #'   can also be used to rename any of the columns specified by n_years, az, or 
 #'   val.
 #'  
@@ -82,10 +82,10 @@ parse_incomplete <- function(data, n_years, val) {
 #' 
 #' With a data set containing station locations, calculate which airzones each 
 #' station belongs to. Requires an sf object from the
-#' \code{sf} package containing the airzone names and locations (polygons).
+#' `sf` package containing the airzone names and locations (polygons).
 #' 
-#' For British Columbia, consider using the \code{airzones()} function to
-#' get an sf object of BC airzones from the \code{\link[bcmaps]{bcmaps}} package.
+#' For British Columbia, consider using the `airzones()` function to
+#' get an sf object of BC airzones from the [bcmaps][bcmaps::bcmaps()] package.
 #' 
 #' @param data Data frame. Contains station ids and air quality data
 #' @param airzones sf PPOLYGON or MULTIPOLYGON reflecting airzone

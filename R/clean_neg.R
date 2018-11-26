@@ -21,8 +21,8 @@
 #'   "nox"
 #'  
 #' @details For gases (type = "ozone", "so2", or "nox"), replaces values 
-#'   \eqn{\le} -5 with \code{NA} and values between -5 and 0 with 0. For type = 
-#'   "pm25", replaces values \eqn{\le} -3.5 with \code{NA} and values between 
+#'   \eqn{\le} -5 with `NA` and values between -5 and 0 with 0. For type = 
+#'   "pm25", replaces values \eqn{\le} -3.5 with `NA` and values between 
 #'   -3.5 and 0 with 0.
 #'  
 #' @return a vector of the same length as x with negative values replaced with 

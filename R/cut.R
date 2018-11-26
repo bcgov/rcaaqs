@@ -16,11 +16,11 @@
 #'
 #'Can be used for Ozone, PM2.5 (24h or annual)
 #'@param x vector of air quality readings (pollutant concentrations)
-#'@param  parameter What is the parameter? Must be one of: \code{"o3",
-#'  "pm2.5_annual", "pm2.5_24h"}
-#'@param  output should the function output labels (\code{"labels"}; default or
-#'  break values in unicode (\code{"breaks_u"}) or break values in html
-#'  (\code{"breaks_h"}), or colour values (\code{"colour"} or \code{"color"})?
+#'@param  parameter What is the parameter? Must be one of: `"o3",
+#'  "pm2.5_annual", "pm2.5_24h"`
+#'@param  output should the function output labels (`"labels"`; default or
+#'  break values in unicode (`"breaks_u"`) or break values in html
+#'  (`"breaks_h"`), or colour values (`"colour"` or `"color"`)?
 #'@param  drop_na Should NA values be dropped, or retained as factor level
 #'  "Insufficient Data" (default)?
 #'@noRd
@@ -35,11 +35,11 @@ cut_management <- function(x, parameter, output = "labels", drop_na = FALSE) {
 #'
 #'Can be used for Ozone, PM2.5 (24h or annual)
 #'@param x vector of air quality readings (pollutant concentrations)
-#'@param  parameter What is the parameter? Must be one of: \code{"o3",
-#'  "pm2.5_annual", "pm2.5_24h"}
-#'@param  output should the function output labels (\code{"labels"}; default or
-#'  break values in unicode (\code{"breaks_u"}) or break values in html
-#'  (\code{"breaks_h"}), or colour values (\code{"colour"} or \code{"color"})?
+#'@param  parameter What is the parameter? Must be one of: `"o3",
+#'  "pm2.5_annual", "pm2.5_24h"`
+#'@param  output should the function output labels (`"labels"`; default or
+#'  break values in unicode (`"breaks_u"`) or break values in html
+#'  (`"breaks_h"`), or colour values (`"colour"` or `"color"`)?
 #'@param  drop_na Should NA values be dropped, or retained as factor level
 #'  "Insufficient Data" (default)?
 #'@noRd
@@ -183,8 +183,8 @@ get_units <- function(parameter = "all") {
 #' Get a vector of colours for management levels or achievement levels
 #' 
 #' @param type "achievement" or "management"
-#' @param drop_na Should NA (i.e., Insufficient Data) be excluded (\code{TRUE}) 
-#'   or includeded \code{FALSE} (the default)?
+#' @param drop_na Should NA (i.e., Insufficient Data) be excluded (`TRUE`) 
+#'   or includeded `FALSE` (the default)?
 #'   
 #' @return named vector of colours (hex)
 #' @export

@@ -29,7 +29,7 @@ get_eetf <- function(x) {
 #'   omit, or two columns specifying a series of start and end date ranges to 
 #'   omit.
 #' @param exclude_df_dt Character vector. The names of the date columns in 
-#'   \code{exclude_df}. Must specify either one (a series of dates), or two (the
+#'   `exclude_df`. Must specify either one (a series of dates), or two (the
 #'   start and end columns specifying dates ranges).
 #' @param quiet Logical. Suppress progress messages (default FALSE)
 #' 
@@ -37,8 +37,8 @@ get_eetf <- function(x) {
 #'   Flows or Exceptional Events create a data frame that either a) contains a
 #'   column listing all the days which are to be omitted, or b) contains two
 #'   columns listing the start and end dates of all the date periods which are
-#'   to be omitted. This is supplied as \code{exclude_df}. Use
-#'   \code{exlcude_df_dt} to specify the name of the column containing the
+#'   to be omitted. This is supplied as `exclude_df`. Use
+#'   `exlcude_df_dt` to specify the name of the column containing the
 #'   dates, or the names of the columns containing the start and end of the date
 #'   ranges (see examples and vignette for more details).
 #'
