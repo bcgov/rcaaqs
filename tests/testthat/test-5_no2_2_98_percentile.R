@@ -94,7 +94,7 @@ test_that("can exclude data rows", {
   expect_gt(nrow(high_dates), 0)
   
   expect_silent(ret3 <- no2_yearly_98(no2, by = c("ems_id", "site"),
-                                      exclude_df = high_dates, 
+                                      exclude_df = high_dates, management = TRUE,
                                       exclude_df_dt = c("date"), quiet = TRUE))
   
   expect_equivalent(dplyr::select(ret2, "ems_id", "site", "year", 

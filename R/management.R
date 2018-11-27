@@ -138,6 +138,7 @@ caaqs_management_pm_no2_so2_3yr <- function(x, exclude_df, exclude_df_dt, quiet)
                             by = by, 
                             exclude_df = exclude_df, 
                             exclude_df_dt = exclude_df_dt, 
+                            management = TRUE,
                             quiet = quiet)
   
   if (!quiet) message("Calculating, " , params()[parameter], " CAAQS metric")
@@ -182,6 +183,7 @@ caaqs_management.o3 <- function(x, exclude_df = NULL, exclude_df_dt = NULL,
   yearly_mgmt <- o3_ann_4th_highest(daily, by = by, 
                                     exclude_df = exclude_df, 
                                     exclude_df_dt = exclude_df_dt, 
+                                    management = TRUE,
                                     quiet = quiet)
   
   if (!quiet) message("Calculating O3 CAAQS metric")
@@ -235,6 +237,7 @@ caaqs_management_so2_no2_1yr <- function(x, exclude_df, exclude_df_dt,
                             val = get_val(x), by = by, 
                             exclude_df = exclude_df, 
                             exclude_df_dt = exclude_df_dt, 
+                            management = TRUE,
                             quiet = quiet)
   
   caaqs_mgmt <- caaqs(yearly_mgmt, val = "avg_yearly", by = by, 
@@ -253,24 +256,24 @@ caaqs_management_so2_no2_1yr <- function(x, exclude_df, exclude_df_dt,
 join_management_caaqs <- function(caaqs, mgmt_caaqs, by, eetf) {
   mgmt_caaqs <- dplyr::select(mgmt_caaqs, by, "caaqs_year", "metric", 
                         "mgmt_metric_value" = "metric_value", 
-                        "mgmt", if (eetf) "excluded")
+                        "mgmt", "excluded")
   ret <- dplyr::left_join(caaqs, mgmt_caaqs, by = c(by, "caaqs_year", "metric"))
   dplyr::select(ret, by, "caaqs_year", "metric", 
                 "ambient_metric_value" = "metric_value", 
                 "ambient_caaqs" = "caaqs", 
-                if (eetf) "excluded", "mgmt_metric_value", "mgmt_level" = "mgmt", 
+                "excluded", "mgmt_metric_value", "mgmt_level" = "mgmt", 
                 dplyr::everything())
 }
 
 join_management_yearly <- function(yearly, mgmt_yearly, parameter, by, eetf) {
   annual_stat <- get_annual_stat(parameter)
-  mgmt_yearly <- dplyr::select(mgmt_yearly, by, "year", if (eetf) "excluded", 
+  mgmt_yearly <- dplyr::select(mgmt_yearly, by, "year", "excluded", 
                                annual_stat, "exceed_mgmt" = "exceed")
   names(mgmt_yearly)[names(mgmt_yearly) == annual_stat] <- paste0(annual_stat, "_mgmt")
   
   ret <- dplyr::left_join(yearly, mgmt_yearly, by = c(by, "year"))
   dplyr::select(ret, by, "year", "valid_in_year", dplyr::starts_with("quarter"), 
-                annual_stat, "exceed", if (eetf) "excluded", 
+                annual_stat, "exceed", "excluded", 
                 paste0(annual_stat, "_mgmt"), "exceed_mgmt", dplyr::everything())
 }
 

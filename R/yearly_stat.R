@@ -17,7 +17,7 @@
 yearly_stat <- function(data, dt = "date", val = "value", 
                         by = c("ems_id", "site"), 
                         stat, stat.opts = NULL, quarter_units = "prop",
-                        pollutant_standard,
+                        pollutant_standard, management,
                         exclude_df, exclude_df_dt, quiet = FALSE) {
   
   # Check inputs
@@ -66,7 +66,7 @@ yearly_stat <- function(data, dt = "date", val = "value",
   
   data <- dplyr::ungroup(data)
   ret <- dplyr::left_join(quarter_valid, data, by = c(by, "year"))
-  if (is.null(exclude_df)) ret$excluded <- NULL
+  if (!management) ret$excluded <- NULL
   ret
 }
 
@@ -97,12 +97,12 @@ NULL
 
 pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, 
                          exclude_df = NULL, exclude_df_dt = NULL, 
-                         quiet = FALSE) {
+                         management = FALSE, quiet = FALSE) {
 
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.98, na.rm = TRUE), 
                       pollutant_standard = get_std("pm2.5_24h"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet)
   
@@ -126,12 +126,12 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL,
 
 so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, 
                           exclude_df = NULL, exclude_df_dt = NULL, 
-                          quiet = FALSE) {
+                          management = FALSE, quiet = FALSE) {
   
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.99, na.rm = TRUE), 
                       pollutant_standard = get_std("so2_3yr"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet)
   
@@ -152,12 +152,12 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL,
 
 no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, 
                           exclude_df = NULL, exclude_df_dt = NULL, 
-                          quiet = FALSE) {
+                          management = FALSE,                   quiet = FALSE) {
 
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.98, na.rm = TRUE), 
                       pollutant_standard = get_std("no2_3yr"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet)
   
@@ -180,11 +180,11 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL,
 
 pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, 
                           exclude_df = NULL, exclude_df_dt = NULL, 
-                          quiet = FALSE) {
+                          management = FALSE, quiet = FALSE) {
 
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       pollutant_standard = get_std("pm2.5_annual"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet)
   
@@ -208,13 +208,13 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL,
 
 o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL, 
                                exclude_df = NULL, exclude_df_dt = NULL, 
-                               quiet = FALSE) {
+                               management = FALSE, quiet = FALSE) {
 
   data <- yearly_stat(data, dt, val, by, 
                       nth_highest, stat.opts = list(n = 4), 
                       quarter_units = "days", 
                       pollutant_standard = get_std("o3"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet)
   
@@ -234,7 +234,7 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
 so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", 
                                    by = NULL, exclude_df = NULL, 
                                    exclude_df_dt = NULL, 
-                                   quiet = FALSE) {
+                                   management = FALSE,                                quiet = FALSE) {
 
   # Add flag placeholder
   data$flag_daily_incomplete <- NA
@@ -242,7 +242,7 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       quarter_units = "days", 
                       pollutant_standard = get_std("so2_1yr"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet) 
   
@@ -270,7 +270,7 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
 no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", 
                                    by = NULL, exclude_df = NULL, 
                                    exclude_df_dt = NULL, 
-                                   quiet = FALSE) {
+                                   management = FALSE, quiet = FALSE) {
 
   # Add flag placeholder
   data$flag_daily_incomplete <- NA
@@ -278,7 +278,7 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       quarter_units = "days", 
                       pollutant_standard = get_std("no2_1yr"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet) 
   

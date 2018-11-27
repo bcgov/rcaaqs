@@ -93,6 +93,7 @@ test_that("can exclude data rows", {
   expect_silent(ret3 <- no2_avg_hourly_by_year(no2, by = c("ems_id", "site"),
                                                exclude_df = high_dates, 
                                                exclude_df_dt = c("date"), 
+                                               management = TRUE,
                                                quiet = TRUE))
   
   expect_equivalent(dplyr::select(ret2, "ems_id", "site", "year", 
