@@ -21,6 +21,7 @@
 #' @param n_years The column containing the number of years each 3yr avg is
 #'   based on
 #' @param az The airzone column
+#' @param station_id The column containing the unique station id
 #' @param ambient_metric_val The column containing the ambient CAAQS metric for individual stations
 #' @param ambient_caaqs The column containing the CAAQS achievement levels for individual
 #'   stations
@@ -43,14 +44,17 @@
 #' @export
 
 airzone_metric <- function(data, n_years = "n_years", az = "airzone", 
+                           station_id = "ems_id",
                            ambient_metric_val = "ambient_metric_value",
                            ambient_caaqs = "ambient_caaqs",
                            excluded = "excluded", mgmt_metric_val = "mgmt_metric_value",
                            mgmt = "mgmt_level", keep = NULL) {
   
   # Check inputs
-  check_vars(c(n_years, az, ambient_metric_val, ambient_caaqs, mgmt_metric_val, mgmt), data)
-  check_one(n_years, az, ambient_metric_val, ambient_caaqs, mgmt_metric_val, mgmt)
+  check_vars(c(n_years, az, station_id, ambient_metric_val, ambient_caaqs,
+               mgmt_metric_val, mgmt), data)
+  check_one(n_years, az, station_id, ambient_metric_val, ambient_caaqs,
+            mgmt_metric_val, mgmt)
   check_class(n_years, data, "numeric")
   check_class(ambient_metric_val, data, "numeric")
   check_class(mgmt_metric_val, data, "numeric")
@@ -62,10 +66,10 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   data1 <- dplyr::arrange(data1, !!rlang::sym(az))
   
   # Arrange column order
-  data1 <- data1[, c(az, n_years, ambient_metric_val, ambient_caaqs, 
-                   setdiff(c(keep, "ems_id"), c(az, n_years, ambient_metric_val, ambient_caaqs)))]
+  data1 <- data1[, c(az, n_years, ambient_metric_val, ambient_caaqs, station_id,
+                   setdiff(keep, c(az, n_years, ambient_metric_val, ambient_caaqs, station_id)))]
   
-  colnames(data1)[which(names(data1) == "ems_id")] <- "ambient_rep_stn_id" 
+  colnames(data1)[which(names(data1) == station_id)] <- "ambient_rep_stn_id" 
 
   # Take station with max mgmt_metric_value for each airzone
   data2 <- dplyr::mutate(data, data = purrr::map(.data$data, ~ dplyr::slice(.x, which.max(.x[[mgmt_metric_val]]))))
@@ -73,10 +77,10 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   data2 <- dplyr::arrange(data2, !!rlang::sym(az))
   
   # Arrange column order
-  data2 <- data2[, c(az, n_years, excluded, mgmt_metric_val, mgmt,
-               setdiff(c(keep, "ems_id"), c(az, n_years, excluded, mgmt_metric_val, mgmt)))]
+  data2 <- data2[, c(az, n_years, excluded, mgmt_metric_val, mgmt, station_id,
+               setdiff(keep, c(az, n_years, excluded, mgmt_metric_val, mgmt, station_id)))]
   
-  colnames(data2)[which(names(data2) == "ems_id")] <- "mgmt_rep_stn_id" 
+  colnames(data2)[which(names(data2) == station_id)] <- "mgmt_rep_stn_id" 
   
   # Join dataframes
   data <- dplyr::left_join(data1, data2)

@@ -5,7 +5,7 @@
 \title{Calculate the airzone metric}
 \usage{
 airzone_metric(data, n_years = "n_years", az = "airzone",
-  ambient_metric_val = "ambient_metric_value",
+  station_id = "ems_id", ambient_metric_val = "ambient_metric_value",
   ambient_caaqs = "ambient_caaqs", excluded = "excluded",
   mgmt_metric_val = "mgmt_metric_value", mgmt = "mgmt_level",
   keep = NULL)
@@ -17,6 +17,8 @@ airzone_metric(data, n_years = "n_years", az = "airzone",
 based on}
 
 \item{az}{The airzone column}
+
+\item{station_id}{The column containing the unique station id}
 
 \item{ambient_metric_val}{The column containing the ambient CAAQS metric for individual stations}
 
