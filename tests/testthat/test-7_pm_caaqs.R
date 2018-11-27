@@ -9,10 +9,10 @@ test_that("classes and extractors for pm2.5 24hr", {
   for (d in pm_caaqs) {
     expect_is(d, "data.frame")
   }
-  expect_is(extract_caaqs(pm_caaqs), "data.frame")
-  expect_is(extract_daily(pm_caaqs), "data.frame")
-  expect_is(extract_yearly(pm_caaqs), "data.frame")
-  expect_is(extract_three_yr_rolling(pm_caaqs), "data.frame")
+  expect_is(get_caaqs(pm_caaqs), "data.frame")
+  expect_is(get_daily(pm_caaqs), "data.frame")
+  expect_is(get_yearly(pm_caaqs), "data.frame")
+  expect_is(get_three_yr_rolling(pm_caaqs), "data.frame")
 })
 
 test_that("classes and extractors for pm2.5 annual", {
@@ -24,10 +24,10 @@ test_that("classes and extractors for pm2.5 annual", {
   for (d in pm_caaqs) {
     expect_is(d, "data.frame")
   }
-  expect_is(extract_caaqs(pm_caaqs), "data.frame")
-  expect_is(extract_daily(pm_caaqs), "data.frame")
-  expect_is(extract_yearly(pm_caaqs), "data.frame")
-  expect_is(extract_three_yr_rolling(pm_caaqs), "data.frame")
+  expect_is(get_caaqs(pm_caaqs), "data.frame")
+  expect_is(get_daily(pm_caaqs), "data.frame")
+  expect_is(get_yearly(pm_caaqs), "data.frame")
+  expect_is(get_three_yr_rolling(pm_caaqs), "data.frame")
 })
 
 test_that("pm_24h_caaqs single", {
@@ -36,7 +36,7 @@ test_that("pm_24h_caaqs single", {
   expect_error(expect_message(pm_caaqs <- pm_24h_caaqs(d), 
                               "Calculating PM 2.5 daily average"),
                NA)
-  caaqs <- extract_caaqs(pm_caaqs)
+  caaqs <- get_caaqs(pm_caaqs)
   expect_true(all(is.na(caaqs$metric_value[caaqs$caaqs == "Insufficient Data"])))
   expect_true(all(!is.na(caaqs$metric_value[caaqs$caaqs != "Insufficient Data"])))
   expect_true(all(caaqs$caaqs[caaqs$metric_value <= get_std("pm2.5_24h")] 
@@ -51,7 +51,7 @@ test_that("pm_24h_caaqs groups", {
   
   expect_error(expect_message(pm_caaqs <- pm_24h_caaqs(d, by = c("ems_id", "site")), 
                               "Calculating PM 2.5 daily average"), NA)
-  caaqs <- extract_caaqs(pm_caaqs)
+  caaqs <- get_caaqs(pm_caaqs)
   expect_true(all(is.na(caaqs$metric_value[caaqs$caaqs == "Insufficient Data"])))
   expect_true(all(!is.na(caaqs$metric_value[caaqs$caaqs != "Insufficient Data"])))
   expect_true(all(caaqs$caaqs[caaqs$metric_value <= get_std("pm2.5_24h")] 
@@ -67,7 +67,7 @@ test_that("pm_annual_caaqs single", {
   expect_error(expect_message(pm_caaqs <- pm_annual_caaqs(d), 
                               "Calculating PM 2.5 daily average"),
                NA)
-  caaqs <- extract_caaqs(pm_caaqs)
+  caaqs <- get_caaqs(pm_caaqs)
   expect_true(all(is.na(caaqs$metric_value[caaqs$caaqs == "Insufficient Data"])))
   expect_true(all(!is.na(caaqs$metric_value[caaqs$caaqs != "Insufficient Data"])))
   expect_true(all(caaqs$caaqs[caaqs$metric_value <= get_std("pm2.5_annual")] 
@@ -82,7 +82,7 @@ test_that("pm_annual_caaqs groups", {
   
   expect_error(expect_message(pm_caaqs <- pm_annual_caaqs(d, by = c("ems_id", "site")), 
                               "Calculating PM 2.5 daily average"), NA)
-  caaqs <- extract_caaqs(pm_caaqs)
+  caaqs <- get_caaqs(pm_caaqs)
   expect_true(all(is.na(caaqs$metric_value[caaqs$caaqs == "Insufficient Data"])))
   expect_true(all(!is.na(caaqs$metric_value[caaqs$caaqs != "Insufficient Data"])))
   expect_true(all(caaqs$caaqs[caaqs$metric_value <= get_std("pm2.5_annual")] 

@@ -109,9 +109,9 @@ pollutant_daily_stat <- function(data, dt, val, by = NULL, pollutant_standard,
 #'
 #' @param data data frame with date and value
 #' @param dt the name (as a character string) of the date-time column. Default
-#'  \code{"date_time"}
+#'  `"date_time"`
 #' @param val the name (as a character string) of the PM2.5 value column. Default
-#'  \code{"value"}
+#'  `"value"`
 #' @param by character vector of grouping variables in data, probably an id if
 #'  using multiple sites. Even if not using multiple sites, you shoud specfify
 #'  the id column so that it is retained in the output.

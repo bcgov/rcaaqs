@@ -12,9 +12,9 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-#' This function is defunct. Use \code{\link{format_caaqs_dt}}
+#' This function is defunct. Use [format_caaqs_dt()]
 #' 
-#' @seealso \code{\link{format_caaqs_dt}}
+#' @seealso [format_caaqs_dt()]
 #' 
 #' @param dates defunct function. do not use
 #' @param format defunct function. do not use 

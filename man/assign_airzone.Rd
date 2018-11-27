@@ -28,7 +28,7 @@ station belongs to. Requires an sf object from the
 }
 \details{
 For British Columbia, consider using the \code{airzones()} function to
-get an sf object of BC airzones from the \code{\link[bcmaps]{bcmaps}} package.
+get an sf object of BC airzones from the \link[bcmaps:bcmaps]{bcmaps} package.
 }
 \examples{
 

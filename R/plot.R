@@ -80,7 +80,7 @@ plot_ts <- function(x, id = NULL, id_col = NULL, rep_yr, plot_caaqs = TRUE,
   }
   
   # Get daily data from caaqs object and subset to the station of interest
-  daily_data <- extract_daily(x)
+  daily_data <- get_daily(x)
   
   if (!is.null(id)) daily_data <- daily_data[daily_data[[id_col]] == id, ]
 
@@ -120,7 +120,7 @@ plot_ts <- function(x, id = NULL, id_col = NULL, rep_yr, plot_caaqs = TRUE,
   }
 
   if (plot_caaqs) {
-    caaqs_data <- extract_caaqs(x)
+    caaqs_data <- get_caaqs(x)
     
     if (!is.null(id)) caaqs_data <- caaqs_data[caaqs_data[[id_col]] == id, ]
     

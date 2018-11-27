@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{format_date}
 \alias{format_date}
-\title{This function is defunct. Use \code{\link{format_caaqs_dt}}}
+\title{This function is defunct. Use \code{\link[=format_caaqs_dt]{format_caaqs_dt()}}}
 \usage{
 format_date(dates, format, lt)
 }
@@ -14,8 +14,8 @@ format_date(dates, format, lt)
 \item{lt}{defunct function. do not use}
 }
 \description{
-This function is defunct. Use \code{\link{format_caaqs_dt}}
+This function is defunct. Use \code{\link[=format_caaqs_dt]{format_caaqs_dt()}}
 }
 \seealso{
-\code{\link{format_caaqs_dt}}
+\code{\link[=format_caaqs_dt]{format_caaqs_dt()}}
 }

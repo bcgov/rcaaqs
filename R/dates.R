@@ -24,16 +24,16 @@
 #' @param  x Vector of date-times as character or POSIXlt/ct.
 #' @param format The format of the character dates
 #' @param prev_hour Should the timestamp be assigned to the previous hour as
-#'   dictated by the CAAQS guidance document? Default \code{TRUE}. This is
+#'   dictated by the CAAQS guidance document? Default `TRUE`. This is
 #'   accomplished by subtracting one second off the times.
 #' @param tz The timezone of the date-times. See Details below.
 #' 
 #' @details You can set the timezone that you are working with in two different
-#'   ways. You can set it globally with: \code{options("rcaaqs.timezone" =
-#'   "your_timezone")} or set it each time you call the function by setting the
-#'   \code{tz} argument to "your_timezone" where "your_timezone" is a valid 
-#'   timezone - see \code{\link{OlsonNames}}. The default (when
-#'   \code{options("rcaaqs.timezone")} is unset) is \code{"Etc/GMT+8"}, which is
+#'   ways. You can set it globally with: `options("rcaaqs.timezone" =
+#'   "your_timezone")` or set it each time you call the function by setting the
+#'   `tz` argument to "your_timezone" where "your_timezone" is a valid 
+#'   timezone - see [OlsonNames()]. The default (when
+#'   `options("rcaaqs.timezone")` is unset) is `"Etc/GMT+8"`, which is
 #'   equivalent to Pacific Standard Time, but does not use Daylight Savings 
 #'   (i.e., is GMT+8 all year). This is the standard for Air Quality Monitoring
 #'   in British Columbia.
@@ -77,7 +77,7 @@ format_caaqs_dt <- function(x, format="%Y-%m-%d %H:%M:%S", prev_hour = TRUE,
 #' 
 #' @param  data Dataframe
 #' @param  date_col The column containing dates
-#' @param  interval The interval in the date sequence. If \code{NULL}, calculated
+#' @param  interval The interval in the date sequence. If `NULL`, calculated
 #'  automatically.
 #' @param  fill_cols Columns to fill with the value in the column (should be
 #'  columns where value is same in every row, such as an ID.)

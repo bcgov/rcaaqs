@@ -93,11 +93,11 @@ class(pm)
 
 The object contains all of the intermediate results as well as the final caaqs. 
 There are accessor/extractor functions to get the different components. See
-`?caaqs_extractors` for the different functions. We can get the caaqs results 
-using the `extract_caaqs()` function:
+`?get_caaqs` for the different functions. We can get the caaqs results 
+using the `get_caaqs()` function:
 
 ```{r}
-extract_caaqs(pm)
+get_caaqs(pm)
 ```
 
 Besides the actual CAAQS metric values (`metric_value`), there are several important columns.
@@ -136,14 +136,14 @@ First let's take a look at the daily averages, to do this, we need to re-run our
 pm <- pm_annual_caaqs(pm25_sample_data, 
                      by = c("ems_id", "site"))
 
-extract_caaqs(pm)
+get_caaqs(pm)
 ```
 
 To explore any of these sub-data sets individually you can use the extractor 
 functions:
 
 ```{r}
-pm_daily_avg <- extract_daily(pm)
+pm_daily_avg <- get_daily(pm)
 pm_daily_avg
 ```
 
@@ -181,7 +181,7 @@ specifies the name of the column holding the dates.
 ```{r}
 pm_excl <- caaqs_management(pm, exclude_df = high_dates, exclude_df_dt = "date")
 pm_excl
-pm_excl_caaqs <- extract_caaqs(pm_excl)
+pm_excl_caaqs <- get_caaqs(pm_excl)
 pm_excl_caaqs
 ```
 
@@ -202,7 +202,7 @@ high_dates
 pm_excl <- caaqs_management(pm, exclude_df = high_dates,
                             exclude_df_dt = c("start", "end"))
 
-pm_excl_caaqs <- extract_caaqs(pm_excl)
+pm_excl_caaqs <- get_caaqs(pm_excl)
 pm_excl_caaqs
 ```
 
@@ -230,7 +230,7 @@ even if we are not adding a data frame of dates to exclude.
 ```{r}
 pm <- caaqs_management(pm)
 
-pm_caaqs <- extract_caaqs(pm) %>%
+pm_caaqs <- get_caaqs(pm) %>%
   filter(caaqs_year == 2013)
 ```
 
