@@ -20,42 +20,68 @@
 #' @param data The dataframe
 #' @param n_years The column containing the number of years each 3yr avg is
 #'   based on
-#' @param az Airzone column
-#' @param caaqs_val Column containing the CAAQS metric for individual stations
-#' @param caaqs Column containing the CAAQS achievement levels for individual
+#' @param az The airzone column
+#' @param ambient_metric_val The column containing the ambient CAAQS metric for individual stations
+#' @param ambient_caaqs The column containing the CAAQS achievement levels for individual
 #'   stations
-#' @param mgmt Column containing the CAAQS management levels for individual
+#' @param excluded Logical vector indicating if ambient data was excluded for calculating
+#'   the CAAQS management levels
+#' @param mgmt_metric_val The column containing the management CAAQS metric for individual stations
+#' @param mgmt The column containing the CAAQS management levels for individual
 #'   stations
-#' @param keep Columns in the input data that you would like to retain in the 
+#' @param keep The columns in the input data that you would like to retain in the 
 #'   output data frame. You can make it a named vector to rename the column in 
 #'   the output. Use the form \code{keep = c(new_name = "existing_name")}. This 
 #'   can also be used to rename any of the columns specified by n_years, az, or 
 #'   val.
 #'  
-#' @return A dataframe with 6 columns: airzone, number of years in calculation,
-#'   CAAQS metric value, CAAQS achievement levels, and CAAQS management levels
+#' @return A dataframe with 9 columns: airzone, number of years in calculation,
+#'   ambient CAAQS metric value, CAAQS achievement levels, ambient reporting station id,
+#'   logical vector indicating if ambient data was excluded for management calculations, 
+#'   management CAAQS metric value, CAAQS management levels, and management reporting station id.
 #'
 #' @export
 
 airzone_metric <- function(data, n_years = "n_years", az = "airzone", 
-                           caaqs_val = "metric_value", caaqs = "caaqs", 
-                           mgmt = "mgmt", keep = NULL) {
+                           ambient_metric_val = "ambient_metric_value",
+                           ambient_caaqs = "ambient_caaqs",
+                           excluded = "excluded", mgmt_metric_val = "mgmt_metric_value",
+                           mgmt = "mgmt_level", keep = NULL) {
   
   # Check inputs
-  check_vars(c(n_years, az, caaqs_val, caaqs), data)
-  check_one(n_years, az, caaqs_val, caaqs)
+  check_vars(c(n_years, az, ambient_metric_val, ambient_caaqs, mgmt_metric_val, mgmt), data)
+  check_one(n_years, az, ambient_metric_val, ambient_caaqs, mgmt_metric_val, mgmt)
   check_class(n_years, data, "numeric")
-  check_class(caaqs_val, data, "numeric")
+  check_class(ambient_metric_val, data, "numeric")
+  check_class(mgmt_metric_val, data, "numeric")
   
-  # Take station with max caaqs for each airzone
+  # Take station with max ambient_metric_value for each airzone
   data <- tidyr::nest(data, - !!rlang::sym(az))
-  data <- dplyr::mutate(data, data = purrr::map(.data$data, ~ dplyr::slice(.x, which.max(.x[[caaqs_val]]))))
-  data <- tidyr::unnest(data)
-  data <- dplyr::arrange(data, !!rlang::sym(az))
+  data1 <- dplyr::mutate(data, data = purrr::map(.data$data, ~ dplyr::slice(.x, which.max(.x[[ambient_metric_val]]))))
+  data1 <- tidyr::unnest(data1)
+  data1 <- dplyr::arrange(data1, !!rlang::sym(az))
   
   # Arrange column order
-  data <- data[, c(az, n_years, caaqs_val, caaqs, mgmt,
-               setdiff(keep, c(az, n_years, caaqs_val, caaqs, mgmt)))]
+  data1 <- data1[, c(az, n_years, ambient_metric_val, ambient_caaqs, 
+                   setdiff(c(keep, "ems_id"), c(az, n_years, ambient_metric_val, ambient_caaqs)))]
+  
+  colnames(data1)[which(names(data1) == "ems_id")] <- "ambient_rep_stn_id" 
+
+  # Take station with max mgmt_metric_value for each airzone
+  data2 <- dplyr::mutate(data, data = purrr::map(.data$data, ~ dplyr::slice(.x, which.max(.x[[mgmt_metric_val]]))))
+  data2 <- tidyr::unnest(data2)
+  data2 <- dplyr::arrange(data2, !!rlang::sym(az))
+  
+  # Arrange column order
+  data2 <- data2[, c(az, n_years, excluded, mgmt_metric_val, mgmt,
+               setdiff(c(keep, "ems_id"), c(az, n_years, excluded, mgmt_metric_val, mgmt)))]
+  
+  colnames(data2)[which(names(data2) == "ems_id")] <- "mgmt_rep_stn_id" 
+  
+  # Join dataframes
+  data <- dplyr::left_join(data1, data2)
+    
+  data
   
   # Rename keep columns if asked to
   if (!is.null(names(keep))) {
