@@ -133,8 +133,8 @@ digraph boxes_and_circles {
 ## In the RStudio viewer, export as a inst/function_overview_prelim.png. 
 ## Then resize with magick:
 # library(magick)
-# image_read("inst/function_overview_prelim.png") %>% 
-#   image_resize(geometry = geometry_size_pixels(width = 1600)) %>% 
+# image_read("inst/function_overview_prelim.png") %>%
+#   image_resize(geometry = geometry_size_pixels(width = 1200)) %>%
 #   image_write("inst/function_overview.png")
 # unlink("inst/function_overview_prelim.png")
 
