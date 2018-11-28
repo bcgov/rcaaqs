@@ -6,18 +6,18 @@
 \title{CAAQS Management levels for air pollutaionts}
 \format{A data frame with 8 variables:
 \describe{
-  \item{parameter}{The name of the parameter}
-  \item{labels}{Name of CAAQS Management Level}
-  \item{lower_breaks}{Lower concentration in the category}
-  \item{upper_breaks}{Upper concentration in the category}
-  \item{units}{Units in plain ascii}
-  \item{units_html}{The units in html codes}
-  \item{units_unicode}{The units in unicode}
-  \item{val_labels}{Labels for the category in plain ascii}
-  \item{val_labels_html}{Labels for the category values in html}
-  \item{val_labels_unicode}{Labels for the category values in unicode}
-  \item{colour}{The colour of the category (in hexadecimal code)}
-  
+\item{parameter}{The name of the parameter}
+\item{labels}{Name of CAAQS Management Level}
+\item{lower_breaks}{Lower concentration in the category}
+\item{upper_breaks}{Upper concentration in the category}
+\item{units}{Units in plain ascii}
+\item{units_html}{The units in html codes}
+\item{units_unicode}{The units in unicode}
+\item{val_labels}{Labels for the category in plain ascii}
+\item{val_labels_html}{Labels for the category values in html}
+\item{val_labels_unicode}{Labels for the category values in unicode}
+\item{colour}{The colour of the category (in hexadecimal code)}
+
 }}
 \usage{
 management_levels

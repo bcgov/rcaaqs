@@ -5,7 +5,9 @@
 \title{Calculate the airzone metric}
 \usage{
 airzone_metric(data, n_years = "n_years", az = "airzone",
-  caaqs_val = "metric_value", caaqs = "caaqs", mgmt = "mgmt",
+  station_id = "ems_id", ambient_metric_val = "ambient_metric_value",
+  ambient_caaqs = "ambient_caaqs", excluded = "excluded",
+  mgmt_metric_val = "mgmt_metric_value", mgmt = "mgmt_level",
   keep = NULL)
 }
 \arguments{
@@ -14,26 +16,38 @@ airzone_metric(data, n_years = "n_years", az = "airzone",
 \item{n_years}{The column containing the number of years each 3yr avg is
 based on}
 
-\item{az}{Airzone column}
+\item{az}{The airzone column}
 
-\item{caaqs_val}{Column containing the CAAQS metric for individual stations}
+\item{station_id}{The column containing the unique station id}
 
-\item{caaqs}{Column containing the CAAQS achievement levels for individual
+\item{ambient_metric_val}{The column containing the ambient CAAQS metric for individual stations}
+
+\item{ambient_caaqs}{The column containing the CAAQS achievement levels for individual
 stations}
 
-\item{mgmt}{Column containing the CAAQS management levels for individual
+\item{excluded}{Logical vector indicating if ambient data was excluded for calculating
+the CAAQS management levels}
+
+\item{mgmt_metric_val}{The column containing the management CAAQS metric for individual stations}
+
+\item{mgmt}{The column containing the CAAQS management levels for individual
 stations}
 
-\item{keep}{Columns in the input data that you would like to retain in the 
-output data frame. You can make it a named vector to rename the column in 
-the output. Use the form \code{keep = c(new_name = "existing_name")}. This 
-can also be used to rename any of the columns specified by n_years, az, or 
+\item{keep}{The columns in the input data that you would like to retain in the
+output data frame. You can make it a named vector to rename the column in
+the output. Use the form \code{keep = c(new_name = "existing_name")}. This
+can also be used to rename any of the columns specified by n_years, az, or
 val.}
 }
 \value{
-A dataframe with 6 columns: airzone, number of years in calculation,
-  CAAQS metric value, CAAQS achievement levels, and CAAQS management levels
+A dataframe with 9 columns: airzone, number of years in calculation,
+ambient CAAQS metric value, CAAQS achievement levels, ambient reporting station id,
+logical vector indicating if ambient data was excluded for management calculations,
+management CAAQS metric value, CAAQS management levels, and management reporting station id.
 }
 \description{
-<full description>
+Calculate the metrics for each airzone based on station-level results.
+Determines the CAAQS achievement levels and CAAQS management levels for each
+airzone and reports on the representative stations for these metrics in each
+airzone.
 }

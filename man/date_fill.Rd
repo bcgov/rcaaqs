@@ -25,7 +25,7 @@ columns and added to the output?}
 Dataframe with filled in dates
 }
 \description{
-Given a dataframe with one column as a date sequence, fill gaps in the date 
+Given a dataframe with one column as a date sequence, fill gaps in the date
 sequence.
 }
 \examples{

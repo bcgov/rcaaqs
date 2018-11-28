@@ -162,7 +162,7 @@ check_exclude <- function(data, dt, by, exclude_df, exclude_df_dt) {
 #' These functions have been removed from rcaaqs.
 #' 
 #' \itemize{
-#'  \item \code{\link{format_date}}: This function is defunct. Use \code{\link{format_caaqs_dt}} instead.
+#'  \item [format_date()]: This function is defunct. Use [format_caaqs_dt()] instead.
 #' }
 #' 
 #' @name rcaaqs-deprecated

@@ -10,32 +10,31 @@ assign_airzone(data, airzones, az = "Airzone", station_id = "ems_id",
 \arguments{
 \item{data}{Data frame. Contains station ids and air quality data}
 
-\item{airzones}{SpatialPolygonsDataFrame. Polygons reflecting airzone
+\item{airzones}{sf PPOLYGON or MULTIPOLYGON reflecting airzone
 locations}
 
 \item{az}{Character. Name of airzones column in the 'airzones'
-SpatialPolygonsDataFrame object}
+sf object}
 
 \item{station_id}{Character. Name of the station_id column in 'data'}
 
-\item{coords}{Character vector. Names of the columns containing latitude and 
-longitude (respectively) for each station. Defaults to 'lat' and 'lon'}
+\item{coords}{Character vector. Names of the columns containing longitude and
+latitude (respectively) for each station. Defaults to 'lon' and 'lat'}
 }
 \description{
-With a data set containing station locations, calculate which airzones each 
-station belongs to. Requires a Spatial Polygons Data Frame object from the
-\code{sp} package containing the airzone names and locations (polygons).
+With a data set containing station locations, calculate which airzones each
+station belongs to. Requires an sf object from the
+\code{sf} package containing the airzone names and locations (polygons).
 }
 \details{
-For British Columbia, consider using the \code{airzones("sp")} function to
-extract a Spatial Polygons Data Frame of BC airzones from the 
-\code{\link[bcmaps]{bcmaps}} package.
+For British Columbia, consider using the \code{airzones()} function to
+get an sf object of BC airzones from the \link[bcmaps:bcmaps]{bcmaps} package.
 }
 \examples{
 
 \dontrun{
-# Using the airzone spatial dataframe from the bcmaps package
-bc_airzones <- bcmaps::airzones("sp")
+# Using the airzones function from the bcmaps package
+bc_airzones <- bcmaps::airzones()
 
 by_airzones <- assign_airzone(data, bc_airzones)
 }

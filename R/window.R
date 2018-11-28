@@ -35,7 +35,7 @@ rolling_sum <- function(x, width) {
 #' @param thresh If at least thresh values are not used in computing the mean,
 #'   then the output will be set to NA.
 #' 
-#' @return A rolling mean (see \code{\link[rcaaqs]{rolling_sum}}), except if not
+#' @return A rolling mean (see [rcaaqs::rolling_sum()]), except if not
 #'   at least thresh values, it returns NA.
 #'   
 #' @noRd
@@ -50,10 +50,10 @@ rolling_mean <- function(x, width = 8, thresh = 0) {
 #'
 #' @param x the date, date_time, or numeric value
 #' @param interval some numeric step size. for date-times, in seconds.
-#' @param window some numeric look-back window in \code{interval} units.
+#' @param window some numeric look-back window in `interval` units.
 #' 
 #' @return vector of same length as x, that returns, for each x, the number 
-#'   behind x that were within \code{window*interval} units, including x itself.
+#'   behind x that were within `window*interval` units, including x itself.
 #' 
 #' @examples
 #' rcaaqs:::n_within_window(c(1,2,7,8), interval = 1, window = 2)
@@ -94,7 +94,7 @@ filled_rolling_mean <- function(dat, val, interval = 3600,
 
 #' Find the maximum, return NA if no non-NA values.
 #'
-#' \code{max()} typically returns -Inf (and a warning) if no non-NA values; this
+#' `max()` typically returns -Inf (and a warning) if no non-NA values; this
 #' wrapper avoids that.
 #' 
 #' @param  x numeric
@@ -110,7 +110,7 @@ max_na <- function(x) {
 
 #' Find the mean, return NA if no non-NA values.
 #'
-#' \code{mean()} typically returns a warning if no non-NA values; this wrapper
+#' `mean()` typically returns a warning if no non-NA values; this wrapper
 #' avoids that.
 #' 
 #' @param  x numeric
@@ -126,23 +126,23 @@ mean_na <- function(x) {
 
 #' Find the quantile, return NA if no non-NA values.
 #' 
-#' Wraps \code{\link{quantile2}} but returns NA if no non-NA values
+#' Wraps [quantile2()] but returns NA if no non-NA values
 #' 
 #' @param x numeric vector whose sample quantiles are wanted.
 #' @param probs numeric vector of probablities with values in \eqn{[0,1]}. 
-#'   Default \code{0.98}
-#' @param na.rm logical; if true, any \code{NA} and \code{NaN}'s are removed 
-#'   from \code{x} before the quantiles are computed. Default \code{FALSE}
+#'   Default `0.98`
+#' @param na.rm logical; if true, any `NA` and `NaN`'s are removed 
+#'   from `x` before the quantiles are computed. Default `FALSE`
 #' @param names logical; if true, the result has a names attribute. Set to FALSE
-#'   for speedup with many probs. Default \code{FALSE}
-#' @param type \code{"caaqs"} (default) or an integer between 1 and 9 selecting 
+#'   for speedup with many probs. Default `FALSE`
+#' @param type `"caaqs"` (default) or an integer between 1 and 9 selecting 
 #'   one of the nine base quantile algorithms be used. See 
-#'   \code{\link[stats]{quantile}} for details
+#'   [stats::quantile()] for details
 #'   
-#' @return A vector of \code{length(probs)}; if \code{names = TRUE}, it has a
-#'   \code{names} attribute
+#' @return A vector of `length(probs)`; if `names = TRUE`, it has a
+#'   `names` attribute
 #'   
-#' @seealso \code{\link{quantile2}}
+#' @seealso [quantile2()]
 #' 
 #' @noRd
 

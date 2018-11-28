@@ -24,7 +24,6 @@ test_that("has correct classes", {
     expect_is(r$quarter_3, "numeric")
     expect_is(r$quarter_4, "numeric")
     expect_is(r$ann_99_percentile, "numeric")
-    expect_is(r$excluded, "logical")
     expect_is(r$exceed, "logical")
     expect_is(r$flag_daily_incomplete, "logical")
     expect_is(r$so2_metric, "numeric")
@@ -35,10 +34,10 @@ test_that("has correct classes", {
 
 test_that("has correct dimensions", {
   nrows <- nrow(so1)
-  expect_equal(dim(ret1), c(nrows, 19))
+  expect_equal(dim(ret1), c(nrows, 18))
   
   nrows <- nrow(so2)
-  expect_equal(dim(ret2), c(nrows, 21))
+  expect_equal(dim(ret2), c(nrows, 20))
 })
 
 test_that("has correct data", {

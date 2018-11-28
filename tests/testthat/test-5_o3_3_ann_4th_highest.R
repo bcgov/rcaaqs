@@ -34,8 +34,7 @@ test_that("has correct classes", {
     expect_is(r$quarter_2, "integer")
     expect_is(r$quarter_3, "integer")
     expect_is(r$quarter_4, "integer")
-    expect_is(r$max8hr, "numeric")
-    expect_is(r$excluded, "logical")
+    expect_is(r$ann_4th_highest, "numeric")
     expect_is(r$exceed, "logical")
     expect_is(r$flag_daily_incomplete, "logical")
     expect_is(r$flag_yearly_incomplete, "logical")
@@ -44,13 +43,13 @@ test_that("has correct classes", {
 
 test_that("has correct dimensions", {
   nrows <- length(unique(format(o1$date, "%Y")))
-  expect_equal(dim(ret1), c(nrows, 12))
+  expect_equal(dim(ret1), c(nrows, 11))
   
   nrows <- dplyr::summarize(o2, n = length(unique(format(date, "%Y")))) %>%
     dplyr::ungroup() %>%
     dplyr::summarize(n = sum(n)) %>%
     dplyr::pull(n)
-  expect_equal(dim(ret2), c(nrows, 14))
+  expect_equal(dim(ret2), c(nrows, 13))
 })
 
 test_that("has correct data", {
@@ -64,10 +63,10 @@ test_that("has correct data", {
 })
 
 test_that("performs data completeness accurately", {
-  for(r in list(ret1, ret2)){
+  for (r in list(ret1, ret2)){
     expect_true(all(r$valid_year[(r$quarter_2 + r$quarter_3)/183 >= 0.75]))
     expect_true(all(!r$valid_year[(r$quarter_2 + r$quarter_3)/183 < 0.75]))
-    expect_true(all(is.na(r$max8hr[!r$valid_year & !r$exceed])))
+    expect_true(all(is.na(r$ann_4th_highest[!r$valid_year & !r$exceed])))
     expect_true(all(r$flag_yearly_incomplete[(r$quarter_2 + r$quarter_3)/183 < 0.75 & r$exceed]))
   }
 })
@@ -90,6 +89,7 @@ test_that("can exclude data rows", {
   expect_silent(ret3 <- o3_ann_4th_highest(o2, by = c("ems_id", "site"),
                                            exclude_df = high_dates, 
                                            exclude_df_dt = c("date"), 
+                                           management = TRUE,
                                            quiet = TRUE))
   
   expect_equivalent(dplyr::select(ret2, "ems_id", "site", "year", 
@@ -101,8 +101,9 @@ test_that("can exclude data rows", {
                                   "quarter_4", "valid_year", 
                                   "flag_daily_incomplete"))
   
-  expect_false(all(ret2$max8hr == ret3$max8hr, na.rm = TRUE))
-  expect_true(all(ret2$max8hr >= ret3$max8hr, na.rm = TRUE))
+  expect_false(all(ret2$ann_4th_highest == ret3$ann_4th_highest, na.rm = TRUE))
+  expect_true(all(ret2$ann_4th_highest >= ret3$ann_4th_highest, na.rm = TRUE))
+  expect_is(ret3$excluded, "logical")
   expect_equal(ret3$excluded, c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE))
-  expect_equivalent(ret3$max8hr, c(NA, NA, 54.6, 44.1, 46.9, 45.0))
+  expect_equivalent(ret3$ann_4th_highest, c(NA, NA, 54.6, 44.1, 46.9, 45.0))
 })

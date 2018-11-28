@@ -1,8 +1,5 @@
 context("plotting")
 
-daily_data <- readRDS("pm_daily1.rds")
-annual_data <- readRDS("pm_24h_caaqs1.rds")
-
 test_that("mid_breaks works", {
   expect_is(mid_breaks(), "function")
   fn <- mid_breaks()
@@ -15,75 +12,56 @@ test_that("mid_breaks works", {
 } 
 )
 
+o3_caaqs <- readRDS("o3_caaqs1.rds")
+pm_24h_caaqs_one <- readRDS("pm_24h_caaqs1.rds")
+pm_24h_caaqs_multi <- readRDS("pm_24h_caaqs2.rds")
+pm_annual_caaqs <- readRDS("pm_annual_caaqs2.rds")
+
 test_that("plot_ts fails correctly", {
-  temp <- daily_data
-  names(temp)[2:3] <- c("date", "avg_24h")
-  # Invalid parameter name
-  expect_error(plot_ts(temp, caaqs_data = NULL, parameter = "pm2.524h", 
-                       rep_yr = 2013, plot_exceedances = FALSE))
-  # Wrong name for date column
-  names(temp)[2:3] <- c("foo", "avg_24h")
-  expect_error(plot_ts(temp, caaqs_data = NULL, parameter = "pm2.5_24h", 
-                       rep_yr = 2013, plot_exceedances = FALSE))
-  # Wrong name for parameter column
-  names(daily_data)[2:3] <- c("date", "foo")
-  expect_error(plot_ts(daily_data, caaqs_data = NULL, parameter = "pm2.5_24h", 
-                       rep_yr = 2013, plot_exceedances = FALSE))
-  # Wrong data formats
-  names(temp) <- c("date", "foo", "avg_24h", "n_readings") # date is character
-  expect_error(plot_ts(temp, caaqs_data = NULL, parameter = "pm2.5_24h", 
-                       rep_yr = 2013, plot_exceedances = FALSE))
-  names(temp) <- c("avg_24h", "date", "foo", "n_readings") # avg_24h is character
-  expect_error(plot_ts(temp, caaqs_data = NULL, parameter = "pm2.5_24h", 
-                       rep_yr = 2013, plot_exceedances = FALSE))
-})
-
-test_that("plot_ts works without caaqs_data (ozone)", {
-  temp <- daily_data
-  names(temp)[names(temp) == "avg_24h"] <- "max8hr"
-  p <- plot_ts(temp, caaqs_data = NULL, parameter = "o3",
-               rep_yr = 2013, plot_exceedances = FALSE)
-  expect_is(p, "ggplot")
-  expect_is(ggplot2::ggplot_build(p), "ggplot_built")
-})
-
-test_that("works with caaqs_data (ozone)", {
-  o3_daily <- readRDS("o3_daily1.rds")
-  o3_caaqs <- readRDS("o3_caaqs1.rds")
   
-  p <- plot_ts(o3_daily, caaqs_data = o3_caaqs[3,], parameter = "o3",
-               rep_yr = 2013, plot_exceedances = FALSE)
+  # not a caaqs object
+  expect_error(plot_ts(data.frame(), rep_yr = 2013), "x must be an object of class 'caaqs")
+  
+  # wrong year
+  expect_error(plot_ts(o3_caaqs, rep_yr = 2025))
+  
+  # Can't plot multiple ids
+  expect_error(plot_ts(pm_24h_caaqs_multi, rep_yr = 2013), 
+               "id and id_col required when more than one monitoring station is present")
+  
+})
+
+test_that("plot_ts works with and without caaqs_data (ozone)", {
+  p <- plot_ts(o3_caaqs, plot_caaqs = TRUE,
+               rep_yr = 2015)
+  expect_is(p, "ggplot")
+  expect_is(ggplot2::ggplot_build(p), "ggplot_built")
+  p <- plot_ts(o3_caaqs, plot_caaqs = FALSE,
+               rep_yr = 2015)
   expect_is(p, "ggplot")
   expect_is(ggplot2::ggplot_build(p), "ggplot_built")
 })
 
-test_that("plot_ts works without caaqs_data (pm_24h)", {
-  p <- plot_ts(daily_data, caaqs_data = NULL, parameter = "pm2.5_24h", 
-               rep_yr = 2013, plot_exceedances = FALSE)
+
+test_that("plot_ts with pm_24h single and multi", {
+  p <- plot_ts(pm_24h_caaqs_one, rep_yr = 2013, plot_caaqs = FALSE)
+  expect_is(p, "ggplot")
+  expect_is(ggplot2::ggplot_build(p), "ggplot_built")
+  
+  expect_warning(
+    plot_ts(pm_24h_caaqs_one, rep_yr = 2013, plot_caaqs = TRUE), 
+    "caaqs not added to plot: Insufficient Data"
+  )
+  
+  p <- plot_ts(pm_24h_caaqs_multi, rep_yr = 2013, 
+               id = "0310162", id_col = "ems_id")
   expect_is(p, "ggplot")
   expect_is(ggplot2::ggplot_build(p), "ggplot_built")
 })
 
-test_that("works with caaqs_data (pm24h)", {
-  caaqs_data <- readRDS("pm_24h_caaqs2.rds")
-  p <- plot_ts(daily_data, caaqs_data = caaqs_data[6,], parameter = "pm2.5_24h", 
-               rep_yr = 2013, plot_exceedances = FALSE)
+test_that("works with annual", {
+  p <- plot_ts(pm_annual_caaqs, rep_yr = 2013, 
+               id = "0310162", id_col = "ems_id")
   expect_is(p, "ggplot")
   expect_is(ggplot2::ggplot_build(p), "ggplot_built")
 })
-
-test_that("plot_ts works without caaqs_data (pm_annual)", {
-  p <- plot_ts(daily_data, caaqs_data = NULL, parameter = "pm2.5_annual", 
-               rep_yr = 2013, plot_exceedances = FALSE)
-  expect_is(p, "ggplot")
-  expect_is(ggplot2::ggplot_build(p), "ggplot_built")
-})
-
-test_that("works with caaqs_data (pm_annual)", {
-  caaqs_data <- readRDS("pm_annual_caaqs2.rds")
-  p <- plot_ts(daily_data, caaqs_data = caaqs_data[6,], 
-               parameter = "pm2.5_annual", rep_yr = 2013, plot_exceedances = FALSE)
-  expect_is(p, "ggplot")
-  expect_is(ggplot2::ggplot_build(p), "ggplot_built")
-})
-

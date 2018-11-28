@@ -17,7 +17,7 @@
 yearly_stat <- function(data, dt = "date", val = "value", 
                         by = c("ems_id", "site"), 
                         stat, stat.opts = NULL, quarter_units = "prop",
-                        pollutant_standard,
+                        pollutant_standard, management,
                         exclude_df, exclude_df_dt, quiet = FALSE) {
   
   # Check inputs
@@ -38,7 +38,7 @@ yearly_stat <- function(data, dt = "date", val = "value",
   quarter_valid <- valid_by_quarter(data, dt, by, val, quarter_units)
 
   # Exclude data
-  if(!is.null(exclude_df)) {
+  if (!is.null(exclude_df)) {
     data <- exclude_data(data, dt, by, 
                          exclude_df, exclude_df_dt,
                          val = val, quiet = quiet)
@@ -47,7 +47,7 @@ yearly_stat <- function(data, dt = "date", val = "value",
   }
 
   # Calculate yearly statistic
-  if(!is.null(stat.opts)) {
+  if (!is.null(stat.opts)) {
     data <- dplyr::summarize(data, 
                              stat = stat(!!rlang::sym(val), !!unlist(stat.opts)),
                              excluded = any(.data$excluded),
@@ -65,7 +65,9 @@ yearly_stat <- function(data, dt = "date", val = "value",
                         exceed = .data$stat > pollutant_standard)
   
   data <- dplyr::ungroup(data)
-  dplyr::left_join(quarter_valid, data, by = c(by, "year"))
+  ret <- dplyr::left_join(quarter_valid, data, by = c(by, "year"))
+  if (!management) ret$excluded <- NULL
+  ret
 }
 
 
@@ -73,9 +75,9 @@ yearly_stat <- function(data, dt = "date", val = "value",
 #'
 #' @param data data frame with date and value
 #' @param dt the name (as a character string) of the date-time column. Default 
-#'   \code{"date"}
+#'   `"date"`
 #' @param val the name (as a character string) of the value column. Default 
-#'   \code{"value"}
+#'   `"value"`
 #' @param by character vector of grouping variables in data, probably an id if 
 #'   using multiple sites. Even if not using multiple sites, you shoud specify 
 #'   the id column so that it is retained in the output.
@@ -95,12 +97,12 @@ NULL
 
 pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL, 
                          exclude_df = NULL, exclude_df_dt = NULL, 
-                         quiet = FALSE) {
+                         management = FALSE, quiet = FALSE) {
 
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.98, na.rm = TRUE), 
                       pollutant_standard = get_std("pm2.5_24h"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet)
   
@@ -124,12 +126,12 @@ pm_yearly_98 <- function(data, dt = "date", val = "avg_24h", by = NULL,
 
 so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL, 
                           exclude_df = NULL, exclude_df_dt = NULL, 
-                          quiet = FALSE) {
+                          management = FALSE, quiet = FALSE) {
   
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.99, na.rm = TRUE), 
                       pollutant_standard = get_std("so2_3yr"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet)
   
@@ -150,12 +152,12 @@ so2_yearly_99 <- function(data, dt = "date", val = "max_24h", by = NULL,
 
 no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL, 
                           exclude_df = NULL, exclude_df_dt = NULL, 
-                          quiet = FALSE) {
+                          management = FALSE,                   quiet = FALSE) {
 
   data <- yearly_stat(data, dt, val, by, quantile2_na, 
                       list(probs = 0.98, na.rm = TRUE), 
                       pollutant_standard = get_std("no2_3yr"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet)
   
@@ -178,11 +180,11 @@ no2_yearly_98 <- function(data, dt = "date", val = "max_24h", by = NULL,
 
 pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL, 
                           exclude_df = NULL, exclude_df_dt = NULL, 
-                          quiet = FALSE) {
+                          management = FALSE, quiet = FALSE) {
 
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       pollutant_standard = get_std("pm2.5_annual"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet)
   
@@ -206,24 +208,24 @@ pm_yearly_avg <- function(data, dt = "date", val = "avg_24h", by = NULL,
 
 o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL, 
                                exclude_df = NULL, exclude_df_dt = NULL, 
-                               quiet = FALSE) {
+                               management = FALSE, quiet = FALSE) {
 
   data <- yearly_stat(data, dt, val, by, 
                       nth_highest, stat.opts = list(n = 4), 
                       quarter_units = "days", 
                       pollutant_standard = get_std("o3"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet)
   
-  data <- dplyr::rename(data, "max8hr" = "stat")
+  data <- dplyr::rename(data, "ann_4th_highest" = "stat")
   
   # Determine data completeness
   days_in_quarter_2_and_3 <- 183
   data$valid_year <- (data$quarter_2 + data$quarter_3) / days_in_quarter_2_and_3 >= 0.75
   
   # Remove data which invalid - Flag invalid data which exceeds (thus kept)
-  data$max8hr[!data$valid_year & !data$exceed] <- NA
+  data$ann_4th_highest[!data$valid_year & !data$exceed] <- NA
   data$flag_yearly_incomplete <- !data$valid_year & data$exceed
   
   data
@@ -232,18 +234,15 @@ o3_ann_4th_highest <- function(data, dt = "date", val = "max8hr", by = NULL,
 so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", 
                                    by = NULL, exclude_df = NULL, 
                                    exclude_df_dt = NULL, 
-                                   quiet = FALSE) {
+                                   management = FALSE,                                quiet = FALSE) {
 
-  # Initial data checks for first time raw data is passed to rcaaqs
-  data <- initial_check(data, dt = dt, val = val, by = by)
-  
   # Add flag placeholder
   data$flag_daily_incomplete <- NA
   
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       quarter_units = "days", 
                       pollutant_standard = get_std("so2_1yr"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet) 
   
@@ -271,18 +270,15 @@ so2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
 no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value", 
                                    by = NULL, exclude_df = NULL, 
                                    exclude_df_dt = NULL, 
-                                   quiet = FALSE) {
+                                   management = FALSE, quiet = FALSE) {
 
-  # Initial data checks for first time raw data is passed to rcaaqs
-  data <- initial_check(data, dt = dt, val = val, by = by)
- 
   # Add flag placeholder
   data$flag_daily_incomplete <- NA
    
   data <- yearly_stat(data, dt, val, by, mean_na, 
                       quarter_units = "days", 
                       pollutant_standard = get_std("no2_1yr"),
-                      exclude_df = exclude_df, 
+                      exclude_df = exclude_df, management = management,
                       exclude_df_dt = exclude_df_dt, 
                       quiet = quiet) 
   
@@ -313,25 +309,25 @@ no2_avg_hourly_by_year <- function(data, dt = "date_time", val = "value",
 #' Return the rank that should be used to determine the 98th percentile given a 
 #' number of valid days
 #' 
-#' Wraps \code{\link[stats]{quantile}} but with different defaults, adds another
-#' \code{type}, "caaqs", where the percentile (default 0.98) is calculated 
+#' Wraps [stats::quantile()] but with different defaults, adds another
+#' `type`, "caaqs", where the percentile (default 0.98) is calculated 
 #' according to the caaqs methods.
 #' 
 #' @param x numeric vector whose sample quantiles are wanted.
 #' @param probs numeric vector of probablities with values in \eqn{[0,1]}. 
-#'   Default \code{0.98}
-#' @param na.rm logical; if true, any \code{NA} and \code{NaN}'s are removed 
-#'   from \code{x} before the quantiles are computed. Default \code{FALSE}
+#'   Default `0.98`
+#' @param na.rm logical; if true, any `NA` and `NaN`'s are removed 
+#'   from `x` before the quantiles are computed. Default `FALSE`
 #' @param names logical; if true, the result has a names attribute. Set to FALSE
-#'   for speedup with many probs. Default \code{FALSE}
-#' @param type \code{"caaqs"} (default) or an integer between 1 and 9 selecting
+#'   for speedup with many probs. Default `FALSE`
+#' @param type `"caaqs"` (default) or an integer between 1 and 9 selecting
 #'   one of the nine base quantile algorithms be used. See
-#'   \code{\link[stats]{quantile}} for details
+#'   [stats::quantile()] for details
 #'   
-#' @return A vector of \code{length(probs)}; if \code{names = TRUE}, it has a
-#'   \code{names} attribute
+#' @return A vector of `length(probs)`; if `names = TRUE`, it has a
+#'   `names` attribute
 #'   
-#' @seealso \code{\link[stats]{quantile}}
+#' @seealso [stats::quantile()]
 #' 
 #' @noRd
 

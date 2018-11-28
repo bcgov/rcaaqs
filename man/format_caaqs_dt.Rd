@@ -30,12 +30,11 @@ manual.
 }
 \details{
 You can set the timezone that you are working with in two different
-  ways. You can set it globally with: \code{options("rcaaqs.timezone" =
-  "your_timezone")} or set it each time you call the function by setting the
-  \code{tz} argument to "your_timezone" where "your_timezone" is a valid 
-  timezone - see \code{\link{OlsonNames}}. The default (when
-  \code{options("rcaaqs.timezone")} is unset) is \code{"Etc/GMT+8"}, which is
-  equivalent to Pacific Standard Time, but does not use Daylight Savings 
-  (i.e., is GMT+8 all year). This is the standard for Air Quality Monitoring
-  in British Columbia.
+ways. You can set it globally with: \code{options("rcaaqs.timezone" = "your_timezone")} or set it each time you call the function by setting the
+\code{tz} argument to "your_timezone" where "your_timezone" is a valid
+timezone - see \code{\link[=OlsonNames]{OlsonNames()}}. The default (when
+\code{options("rcaaqs.timezone")} is unset) is \code{"Etc/GMT+8"}, which is
+equivalent to Pacific Standard Time, but does not use Daylight Savings
+(i.e., is GMT+8 all year). This is the standard for Air Quality Monitoring
+in British Columbia.
 }

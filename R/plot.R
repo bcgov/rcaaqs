@@ -13,29 +13,41 @@
 # the License.
 
 
-#' Plot daily time series data with exceedances
+#' Plot daily time series data with exceedances and optionally caaqs for a 
+#' particular station
 #'   
-#' @param daily_data a dataframe of daily aggregated air quality readings with 
-#'   columns: date, avg_24h (if pm25), max8hr (if o3)
-#' @param caaqs_data (optional) a one-row dataframe with columns "min_year", 
-#'   "max_year" and columns for caaqs achievement status and mangaement status
-#' @param parameter air pollutant ("o3", "pm2.5_annual", "pm2.5_24h")
+#' @param x an object of class `caaqs`
+#' @param id the id of the station you would like to plot
+#' @param id_col the column in which to look for `id`
 #' @param rep_yr The reporting year
 #' @param plot_exceedances logical. Should exceedances be plotted?
 #' @param base_size base font size for the plot
 #' @param annot_size size of annotations. Scaling of this size is not the same 
 #'   as the rest of the font sizes, so you will have to experiment. Defaults to 
 #'   0.32*base_size
+#' @param plot_caaqs Should the caaqs be plotted?
 #'   
 #' @return a ggplot2 object
-#' @noRd
-
-plot_ts <- function(daily_data, caaqs_data = NULL, parameter, 
-                    rep_yr, plot_exceedances = FALSE, base_size = 10, 
+#' @export
+plot_ts <- function(x, id = NULL, id_col = NULL, rep_yr, plot_caaqs = TRUE,
+                    plot_exceedances = FALSE, base_size = 10, 
                     annot_size = NULL) {
   
-  if (!"date" %in% names(daily_data)) stop("There is no 'date' column in daily_data")
-  if (!inherits(daily_data[["date"]], c("POSIXt", "Date"))) stop("'date' column is not a valid date type")
+  if (!inherits(x, "caaqs")) stop("x must be an object of class 'caaqs.", 
+                                  call. = FALSE)
+  
+  if (is.null(id) && !is.null(get_by(x))) {
+    stop("id and id_col required when more than one monitoring station is present")
+  }
+  
+  if (!is.null(id_col) && !id_col %in% get_by(x)) {
+    stop(id_col, " is not a column in the data", call. = FALSE)
+  }
+  
+  if (!is.null(id) && !id %in% unique(get_by_vals(x)[[id_col]])) {
+    stop(id, " is not a value in ", id_col, call. = FALSE)
+  }
+  
   if (is.null(annot_size)) {
     annot_size <- 0.32*base_size
   } else if (!is.numeric(annot_size)) {
@@ -48,13 +60,12 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
   caaqs_metric <- "metric_value"
   caaqs_status <- "caaqs"
   
+  parameter <- get_param(x)
+  
   if (parameter == "pm2.5_annual") {
     val <- "avg_24h"
     ylab <- bquote(atop('Daily Average ' ~PM[2.5],~ '(micrograms per cubic metre)'))
     param_name <- "Annual~PM[2.5]"
-    if (is.null(caaqs_data)) {
-      plot_std <- FALSE
-    }
     if (plot_exceedances) stop("Plotting daily exceedances not meaningful for this metric")
   } else if (parameter == "pm2.5_24h") {
     val <- "avg_24h"
@@ -65,20 +76,22 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
     param_name <- "Ozone"
     ylab <- "Daily Maximum Ozone\n(parts per billion)"
   } else {
-    stop(parameter, " is not a valid parameter name")
+    stop(parameter, " is currently not supported in plot_ts")
   }
   
-  if (!val %in% names(daily_data)) stop(val, " column is not present in daily_data")
-  if (!inherits(daily_data[[val]], "numeric")) stop(val, " is not numeric")
+  # Get daily data from caaqs object and subset to the station of interest
+  daily_data <- get_daily(x)
   
+  if (!is.null(id)) daily_data <- daily_data[daily_data[[id_col]] == id, ]
+
   std <- get_std(parameter)
   par_units <- plot_units(parameter)
   
   # daily_data <- daily_data[!is.na(daily_data[[val]]), , drop = FALSE]
   
   ## Fill in missing dates so that gaps in data are not connected
-  daily_data <- tidyr::complete(daily_data,
-                                date = tidyr::full_seq(.data$date, 1))
+  # daily_data <- tidyr::complete(daily_data,
+  #                               date = tidyr::full_seq(.data$date, 1))
   min_year <- rep_yr - 2
   maxdate <- as.Date(paste0(rep_yr, "-12-31"))
   mindate <- as.Date(paste0(min_year, "-01-01"))
@@ -105,8 +118,14 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
                  label = "Exceedances", hjust = 0, vjust = 0, colour = "#e41a1c", size = annot_size)
     }
   }
-  
-  if (!is.null(caaqs_data) && !nrow(caaqs_data) == 0) {
+
+  if (plot_caaqs) {
+    caaqs_data <- get_caaqs(x)
+    
+    if (!is.null(id)) caaqs_data <- caaqs_data[caaqs_data[[id_col]] == id, ]
+    
+    caaqs_data <- caaqs_data[caaqs_data[["caaqs_year"]] == rep_yr, ]
+
     stopifnot(nrow(caaqs_data) == 1)
     if (is.na(caaqs_data[[caaqs_metric]])) {
       warning("caaqs not added to plot: Insufficient Data")

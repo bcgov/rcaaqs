@@ -18,7 +18,6 @@ knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE
 )
-library(ggplot2)
 ```
 
 
@@ -27,7 +26,7 @@ The `rcaaqs` package strives to automate the calculation of CAAQS metrics outlin
 See the section ["Under the hood"](#under-the-hood) for a better idea of how `rcaaqs` performs the underlying calculations.
 
 
-## CAAQS metrics
+## CAAQS Metrics
 
 There are 7 CAAQS metrics for 4 different pollutants, in the `rcaaqs` package each has a corresponding function:
 
@@ -55,37 +54,57 @@ library(tidyr)
 library(rcaaqs)
 ```
 
-The `rcaaqs` package contains several sample data sets, let's take a look at the PM2.5 sample data:
+The `rcaaqs` package contains several sample data sets, let's take a look at the Ozone (O~3~) sample data:
 ```{r}
+#head(o3_sample_data)
 head(pm25_sample_data)
 ```
 
 
+## Data Preparation
+
 The `clean_neg()` and `date_fill()` are useful helper functions for ensuring all the pollutant values are positive or zero, and that you are starting with a complete dataframe (i.e. no missing hourly readings):
 ```{r}
-pm25_sample_data <- pm25_sample_data %>% 
+pm25_sample_data_clean <- pm25_sample_data %>% 
   mutate(value = clean_neg(value, type = "pm25"))
 
-pm25_sample_data <- pm25_sample_data %>% 
+pm25_sample_data_clean <- pm25_sample_data_clean %>% 
   group_by(ems_id, site) %>% 
   do(., date_fill(., date_col = "date_time",
                   fill_cols = c("ems_id", "site"),
                   interval = "1 hour")) %>% 
   ungroup()
 
-head(pm25_sample_data)
+head(pm25_sample_data_clean)
 ```
 
 
-Calculating a CAAQS metric is straightforward. Just make sure you include grouping variables (i.e. station information in our case here)
+## Calculate Ambient CAAQS Metric & CAAQS Achievement
+
+Calculating a CAAQS metric is done using one of the 7 the `caaqs_metrics` functions. Note you must include grouping variables (i.e. station information in our case here):
 ```{r}
-pm <- pm_annual_caaqs(pm25_sample_data, 
+pm <- pm_annual_caaqs(pm25_sample_data_clean, 
                      by = c("ems_id", "site"))
 pm
 ```
 
+The resulting object is of class `caaqs` plus an additional class denoting the 
+parameter analyzed:
 
-Besides the actual CAAQS metric values (`metric_value`), there are several important columns.
+```{r}
+class(pm)
+```
+
+The object contains all of the intermediate analysis results as well as the final caaqs results. 
+There are accessor/extractor functions to get the different components. See
+`?get_caaqs` for the different functions. We can get the caaqs results 
+using the `get_caaqs()` function:
+
+```{r}
+get_caaqs(pm)
+```
+
+Besides the actual CAAQS metric values (`metric_value`), there are several important columns in the caaqs results dataframe.
 
 **CAAQS details**
 
@@ -98,11 +117,6 @@ Besides the actual CAAQS metric values (`metric_value`), there are several impor
 - `metric` - The name of the metric calculated
 - `metric_value` - The actual CAAQS metric, calculated and rounded according to the documentation
 - `caaqs` - The 'achievement' level of the CAAQS metric
-- `mgmt` - The 'management' level of the CAAQS metric
-
-**Data Exclusion**
-
-- `excluded` - Whether any days were excluded due to Exceptional Events or Transboundary Flows (see below)
 
 **Data completeness**
 
@@ -113,22 +127,17 @@ Besides the actual CAAQS metric values (`metric_value`), there are several impor
 Note that in all cases values of `NA` indicate that flagging didn't apply to this metric (see CAAQS Documentation for more details)
 
 
-## Excluding dates based on Exceptional Events or Transboundary Flows
+## Calculate Management CAAQS Metric Values and Management Levels
 
-First let's take a look at the daily averages, to do this, we need to re-run our CAAQS analysis, but retain intermediate data:
+Prior to determining management levels, jurisdictions have the option of adjusting their air zone metric values to remove external influences over which jurisdictions have little or no control, such as those related to transboundary flows and exceptional events. These arrangements aim to ensure that jurisdictions are responsible for managing only the emissions sources they can control. 
 
-```{r}
-pm <- pm_annual_caaqs(pm25_sample_data, 
-                     by = c("ems_id", "site"),
-                     return_all = TRUE)
 
-pm
-```
+**Excluding Dates based on Exceptional Events or Transboundary Flows**
 
-To explore any of these sub-data sets individually you can unnest the data (using the `unnest()` function from the `tidyr` package):
+First let's take a look at the daily averages. To do this, we need to get the intermediate daily analysis from the CAAQS results useing the extractor functions:
 
 ```{r}
-pm_daily_avg <- unnest(pm, daily_avg)
+pm_daily_avg <- get_daily(pm)
 pm_daily_avg
 ```
 
@@ -137,6 +146,15 @@ ggplot(data = pm_daily_avg, aes(x = date, y = avg_24h)) +
   geom_line() +
   facet_wrap(~ site)
 ```
+
+We can also plot the time series with CAAQS results using the built-in `plot_ts`
+function, providing an id (and the column in which to look) of the station we 
+wish to plot:
+
+```{r}
+plot_ts(pm, id = "0310172", id_col = "ems_id", rep_yr = 2013)
+```
+
 
 Let's say, for illustration purposes, that all high values in the summer of 2012 were due to forest fires and we want to exclude them.
 
@@ -150,21 +168,25 @@ high_dates <- pm_daily_avg %>%
 high_dates
 ```
 
-Now we can pass this on to our caaqs function with the `exclude_df` argument, which specifies the data frame, and the `exclude_df_dt` which specifies the name of the column holding the dates.
+
+**Determine Air Quality Management System Management Levels**
+Now we can pass this excluded data on to the `caaqs_management()`function via the `exclude_df` 
+argument, which specifies the data frame, and the `exclude_df_dt` which 
+specifies the name of the column holding the dates.
 
 ```{r}
-pm_excl <- pm_annual_caaqs(pm25_sample_data, 
-                          by = c("ems_id", "site"),
-                          return_all = TRUE,
-                          exclude_df = high_dates,
-                          exclude_df_dt = "date")
-
-pm_excl_caaqs <- unnest(pm_excl, caaqs)
+pm_excl <- caaqs_management(pm, exclude_df = high_dates, exclude_df_dt = "date")
+pm_excl
+pm_excl_caaqs <- get_caaqs(pm_excl)
 pm_excl_caaqs
 ```
 
-Note that the `excluded` column now has some `TRUE` values, reflect the fact that some dates in that metric have been excluded. (Note that excluding data in this manner does not influence the evaluation of data completeness).
+Note that there are some new columns in the caaqs plus managament results data frame: 
 
+- `excluded` - Whether any days were excluded due to Exceptional Events or Transboundary Flows (see below). The `TRUE` 
+values reflect the fact that some dates in that metric have been excluded. (Note that excluding data in this manner does not influence the evaluation of data completeness).
+- `mgmt_metric_value` - The recalculated "management" CAAQS metric, calculated  and rounded with excluded days according to the documentation
+- `mgmt_level` - The 'management' level of the management CAAQS metric
 
 We can also define excluded dates with date ranges, but here we must specify both start and end column names:
 
@@ -175,13 +197,10 @@ high_dates <- data.frame(ems_id = "0310162",
                          end = as.Date(c("2012-06-25", "2012-08-14")))
 high_dates
 
-pm_excl <- pm_annual_caaqs(pm25_sample_data, 
-                          by = c("ems_id", "site"),
-                          return_all = TRUE,
-                          exclude_df = high_dates,
-                          exclude_df_dt = c("start", "end"))
+pm_excl <- caaqs_management(pm, exclude_df = high_dates,
+                            exclude_df_dt = c("start", "end"))
 
-pm_excl_caaqs <- unnest(pm_excl, caaqs)
+pm_excl_caaqs <- get_caaqs(pm_excl)
 pm_excl_caaqs
 ```
 
@@ -199,13 +218,20 @@ Each step from the documentation has a corresponding function (or functions) in 
 
 We can match our data to an airzone by using the `assign_airzones()` function but you must have the following:
 
-- A map file reflecting airzones, specifically a SpatialPolygonsDataFrame
+- A map file reflecting airzones, specifically an sf POLYGON (or MULTIPOLYGON) object
 - CAAQS data with latitude and longitude for each station/site
 
-For the following examples, we'll use our `pm` CAAQS data, but only for 2013
+For the following examples, we'll use our `pm` CAAQS data, but only for 2013. To 
+get the management levels, we must run `caaqs_management()` on the `caaqs` object, 
+even if we are not adding a data frame of dates to exclude.
+
 ```{r}
-pm_caaqs <- unnest(pm, caaqs) %>%
+pm <- caaqs_management(pm)
+pm
+
+pm_caaqs <- get_caaqs(pm) %>%
   filter(caaqs_year == 2013)
+pm_caaqs
 ```
 
 
@@ -214,9 +240,9 @@ We will get our map file from the [`bcmaps` package](https://github.com/bcgov/bc
 
 ```{r}
 library(bcmaps)
-az <- bcmaps::airzones(class = "sp")
+az <- bcmaps::airzones()
 class(az)
-az@data
+az
 ```
 
 For the purposes of this vignette, we'll get our stations coordinates from a 
@@ -227,12 +253,12 @@ from [the BC Data Catalogue](https://catalogue.data.gov.bc.ca/dataset/01867404-b
 stations_file <- system.file("air_stations_2018-11-07.csv", package = "rcaaqs")
 
 stations <- readr::read_csv(stations_file, na = "N/A") %>%  # Read csv file
-  rename_all(tolower) %>%                         # Rename columns to lower case
-  filter(ems_id %in% unique(pm$ems_id)) %>%       # Filter to ids in our pm data
-  select(ems_id, latitude, longitude) %>%         # Select only the important columns
-  mutate(latitude = as.numeric(latitude),         # Transform lat and lon to numeric
+  rename_all(tolower) %>%                                   # Rename columns to lower case
+  filter(ems_id %in% unique(pm_caaqs$ems_id)) %>%           # Filter to ids in our pm data
+  select(ems_id, latitude, longitude) %>%                   # Select only the important columns
+  mutate(latitude = as.numeric(latitude),                   # Transform lat and lon to numeric
          longitude = as.numeric(longitude)) %>%
-  distinct()                                      # Remove any duplicates
+  distinct()                                                # Remove any duplicates
 
 stations
 ```
@@ -247,7 +273,7 @@ pm_caaqs
 Now we have our airzones map and our station coordinates, we can match stations to airzones:
 
 ```{r}
-pm_az <- assign_airzone(pm_caaqs, airzones = az, coords = c("latitude", "longitude"))
+pm_az <- assign_airzone(pm_caaqs, airzones = az, coords = c("longitude", "latitude"))
 pm_az
 ```
 
@@ -260,35 +286,28 @@ pm_az2
 ## Mapping airzones
 
 
-```{r, fig.width = 8, fig.asp = 1.5, eval = require("maptools")}
-library(sp)
+```{r, fig.width = 8, fig.asp = 1.5}
+library(sf)
 library(gridExtra)
 
-az_plot <- spTransform(az, CRS("+proj=longlat"))
-az_plot <- fortify(az_plot, region = "Airzone") %>%
-  left_join(pm_az2, by = c("id" = "airzone"))
+az_plot <- st_transform(az, crs = "+proj=longlat") %>%
+  left_join(pm_az2, by = c("Airzone" = "airzone"))
 
-g1 <- ggplot(data = az_plot, aes(x = long, y = lat, group = group)) +
-  theme(legend.position = c(0.85, 0.85)) +
-  coord_map() +
-  geom_polygon(aes(fill = caaqs)) +
-  geom_path(colour = "black") +
-  geom_point(data = pm_az, shape = 21, colour = "black",
-             aes(x = lon, y = lat, fill = caaqs), 
-             inherit.aes = FALSE) +
+g1 <- ggplot() +
+  geom_sf(data = az_plot, aes(fill = ambient_caaqs)) +
+  geom_sf(data = st_as_sf(pm_az, coords = c("lon", "lat"), crs = "+proj=longlat"),
+          shape = 21, colour = "black", aes(fill = ambient_caaqs)) +
   scale_fill_manual(values = get_colours(type = "achievement"), drop = FALSE) +
-  labs(title = "Achievement Status: PM2.5 Annual CAAQS")
+  labs(title = "Achievement Status: PM2.5 Annual CAAQS") +
+  theme(legend.position = c(0.85, 0.85))
 
-g2 <- ggplot(data = az_plot, aes(x = long, y = lat, group = group)) +
-  theme(legend.position = c(0.85, 0.85)) +
-  coord_map() +
-  geom_polygon(aes(fill = mgmt)) +
-  geom_path(colour = "black") +
-  geom_point(data = pm_az, shape = 21, colour = "black",
-             aes(x = lon, y = lat, fill = mgmt), 
-             inherit.aes = FALSE) +
+g2 <- ggplot() +
+  geom_sf(data = az_plot, aes(fill = mgmt_level)) +
+  geom_sf(data = st_as_sf(pm_az, coords = c("lon", "lat"), crs = "+proj=longlat"),
+          shape = 21, colour = "black", aes(fill = mgmt_level)) +
   scale_fill_manual(values = get_colours(type = "management"), drop = FALSE) +
-  labs(title = "Management Status: PM2.5 Annual CAAQS")
+  labs(title = "Management Status: PM2.5 Annual CAAQS") + 
+  theme(legend.position = c(0.85, 0.85))
 
 grid.arrange(g1, g2, ncol = 1)
 ```

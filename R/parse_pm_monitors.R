@@ -14,8 +14,6 @@
 
 
 #' Parse multiple columns to extract a simplified PM2.5 monitor type from them.
-#'
-#' <full description>
 #' 
 #' @param ... Columns to parse, supplied in decreasing order of reliability
 #' 
