@@ -1,15 +1,12 @@
 Type: Package
 Package: rcaaqs
 Title: Tools to implement CAAQS analysis for air quality
-Version: 0.3.1
-Date: 2017-09-22
+Version: 0.3.1.9000
 Authors@R: 
     c(person(given = "Andy",
              family = "Teucher",
              role = c("aut", "cre"),
              email = "andy.teucher@gov.bc.ca"),
-      person(given = "Province of British Columbia",
-             role = "cph"),
       person(given = "Aman",
              family = "Verma",
              role = c("aut", "ctr"),
@@ -17,22 +14,28 @@ Authors@R:
       person(given = "Steffi",
              family = "LaZerte",
              role = c("aut", "ctr"),
-             email = "steffi@steffi.ca"))
+             email = "steffi@steffi.ca"), 
+      person(given = "Stephanie",
+             family = "Hazlitt",
+             role = c("aut", "ctr"),
+             email = "stephanie.hazlitt@gov.bc.ca"),
+      person(given = "Province of British Columbia",
+             role = "cph"))
 Description: Analyze air quality data according to Canadian
     Ambient Air Quality Standars (CAAQS) guidelines.
-License: file LICENSE
+License: Apache License (== 2.0) | file LICENSE
 URL: https://github.com/bcgov/rcaaqs
 BugReports: https://github.com/bcgov/rcaaqs/issues
 Depends:
     R (>= 3.3.0)
 Imports:
-    dplyr (>= 0.7.0),
-    ggplot2 (>= 2.2.0),
-    lubridate (>= 1.6.0),
-    purrr (>= 0.2.4),
-    rlang (>= 0.1.6),
-    scales (>= 0.4.0),
-    tidyr (>= 0.6.0)
+    dplyr (>= 0.7),
+    ggplot2 (>= 3.0),
+    lubridate (>= 1.7),
+    purrr (>= 0.2),
+    rlang (>= 0.3),
+    scales (>= 1.0),
+    tidyr (>= 0.8)
 Suggests:
     bcmaps,
     bcmaps.rdata,
@@ -41,7 +44,7 @@ Suggests:
     knitr,
     magrittr,
     readr,
-    rgdal (>= 1.2),
+    rgdal (>= 1.3),
     rmarkdown,
     sf (>= 0.7),
     testthat (>= 1.0.0)
@@ -52,4 +55,3 @@ LazyData: true
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
-
