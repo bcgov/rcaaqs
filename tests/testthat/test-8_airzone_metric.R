@@ -14,12 +14,19 @@ test_that("parsing valid years works with all n_years being 2", {
 
 test_that("airzone_metric works", {
   df <- data.frame(Airzone = sort(rep(LETTERS[1:4],4)), 
-                   nyears = c(rep(2, 4), rep(3, 4), c(2,3,2,3,2,3,2,3)), 
+                   nyears = c(rep(2, 4), rep(3, 4), c(2,3,2,3,2,3,2,3)),
+                   stationid = sort((LETTERS[1:16])),
                    value = c(1:4, 5:8, 12:9, 13:16), 
                    caaqs = achievement_levels$labels[1],
+                   excluded = (rep(FALSE, 16)),
+                   mgmt_value = c(1:4, 5:8, 12:9, 13:16),
                    mgmt = management_levels$labels[1])
-  res <- airzone_metric(df, n_years = "nyears", az = "Airzone", caaqs_val = "value")
-  expect_equal(dim(res), c(4, 5))
+                   
+  res <- airzone_metric(df, n_years = "nyears", az = "Airzone",
+                        ambient_metric_val = "value", ambient_caaqs = "caaqs",
+                        station_id = "stationid", mgmt = "mgmt",
+                        mgmt_metric_val = "mgmt_value", excluded = "excluded")
+  expect_equal(dim(res), c(4, 9))
   expect_equal(as.character(res$Airzone), LETTERS[1:4])
   expect_equal(res$nyears, c(2,3,2,3))
   expect_equal(res$value, c(4,8,12,16))
