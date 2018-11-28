@@ -15,7 +15,10 @@
 
 #' Calculate the airzone metric
 #'
-#' <full description>
+#' Calculate the metrics for each airzone based on station-level results. 
+#' Determines the CAAQS achievement levels and CAAQS management levels for each
+#' airzone and reports on the representative stations for these metrics in each 
+#' airzone.
 #' 
 #' @param data The dataframe
 #' @param n_years The column containing the number of years each 3yr avg is

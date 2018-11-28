@@ -46,5 +46,8 @@ logical vector indicating if ambient data was excluded for management calculatio
 management CAAQS metric value, CAAQS management levels, and management reporting station id.
 }
 \description{
-<full description>
+Calculate the metrics for each airzone based on station-level results.
+Determines the CAAQS achievement levels and CAAQS management levels for each
+airzone and reports on the representative stations for these metrics in each
+airzone.
 }
