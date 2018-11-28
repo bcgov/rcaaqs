@@ -33,35 +33,60 @@ test_that("airzone_metric works", {
 })
 
 test_that("keep arg works", {
-  df <- data.frame(site_id = letters[1:16], Airzone = sort(rep(LETTERS[1:4],4)), 
+  df <- data.frame(city = letters[1:16],
+                   stationid = sort((LETTERS[1:16])),
+                   Airzone = sort(rep(LETTERS[1:4],4)), 
                    nyears = c(rep(2, 4), rep(3, 4), c(2,3,2,3,2,3,2,3)), 
                    value = c(1:4, 5:8, 12:9, 13:16),
                    caaqs = achievement_levels$labels[1],
+                   excluded = (rep(FALSE, 16)),
+                   mgmt_value = c(1:4, 5:8, 12:9, 13:16),
                    mgmt = management_levels$labels[1],
                    otherdata = rep(c("foo", "bar"), 8), stringsAsFactors = FALSE)
-  res <- airzone_metric(df, n_years = "nyears", az = "Airzone", 
-                        caaqs_val = "value",
-                        keep = c("site_id", "otherdata"))
-  expect_equal(dim(res), c(4, 7))
+  res <- airzone_metric(df,  station_id = "stationid", n_years = "nyears",
+                        az = "Airzone", ambient_metric_val = "value",
+                        ambient_caaqs = "caaqs",
+                        mgmt = "mgmt", mgmt_metric_val = "mgmt_value",
+                        excluded = "excluded", keep = c("city", "otherdata"))
+  expect_equal(dim(res), c(4, 11))
   expect_equal(res$Airzone, LETTERS[1:4])
   expect_equal(res$nyears, c(2,3,2,3))
   expect_equal(res$value, c(4,8,12,16))
-  expect_equal(res$site_id, c("d", "h", "i", "p"))
+  expect_equal(res$city, c("d", "h", "i", "p"))
 })
 
 test_that("renaming keep cols works", {
-  df <- data.frame(site_id = letters[1:16], Airzone = sort(rep(LETTERS[1:4],4)), 
+  df <- data.frame(city = letters[1:16],
+                   stationid = sort((LETTERS[1:16])),
+                   Airzone = sort(rep(LETTERS[1:4],4)), 
                    nyears = c(rep(2, 4), rep(3, 4), c(2,3,2,3,2,3,2,3)), 
-                   value = c(1:4, 5:8, 12:9, 13:16), 
+                   value = c(1:4, 5:8, 12:9, 13:16),
                    caaqs = achievement_levels$labels[1],
+                   excluded = (rep(FALSE, 16)),
+                   mgmt_value = c(1:4, 5:8, 12:9, 13:16),
                    mgmt = management_levels$labels[1],
                    otherdata = rep(c("foo", "bar"), 8), stringsAsFactors = FALSE)
-  res <- airzone_metric(df, n_years = "nyears", az = "Airzone", caaqs_val = "value",
-                        keep = c(rep_site = "site_id", foobar = "otherdata"))
-  expect_equal(names(res), c("Airzone", "nyears", "value", "caaqs", "mgmt", "rep_site", "foobar"))
-  res <- airzone_metric(df, n_years = "nyears", az = "Airzone", caaqs_val = "value",
-                        keep = c(rep_site = "site_id", "otherdata", yearssss = "nyears"))
-  expect_equal(names(res), c("Airzone", "yearssss", "value", "caaqs", "mgmt", "rep_site", "otherdata"))
+  res <- airzone_metric(df, station_id = "stationid", n_years = "nyears",
+                        az = "Airzone", ambient_metric_val = "value",
+                        ambient_caaqs = "caaqs",
+                        mgmt = "mgmt", mgmt_metric_val = "mgmt_value",
+                        excluded = "excluded", 
+                        keep = c(rep_city = "city", foobar = "otherdata"))
+  expect_equal(names(res), c("Airzone", "nyears", "value", "caaqs",
+                             "ambient_rep_stn_id", "rep_city", "foobar",
+                             "excluded", "mgmt_value", "mgmt",
+                              "mgmt_rep_stn_id"))
+  
+  res <- airzone_metric(df, station_id = "stationid", n_years = "nyears",
+                        az = "Airzone", ambient_metric_val = "value",
+                        ambient_caaqs = "caaqs",
+                        mgmt = "mgmt", mgmt_metric_val = "mgmt_value",
+                        excluded = "excluded",
+                        keep = c(rep_city = "city", "otherdata", yearssss = "nyears"))
+  expect_equal(names(res), c("Airzone", "yearssss", "value", "caaqs",
+                             "ambient_rep_stn_id", "rep_city", "otherdata",
+                             "excluded", "mgmt_value", "mgmt",
+                             "mgmt_rep_stn_id"))
 })
 
 test_that("assign_airzone catches incorrect input", {
