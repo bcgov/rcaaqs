@@ -18,6 +18,7 @@ test_that("classes and extractors for o3 3yr", {
   expect_is(get_daily(o3_caaqs_one),"data.frame")
   expect_is(get_yearly(o3_caaqs_one), "data.frame")
   expect_is(get_three_yr_rolling(o3_caaqs_one), "data.frame")
+  saveRDS(o3_caaqs_one, "o3_caaqs1.rds")
 })
 
 test_that("o3_3yr_caaqs single", {
