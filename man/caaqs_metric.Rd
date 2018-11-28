@@ -99,12 +99,6 @@ pm
 
 get_caaqs(pm)
 
-# Extract intermediate objects:
-
-get_daily(pm)
-get_yearly(pm)
-get_three_yr_rolling(pm)
-
 }
 \references{
 CCME Guidance document on achievement determination Canadian

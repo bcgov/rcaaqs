@@ -48,8 +48,8 @@ Varies according to the function and the parameter being analyzed:
 \item pm2.5_annual: Annual average of daily averages
 \item o3: Annual 4th highest daily maximum
 \item so2_1yr, no2_1yr: Annual average of hourly values
-\item so2_3yr: Annual 99th percentile or daily maximums
-\item no2_3yr: Annual 98th percentile or daily maximums
+\item so2_3yr: Annual 99th percentile of daily maximums
+\item no2_3yr: Annual 98th percentile of daily maximums
 }
 
 \code{get_three_yr_rolling()}
@@ -61,4 +61,16 @@ yearly value.
 }
 \description{
 Extract results from a caaqs analysis
+}
+\examples{
+pm <- pm_24h_caaqs(pm25_sample_data, by = c("ems_id", "site"))
+
+get_caaqs(pm)
+
+# Extract intermediate objects:
+
+get_daily(pm)
+get_yearly(pm)
+get_three_yr_rolling(pm)
+
 }

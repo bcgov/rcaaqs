@@ -56,4 +56,7 @@ high_dates <- data.frame(ems_id = "0310162",
 pm_ex <- caaqs_management(pm, exclude_df = high_dates, exclude_df_dt = "date")
 
 pm_ex
+
+get_caaqs(pm_ex)
+
 }

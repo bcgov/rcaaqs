@@ -85,13 +85,24 @@ print_summary <- function(x, ...) {
 #' - pm2.5_annual: Annual average of daily averages
 #' - o3: Annual 4th highest daily maximum
 #' - so2_1yr, no2_1yr: Annual average of hourly values
-#' - so2_3yr: Annual 99th percentile or daily maximums
-#' - no2_3yr: Annual 98th percentile or daily maximums
+#' - so2_3yr: Annual 99th percentile of daily maximums
+#' - no2_3yr: Annual 98th percentile of daily maximums
 #' 
 #' `get_three_yr_rolling()`
 #'  - pm2.5_24h, pm2.5_annual, o3, so2_3yr, no2_3yr: Three-year rolling average of the 
 #'  yearly value.
 #'  - so2_1yr, no2_1yr: None
+#'  
+#' @examples 
+#' pm <- pm_24h_caaqs(pm25_sample_data, by = c("ems_id", "site"))
+#' 
+#' get_caaqs(pm)
+#' 
+#' # Extract intermediate objects:
+#' 
+#' get_daily(pm)
+#' get_yearly(pm)
+#' get_three_yr_rolling(pm)
 #' 
 #' @name get_caaqs
 NULL

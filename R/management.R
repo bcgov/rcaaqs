@@ -43,7 +43,6 @@ get_eetf <- function(x) {
 #'   ranges (see examples and vignette for more details).
 #'
 #' @return object of class `caaqs`
-#' @export
 #'
 #' @examples
 #' 
@@ -62,6 +61,10 @@ get_eetf <- function(x) {
 #' pm_ex <- caaqs_management(pm, exclude_df = high_dates, exclude_df_dt = "date")
 #' 
 #' pm_ex
+#' 
+#' get_caaqs(pm_ex)
+#' 
+#' @export
 caaqs_management <- function(x, exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE) {
   UseMethod("caaqs_management")
 }
