@@ -1,3 +1,5 @@
+^Meta$
+^doc$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^Makefile$
@@ -9,3 +11,4 @@ CONTRIBUTING.md
 ^README-.*\.png$
 CODE_OF_CONDUCT.md
 ^Code-with-Us_Terms_EnvReportBC.pdf$
+^scratch$

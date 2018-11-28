@@ -8,6 +8,6 @@ These functions have been removed from rcaaqs.
 }
 \details{
 \itemize{
- \item \code{\link{format_date}}: This function is defunct. Use \code{\link{format_caaqs_dt}} instead.
+\item \code{\link[=format_date]{format_date()}}: This function is defunct. Use \code{\link[=format_caaqs_dt]{format_caaqs_dt()}} instead.
 }
 }

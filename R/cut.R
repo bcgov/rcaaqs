@@ -1,31 +1,33 @@
 # Copyright 2015 Province of British Columbia
 # 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at
 # 
 # http://www.apache.org/licenses/LICENSE-2.0
 # 
-# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and limitations under the License.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
 
 #'Bin a vector of air quaility readings into CAAQS management levels
 #'
 #'Can be used for Ozone, PM2.5 (24h or annual)
 #'@param x vector of air quality readings (pollutant concentrations)
-#'@param  parameter What is the parameter? Must be one of: \code{"o3",
-#'  "pm2.5_annual", "pm2.5_24h"}
-#'@param  output should the function output labels (\code{"labels"}; default or
-#'  break values in unicode (\code{"breaks_u"}) or break values in html
-#'  (\code{"breaks_h"}), or colour values (\code{"colour"} or \code{"color"})?
+#'@param  parameter What is the parameter? Must be one of: `"o3",
+#'  "pm2.5_annual", "pm2.5_24h"`
+#'@param  output should the function output labels (`"labels"`; default or
+#'  break values in unicode (`"breaks_u"`) or break values in html
+#'  (`"breaks_h"`), or colour values (`"colour"` or `"color"`)?
 #'@param  drop_na Should NA values be dropped, or retained as factor level
 #'  "Insufficient Data" (default)?
-#'@export
+#'@noRd
 #'@return factor
 
 cut_management <- function(x, parameter, output = "labels", drop_na = FALSE) {
-  cut_caaq(type = "management", x = x, parameter = parameter, output = output, 
+  cut_caaqs(type = "management", x = x, parameter = parameter, output = output, 
            drop_na = drop_na)
 }
 
@@ -33,23 +35,23 @@ cut_management <- function(x, parameter, output = "labels", drop_na = FALSE) {
 #'
 #'Can be used for Ozone, PM2.5 (24h or annual)
 #'@param x vector of air quality readings (pollutant concentrations)
-#'@param  parameter What is the parameter? Must be one of: \code{"o3",
-#'  "pm2.5_annual", "pm2.5_24h"}
-#'@param  output should the function output labels (\code{"labels"}; default or
-#'  break values in unicode (\code{"breaks_u"}) or break values in html
-#'  (\code{"breaks_h"}), or colour values (\code{"colour"} or \code{"color"})?
+#'@param  parameter What is the parameter? Must be one of: `"o3",
+#'  "pm2.5_annual", "pm2.5_24h"`
+#'@param  output should the function output labels (`"labels"`; default or
+#'  break values in unicode (`"breaks_u"`) or break values in html
+#'  (`"breaks_h"`), or colour values (`"colour"` or `"color"`)?
 #'@param  drop_na Should NA values be dropped, or retained as factor level
 #'  "Insufficient Data" (default)?
-#'@export
+#'@noRd
 #'@return factor
 
 cut_achievement <- function(x, parameter, output = "labels", drop_na = FALSE) {
-  cut_caaq(type = "achievement", x = x, parameter = parameter, output = output, 
+  cut_caaqs(type = "achievement", x = x, parameter = parameter, output = output, 
            drop_na = drop_na)
 }
 
 #' @keywords internal
-cut_caaq <- function(type, x, parameter, output, drop_na) {
+cut_caaqs <- function(type, x, parameter, output, drop_na) {
   levels <- get_levels(type, parameter)
 
   breaks <- c(levels$lower_breaks, Inf)
@@ -68,22 +70,26 @@ cut_caaq <- function(type, x, parameter, output, drop_na) {
       ordered_result = TRUE)
 }
 
-#'Return CAAQS levels for any or all, parameters, for either achievement or
-#'management reporting
+#' Return CAAQS levels for any or all, parameters, for either achievement or 
+#' management reporting
 #'
-#'@param type one of "achievement", "management"
-#'@param parameter one of "all" (default), "o3", "PM2.5_annual", "PM2.5_24h"
-#'@export
-#'@return A data frame
+#' @param type one of "achievement", "management"
+#' @param parameter one of "all" (default), "o3", "PM2.5_annual", "PM2.5_24h"
+#' 
+#' @return A data frame
+#' 
 #' @examples \dontrun{
-#' get_levels("o3") 
-#'}
+#'  get_levels("o3") 
+#' }
+#' 
+#' @noRd
+
 get_levels <- function(type, parameter = "all") {
   
   if (type == "achievement") {
-    levels <- achievement_levels
+    levels <- rcaaqs::achievement_levels
   } else if (type == "management") {
-    levels <- management_levels
+    levels <- rcaaqs::management_levels
   } else {
     stop("type must be one of achievement or management")
   }
@@ -100,10 +106,14 @@ get_levels <- function(type, parameter = "all") {
 
 #' Get labels
 #'
-#' @param x dataframe - a subset of achievement_levels or caaqs_levels
-#' @param output one of: "labels", "breaks_h", "breaks_u", "colour", "color"
+#' @param x Data frame. A subset of achievement_levels or caaqs_levels
+#' @param output Character. One of: "labels", "breaks_h", "breaks_u", "colour",
+#'   "color"
 #' @keywords internal
 #' @return character vector
+#' 
+#' @noRd
+
 get_labels <- function(x, output, drop_na) {
   
   if (!output %in% c("labels", "breaks_h", "breaks_u", "colour", "color")) {
@@ -126,7 +136,9 @@ get_labels <- function(x, output, drop_na) {
   
   if (!drop_na) {
     if (output %in% c("colour", "color")) {
-      labels <- c("#CCCCCC", labels)
+      #labels <- c("#E8D3D3", labels) #pale grey-pink
+      #labels <- c("#0900FF", labels) #blue
+      labels <- c("grey80", labels) #current use
     } else {
       labels <- c("Insufficient Data", labels)
     }
@@ -135,13 +147,15 @@ get_labels <- function(x, output, drop_na) {
   labels
 }
 
-#' get the CAAQS value for a given parameter
+#' Get the CAAQS value for a given parameter
 #'
 #' @param parameter parameter of interest. One or more of 
 #'
 #' @return a named vector of standards
 #' @keywords internal
-#'
+#' 
+#' @noRd
+
 get_std <- function(parameter = "all") {
   levels <- get_levels("achievement", parameter = parameter)
   stds <- levels[levels$labels == "Not Achieved", "lower_breaks", drop = TRUE]
@@ -156,6 +170,8 @@ get_std <- function(parameter = "all") {
 #' @return a named vector of units
 #' @keywords internal
 #'
+#' @noRd
+
 get_units <- function(parameter = "all") {
   levels <- get_levels("achievement", parameter = parameter)
   units_df <- unique(levels[c("parameter", "units_unicode")])
@@ -167,11 +183,12 @@ get_units <- function(parameter = "all") {
 #' Get a vector of colours for management levels or achievement levels
 #' 
 #' @param type "achievement" or "management"
-#' @param drop_na Should NA (i.e., Insufficient Data) be excluded (\code{TRUE})
-#'   or includeded \code{FALSE} (the default)?
+#' @param drop_na Should NA (i.e., Insufficient Data) be excluded (`TRUE`) 
+#'   or includeded `FALSE` (the default)?
 #'   
 #' @return named vector of colours (hex)
 #' @export
+
 get_colours <- function(type = "management", drop_na = FALSE) {
   if (!type %in% c("management", "achievement")) 
     stop("type must be 'achievement' or 'management'")

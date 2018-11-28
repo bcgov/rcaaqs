@@ -4,8 +4,8 @@
 \alias{plot_station_instruments}
 \title{Plot date ranges at which different instruments were deployed at each station}
 \usage{
-plot_station_instruments(data, dt = "date_time", station = "station_name",
-  instrument = "instrument")
+plot_station_instruments(data, dt = "date_time",
+  station = "station_name", instrument = "instrument")
 }
 \arguments{
 \item{data}{data frame}

@@ -4,13 +4,13 @@
 \alias{date_fill}
 \title{Fill gaps in a date sequence}
 \usage{
-date_fill(df, date_col, interval = NULL, fill_cols = NULL,
+date_fill(data, date_col, interval = NULL, fill_cols = NULL,
   add_ymd = FALSE)
 }
 \arguments{
-\item{df}{Dataframe}
+\item{data}{Dataframe}
 
-\item{date_col}{the column containing dates}
+\item{date_col}{The column containing dates}
 
 \item{interval}{The interval in the date sequence. If \code{NULL}, calculated
 automatically.}
@@ -21,8 +21,11 @@ columns where value is same in every row, such as an ID.)}
 \item{add_ymd}{logical. Should the date be split into year, month, and day
 columns and added to the output?}
 }
+\value{
+Dataframe with filled in dates
+}
 \description{
-Given a dataframe with one column as a date sequence, fill gaps in the dat
+Given a dataframe with one column as a date sequence, fill gaps in the date
 sequence.
 }
 \examples{
@@ -32,4 +35,5 @@ foo <- data.frame(Date = seq(as.Date("2008-01-01"), as.Date("2008-12-01"), by = 
 bar <- foo[-c(2,5,6,7,10),]
 date_fill(bar, "Date", interval = "1 month", fill_cols = "label")
 }
+
 }

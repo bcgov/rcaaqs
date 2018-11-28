@@ -1,41 +1,53 @@
 # Copyright 2015 Province of British Columbia
 # 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at
 # 
 # http://www.apache.org/licenses/LICENSE-2.0
 # 
-# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and limitations under the License.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
 
-#' Plot daily time series data with exceedances
-#' 
-#' @import ggplot2
-#' @importFrom scales date_format
-#' @importFrom tidyr complete_
+
+#' Plot daily time series data with exceedances and optionally caaqs for a 
+#' particular station
 #'   
-#' @param daily_data a dataframe of daily aggregated air quality readings with 
-#'   columns: date, avg_24h (if pm25), max8hr (if o3)
-#' @param caaqs_data (optional) a one-row dataframe with columns "min_year", 
-#'   "max_year" and columns for caaqs achievement status and mangaement status
-#' @param parameter air pollutant ("o3", "pm2.5_annual", "pm2.5_24h")
+#' @param x an object of class `caaqs`
+#' @param id the id of the station you would like to plot
+#' @param id_col the column in which to look for `id`
 #' @param rep_yr The reporting year
 #' @param plot_exceedances logical. Should exceedances be plotted?
 #' @param base_size base font size for the plot
-#' @param annot_size size of annotations. Scaling of this size is not the same
-#'   as the rest of the font sizes, so you will have to experiment. Defaults to
+#' @param annot_size size of annotations. Scaling of this size is not the same 
+#'   as the rest of the font sizes, so you will have to experiment. Defaults to 
 #'   0.32*base_size
+#' @param plot_caaqs Should the caaqs be plotted?
 #'   
 #' @return a ggplot2 object
 #' @export
-plot_ts <- function(daily_data, caaqs_data = NULL, parameter, 
-                    rep_yr, plot_exceedances = FALSE, base_size = 10, 
+plot_ts <- function(x, id = NULL, id_col = NULL, rep_yr, plot_caaqs = TRUE,
+                    plot_exceedances = FALSE, base_size = 10, 
                     annot_size = NULL) {
   
-  if (!"date" %in% names(daily_data)) stop("There is no 'date' column in daily_data")
-  if (!inherits(daily_data[["date"]], c("POSIXt", "Date"))) stop("'date' column is not a valid date type")
+  if (!inherits(x, "caaqs")) stop("x must be an object of class 'caaqs.", 
+                                  call. = FALSE)
+  
+  if (is.null(id) && !is.null(get_by(x))) {
+    stop("id and id_col required when more than one monitoring station is present")
+  }
+  
+  if (!is.null(id_col) && !id_col %in% get_by(x)) {
+    stop(id_col, " is not a column in the data", call. = FALSE)
+  }
+  
+  if (!is.null(id) && !id %in% unique(get_by_vals(x)[[id_col]])) {
+    stop(id, " is not a value in ", id_col, call. = FALSE)
+  }
+  
   if (is.null(annot_size)) {
     annot_size <- 0.32*base_size
   } else if (!is.numeric(annot_size)) {
@@ -45,16 +57,15 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
   line_col <- "#9ecae1"
   plot_std <- TRUE
   draw_caaqs <- FALSE
-  caaq_metric <- "metric_value"
-  caaq_status <- "caaqs"
+  caaqs_metric <- "metric_value"
+  caaqs_status <- "caaqs"
+  
+  parameter <- get_param(x)
   
   if (parameter == "pm2.5_annual") {
     val <- "avg_24h"
     ylab <- bquote(atop('Daily Average ' ~PM[2.5],~ '(micrograms per cubic metre)'))
     param_name <- "Annual~PM[2.5]"
-    if (is.null(caaqs_data)) {
-      plot_std <- FALSE
-    }
     if (plot_exceedances) stop("Plotting daily exceedances not meaningful for this metric")
   } else if (parameter == "pm2.5_24h") {
     val <- "avg_24h"
@@ -65,22 +76,22 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
     param_name <- "Ozone"
     ylab <- "Daily Maximum Ozone\n(parts per billion)"
   } else {
-    stop(parameter, " is not a valid parameter name")
+    stop(parameter, " is currently not supported in plot_ts")
   }
   
-  if (!val %in% names(daily_data)) stop(val, " column is not present in daily_data")
-  if (!inherits(daily_data[[val]], "numeric")) stop(val, " is not numeric")
+  # Get daily data from caaqs object and subset to the station of interest
+  daily_data <- get_daily(x)
   
+  if (!is.null(id)) daily_data <- daily_data[daily_data[[id_col]] == id, ]
+
   std <- get_std(parameter)
   par_units <- plot_units(parameter)
   
   # daily_data <- daily_data[!is.na(daily_data[[val]]), , drop = FALSE]
   
   ## Fill in missing dates so that gaps in data are not connected
-  daily_data <- tidyr::complete_(
-    daily_data, cols = list(date = lazyeval::interp(~full_seq(y, 1), y = as.name("date")))
-  )
-  
+  # daily_data <- tidyr::complete(daily_data,
+  #                               date = tidyr::full_seq(.data$date, 1))
   min_year <- rep_yr - 2
   maxdate <- as.Date(paste0(rep_yr, "-12-31"))
   mindate <- as.Date(paste0(min_year, "-01-01"))
@@ -107,10 +118,16 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
                  label = "Exceedances", hjust = 0, vjust = 0, colour = "#e41a1c", size = annot_size)
     }
   }
-  
-  if (!is.null(caaqs_data) && !nrow(caaqs_data) == 0) {
+
+  if (plot_caaqs) {
+    caaqs_data <- get_caaqs(x)
+    
+    if (!is.null(id)) caaqs_data <- caaqs_data[caaqs_data[[id_col]] == id, ]
+    
+    caaqs_data <- caaqs_data[caaqs_data[["caaqs_year"]] == rep_yr, ]
+
     stopifnot(nrow(caaqs_data) == 1)
-    if (is.na(caaqs_data[[caaq_metric]])) {
+    if (is.na(caaqs_data[[caaqs_metric]])) {
       warning("caaqs not added to plot: Insufficient Data")
     } else {
       draw_caaqs <- TRUE
@@ -121,21 +138,21 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
       
       label_pos_x <- mean(c(mindate, maxdate))
       # Put y label at higher of 98th percentile of data, or caaqs_data + 5
-      high_val_in_min_year <- quantile(daily_data[[val]][daily_data$date < label_pos_x], 0.98, na.rm = TRUE)
-      label_pos_y <- max(high_val_in_min_year + 2, caaqs_data[[caaq_metric]] + 5)
+      high_val_in_min_year <- stats::quantile(daily_data[[val]][daily_data$date < label_pos_x], 0.98, na.rm = TRUE)
+      label_pos_y <- max(high_val_in_min_year + 2, caaqs_data[[caaqs_metric]] + 5)
       seg_x <- label_pos_x + 5
       seg_xend <- seg_x + 50
       
       p <- p + geom_segment(data = caaqs_data, 
                             mapping = aes_string(x = "b_date", xend = "e_date", 
-                                                 y = caaq_metric, yend = caaq_metric, 
-                                                 colour = caaq_status), size = 1.5)
+                                                 y = caaqs_metric, yend = caaqs_metric, 
+                                                 colour = caaqs_status), size = 1.5)
       p <- p + annotate("text", x = label_pos_x, y = label_pos_y, 
                         label = paste0(min_year, "-", max_year, "~", param_name, "~Metric"), 
                         parse = TRUE,
                         size = annot_size, hjust = 1, colour = "grey45")
       p <- p + geom_segment(data = caaqs_data, colour = "grey45", x = as.numeric(seg_x), y = label_pos_y, 
-                            xend = as.numeric(seg_xend), yend = caaqs_data[[caaq_metric]])
+                            xend = as.numeric(seg_xend), yend = caaqs_data[[caaqs_metric]])
       p <- p + scale_colour_manual(values = c("Achieved" = "#377eb8", "Not Achieved" = "#e41a1c"), 
                                    labels = expression(paste0(min_year, "-", max_year, "~", param_name, "~Metric")), 
                                    name = element_blank(), guide = "none")
@@ -146,7 +163,7 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
     p <- p + geom_hline(aes_string(yintercept = std), linetype = 2, colour = "#e41a1c")
     # Set y label position dependent on if and where caaqs line is drawn
     if (draw_caaqs) {
-      if (caaqs_data[[caaq_metric]][1] < std || caaqs_data[[caaq_metric]][1] - std > 5) {
+      if (caaqs_data[[caaqs_metric]][1] < std || caaqs_data[[caaqs_metric]][1] - std > 5) {
         label_pos_y <- std + (base_size / 2)
       } else {
         label_pos_y <- std - (base_size / 10)
@@ -168,10 +185,12 @@ plot_ts <- function(daily_data, caaqs_data = NULL, parameter,
 
 #' Move annual breaks to the midpoint of the year
 #' 
-#' @importFrom scales fullseq
 #' @param width The desired interval of the breaks
 #'
 #' @return a function
+#' 
+#' @noRd
+
 mid_breaks <- function(width = "1 year") {
   function(x) {
     if (length(x) > 2) stop("x should be a range of length 2")
@@ -181,7 +200,7 @@ mid_breaks <- function(width = "1 year") {
   }
 }
 
-#' Gnerate a summary plot of individual station CAAQS values, grouped by Airzone
+#' Generate a summary plot of individual station CAAQS values, grouped by Airzone
 #' 
 #' @param data a data frame with columns for the metric value, the station name,
 #'   and the air zone
@@ -197,7 +216,7 @@ mid_breaks <- function(width = "1 year") {
 #' @import ggplot2
 #'   
 #' @return ggplot2 object
-#' @export
+#' @noRd
 #' 
 summary_plot <- function(data, metric_val, station, airzone, parameter, 
                          base_size = 12, pt_size = 4, ...) {
@@ -221,12 +240,12 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
   ## Conver to a call object for use in bquote
   units <- parse(text = units)[[1]]
 
-  data[[airzone]] <- reorder(data[[airzone]], data[[metric_val]], max, order = TRUE)
+  data[[airzone]] <- stats::reorder(data[[airzone]], data[[metric_val]], max, order = TRUE)
   data[[airzone]] <- factor(data[[airzone]], levels = rev(levels(data[[airzone]])))
   
   order_metric <- data[[parameter]][which.max(data[[metric_val]])]
   order_data <- data[data[["metric"]] == order_metric, c(metric_val, station)]
-  stn_levels <- order_data[[station]][order(order_data[[metric_val]])]
+  stn_levels <- unique(order_data[[station]][order(order_data[[metric_val]])])
   data[[station]] <- factor(data[[station]], levels = stn_levels)
   
   p <- ggplot(data, aes_string(x = metric_val, y = station))
@@ -273,7 +292,6 @@ achievement_plot <- function(data, parameter = NULL) {
 
 #' Plot date ranges at which different instruments were deployed at each station
 #'
-#' @importFrom utils packageVersion
 #' @param data data frame
 #' @param dt a date or date/time column in data
 #' @param station column in data containing station names or ids
@@ -282,16 +300,17 @@ achievement_plot <- function(data, parameter = NULL) {
 #' @return a ggplot2 opbject
 #' @export
 plot_station_instruments <- function(data, dt = "date_time", station = "station_name", instrument = "instrument") {
-  ## This uses the new tidyevl/rlang framework:
-  if (!packageVersion("dplyr") >= "0.7.0") stop("You need to install dplyr 0.7.0 or higher")
-  # browser()
+  
+  check_vars(vars = list(dt, station, instrument), data)
+  check_one(dt, station, instrument)
+  
   data$date <- as.Date(data[[dt]])
   
   ## conversation here discussing quosing strings: https://github.com/tidyverse/rlang/issues/116
-  data <- group_by(data, date, !! as.name(station), !! as.name(instrument)) %>% 
-    summarise()
+  data <- dplyr::group_by(data, date, !!rlang::sym(station), !!rlang::sym(instrument))
+  data <- dplyr::summarize(data)
   
-  ggplot(data, aes_(x = as.name("date"), y = as.name(instrument), colour = as.name(instrument))) + 
+  ggplot(data, aes_string(x = "date", y = instrument, colour = instrument)) + 
     facet_wrap("station_name", scales = "free_y", ncol = 1, strip.position = "left") +
     geom_line(size = 1) + 
     labs(y = station) +

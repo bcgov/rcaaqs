@@ -1,0 +1,378 @@
+SERIAL_CODE,EMS_ID,STATION_NAME,LOCATION,CITY,CATEGORY,STATION_ENVIRONMENT,STATION_OWNER,DATE_ESTABLISHED,NOTES,LATITUDE,LONGITUDE,HEIGHT(m),STATUS
+428,E289309,Abbotsford A Columbia Street,N/A,Abbotsford,METRO VANCOUVER,N/A,MVRD,7/25/2012,GVRD T045,49.0215,-122.3266,65,1
+429,E289309,Abbotsford A Columbia Street Met,N/A,Abbotsford,METRO VANCOUVER,N/A,MVRD,7/25/2012 6:28:41 AM,GVRD T045,49.0215,-122.3266,65,1
+306,0310081,Abbotsford Airport,2nd Avenue,Abbotsford,NON OPERATIONAL,Commercial,MVRD,1/7/1978,GVRD T011;Closed 1994-04-28,49.0306,-122.3761,40,0
+262,E246240,Abbotsford Airport Walmsley Road,31790 Walmsley Road,Aldergrove,METRO VANCOUVER NON OPERATIONAL,Commercial,MVRD,5/1/2001,GVRD T034,49.0235,-122.3430,65,0
+261,E238212,Abbotsford Central,32995 Bevan Avenue,Abbotsford,METRO VANCOUVER,Residential,MVRD,9/17/1998,GVRD T033,49.0428,-122.3097,80,1
+307,E217029,Abbotsford Downtown,South Fraser Highway,Abbotsford,NON OPERATIONAL,Residential,MVRD,1/5/1992,GVRD T028;Station Closed 1998-09-17,49.0492,-122.2922,20,0
+442,E293810,Agassiz Municipal Hall,Agassiz,Agassiz,METRO VANCOUVER,N/A,MVRD,6/3/2013,GVRD T044,49.238032,-121.762334,23,1
+443,E293810,Agassiz Municipal Hall Met,N/A,Agassiz,METRO VANCOUVER,N/A,MVRD,6/7/2013 8:39:12 AM,GVRD T044,49.238032,-121.762334,23,1
+22,E230617,Ainsworth 100 Mile Met_60,Exeter Station Road,100 Mile House,OPERATIONAL,Rural,ENV,9/30/1998,Met closed Sept 3/2013; T/RH. Pluvio & Snowdepth still active,51.6534,-121.366,1063,1
+426,E288890,Alex Fraser Bridge,N/A,Delta,METRO VANCOUVER NON OPERATIONAL,N/A,MVRD,1/1/2012,GVRD T037,49.1592,-122.9422,160,0
+308,0310167,Anmore,Elementary Road,Anmore,METRO VANCOUVER NON OPERATIONAL,Residential,MVRD,1/8/1980,GVRD T017;Station Closed 1998-02-01,49.3111,-122.8583,174,0
+309,M110514,Annacis Island,Alex Fraser Bridge,Vancouver,NON OPERATIONAL,Commercial,ENV,8/9/1986,Station Closed 2002-05-23,49.1597,-122.9422,160,0
+459,E296510,Ashcroft Ranch,N/A,None,METRO VANCOUVER NON OPERATIONAL,N/A,MVRD,2/28/2014 2:11:00 PM,N/A,50.704444,-121.340830,565,0
+450,E295729,Bessborough 237 Road,237 Road,None,OPERATIONAL,DR DAS Ultimate Datalogger,INDUSTRY,11/26/2013 12:17:54 PM,N/A,55.791944,-120.483611,665,1
+520,E257435,Birchbank Golf Course,South end of golf course,Trail,OPERATIONAL,N/A,INDUSTRY,8/17/2016,Attached to Ultimate at Trail Columbia Gardens,49.15785500,-117.7331200,483,1
+97,E257435,Birchbank Golf Course_60,South end of golf course,Trail,OPERATIONAL,Forest,INDUSTRY,8/11/2004,CR1000,49.157855,-117.73312,483,1
+510,E306063,Blueberry River First Nation School,Stoney Flats Road,Buick,NON OPERATIONAL,N/A,ENV,6/23/2016 7:30:07 AM,Station shutdown 2017-11-29,56.70165500,-121.10429000,675,0
+513,E306063,Blueberry River First Nation School_60,Stoney Flats Road,Buick,NON OPERATIONAL,N/A,ENV,6/23/2016 1:13:11 PM,Station shutdown 2017-11-29,56.70165500,-121.10429000,675,0
+310,E238240,Boston Bar RCMP Station,47864 Old Boston Bar Road,Boston Bar,NON OPERATIONAL,Residential,ENV,8/7/1999,Station Closed 2002-06-20,49.8658,-121.4425,180,0
+349,M114017,Brilliant,Popoff Street,Castlegar,NON OPERATIONAL,Residential,ENV,12/5/1993,Station closed 2002-07-31,49.3217,-117.6403,0,0
+504,Buick OGC CAMEL,Buick Creek Elementary School,N/A,Buick,BC OGC MOBILE,N/A,BC OGC,2/4/2015,N/A,56.759244,-121.274225,0,0
+251,E244515,Burnaby Burmount,7815 Shellmont Street,Burnaby,METRO VANCOUVER,Residential,MVRD,1/1/2000,GVRD T022,49.2667,-122.9356,101,1
+311,0310178,Burnaby Confederation Park,Pandora Street and Alpha Avenue,Burnaby,METRO VANCOUVER NON OPERATIONAL,Residential,MVRD,1/8/1977,GVRD T005;Station Closed 1999-05-28,49.2833,-123.0208,101,0
+312,E207420,Burnaby Edmonds,19th Street and 10th Avenue,Burnaby,METRO VANCOUVER NON OPERATIONAL,Residential,MVRD,1/6/1987,GVRD T020;Station Closed 1994-03-31,49.2056,-122.9519,113,0
+242,0310177,Burnaby Kensington Park,6400 East Hastings,Burnaby,METRO VANCOUVER,Residential,MVRD,1/3/1975,GVRD T004,49.2794,-122.9711,133,1
+313,E206270,Burnaby Mountain,Ring Road SFU,Burnaby,METRO VANCOUVER,Residential,MVRD,1/1/1984,GVRD T014,49.2797,-122.9222,360,1
+253,E244517,Burnaby North Eton,North Eton and Madison Avenue,Burnaby,METRO VANCOUVER,Residential,MVRD,1/1/2000,GVRD T024,49.2875,-123.0078,70,1
+249,E207418,Burnaby South,5455 Rumble Street,Burnaby,METRO VANCOUVER,Residential,MVRD,1/6/1987,GVRD T018,49.2153,-122.9856,122,1
+436,E225267,Burns Lake Fire Centre,#8 4th Avenue,Burns Lake,OPERATIONAL,N/A,ENV,2/15/2013 11:04:56 AM,Converted from ESC to Envidas Ultimate 2017-05-17,54.2307,-125.7643,652,1
+104,E225267,Burns Lake Fire Centre_60,#8 4th Avenue,Burns Lake,OPERATIONAL,Commercial; NAPS 105201,ENV,1/3/1997,PM2.5 TEOM set to record at local temperature and pressure 2011-02-16,54.230731,-125.764354,710,1
+439,E292669,Burns Lake Sheraton East Met_60,N/A,Burns Lake,OPERATIONAL,N/A,INDUSTRY,2/21/2013 8:56:42 AM,N/A,54.1527,-125.4495,679,1
+24,E229798,Campbell River Tyee Spit,2662 Tyee Spit,Campbell River,NON OPERATIONAL,Industrial,INDUSTRY,1/12/1997,Monitoring suspended until Mill re-opens (2010-01-04);;;;Shut down 2010/01/04,50.0486,-125.2556,3,0
+26,0260021,Castlegar Hospital,709 10th Street,Castlegar,OPERATIONAL,Residential,INDUSTRY,1/2/1978,N/A,49.3144,-117.6605,455,1
+350,M114217,Castlegar Met,709 10th Street,Castlegar,NON OPERATIONAL,Residential,ENV,10/20/1985,Station closed 1995-08-08,49.3139,-117.6578,451,0
+419,E286369,Castlegar Zinio Park,801 9th Avenue,Castlegar,OPERATIONAL,Shaw; NAPS 103502,ENV,7/15/2011,PM2.5=SHARP5030;  CO Shut down 2012-05-04,49.317698,-117.661527,407,1
+98,M114009,Celgar Pulp Met_60,N/A,Castlegar,OPERATIONAL,Industry,INDUSTRY,12/5/1994,N/A,49.3333,-117.7188,449,1
+6,E253229,Central Saanich Stellys Cross Road,Tsartlip Band Property,Victoria,NON OPERATIONAL,Residential,ENV,8/9/2003,Station closed 2010-03-02,48.5800,-123.4422,60,0
+166,E253229,Central Saanich Stellys CrossRoad_60,Tsartlip Band Property,Victoria,NON OPERATIONAL,Residential,ENV,8/9/2003,Station Closed 2010-03-03,48.5800,-123.4422,60,0
+555,Chetwynd OGC CAMEL,Chetwynd Airport Westgate Road,At west end of  airstrip,Chetwynd,BC OGC MOBILE,N/A,BC OGC,9/19/2018 3:26:23 PM,N/A,55.682131,-121.646006,0,0
+500,E220891,Chilliwack Airport,Airport Road,Chilliwack,METRO VANCOUVER,Commercial,MVRD,5/18/1994,GVRD T012,49.1561,-121.9406,10,1
+245,E220891,Chilliwack Airport_OLD,Airport Road,Chilliwack,METRO VANCOUVER NON OPERATIONAL,Commercial,MVRD,5/18/1994,GVRD T012,49.1561,-121.9406,10,0
+314,M110517,Chilliwack Airport_OLD,Airport,Chilliwack,NON OPERATIONAL,Commercial,ENV,5/17/1994,Station Closed 2000-03-09,49.1511,-121.9469,15,0
+315,0310173,Chilliwack Airport_Old,Chilliwack Airport,Chilliwack,NON OPERATIONAL,Commercial,MVRD,1/2/1979,Station Closed 1987-05-09,49.1558,-121.9436,0,0
+316,E206612,Chilliwack Works Yard,Works Yard,Chilliwack,METRO VANCOUVER NON OPERATIONAL,Commercial,MVRD,1/1/1984,GVRD T012;Station Closed 1996-05-31,49.1519,-121.9511,10,0
+284,E240337,Colwood City Hall,3300 Wishart Road,Colwood,OPERATIONAL,Commercial; Telus; NAPS 100308,ENV,1/2/2000,Station closed 2002-10-04;;Station reopened 2011-01-24; PM2.5 BAM set to record at local temp and pressure 2011-02-03;;BAM changed to record at actual conditions 2011-02-03; Ultimate installed June 7. 2016,48.42389,-123.49278,75,1
+553,E240337,Colwood City Hall_60,3300 Wishart Road,Colwood,OPERATIONAL,N/A,ENV,9/6/2018 3:54:12 PM,MET site added on 2018-09-07,48.42389,-123.49278,75,1
+260,E242892,Coquitlam Douglas College,1250 Pinetree Way,Coquitlam,METRO VANCOUVER,Residential,MVRD,1/10/2000,GVRD T032,49.2881,-122.7914,61,1
+414,E285829,Courtenay Elementary School,1540 McPhee Avenue,Courtenay,OPERATIONAL,Shaw; NAPS 107100,ENV,5/20/2011,Started 2011-05-20: PM2.5=BAM1020,49.682603,-124.996222,27,1
+526,E285829,Courtenay Elementary School_60,1540 McPhee Avenue,Courtenay,OPERATIONAL,N/A,ENV,12/8/2016 1:16:57 PM,N/A,49.682603,-124.996222,27,1
+351,E242577,Cranbrook Forest Fire,Forest,Cranbrook,NON OPERATIONAL,Forest,ENV,8/20/2000,Station closed 2000-09-12,49.5319,-115.7536,891,0
+550,E313510,Cranbrook Muriel Baxter,3rd St. S. 20 Ave S.,Cranbrook,OPERATIONAL,N/A,ENV,8/20/2018,AQHI station for Cranbrook and East Kootenay. Started Aug.22. 2018,49.507103,-115.753682,941,1
+551,E313510,Cranbrook Muriel Baxter_60,3rd St. S. 20 Ave S.,Cranbrook,OPERATIONAL,N/A,ENV,8/16/2018 12:06:35 PM,N/A,49.507103,-115.753682,941,1
+352,E220203,Cranbrook PR3,Adjacent to 1333 14th Avenue S,Cranbrook,NON OPERATIONAL,Residential,ENV,4/20/1994,Station closed 1998-11-30,49.5100,-115.7592,970,0
+353,E206243,Cranbrook Swimming Pool,Balment Park,Cranbrook,NON OPERATIONAL,Residential,ENV,1/8/1989,Station closed 1993-09-16,49.5117,-115.7569,940,0
+99,E256215,Creston Flats_60,830 Indian Road,Creston,NON OPERATIONAL,Rural,ENV,5/31/2007,Station Closed 2009-08-24,49.1339,-116.5528,529,0
+29,E221199,Creston PC School,Prince Charles Secondary School,Creston,NON OPERATIONAL,Residential,ENV,10/27/1994,TEOM set to record at actual temperature and pressure 2011-02-10,49.0944,-116.5125,609,0
+31,M114018,Creston PC School Met_60,Prince Charles Secondary School,Creston,NON OPERATIONAL,Residential,ENV,2/1/1995,N/A,49.0944,-116.5125,609,0
+32,E259398,Creston Piper Farms,Canada/US Border,Creston,NON OPERATIONAL,N/A,ENV,12/1/2008,Gas Analyzers closed 2007-05-03            Station Closed 2009-07-01,49.0119,-116.5333,418,0
+354,E262799,Creston South Hanson Farm,Hanson Farm,Creston,NON OPERATIONAL,Rural,ENV,4/15/2006,Station closed 2008-09-24,49.0439,-116.5439,525,0
+285,E206379,Crofton Community Hall,Robert Street,Crofton,NON OPERATIONAL,Residential,ENV,1/7/1986,Station Closed 1994-03-27,48.8647,-123.6481,73,0
+38,E273443,Crofton Escarpment Way,1821 Escarpment Way,Crofton,NON OPERATIONAL,Industrial,INDUSTRY,9/18/2008,Station closed February 3. 2014,48.8380,-123.6552,142,0
+458,E296370,Crofton Georgia Hts,1427 Georgia Park Hts,Crofton,OPERATIONAL,N/A,INDUSTRY,2/18/2014,N/A,48.849635,-123.637041,150,1
+37,M101004,Crofton Met_60,Catalyst Paper,Crofton,NON OPERATIONAL,Industrial,INDUSTRY,3/15/1991,N/A,48.8802,-123.6458,20,0
+286,E220218,Crofton South,7390 Albert Place,Crofton,NON OPERATIONAL,Residential,INDUSTRY,7/22/1994,Station Closed 2008-09-04,48.8389,-123.6528,140,0
+39,E220217,Crofton Substation,8541 Hay Road,Crofton,OPERATIONAL,Industrial,INDUSTRY,8/19/1994,NAPS 106701,48.874529,-123.653929,22,1
+287,E220219,Crofton West,7815 Westholme Road,Crofton,NON OPERATIONAL,Rural,INDUSTRY,8/7/1994,Station Closed 1998-07-29,48.8694,-123.6944,10,0
+506,Dawson OGC CAMEL,Dawson Creek Northern Lights College,N/A,Dawson Creek,BC OGC MOBILE,N/A,BC OGC,4/1/2014,N/A,55.747586,-120.230519,0,0
+454,E295893,Doig River Cultural Centre,4356 Doig Road,Doig River,NON OPERATIONAL,DR DAS Ultimate Datalogger at North Road,ENV,12/10/2013,Station closed Dec 2. 2015 @1100.,56.57808330,-120.49748000,552,0
+462,E295893,Doig River Cultural Centre Met_60,4356 Doig Road,Doig River,NON OPERATIONAL,N/A,ENV,5/5/2014 7:39:24 AM,Station closed Dec 2. 2015 @1100.,56.57808330,-120.49748000,552,0
+33,E277329,Duncan Cairnsmore,490 Cairnsmore Street,Duncan,NON OPERATIONAL,Residential; Telus; NAPS 104803,ENV,8/17/2009,PM2.5=BAM1020; PM2.5 BAM set to record at local temperature and pressure 2011-02-04. shutdown 2018-01-15,48.784854,-123.715846,62,0
+523,E277329,Duncan Cairnsmore_60,490 Cairnsmore Street,Duncan,NON OPERATIONAL,N/A,ENV,11/28/2016 2:24:47 PM,CR1000 installed 2016-12-07. shutdown 2018-01-15,48.784854,-123.715846,62,0
+542,E311128,Duncan College Street,1050 College Street,Duncan,OPERATIONAL,Urban environment,ENV,2/1/2018 10:22:38 AM,Duncan Cairnsmore shut down on Jan. 15 2018  and moved to college st. ,48.786114,-123.717307,32,1
+537,E311128,Duncan College Street_60,1050 College Street,Duncan,OPERATIONAL,Downwind Cantimber Biotech,ENV,12/4/2017,BAM1020. MET,48.786114,-123.717307,32,1
+40,E234670,Duncan Deykin Avenue,6364 Deykin Avenue,Duncan,OPERATIONAL,Rural,INDUSTRY,1/11/1998,NAPS 104801,48.80255,-123.646402,62,1
+288,E242620,Duncan Koksilah,5300 Island Highway,Duncan,NON OPERATIONAL,Commercial,ENV,9/26/2000,Station Closed 2001-12-07,48.7580,-123.6889,0,0
+289,E223361,Duncan Mobile,5700 Menzies Road,Duncan,NON OPERATIONAL,Rural,ENV,1/7/1996,Station Closed 1996-10-24,48.9128,-123.7814,61,0
+290,E242166,Duncan Mobile Transfer Station,3900 Drinkwater Road,Duncan,NON OPERATIONAL,Industrial,ENV,1/7/2000,Station Closed 2001-05-08,49.8036,-123.6897,244,0
+317,0310169,Eagle Ridge,475 Guildford Way,Port Moody,METRO VANCOUVER NON OPERATIONAL,Residential,MVRD,10/15/2010,GVRD T010;Station Closed 1999-05-31,49.2847,-122.9017,52,0
+522,E222520,Elk Falls Dogwood,Adjacent to 660 Westmere,Campbell River,OPERATIONAL,Residential; NAPS 102801,INDUSTRY,11/18/2016 5:02:57 PM,N/A,50.018425,-125.2844,63,1
+41,E222520,Elk Falls Dogwood_OLD,Adjacent to 660 Westmere,Campbell River,NON OPERATIONAL,Residential; NAPS 102801,INDUSTRY,12/1/1995,PM2.5 TEOM set to record at local temperature and pressure 2011-02-21   BAM1020 set to feed BC AQO 2013-03-07; removed PM2.5 2014-05-20; removed NOx/O3 2014-06-01,50.018425,-125.2844,63,0
+44,E251329,Elk Falls Pulp Mill_60,Adjacent to 660 Westmere,Campbell River,NON OPERATIONAL,Industrial,INDUSTRY,11/2/2003,Station Closed 2010-08-31,50.0733,-125.2869,15,0
+47,E231478,Esquimalt Graving Dock_60,825 Admirals Road,Victoria,NON OPERATIONAL,Commercial,ENV,8/29/2004,Station Closed September 17. 2013 @0800 PST,48.4374,-123.4220,23,0
+455,E295892,Farmington Community Hall,4794 Parkland Road,Farmington,OPERATIONAL,N/A,ENV,12/5/2017,Station closed April 27. 2016 @0900 PST; Reopened on Dec. 5. 2017. euipment from Blueberry River First Nation School,55.91323260,-120.53157000,696,1
+464,E295892,Farmington Community Hall Met_60,4794 Parkland Road,Farmington,OPERATIONAL,N/A,ENV,12/5/2017,Station closed April 27. 2016 @0900 PST; Reopened on Dec. 5. 2107 (Equipment moved from Blueberry River),55.9132326,-120.53157000,696,1
+275,E283242,Farmington MAML,Farm yard off Hwy 97,Farmington,MOBILE NON OPERATIONAL,Rural,ENV,8/13/2010,Mobile Air Monitoring Laboratory;;Station Closed 2010-09-10,55.904722,-120.51583,686,0
+396,E239298,Fort Nelson Brucker Ranch,Blcok A of District Lot 1676,Fort Nelson,NON OPERATIONAL,Undeveloped,INDUSTRY,10/27/1999,Station closed 2005-09-20,58.5778,-122.5894,518,0
+50,E250350,Fort Nelson Chalo School_60,Chalo Road (First Nation reserve),Fort Nelson,NON OPERATIONAL,Rural,INDUSTRY,12/30/2002,Station Closed 2009-07-28,58.7480,-122.6622,380,0
+398,0770706,Fort Nelson Jackfish,Jackfish Creek,Fort Nelson,NON OPERATIONAL,Forest,INDUSTRY,1/4/1993,Station closed 2000-01-06,58.5883,-122.6644,468,0
+397,0770704,Fort Nelson Muskawa Industrial Area,Muskawa Industrial Area,Fort Nelson,NON OPERATIONAL,Industrial,INDUSTRY,1/4/1993,Station closed 199-09-30,58.7419,-122.6808,371,0
+399,0770705,Fort Nelson Townsite,Village Site,Fort Nelson,NON OPERATIONAL,Residential,INDUSTRY,1/4/1993,Station closed 2005-09-21,58.8103,-122.7042,408,0
+489,E304550,Fort St John 85th Avenue_60,in flat industrial part of south FSJ,Fort St John,BC HYDRO,N/A,INDUSTRY-BCH,11/4/2015 12:24:25 PM,Communications started January 13. 2016,56.2317920,-120.8538950,685,1
+505,FSJ OGC CAMEL,Fort St John Hospital,at 79 Street & 112 Avenue,Fort St John,BC OGC MOBILE,N/A,BC OGC,1/22/2014,N/A,56.257717,-120.809353,0,0
+469,E299830,Fort St John Key Learning Centre,10511 99 Avenue,Fort St John,OPERATIONAL,N/A,ENV,2/12/2015,N/A,56.244722,-120.856111,679,1
+52,E243516,Fort St John NP Cultural Centre,10015 100th Avenue,Fort St John,NON OPERATIONAL,Commercial,ENV,3/8/2001,PM2.5 TEOM set to record at local temperature and pressure 2011-03-19; station closed 2015-10-15,56.2458,-120.8489,695,0
+516,E306480,Fort St John North Camp B_Amb_60,Worker's Camp at Site C,Fort St John,BC HYDRO,CR1000,INDUSTRY-BCH,7/7/2016,N/A,56.200998,-120.9026000,581,0
+533,E309527,Fort St John North Camp C_60,Worker's Camp at Site C,Fort St John,BC HYDRO,CR1000,INDUSTRY-BCH,8/23/2017 9:43:40 AM,N/A,56.2032887,-120.90108,584,1
+517,E309527,Fort St John North Camp C_Met_60,Worker's Camp at Site C,Fort St John,BC HYDRO,CR1000,INDUSTRY-BCH,7/7/2016,N/A,56.200998,-120.9026000,581,1
+487,E304470,Fort St John Old Fort_60,8880 Old Fort Loop,Fort St John,BC HYDRO,N/A,INDUSTRY-BCH,10/30/2015 3:01:39 PM,Communications started January 13. 2016,56.2005870,-120.8257130,421,1
+452,E295949,Fraser Lake Endako Mines_60,Endako Mines,Fraser Lake,OPERATIONAL,Industrial,INDUSTRY,12/1/2013,CR800,54.034444,-125.095833,1005,1
+355,E222140,Genelle,Medengo Drive and 2nd Street,Trail,NON OPERATIONAL,Residential,INDUSTRY,9/14/1995,Station closed 2004-09-30,49.2075,-117.6969,440,0
+318,E217061,Gibsons Firehall,Firehall Roof,Gibsons,NON OPERATIONAL,Residential,INDUSTRY,5/5/1992,Station Closed 1995-07-05,49.4117,-123.5131,0,0
+529,E308306,Gibsons Municipal Hall,474 South Fletcher Road,Gibsons,OPERATIONAL,N/A,ENV,4/6/2017,N/A,49.40054,-123.50913000,30,1
+319,E217062,Gibsons Townhall,Townhall Roof,Gibsons,NON OPERATIONAL,Residential,INDUSTRY,10/15/2010,Station Closed 1994-12-31,49.4003,-123.5094,0,0
+291,E225265,Gold River Annex,390 Nimpkish,Gold River,NON OPERATIONAL,Industrial,INDUSTRY,1/1/1997,Station Closed 1998-11-09,49.7111,-126.0500,100,0
+292,0110203,Gold River Pumphouse,At the pumphouse,Gold River,NON OPERATIONAL,Industrial,INDUSTRY,1/2/1977,Closed 1998-11-09,49.6914,-126.1178,3,0
+380,M120001,Golden Bear,Bearskin Lake,Telegraph Creek,NON OPERATIONAL,Industrial,INDUSTRY,1/10/1993,Station closed 2000-03-17,58.2056,-132.2875,980,0
+356,E256894,Golden CPR,CPR Yard,Golden,NON OPERATIONAL,Industrial,ENV,8/9/2004,Station closed 2006-10-03,51.2700,-116.9308,857,0
+357,E256895,Golden Golf Course,576 Golf Course Road,Golden,NON OPERATIONAL,Forest,ENV,12/6/2010,Station closed 2006-11-23,51.3325,-117.0067,795,0
+433,E292149,Golden Helipad,835 9th Avenue South,Golden,OPERATIONAL,N/A,ENV,1/22/2013 11:41:40 AM,N/A,51.2975,-116.966,780,1
+17,E235070,Golden Hospital,835 9th Avenue South,Golden,NON OPERATIONAL,Residential,ENV,11/2/1999,PM2.5 and PM10 TEOM set to record at local temperature and pressure 2011-02-11   Site closed 2013-02-28,51.2958,-116.9716,773,0
+19,E243003,Golden Lady Grey School Met_60,670 9th Street S,Golden,OPERATIONAL,Residential,ENV,11/22/2000,N/A,51.2956,-116.9717,773,1
+358,E256315,Golden Townsite,835 9th Avenue South,Golden,NON OPERATIONAL,Residential,ENV,12/7/2004,Station closed 2007-03-01,51.2978,-116.9672,855,0
+56,E262779,Grand Forks Airport Met_60,Cameron Avenue,Grand Forks,OPERATIONAL,Commercial,ENV,4/13/2006,N/A,49.0147,-118.4269,520,1
+57,E263701,Grand Forks City Hall,2217 4th Street,Grand Forks,OPERATIONAL,Commercial; NAPS 104101,ENV,7/27/2006,PM2.5 TEOM set to record at local temperature and pressure 2011-02-21; installed ESC8816 2014-10-09 to stop missing data,49.031168,-118.439088,517,1
+342,E223885,Grand Forks Mobile,625 69th Avenue,Grand Forks,NON OPERATIONAL,Residential,ENV,10/29/1996,Station closed 1997-11-02,49.0278,-118.4375,525,0
+268,E282369,Groundbirch MAML,RR269 south of 208,Groundbirch,MOBILE NON OPERATIONAL,Rural,ENV,6/22/2010,Mobile Air Monitoring Laboratory;;Station Closed 2010-07-18,55.7283,-120.8919,0,0
+293,E221800,Harmac Cedar,Holden Corso Road,Nanaimo,NON OPERATIONAL,Industrial,INDUSTRY,4/21/1995,Station Closed 1996-11-12,49.1200,-123.8514,31,0
+453,E225377,Harmac Cedar Woobank,1624 Woobank,Nanaimo,OPERATIONAL,Industry; NAPS 102103,INDUSTRY,2/21/1997,N/A,49.114165,-123.850165,25,1
+58,E225377,Harmac Cedar Woobank_60,1624 Woobank,Nanaimo,NON OPERATIONAL,Industry,INDUSTRY,2/21/1997,N/A,49.1216,-123.8600,47,0
+468,E299790,Harmac Nanaimo Duke Point_60,750 Jackson Road,Nanaimo,OPERATIONAL,Industrial,INDUSTRY,10/3/2014,CR 10X,49.14522000,-123.87873000,10,1
+294,E221801,Harmac Pacific,333 Haliburton Road,Nanaimo,NON OPERATIONAL,Industrial,INDUSTRY,4/21/1995,Station Closed 1997-01-31,49.1578,-123.8450,32,0
+60,M102038,Harmac Pacific Met_60,333 Haliburton Street,Nanaimo,OPERATIONAL,Commercial,INDUSTRY,2/25/1995,N/A,49.1352,-123.8475,23,1
+61,E226983,Harmac Treatment Pond_60,Harmac Mill,Nanaimo,NON OPERATIONAL,Industrial,INDUSTRY,1/7/1997,Station closed 2014-09-16 @1100 PST,49.1361,-123.8613,86,0
+257,E223756,Hope Airport,62715 Airport Road,Hope,METRO VANCOUVER,Commercial,MVRD,8/15/1996,GVRD T029,49.3697,-121.4994,131,1
+320,E214615,Hope Firehall,3rd Avenue,Hope,NON OPERATIONAL,Residential,ENV,5/23/1991,Station Closed 1996-11-06,49.3796,-121.4416,0,0
+64,E254955,Hope Othello Compressor Station_60,67301 Othello Road,Hope,OPERATIONAL,Industry,INDUSTRY,2/23/2004,N/A,49.3828,-121.3653,228,1
+269,E275843,Horseshoe Bay,6350 Marine Drive,West Vancouver,METRO VANCOUVER,Residential,MVRD,6/21/2010,GVRD T035,49.3686,-123.2766,65,1
+321,E207302,Horseshoe Bay,Isleview Road,Vancouver,NON OPERATIONAL,Residential,ENV,12/17/1987,Station Closed 1991-01-27,49.3786,-123.2794,0,0
+322,M104271,Horseshoe Bay Met,Horseshoe Bay Water Tower,Vancouver,NON OPERATIONAL,Residential,ENV,4/24/1985,Station Closed 1987-02-17,49.3738,-123.2797,0,0
+437,M107004,Houston Firehall,3382 11th Street,Houston,OPERATIONAL,N/A,ENV,2/19/2013 12:52:54 PM,N/A,54.3972,-126.6450,594,1
+3,M107004,Houston Firehall_60,3382 11th Street,Houston,OPERATIONAL,Residential; NAPS 105101,ENV,11/21/1994,PM2.5 TEOM set to record at local temperature and pressure 2011-02-03;;PM10 TEOM set to record at local temperature and pressure 2011-02-16,54.398289,-126.641604,602,1
+479,E303935,Kamloops Aberdeen,2330 Pacific Way,Kamloops,OPERATIONAL,Ultimate,ENV,10/16/2015,Discontinued polling 2017-01-19,50.63694,-120.37207,857,0
+481,E303935,Kamloops Aberdeen_60,2330 Pacific Way,Kamloops,OPERATIONAL,CR1000,ENV,10/16/2015,s/n 69966 initially installed. Removed Dec 12. 2105 and s/n 69961 installed. Discontinued Polling 20180119 ,50.63694,-120.37207,857,0
+5,E206898,Kamloops Brocklehurst,705 Mayfair St,Kamloops,NON OPERATIONAL,Commercial,MVRD,3/2/1987,Station Closed except BAM 2011-06-08;;PM2.5 TEOM set to record at local temperature and pressure 2011-03-01;;PM2.5 BAM set to record at local temperature and pressure 2011-03-01,50.6975,-120.3969,347,0
+416,E206898,Kamloops Brocklehurst BAM,705 Mayfair Street,Kamloops,NON OPERATIONAL,N/A,ENV,6/6/2011,N/A,50.6975,-120.3969,347,0
+66,M116003,Kamloops Brocklehurst_60,Mayfair Street,Kamloops,NON OPERATIONAL,Commercial,ENV,1/11/1996,Station Closed 2009-12-14,50.6975,-120.3975,347,0
+267,0605008,Kamloops Federal Building,317 Seymour Street,Kamloops,OPERATIONAL,Commercial; Shaw; NAPS 100401,ENV,3/3/1978,Station Closed 2006-11-27;;Station Reopened 2010-06-10,50.67477,-120.334016,381,1
+415,E286009,Kamloops Fire Station #2,1578 Tranquille Road,Kamloops,NON OPERATIONAL,N/A,ENV,6/3/2011,PM2.5=BAM1020;  Started 2011-06-03; Closed 2013-10-28,50.7025,-120.3944,348,0
+412,E284909,Kelly Lake MAML,Community Hall,Kelly Lake,MOBILE NON OPERATIONAL,N/A,ENV,4/2/2011,Mobile Air Monitoring Laboratory;;Station Closed 2011-04-18,55.2606,-120.0356,867,0
+9,0500886,Kelowna College,3333 College Way,Kelowna,OPERATIONAL,Commercial; NAPS 100701,ENV,8/11/1983,PM2.5 TEOM set to record at local temperature and pressure 2011-03-03; Met on CR1000 2016-05-01;,49.862336,-119.477367,347,1
+102,0500886,Kelowna College_60,3333 College Way,Kelowna,OPERATIONAL,Commercial,ENV,10/28/1994,21X  Closed 2009-12-18;CR1000 opened 2016-05-01,49.862336,-119.477367,347,1
+68,E272963,Keremeos Municipal Office,702 4th Street,Keremeos,NON OPERATIONAL,Commercial,ENV,1/8/2008,Station Closed 2010-08-23,49.3494,-119.8361,423,0
+70,E272963,Keremeos Municipal Office_60,702 4th Street,Keremeos,NON OPERATIONAL,Commercial,ENV,1/8/2008,Station Closed 2010-08-23,49.3494,-119.8361,423,0
+359,0440401,Kimberely Lois Creek,Lot 3700,Kimberely,NON OPERATIONAL,Rural,INDUSTRY,1/6/1991,Station closed 1993-11-30,49.7522,-115.9850,0,0
+360,0440402,Kimberely Mine Shaft 24,N/A,Kimberely,NON OPERATIONAL,Industrial,INDUSTRY,1/6/1991,Station closed 1993-11-30,49.7147,-115.9967,1500,0
+381,E206671,Kitimat Alcan Dock,Highway 37,Kitimat,NON OPERATIONAL,Industry,INDUSTRY,1/23/1987,Station closed 1991-04-02,53.9883,-128.695,0,0
+72,M106008,Kitimat Eurocan Dock_60,N/A,Kitimat,NON OPERATIONAL,Industrial,INDUSTRY,7/10/1996,Station Closed 2010-02-15,53.9950,-128.6783,10,0
+271,E282711,Kitimat Haisla Village,347 Haisla Avenue,Kitimat,OPERATIONAL,Commercial; NAPS 103905,INDUSTRY,1/7/2010,HF is a TESSCOM 747A,53.973228,-128.650768,5,1
+73,E223616,Kitimat Haul Road,Haulage Road,Kitimat,OPERATIONAL,Industrial,INDUSTRY,1/11/1996,NAPS 103902,54.029194,-128.70269,11,1
+75,E223616,Kitimat Haul Road Met_60,Haulage Road,Kitimat,OPERATIONAL,Industrial,INDUSTRY,10/4/1996,N/A,54.029194,-128.70269,11,1
+382,0660601,Kitimat Kildala School,803 Columbia Street,Kitimat,NON OPERATIONAL,Residential,INDUSTRY,1/5/1988,Station closed 1995-05-16,54.0542,-128.6722,0,0
+383,E207182,Kitimat Minette,Substation Road,Kitimat,NON OPERATIONAL,Industry,INDUSTRY,1/6/1987,Station closed 1996-10-07,54.0325,-128.7122,110,0
+76,E223827,Kitimat Rail,CN Rail Yard,Kitimat,NON OPERATIONAL,Industrial,INDUSTRY,9/10/1996,Station Closed 2010-06-25,54.0611,-128.6872,75,0
+279,E277529,Kitimat Rio Tinto Alcan KMP Camp_60,#1 Smeltersite Road,Kitimat,NON OPERATIONAL,Industry,INDUSTRY,8/18/2010,Closed 25-06-2012,54.0194,-128.7042,17,0
+77,E216670,Kitimat Riverlodge,651 Columbia Street,Kitimat,OPERATIONAL,Residential,INDUSTRY,4/5/1995,NAPS 103901,54.05389,-128.671436,18,1
+384,0660602,Kitimat Saunders,9th Avenue,Kitimat,NON OPERATIONAL,Commercial,INDUSTRY,1/6/1987,Station closed 1996-10-09,54.0606,-128.6867,0,0
+431,E290529,Kitimat Smeltersite Road,KMP Campsite,Kitimat,NON OPERATIONAL,N/A,INDUSTRY,8/14/2012 1:44:22 PM,SO2/BAM closed May 26 @1300 PST; MET closed June 2 @0900 PST,54.018801,-128.700585,2,0
+78,E223615,Kitimat Whitesail,1332 Lahakas Blvd N,Kitimat,OPERATIONAL,Residential,INDUSTRY,12/7/1996,NAPS 103904,54.066909,-128.639131,94,1
+80,E223615,Kitimat Whitesail Met_60,1332 Lahakas Blvd N,Kitimat,OPERATIONAL,Residential,INDUSTRY,11/29/1996,21X,54.066909,-128.639131,94,1
+418,E286269,Kitimat Yacht Club_60,On Access Road to Plant,Kitimat,OPERATIONAL,N/A,INDUSTRY,6/14/2011,N/A,54.000,-128.692,2,1
+82,E255714,Kitwanga School Met_60,School Road,Kitwanga,NON OPERATIONAL,Residential,ENV,10/25/2004,N/A,55.1172,-128.0158,253,0
+85,E248774,Kwoen Gas Plant_60,Kwoen Gas Plant PO Box 906,Chetwynd,OPERATIONAL,Industrial,INDUSTRY,8/9/2002,N/A,55.3778,-121.7047,665,1
+86,E222778,Langdale Elementary,1551 Johnson Road,Langdale,OPERATIONAL,Residential,INDUSTRY,1/12/1995,NAPS 105301,49.438848,-123.479185,90,1
+88,M104273,Langdale Ferry Terminal_60,Ferry Terminal,Langdale,NON OPERATIONAL,Commercial,ENV,11/9/1987,station closed August 9. 2016,49.4344,-123.4691,15,0
+323,E206987,Langdale YMCA,Camp Elphinstone,Gibsons,NON OPERATIONAL,Forest,INDUSTRY,1/7/1987,Station Closed 1995-11-30,49.4500,-123.4678,0,0
+295,E249735,Langford Dogwood School,2720 Jacklin Road,Victoria,NON OPERATIONAL,Residential,ENV,12/11/2002,Station Closed 2005-08-11,48.4530,-123.5043,80,0
+91,E264882,Langford Lakewood  School_60,2363 Setchfield,Victoria,NON OPERATIONAL,Residential,ENV,8/2/2007,Station Closed 2010-09-20,48.4658,-123.5075,100,0
+256,E209178,Langley Central,23752 52nd Avenue,Langley,METRO VANCOUVER,Rural,MVRD,6/6/1992,GVRD T027,49.0956,-122.5669,82,1
+324,M110515,Langley Peterson,Peterson Road,Langley,NON OPERATIONAL,Rural,ENV,2/19/1987,Station Closed 1996-03-12,49.0872,-122.5733,110,0
+328,E206707,Langley Peterson School,Peterson Road,Langley,NON OPERATIONAL,Residential,ENV,12/6/1986,Station Closed 1991-05-22,49.0875,-122.5722,0,0
+490,E304590,Lavington Baptist Church,9681 School Road,Coldstream,OPERATIONAL,N/A,ENV,11/9/2015,N/A,50.2308100,-119.1067400,537,1
+92,0770709,Mackenzie,Worthington Mackenzie,Mackenzie,NON OPERATIONAL,Industrial,INDUSTRY,1/9/1991,Station Closed 2009-02-06,55.3363,-123.0955,645,0
+385,E230577,Manalta,Telkwa Coal Mine Road,Telkwa,NON OPERATIONAL,Industrial,INDUSTRY,1/20/1998,Station closed 2000-08-30,54.6450,-127.1203,0,0
+258,E232245,Maple Ridge Golden Ears School,23124 118th Avenue,Maple Ridge,METRO VANCOUVER,Residential,MVRD,1/2/1998,GVRD T030,49.2150,-122.5819,100,1
+343,0605040,Merritt City Hall,2185 Voght Street,Merritt,NON OPERATIONAL,Residential,ENV,2/9/1998,Station closed 1998-09-22,50.1128,-121.7889,500,0
+344,E237431,Merritt Granite-Garcia Mobile,2113 Granite Street,Merritt,NON OPERATIONAL,Residential,ENV,5/14/1999,Station closed 2000-05-29,50.1128,-121.7889,500,0
+94,E264682,Merritt Parcel Street Met_60,1301 Parcel Street,Merritt,OPERATIONAL,Residential,ENV,4/12/2006,21X until 20160530  CR1000 ,50.1050,-120.7921,603,1
+474,E302130,Mission School Works Yard,32939 7th Avenue,Mission,METRO VANCOUVER,GVRD T043,MVRD,8/7/2014,GVRD T043,49.141490,-122.311078,74,1
+476,E302130,Mission School Works Yard Met,32939 7th Avenue,Mission,METRO VANCOUVER,GVRD T043,MVRD,5/20/2015 2:57:03 PM,N/A,49.141490,-122.311078,74,1
+215,E277629,Moricetown MAML,200 Block Beaver Road,Moricetown,MOBILE NON OPERATIONAL,Rural,ENV,10/22/2009,Mobile Air Monitoring Laboratory;;Station Closed 2009-12-11,N/A,N/A,0,0
+10,E229797,Nanaimo Labieux Road,2080A Labieux Road,Nanaimo,OPERATIONAL,Residential; Shaw; NAPS 102102,ENV,1/12/1997,PM25 TEOM set to record at local temp & pressure 2011-02-18; SO2 shut down; 2013-01-16 AQHI calculated using BAM1020 2013-02-01; Teom PM2.5 shut down June 4 @1400,49.20083,-123.99389,121,1
+361,M114216,Nelson,Nelson Airport,Nelson,NON OPERATIONAL,Commercial,ENV,10/23/1985,Station closed 1987-09-22,49.4928,-117.2969,538,0
+89,E258315,Nelson Kutenai Place,333 Victoria Street,Nelson,NON OPERATIONAL,Residential,ENV,3/23/2005,PM2.5 and PM10 TEOM set to record at local temperature and pressure 2011-02-22; Station closed 2015-04-23 @1200 PST,49.4908,-117.2952,542,0
+96,E260397,New Hazelton School Met_60,3275 Bowser Street,New Hazelton,NON OPERATIONAL,Residential,ENV,11/8/2005,21X,55.2452,-127.5861,321,0
+530,E308566,New Westminster Sapperton Park,351 E Columbia Street,New Westminster,METRO VANCOUVER,N/A,MVRD,11/1/2015,GVRD T046,49.227045,-122.894487,45,1
+531,E308566,New Westminster Sapperton Park Met,351 E Columbia Street,New Westminster,METRO VANCOUVER,GVRD T046,MVRD,11/1/2015,N/A,49.227045,-122.894487,45,1
+252,E244516,North Burnaby Capitol Hill,Grosvenor Crescent,Burnaby,METRO VANCOUVER,Residential,MVRD,1/1/2000,GVRD T023,49.2878,-122.9856,200,1
+246,E207723,North Delta,8544 116 Street,Delta,METRO VANCOUVER,Residential,MVRD,1/6/1987,GVRD T013,49.1583,-122.9017,111,1
+255,E209177,North Vancouver Mahon Park,16th Street and Jones Avenue,North Vancouver,METRO VANCOUVER,Residential,MVRD,4/1/1990,GVRD T026,49.3239,-123.0836,80,1
+243,0310179,North Vancouver Second Narrows,75 Riverside Drive,North Vancouver,METRO VANCOUVER,Commercial,MVRD,1/4/1977,GVRD T006,49.3017,-123.0203,15,1
+362,E222689,Northport Washington,Flat Creek Road,Spokane,NON OPERATIONAL,Undeveloped,INDUSTRY,12/21/1995,Station closed 2003-12-31,48.9256,-117.7797,420,0
+12,E257415,Osoyoos Canada Customs,202 Hwy 97S,Osoyoos,NON OPERATIONAL,Residential,MVRD,11/1/2004,Ambient shut down 2012-05-01,49.0000,-119.4625,308,0
+120,E257415,Osoyoos Canada Customs_60,202 Highway 97 South,Osoyoos,NON OPERATIONAL,Residential,MVRD,11/1/2004,Station Closed 2009-02-26,49.0000,-119.4625,308,0
+345,E244775,Osoyoos Shaw Gardens,6601 89the Street,Osoyoos,NON OPERATIONAL,Residential,INDUSTRY,1/8/2001,Station closed 2002-09-10,49.0322,-119.4689,297,0
+233,E278829,PG Marsulex Met_60,3025 Industrial Way,Prince George,OPERATIONAL,Industrial,INDUSTRY,4/30/2010,N/A,53.8450,-122.6672,595,1
+485,E304453,Peace Valley Attachie Flat Upper Terrace_60,Fenced-in area of flat field,Fort St John,BC HYDRO,N/A,INDUSTRY-BCH,10/28/2015,Communications started January 13. 2016,56.231213,-121.4194400,480,1
+540,E304453,Peace Valley Attachie Flat Upper Terrace_Met_60,Fenced-in area of flat field,Fort St John,BC HYDRO,N/A,INDUSTRY-BCH,12/12/2017 3:47:58 PM,N/A,56.231213,-121.4194400,480,1
+346,0500869,Penticton Carmi School,Carmi School,Penticton,NON OPERATIONAL,Residential,MVRD,11/21/1983,Station closed 1987-06-04,49.4847,-119.5833,0,0
+400,0770701,Pine River Airport,Airport,Chetwynd,NON OPERATIONAL,Commercial,INDUSTRY,1/4/1993,Station closed 1999-04-22,55.6778,-121.6250,0,0
+401,0770702,Pine River Bend River Ranch,Hasler Flats,Chetwynd,NON OPERATIONAL,Industrial,INDUSTRY,1/4/1993,Station closed 1999-05-20,55.6222,-121.9167,0,0
+107,0770703,Pine River Gas Plant_60,Gas Plant at end of Airstrip,Chetwynd,OPERATIONAL,Industrial,INDUSTRY,1/4/1993,NAPS 103702,55.570022,-121.928814,1159,1
+110,E237631,Pine River Hasler_60,Gas Plant next to Pumphouse,Chetwynd,OPERATIONAL,Industrial,INDUSTRY,5/26/1999,NAPS 103704,55.601678,-121.99348,602,1
+330,M110510,Pitt Meadows,N/A,Pitt Meadows,NON OPERATIONAL,Rural,ENV,10/4/1985,Station Closed 1996-03-13,49.2167,-122.7167,3,0
+331,E206169,Pitt Meadows Airport,Airport,Pitt Meadows,NON OPERATIONAL,Commercial,MVRD,1/3/1985,GVRD T016;Station Closed 1996-04-30,49.2089,-122.7063,15,0
+501,E232244,Pitt Meadows Meadowlands School,18477 Dewdney Trunk Road,Pitt Meadows,METRO VANCOUVER,Residential,MVRD,1/2/1998,GVRD T020,49.2453,-122.7089,20,1
+296,0110258,Port Alberni,5279 River Road,Port Alberni,NON OPERATIONAL,Residential,ENV,1/4/1978,Station Closed 1993-04-02,49.2617,-124.8244,0,0
+297,E244234,Port Alberni BC Hydro,4820 Wallace Street,Port Alberni,NON OPERATIONAL,Commercial,INDUSTRY,6/15/2001,Station Closed 2002-01-11,49.2500,-124.8092,10,0
+263,E273483,Port Alberni Elementary,4645 Helen Street,Port Alberni,OPERATIONAL,Residential,INDUSTRY,5/31/2010,BAM 1020; NAPS 102602,49.261014,-124.806628,21,1
+457,E296090,Port Alberni Firehall MAML,Port Alberni Firehall,Port Alberni,MOBILE NON OPERATIONAL,N/A,ENV,1/27/2014,closed station February 18 @1400 PST,49.24305600,-124.79666700,44,0
+298,M103335,Port Alberni Met,Corner of 9th Ave and Morton Street,Port Alberni,NON OPERATIONAL,Residential,ENV,1/18/1989,Station Closed 1995-06-20,49.2456,-124.8014,51,0
+541,E310612,Port Alberni Port Authority,2750 Harbour Road,Port Alberni,OPERATIONAL,Downwind Cantimber Biotech,INDUSTRY,12/13/2017 8:23:51 AM,BAM1020; Wind Speed and Wind Direction,49.227798,-124.81254,1,0
+111,E228065,Port Alberni Townsite,5410 Argyle Street,Port Alberni,NON OPERATIONAL,Commercial,INDUSTRY,9/2/1997,Closed 2011-08-02,49.2344,-124.8147,10,0
+299,0110101,Port Alice Hospital,1090 Marine Drive,Port Alice,NON OPERATIONAL,Commercial,ENV,1/5/1990,Station Closed1993-12-31,50.4250,-127.4792,0,0
+112,E221822,Port Alice Lake Road,Lake Road,Port Alice,NON OPERATIONAL,Forest,INDUSTRY,3/22/1995,Station shut down for approx 1 year,50.3668,-127.4333,152,0
+114,E234430,Port Alice Mill_60,Port Alice Mill,Port Alice,NON OPERATIONAL,Industrial,INDUSTRY,1/11/1998,Station Closed 2006-12-20,50.3842,-127.2505,88,0
+115,0110501,Port Alice Trailer,N/A,Port Alice,NON OPERATIONAL,Industrial,INDUSTRY,7/22/1980,Station Closed 2010-03-16,50.3892,-127.4553,10,0
+332,E207421,Port Coquitlam North,Hamilton and Paisley,Port Coquitlam,METRO VANCOUVER NON OPERATIONAL,Residential,MVRD,1/6/1987,GVRD T021;Station Closed 2000-07-20,49.2800,-122.7342,32,0
+386,0660606,Port Edward Elementary,633 Sunset,Prince Rupert,NON OPERATIONAL,Residential,INDUSTRY,5/3/1993,Station closed 1996-08-23,54.2244,-130.2833,35,0
+325,E243949,Port Edward Mill,Skeena Cellulose Inc.,Port Edward,NON OPERATIONAL,Industrial,INDUSTRY,5/20/2001,Station Closed 2004-10-25,54.2336,-130.2922,30,0
+387,E225184,Port Edward Pacific,770 Pacific Street,Port Edward,NON OPERATIONAL,Industrial,INDUSTRY,3/1/1997,Station closed 2005-03-17,54.2208,-130.2897,10,0
+117,E226338,Port Mellon_60,Howe Sound Pulp & Paper,Gibsons,OPERATIONAL,Industrial,INDUSTRY,5/27/1997,N/A,49.5228,-123.4822,3,1
+244,0310162,Port Moody Rocky Point Park,Moody Street and Esplanade,Port Moody,METRO VANCOUVER,Residential,MVRD,1/3/1977,GVRD T009,49.2808,-122.8492,15,1
+475,0310162,Port Moody Rocky Point Park Met,Moody Street and Esplanade,Port Moody,METRO VANCOUVER,Residential,MVRD,1/1/2015,GVRD T009,49.2808,-122.8492,15,1
+333,E206986,Porteau Cove,Porteau Cove Provincial Park,Britannia Beach,NON OPERATIONAL,Forest,INDUSTRY,8/6/1987,Station Closed 1993-07-22,49.5586,-123.2325,0,0
+521,E307124,Pouce Coupe 200 Road BCOGC CAMEL,3699 200 Road,Pouce Coupe,BC OGC MOBILE,N/A,BC OGC,9/11/2016,N/A,55.634323,-120.132649,833,0
+334,E207286,Powell River Cranberry Centre,N/A,Powell River,NON OPERATIONAL,Residential,ENV,10/15/1987,Station closed 1990-07-14,49.5586,-123.2325,0,0
+119,0220204,Powell River Cranberry Lake_60,Wildlife Sanctuary,Powell River,OPERATIONAL,Forest,INDUSTRY,7/1/1990,NAPS 102301. NOx relocated on Jan. 31. site closed on Feb. 13. ,49.866905,-124.521819,209,0
+335,0220206,Powell River Hospital,Hospital,Powell River,NON OPERATIONAL,Residential,INDUSTRY,1/7/1990,Station closed 1993-08-16,49.8736,-124.5458,0,0
+122,E271963,Powell River James Thomson School,6388 Sutherland Drive,Powell River,OPERATIONAL,Residential,INDUSTRY,6/15/2008,NAPS 102303,49.889299,-124.5624,125,1
+126,E238705,Powell River Pacifica Met_60,6270 Yew Street,Powell River,OPERATIONAL,Industrial,INDUSTRY,7/19/2000,N/A,49.8742,-124.5556,45,1
+127,E271964,Powell River Townsite Helipad,Walnut & Arbutus,Powell River,OPERATIONAL,Industrial,INDUSTRY,6/21/2008,N/A,49.8747,-124.5541,62,1
+130,0220205,Powell River Wildwood_60,6105 Lund Street,Powell River,OPERATIONAL,Commercial,INDUSTRY,1/7/1990,NAPS 102302,49.886894,-124.558104,136,1
+365,E215732,Power Cons.New Recovery Boiler Stack,N/A,Castlegar,NON OPERATIONAL,Industrial,INDUSTRY,1/7/1993,Station closed 199-12-31,49.3353,-117.7278,0,0
+364,E215733,Power Consolidated. New Lime Kiln,N/A,Castlegar,NON OPERATIONAL,Industrial,INDUSTRY,1/7/1993,Station Closed 199-12-31,49.3353,-117.7278,0,0
+363,E102292,Power Consolidated.#2 Power Boiler,N/A,Castlegar,NON OPERATIONAL,Industrial,INDUSTRY,1/7/1993,Station closed 1999-12-31,49.3353,-117.7278,0,0
+535,E309666,Prince George 18th Avenue MAML,4051 18th Avenue,Prince George,MOBILE,In the corner of the BC Parks Compound,ENV,9/7/2017 10:43:42 AM,Mobile Air Pollutants Monitoring; Shortname temporarily changed for AQHI reporting,53.906819,-122.79525,608,0
+132,E224013,Prince George BC Rail Warehouse,1108 Industrial Way,Prince George,NON OPERATIONAL,Commercial,INDUSTRY,9/28/1996,Station closed November 6. 2015,53.8710,-122.7430,590,0
+133,E209179,Prince George CBC Transmitter,Gunn Road,Prince George,OPERATIONAL,Industrial,INDUSTRY,1/4/1995,NAPS 100210;,53.90339,-122.703963,733,1
+281,E283370,Prince George Denicola Ranch_60,1885 Foreman Road,Prince George,NON OPERATIONAL,Industry,INDUSTRY,8/1/2010,Station closed 2012-11-01,53.9353,-122.6814,581,0
+532,E309446,Prince George District Energy Building,215 George St,Prince George,E-BAM OPERATIONAL,N/A,ENV,5/17/2017 9:40:14 AM,N/A,53.916844,-122.742703,572,0
+528,E293670,Prince George Exploration Place,333 Becott Place,Prince George,OPERATIONAL,N/A,INDUSTRY,3/1/2017 12:07:54 PM,N/A,53.905139,-122.734049,576,1
+280,E283369,Prince George Exploration Place Trailer_60,333 Becott Place,Prince George,NON OPERATIONAL,Industry,INDUSTRY,8/1/2010,Station closed 2012-11-01,53.9053,-122.7344,576,0
+444,E293670,Prince George Exploration Place_60,333 Becott Place,Prince George,OPERATIONAL,N/A,INDUSTRY,6/27/2013 11:16:19 AM,N/A; NAPS 100214,53.905139,-122.734049,576,1
+402,0450325,Prince George Foreman Flats,1895 Foreman Road,Prince George,NON OPERATIONAL,Industrial,INDUSTRY,11/6/1982,Station closed 1995-03-31,53.9339,-122.6822,578,0
+403,M109940,Prince George Foreman Flats_60,Foreman Flats Road,Prince George,NON OPERATIONAL,Industrial,ENV,1/17/1985,Station closed 1989-09-05,53.9333,-122.6827,578,0
+134,0450270,Prince George Gladstone School,7005 Gladstone Drive,Prince George,NON OPERATIONAL,Residential; Shaw,INDUSTRY,2/28/1985,N/A,53.8592,-122.7633,583,0
+136,0450270,Prince George Gladstone School_60,7005 Gladstone Drive,Prince George,NON OPERATIONAL,Residential,ENV,2/28/1985,Station Closed 2010-11-18,53.8592,-122.7633,583,0
+138,E224014,Prince George Glenview School Met_60,7310 Cluff,Prince George,OPERATIONAL,Residential,ENV,12/11/1996,N/A,53.9960,-122.7760,750,1
+404,E225868,Prince George Hart Highlands,3487 East Austin Road,Prince George,NON OPERATIONAL,Commercial,ENV,4/4/1997,Station closed 1998-03-22,53.9894,-122.7858,740,0
+214,E277370,Prince George Hwy 16/97 MAML,Roadside,Prince George,MOBILE NON OPERATIONAL,Rural,ENV,3/9/2009,Mobile Air Monitoring Laboratory;;Station Closed 2009-10-21,53.8963,-122.7666,595,0
+139,0450322,Prince George Jail,775 E Highway 16,Prince George,OPERATIONAL,Commercial,INDUSTRY,1/1/1981,NAPS 100211,53.908018,-122.713337,616,1
+405,M109915,Prince George Jail_60,2nd Avenue,Prince George,NON OPERATIONAL,Commercial,ENV,12/13/1984,Station closed 1987-06-16,53.9069,-122.7133,623,0
+140,0450324,Prince George Lakewood,4131 Rainbow Drive,Prince George,OPERATIONAL,Residential; Shaw,INDUSTRY,4/15/1982,N/A,53.9156,-122.7958,584,1
+406,M109943,Prince George Lakewood_60,Lakewood School,Prince George,NON OPERATIONAL,Residential,ENV,12/17/1984,Station closed 1987-06-16,53.9153,-122.7961,584,0
+210,E270963,Prince George Marsulex Acid Plant,8901 Penn Road,Prince George,OPERATIONAL,Industrial,INDUSTRY,1/3/2008,NAPS 100212,53.8416,-122.7344,604,1
+142,M109913,Prince George Northwood Met_60,Fraser Flats,Prince George,NON OPERATIONAL,Industrial,ENV,6/18/1987,closed 2013-10-08,53.9675,-122.6908,577,0
+13,0450307,Prince George Plaza 400,1011 4th Avenue,Prince George,OPERATIONAL,Commercial; Shaw; NAPS 100202,ENV,11/5/1979,PM2.5 TEOM changed to record at local temperature and pressure 2011-02-02,53.91472,-122.74194,588,1
+144,0450307,Prince George Plaza 400 Met_60,1011 4th Avenue,Prince George,OPERATIONAL,Commercial,ENV,12/17/1984,N/A,53.91472,-122.74194,588,1
+423,0451307,Prince George Plaza 400 URG,1011 4th Avenue,Prince George,NON OPERATIONAL,N/A,ENV,12/30/2003,Station closed 2005-02-18,53.9147,-122.7419,601,0
+146,M109914,Prince George Pulp Met_60,Prince George Pulp Mill,Prince George,OPERATIONAL,Industrial,ENV,6/23/1987,N/A,53.9244,-122.6861,600,1
+407,0450232,Prince George Van Bien,311 Wilson Crescent,Prince George,NON OPERATIONAL,Residential,INDUSTRY,6/15/1982,Station closed 1995-05-16,53.8906,-122.7614,594,0
+408,M109946,Prince George Van Bien_60,Van Bien Elementary School,Prince George,NON OPERATIONAL,Residential,ENV,1/21/1985,Station closed 1989-09-05,53.8892,-122.7603,594,0
+388,0660607,Prince Rupert (Ambient),1700 Sloan Avenue,Prince Rupert,NON OPERATIONAL,Residential,INDUSTRY,1/2/1993,Station closed 1998-04-06,54.2967,-130.335,50,0
+326,M106037,Prince Rupert (Met),1700 Sloan Avenue,Prince Rupert,NON OPERATIONAL,Industrial,ENV,2/10/1990,Station Closed 1996-09-14,54.2322,-130.2889,35,0
+546,E312331,Prince Rupert Fairview,Fairview Container Terminal,Prince Rupert,NON OPERATIONAL,N/A,INDUSTRY,7/26/2017,Relocated from PR Pineridge Elementary,54.292615,-130.352188,15,0
+547,E312331,Prince Rupert Fairview_60,Fairview Container Terminal,Prince Rupert,NON OPERATIONAL,N/A,INDUSTRY,7/26/2017,N/A,54.292615,-130.352188,15,0
+327,E231838,Prince Rupert Galloway Rapids,Highway 16,Prince Rupert,NON OPERATIONAL,Industrial,INDUSTRY,10/4/1998,Station Closed 2004-12-21,54.2322,-130.2889,1,0
+545,E312330,Prince Rupert Pineridge Elementary,Pineridge Elementary School,Prince Rupert,NON OPERATIONAL,N/A,INDUSTRY,12/16/2016,AQ and MET monitoring from 2016-12-16 to 2017-07-25,54.29854700,-130.337676,63,0
+425,E288469,Prince Rupert Roosevelt Park School Met_60,800 Summit,Prince Rupert,OPERATIONAL,N/A,ENV,1/31/2012,N/A,54.3064,-130.3269,80,1
+389,E231657,Prince Rupert Seal Cove,Seal Cove,Prince Rupert,NON OPERATIONAL,Commercial,INDUSTRY,7/4/1998,Station closed 2002-09-02,54.3311,-130.2761,2,0
+432,E293649,Prince Rupert Westview MAML,Westview Dock,Prince Rupert,MOBILE NON OPERATIONAL,N/A,ENV,4/14/2013,Station closed August 17. 2013 @1200,54.3047,-130.3436,33,0
+148,E266302,Quadra Island Cape Mudge Village,In village,Campbell River,NON OPERATIONAL,Residential,INDUSTRY,1/4/2007,Station Closed 2010-08-31,50.0183,-125.1972,3,0
+147,E225378,Quadra Island Lighthouse,N/A,Campbell River,NON OPERATIONAL,Rural,ENV,2/21/1997,Station Closed 2009-08-05,49.9983,-125.1956,2,0
+300,M102039,Qualicum Beach,N/A,Qualicum Beach,NON OPERATIONAL,Residential,ENV,2/17/1994,Station Closed 1997-08-28,49.3472,-126.4444,57,0
+150,E233625,Qualicum Beach Jones Street_60,740 Jones Street,Qualicum Beach,NON OPERATIONAL,Residential,ENV,6/1/1999,Station closed 2012-11-26,49.3385,-124.4516,98,0
+153,M111073,Quesnel CP Met_60,North Star Road,Quesnel,OPERATIONAL,Industrial,ENV,6/18/1991,N/A,52.9919,-122.4883,488,1
+156,E216667,Quesnel Maple Drive,950 Mountain Ash Road,Quesnel,NON OPERATIONAL,Residential,INDUSTRY,11/3/1992,PM2.5 and PM10 TEOM set to record at local temperature and pressure 2011-02-25,52.9630,-122.4972,456,0
+375,E221885,Quesnel Pinecrest Centre,501 Pinecrest Road,Quesnel,NON OPERATIONAL,Industrial,INDUSTRY,5/23/1995,Station Closed 2006-05-04,53.0028,-122.5122,500,0
+15,E208096,Quesnel Senior Secondary,585 Callanan Street,Quesnel,OPERATIONAL,Residential; Shaw; NAPS 101701,ENV,2/14/1990,PM2.5 and PM10 TEOM set to record at local temperature and pressure 2011-02-25;;PM2.5 SHARP set to record at local temperature and pressure 2011-02-25,52.981686,-122.493227,490,1
+158,E208096,Quesnel Senior Secondary Met_60,585 Callanan Street,Quesnel,OPERATIONAL,Residential,ENV,2/14/1990,N/A,52.9822,-122.4922,500,1
+159,E228064,Quesnel West Correlieu School,850 Anderson,Quesnel,NON OPERATIONAL,Residential,INDUSTRY,11/17/2000,PM2.5 and PM10 TEOM set to record at local temperature and pressure 2011-02-25; station shut down July 28 @1100 PST,52.9664,-122.5167,0,0
+376,0550501,Quesnel West Fraser,Finning Road,Quesnel,NON OPERATIONAL,Industrial,INDUSTRY,1/12/1990,Station closed 2007-01-03,53.0053,-122.4972,539,0
+390,E226268,Quick Mobile,Kerr Road,Quick,NON OPERATIONAL,Rural,ENV,5/22/1997,Station closed 1998-06-01,54.6214,-126.8511,552,0
+160,E248021,Revelstoke Mt Begbie School,402 Downie Street,Revelstoke,NON OPERATIONAL,Residential,ENV,2/15/2002,PM2.5 TEOM set to record at local temperature and pressure 2011-02-11     Shut down 2012-07-26,50.9872,-118.2056,1500,0
+162,E248021,Revelstoke Mt Begbie School_60,402 Downie Street,Revelstoke,NON OPERATIONAL,Residential,ENV,2/15/2002,Shut down 2012-07-26,50.9872,-118.2056,1500,0
+336,E207419,Richmond East,16400 Cambie Road,Richmond,METRO VANCOUVER NON OPERATIONAL,Residential,MVRD,1/6/1987,GVRD T019 Station closed 1996-09-30,49.1847,-123.1847,15,0
+248,E207417,Richmond South,Williams and Aragon Road,Richmond,METRO VANCOUVER,Residential,MVRD,1/7/1986,GVRD T017,49.1414,-123.1083,15,1
+163,E207879,Robson,3113 Charleston Road,Robson,OPERATIONAL,Residential,INDUSTRY,5/16/1989,NAPS 106401,49.337031,-117.698275,441,1
+494,E304684,Rolla 213 Road,5095 213 Road; private residence,Rolla,NON OPERATIONAL,N/A,ENV,12/15/2015,Station shutdown 2017-11-30,55.90761,-120.16901,708,0
+272,E282769,Rolla MAML,976 Sweetwater Road,Rolla,MOBILE NON OPERATIONAL,Rural,ENV,7/20/2010,Mobile Air Monitoring Laboratory;;Closed 2010-08-11,55.8997,-120.1869,695,0
+301,E222012,Royal Oak Hydro Mobile,4400 West Saanich Road,Victoria,NON OPERATIONAL,Commercial,ENV,7/26/1995,Station Closed 1995-12-12,48.4906,-123.3883,25,0
+446,E294391,Rumble Beach Firehall_60,1051 Marine Drive,Port Alice,NON OPERATIONAL,N/A,INDUSTRY,8/1/2013 8:10:39 AM,N/A,50.42671230,-127.488127,37,0
+164,E221821,Rumble Beach Hospital,1090 Marine Road,Port Alice,NON OPERATIONAL,Commercial,INDUSTRY,1/2/1995,Station shut down for approx 1 year,50.4264,-127.4881,3,0
+347,E233344,Salmon Arm Hospital,601 10th Street NE,Salmon Arm,NON OPERATIONAL,Residential,ENV,6/8/1998,Station closed 1998-08-26,50.7017,-119.2236,350,0
+302,M101110,Saturna Met,Mt Warburton,Saturna,NON OPERATIONAL,Forest,ENV,11/7/1985,Station Closed 1995-09-25,48.7744,-123.1700,445,0
+303,M101005,Saturna Pike,Mt Warburton,Saturna,NON OPERATIONAL,Forest,ENV,8/10/1992,Station Closed 2002-01-03,48.7744,-123.1700,478,0
+167,0440403,Scottys Marina,5220 Broadwater Road,Castlegar,OPERATIONAL,Commercial,INDUSTRY,3/7/1992,N/A,49.3427,-117.8297,502,1
+254,E231001,Seymour Falls,Seymour Dam,Vancouver,METRO VANCOUVER NON OPERATIONAL,Forest,MVRD,1/1/1985,GVRD T025;Station Closed Due to Construction 2011,49.4400,-122.9714,220,0
+366,M115024,Skookumchuck,Highway 93/95,Cranbrook,NON OPERATIONAL,Industry,ENV,10/11/1987,Station closed 2005-07-19,49.8369,-115.7458,783,0
+422,E254190,Skookumchuck Farstad Way,Near Tembec Mill on Farstad,Cranbrook,OPERATIONAL,Industrial,INDUSTRY,8/26/2011,N/A,49.905404,-115.755613,746,1
+543,E254190,Skookumchuck Farstad Way_60,Near Tembec Mill on Farstad,Cranbrook,OPERATIONAL,N/A,INDUSTRY,2/9/2018 2:08:54 PM,N/A,49.905404,-115.755613,746,1
+367,E207914,Skookumchuck Johnson Lake,Johnson Lake Road Southsite Road,Cranbrook,NON OPERATIONAL,Industrial,ENV,10/11/1989,Station closed 1995-05-12,49.9547,-115.7594,828,0
+368,E221953,Skookumchuck Moan Road,Moan/Skookumchuck Road,Cranbrook,NON OPERATIONAL,Industrial,INDUSTRY,6/21/1995,Station closed 1996-06-27,49.8233,-115.7667,783,0
+168,E206589,Smithers St Josephs,4020 Broadway Avenue,Smithers,OPERATIONAL,Residential; Telus; NAPS 102401,ENV,3/6/1997,Smithers PM2.5 and PM10 TEOM set to record at local temperature and pressure 2011-02-15; Aeth off June 11. 2014,54.783308,-127.177324,495,1
+171,E206589,Smithers St Josephs_60,4020 Broadway Avenue,Smithers,OPERATIONAL,Residential,ENV,11/21/1994,21X Closed 2009-12-08; re-opened 2015-06-23,54.7830,-127.1775,481,1
+337,M110511,South Langley Met,240 Street,Langley,NON OPERATIONAL,Rural,ENV,6/19/1985,Station closed 1993-12-31,49.0042,-122.5611,80,0
+491,E304570,Squamish Elementary,38370 Buckley Avenue,Squamish,OPERATIONAL,N/A,ENV,12/17/2015,N/A,49.70516000,-123.15133000,6,1
+493,E304570,Squamish Elementary_60,Next to playing field at the school,Squamish,OPERATIONAL,N/A,ENV,12/17/2015,N/A,49.70516000,-123.15133000,6,1
+187,0310172,Squamish Gov't Bldg,38075 2nd Avenue,Squamish,NON OPERATIONAL,Residential; Shaw; stn closed 2016-02-24,MVRD,1/11/1984,PM2.5 BAM and TEOM set to record at local temperature and pressure 2011-02-09,49.7063,-123.1544,20,0
+173,M104270,Squamish_60,38075 2nd Avenue,Squamish,NON OPERATIONAL,Residential,ENV,5/17/1985,Station Closed 2010-02-02,49.7003,-123.1536,10,0
+435,E292249,Stewart Youth Centre Met_60,720 King Street,Stewart,OPERATIONAL,N/A,ENV,2/1/2013 2:02:14 PM,N/A,55.9381,-129.9850,13,1
+128,E278429,Strathnaver Meadowbank_60,Pinnacle Pellet Plant 41880  Hwy 97N,Strathnaver,NON OPERATIONAL,Industrial,INDUSTRY,2/2/2010,Closed Amb Jan 11. 2013   Closed Met Jan 24. 2013,53.3002,-122.5214,655,0
+338,M110512,Sumas,Vye Road,Sumas,NON OPERATIONAL,Rural,ENV,6/27/1985,Station closed 1987-03-24,49.0347,-122.1597,6,0
+247,E206271,Surrey East,19000 72nd Avenue,Surrey,METRO VANCOUVER,Residential,MVRD,1/4/1984,GVRD T015,49.1328,-122.6942,79,1
+339,M110513,Surrey Echo,10334 152A Street,Surrey,NON OPERATIONAL,Residential,ENV,5/30/1985,Station closed 1996-03-12,49.1897,-122.7975,82,0
+409,0770707,Taylor Farmhouse,1.5 miles NE of Plant Site,Taylor,NON OPERATIONAL,Industrial,INDUSTRY,1/4/1993,Station closed 1998-01-31,56.1667,-120.6750,0,0
+497,E304685,Taylor Lone Wolf Golf Course,9999 99 Avenue,Taylor,NON OPERATIONAL,Shut down at 17:00. Mar. 5. 2018,ENV,1/27/2016,N/A,56.16013000,-120.67594000,488,0
+499,E304685,Taylor Lone Wolf Golf Course_60,9999 99 Avenue,Taylor,NON OPERATIONAL,Shut down at 17:00. Mar. 5. 2018,ENV,1/26/2016,N/A,56.16013000,-120.67594000,488,0
+176,E234230,Taylor South Hill_60,Pingle Creek Road,Taylor,OPERATIONAL,Rural,INDUSTRY,3/2/1998,NAPS 104302,56.105871,-120.662779,689,1
+179,0770708,Taylor Townsite,McMahon Complex. Alaska Highway,Taylor,OPERATIONAL,Residential,INDUSTRY,4/1/1993,NAPS 104301; changed to Envidas Ultimate 2017-08-04,56.150186,-120.686985,474,1
+556,Taylor OGC CAMEL,Taylor Willow Drive,intersection of 102 St & Willow,Taylor,BC OGC MOBILE,N/A,BC OGC,9/19/2018 4:11:10 PM,N/A,56.144931,-120.678956,0,0
+391,E233102,Telegraph Creek,Tahltan School,Telegraph Creek,NON OPERATIONAL,Residential,ENV,7/23/1998,Station closed 1998-09-02,54.9033,-131.1611,0,0
+213,E230557,Telkwa,1304 Birch Street,Telkwa,NON OPERATIONAL,Rural; Cellular,ENV,7/1/2009,Teom & Sharp removed from service 2015-05-08; now a Met site only,54.691479,-127.054340,80,0
+182,E230557,Telkwa_60,1304 Birch Street,Telkwa,OPERATIONAL,Rural,ENV,1/20/1998,Station Closed 2009-12-09; re-opened 2015-06-22,54.691479,-127.054340,0,1
+392,E220621,Terrace Airport,Terrace Airport,Terrace,NON OPERATIONAL,Commercial,INDUSTRY,8/6/1994,Station closed 1994-10-04,54.4667,-128.5667,0,0
+185,M107028,Terrace BC Access Centre_60,104 3220 Eby Street,Terrace,NON OPERATIONAL,Residential; Station closed May 6. 2015,ENV,6/13/1996,PM2.5 TEOM set to record at local temperature and pressure 2011-02-11;;PM10 TEOM set to record at local temperature and pressure 2011-03-04,54.5183,-128.5975,510,0
+471,E300350,Terrace Skeena Middle School,3411 Munroe Street,Terrace,OPERATIONAL,N/A,ENV,12/8/2014,NAPS 102503,54.52167,-128.6075,81,1
+473,E300350,Terrace Skeena Middle School_60,3411 Munroe Street,Terrace,OPERATIONAL,N/A,ENV,11/28/2014 11:29:42 AM,CR1000,54.52167,-128.6075,81,1
+456,E295891,Tomslake 197 Rd East,14927 Old Edmonton Highway,Tomslake,NON OPERATIONAL,N/A,ENV,12/9/2013,Station closed Nov 30 2015 @1400,55.59015000,-120.08583000,765,0
+466,E295891,Tomslake 197 Rd East Met_60,14927 Old Edmonton Highway,Tomslake,NON OPERATIONAL,N/A,ENV,5/5/2014 10:21:23 AM,Station closed Nov 30 2015 @1400,55.59015000,-120.08583000,765,0
+265,E279629,Tomslake MAML,Toms Lake Community Centre,Dawson Creek,MOBILE NON OPERATIONAL,Rural,ENV,5/14/2010,Mobile Air Monitoring Laboratory;;Station Closed 2010-06-21,55.5564,-120.0814,0,0
+186,E269123,Trail Aquatic Centre,1875 Columbia Avenue,Trail,NON OPERATIONAL,Residential,ENV,9/10/2007,Station Closed 2010-02-25,49.0955,-117.6972,486,0
+190,0250009,Trail Butler Park,1875 Columbia Avenue,Trail,OPERATIONAL,Residential,INDUSTRY,1/3/1972,NAPS 102201,49.096218,-117.697828,422,1
+189,0250009,Trail Butler Park Met_60,1875 Columbia Avenue,Trail,OPERATIONAL,Residential,INDUSTRY,10/17/1985,changed over to CR1000 July 27. 2016,49.096218,-117.697828,423,1
+264,0260012,Trail Columbia Gardens Airport,Highway 22A,Trail,OPERATIONAL,N/A,INDUSTRY,6/5/2010,Station Closed 2011-06-09; Re-opened August 17. 2016,49.04640500,-117.60711000,428,1
+192,E237758,Trail Columbia Gardens Airport_60,Field along the south property line,Trail,OPERATIONAL,Commercial,INDUSTRY,6/23/1999,Station Closed 2011-06-09; Re-opened July 28. 2016,49.04640500,-117.607110,428,1
+369,0260010,Trail Downtown,WKP & Light Building,Trail,NON OPERATIONAL,Commercial,INDUSTRY,1/1/1982,Station closed 2003-12-31,49.0953,-117.6508,417,0
+370,0260026,Trail Glenmerry,3370 Highway Drive,Trail,NON OPERATIONAL,Commercial,INDUSTRY,12/24/1986,Station closed 2001-07-31,49.0967,-117.6686,458,0
+371,0260023,Trail Hospital,1200 Hospital Bench,Trail,NON OPERATIONAL,Residential,INDUSTRY,1/7/1995,Station closed 2009-09-30,49.1031,-117.6833,457,0
+372,0260022,Trail Oasis,Willow End Road,Trail,NON OPERATIONAL,Industrial,INDUSTRY,1/1/1982,Station Closed 2006-12-31,49.1331,-117.7456,555,0
+373,E222141,Trail West,Corner of Bay Avenue & Wilms Lane,Trail,NON OPERATIONAL,Residential,INDUSTRY,5/21/1995,Station closed 2004-09-30,49.0936,-117.7014,488,0
+273,E283549,Tsawwassen,411 Milsom Wynd,Delta,METRO VANCOUVER,Residential,MVRD,4/8/2010,GVRD T039,49.0099,-123.0820,52,1
+509,Tumbler Ridge OGC CAMEL,Tumbler Ridge Lions Flatbed Creek Campground,off Don Phillips Way,Tumbler Ridge,BC OGC MOBILE,N/A,BC OGC,7/7/2014,N/A,55.119369,-121.019111,0,0
+266,E282169,Ucluelet Amphitrite Point,Coast Guard Drive,Ucluelet,NON OPERATIONAL,Commercial; Cellular,ENV,5/14/2010,NAPS 106800,48.921799,-125.541209,14,0
+277,E282169,Ucluelet Amphitrite Point Met_60,Coast Guard Lighthouse,Ucluelet,NON OPERATIONAL,Commercial,ENV,9/24/2010,N/A,48.921799,-125.541209,14,0
+440,E234293,Valemount,1380 5th Avenue,Valemount,OPERATIONAL,N/A; Telus,ENV,3/1/2013,NAPS 106101,52.832459,-119.269821,800,1
+209,E274205,Valemount Met_60,38 Dogwood Street,Valemount,OPERATIONAL,Commercial,ENV,11/13/2008,N/A,52.8330,-119.2680,792,1
+259,E232246,Vancouver International Airport #2,3153 Templeton Street,Richmond,METRO VANCOUVER,Commercial,MVRD,1/2/1998,GVRD T031,49.1864,-123.1522,10,1
+241,0310175,Vancouver Kitsilano,2550 West 10th Avenue,Vancouver,METRO VANCOUVER NON OPERATIONAL,Residential,MVRD,3/16/2010,GVRD T002 Station closed 2014-05,49.2617,-123.1633,34,0
+340,0310176,Vancouver Marpole,250W 70th Avenue,Vancouver,METRO VANCOUVER NON OPERATIONAL,Residential,MVRD,1/8/1973,GVRD T003 Station closed 1993-05-06,49.2097,-123.1139,27,0
+240,0310174,Vancouver Robson Square,Robson and Hornby,Vancouver,METRO VANCOUVER,Commercial,MVRD,1/2/1975,GVRD T001,49.2822,-123.1219,56,1
+212,E269223,Vanderhoof Courthouse,2441 Bute Road,Vanderhoof,OPERATIONAL,Residential,ENV,12/8/2009,Changed BAM range May 11. 2015 from 200 to 500,54.0163,-124.0061,638,1
+207,E269223,Vanderhoof Courthouse Met_60,2441 Bute Road,Vanderhoof,OPERATIONAL,NAPS 106900,ENV,5/10/2007,CR1000,54.016476,-124.005724,637,1
+348,E222853,Vernon City Hall Mobile,340030th Avenue,Vernon,NON OPERATIONAL,Residential,ENV,1/1/1996,Station closed 1996-05-28,50.2661,-119.2708,400,0
+11,E249492,Vernon Science Centre,2704 Highway #6,Vernon,OPERATIONAL,Commercial; Shaw; NAPS 104003,ENV,10/15/2002,PM2.5 TEOM set to record at local temperature and pressure 2011-03-03,50.260617,-119.270723,476,1
+194,E249492,Vernon Science Centre_60,2704 Highway #6,Vernon,OPERATIONAL,Residential,ENV,10/15/2002,Station Closed 2009-12-19; CR1000 Aug 18. 2016,50.260617,-119.270723,476,1
+304,0110000,Victoria Air 1,1106 Cook Street,Victoria,NON OPERATIONAL,Residential,ENV,1/1/1976,Station Closed 1983-02-28,48.4244,-123.3597,0,0
+203,E260701,Victoria Christopher Point_60,DND property at Rocky Point,Victoria,NON OPERATIONAL,Rural,INDUSTRY,1/9/2005,Station Closed 2008-12-31,48.3094,-123.5619,0,0
+413,E285559,Victoria James Bay Daniels Electronics,43 Erie Street,Victoria,NON OPERATIONAL,N/A,ENV,4/12/2011,N/A,48.4208,-123.3828,22,0
+211,E277063,Victoria James Bay MAML,James Bay Montreal Street,Victoria,MOBILE NON OPERATIONAL,Residential:  MAML Test 2012-08-29 to,ENV,5/19/2009,Mobile Air Monitoring Laboratory;;Station Closed 2009-08-24,48.418056,-123.381667,20,0
+460,E297190,Victoria James Bay The Reef,21 Erie Street,Victoria,OPERATIONAL,N/A,INDUSTRY,4/2/2014,polled through Vic Topaz,48.42158900,-123.384311,22,1
+305,0110030,Victoria PAPS,1250 Quadra Street,Victoria,NON OPERATIONAL,Residential,MVRD,1/4/1983,Station Closed 1997-10-30,48.4239,-123.3553,22,0
+20,0110031,Victoria Royal Roads University,2005 Sooke Road,Victoria,NON OPERATIONAL,Residential,INDUSTRY,3/3/1998,Station Closed 2008-12-31,48.4300,-123.4686,1,0
+205,0110031,Victoria Royal Roads_60,2005 Sooke Road,Victoria,NON OPERATIONAL,Residential,INDUSTRY,3/3/1998,Station Closed 2008-12-31,48.4300,-123.4686,1,0
+4,E231866,Victoria Topaz,923 Topaz Avenue,Victoria,OPERATIONAL,Residential; Telus; NAPS 100304,ENV,5/1/1998,PM2.5= BAM1020; PM2.5 BAM set to record at local temperature and pressure 2011-02-04,48.441942,-123.363165,29,1
+8,E231866,Victoria Topaz Met_60,923 Topaz Avenue,Victoria,OPERATIONAL,Commercial,ENV,5/1/1998,N/A,48.441942,-123.363165,29,1
+283,0260011,Warfield Elementary,395 Schofield Highway,Warfield,OPERATIONAL,N/A,INDUSTRY,9/28/2010,Attached to Ultimate at Columbia Gardens Aug 17. 2016,49.0952,-117.7469,604,1
+196,0260011,Warfield Elementary Met_60,395 Schofield Highway,Warfield,OPERATIONAL,Forest,INDUSTRY,1/1/1982,changed over to CR1000 July 27. 2016,49.095439,-117.74683,610,1
+377,M109011,Wells,Jack of Club Lake,Wells,NON OPERATIONAL,Forest,ENV,7/25/1990,Station closed 1991-10-08,53.0983,-123.5786,1207,0
+341,0310180,West Vancouver Lions Gate,Welsh Road,West Vancouver,METRO VANCOUVER NON OPERATIONAL,Commercial,MVRD,1/8/1980,GVRD T008 Station closed 1993-09-30,49.3181,-123.1347,15,0
+217,E278652,Whistler Function Junction MAML,Waste Treatment Plant,Whistler,NON OPERATIONAL,Industry,ENV,1/27/2010,Mobile Air Monitoring Laboratory;;Station Closed 2010-04-15,50.0856,-123.0383,593,0
+197,E227431,Whistler Meadow Park,4325 Blackcomb Way,Whistler,OPERATIONAL,Residential; Shaw; NAPS 105001,ENV,4/24/2001,PM 2.5 BAM and TEOM set to record at local temperature and pressure 2011-02-09; Ultimate installed June 1. 2016,50.144285,-122.960402,638,1
+200,E248797,Williams Lake CRD Library,180 North third Avenue,Williams Lake,NON OPERATIONAL,Residential; NAPS 102706,ENV,7/26/2002,TEOM Converted from PM2.5 to PM10 2013-02-28; station closed 2014-06-17,52.13083,-122.14222,609,0
+199,E248623,Williams Lake Canadian Tire Met_60,1050 South Lakeside Drive,Williams Lake,OPERATIONAL,Residential,ENV,6/13/2002,N/A,52.1175,-122.1313,578,0
+16,0550502,Williams Lake Columneetza School,1045 Western Avenue,Williams Lake,OPERATIONAL,Residential; NAPS 102701,ENV,4/15/1992,PM2.5 TEOM set to record at local temperature and pressure 2011-02-21;;PM10 TEOM set to record at local temperature and pressure 2011-03-02,52.14428,-122.150391,631,1
+549,0550502,Williams Lake Columneetza School_60,1045 Western Avenue,Williams Lake,OPERATIONAL,N/A,ENV,8/1/2018 3:10:37 PM,N/A,52.14428,-122.150391,631,1
+378,0605020,Williams Lake Skyline School,225 Hodson Road,Williams Lake,NON OPERATIONAL,Residential,ENV,8/8/2001,Station closed 2008-03-31,52.1161,-122.1325,650,0

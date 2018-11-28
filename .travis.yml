@@ -1,18 +1,46 @@
 language: r
-cran: https://cran.rstudio.com
-# cache: packages
+cache: packages
 sudo: required
-dist: trusty
+repos:
+  CRAN: https://cloud.r-project.org
+  bcgov: https://bcgov.github.io/drat
 
-before_install:
-  - sudo add-apt-repository ppa:ubuntugis/ppa --yes
-  - sudo apt-get --yes --force-yes update -qq
-  - sudo apt-get install --yes libudunits2-dev libproj-dev libgeos-dev libgdal-dev
+#before_install:
+#  - sudo add-apt-repository ppa:ubuntugis/ppa --yes
+#  - sudo apt-get --yes --force-yes update -qq
+#  - sudo apt-get install --yes libudunits2-dev libproj-dev libgeos-dev libgdal-dev
 
-r:
-  - release
-  - devel
-  - oldrel
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:ubuntugis/ppa'
+    packages:
+      - libudunits2-dev
+      - libproj-dev
+      - libgeos-dev
+      - libgdal-dev
+      
+r_packages: 
+  - devtools
+  - bcmaps.rdata
+
+matrix:
+  include:
+    - os: linux
+      r: devel
+
+    - os: linux
+      r: release
+
+    - os: osx
+      r: devel
+      
+    - os: osx
+      r: release
+
+  allow_failures:
+    - os: osx
+      r: devel
 
 notifications:
   email:

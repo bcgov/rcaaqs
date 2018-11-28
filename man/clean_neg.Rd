@@ -15,7 +15,7 @@ clean_neg(x, type = c("pm25", "ozone", "so2", "nox"))
 }
 \value{
 a vector of the same length as x with negative values replaced with
- CAAQS compliant values
+CAAQS compliant values
 }
 \description{
 Replaces negative values in a vector of air quality readings with
@@ -23,7 +23,7 @@ CAAQS-compliant values
 }
 \details{
 For gases (type = "ozone", "so2", or "nox"), replaces values
- \eqn{\le} -5 with \code{NA} and values between -5 and 0 with 0. For type =
- "pm25", replaces values \eqn{\le} -3.5 with \code{NA} and values between
- -3.5 and 0 with 0.
+\eqn{\le} -5 with \code{NA} and values between -5 and 0 with 0. For type =
+"pm25", replaces values \eqn{\le} -3.5 with \code{NA} and values between
+-3.5 and 0 with 0.
 }

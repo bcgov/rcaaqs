@@ -2,21 +2,22 @@
 % Please edit documentation in R/plot.R
 \name{plot_ts}
 \alias{plot_ts}
-\title{Plot daily time series data with exceedances}
+\title{Plot daily time series data with exceedances and optionally caaqs for a
+particular station}
 \usage{
-plot_ts(daily_data, caaqs_data = NULL, parameter, rep_yr,
+plot_ts(x, id = NULL, id_col = NULL, rep_yr, plot_caaqs = TRUE,
   plot_exceedances = FALSE, base_size = 10, annot_size = NULL)
 }
 \arguments{
-\item{daily_data}{a dataframe of daily aggregated air quality readings with 
-columns: date, avg_24h (if pm25), max8hr (if o3)}
+\item{x}{an object of class \code{caaqs}}
 
-\item{caaqs_data}{(optional) a one-row dataframe with columns "min_year", 
-"max_year" and columns for caaqs achievement status and mangaement status}
+\item{id}{the id of the station you would like to plot}
 
-\item{parameter}{air pollutant ("o3", "pm2.5_annual", "pm2.5_24h")}
+\item{id_col}{the column in which to look for \code{id}}
 
 \item{rep_yr}{The reporting year}
+
+\item{plot_caaqs}{Should the caaqs be plotted?}
 
 \item{plot_exceedances}{logical. Should exceedances be plotted?}
 
@@ -30,5 +31,6 @@ as the rest of the font sizes, so you will have to experiment. Defaults to
 a ggplot2 object
 }
 \description{
-Plot daily time series data with exceedances
+Plot daily time series data with exceedances and optionally caaqs for a
+particular station
 }
