@@ -33,11 +33,8 @@
 #' @param mgmt_metric_val The column containing the management CAAQS metric for individual stations
 #' @param mgmt The column containing the CAAQS management levels for individual
 #'   stations
-#' @param keep The columns in the input data that you would like to retain in the 
-#'   output data frame. You can make it a named vector to rename the column in 
-#'   the output. Use the form `keep = c(new_name = "existing_name")`. This 
-#'   can also be used to rename any of the columns specified by n_years, az, or 
-#'   val.
+#' @param keep Character vector specifying the columns in the input data that you would like to retain in the 
+#'   output data frame.
 #'  
 #' @return A dataframe with 9 columns: airzone, number of years in calculation,
 #'   ambient CAAQS metric value, CAAQS achievement levels, ambient reporting station id,
@@ -64,17 +61,6 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   
   data <- dplyr::ungroup(data)
   
-  # Rename keep columns if asked to
-  new_keep <- names(keep)
-  if (!is.null(new_keep)) {
-    for (k in keep) {
-      n <- new_keep[keep == k]
-      if (nchar(n) > 0) {
-        names(data)[names(data) == k] <- n
-      }
-    }
-  }
-  
   # Take station with max ambient_metric_value for each airzone
   data <- tidyr::nest(data, -!!rlang::sym(az))
   
@@ -88,7 +74,7 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   
   # Arrange column order
   data1 <- data1[, c(az, n_years, ambient_metric_val, ambient_caaqs, station_id,
-                   setdiff(new_keep, c(az, n_years, ambient_metric_val, ambient_caaqs, station_id)))]
+                   setdiff(keep, c(az, n_years, ambient_metric_val, ambient_caaqs, station_id)))]
   
   colnames(data1)[names(data1) == station_id] <- "rep_stn_id_ambient"
 
@@ -103,7 +89,7 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   
   # Arrange column order
   data2 <- data2[, c(az, n_years, excluded, mgmt_metric_val, mgmt, station_id,
-               setdiff(new_keep, c(az, n_years, excluded, mgmt_metric_val, mgmt, station_id)))]
+               setdiff(keep, c(az, n_years, excluded, mgmt_metric_val, mgmt, station_id)))]
   
   colnames(data2)[names(data2) == station_id] <- "rep_stn_id_mgmt"
   

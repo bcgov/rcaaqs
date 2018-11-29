@@ -33,11 +33,8 @@ the CAAQS management levels}
 \item{mgmt}{The column containing the CAAQS management levels for individual
 stations}
 
-\item{keep}{The columns in the input data that you would like to retain in the
-output data frame. You can make it a named vector to rename the column in
-the output. Use the form \code{keep = c(new_name = "existing_name")}. This
-can also be used to rename any of the columns specified by n_years, az, or
-val.}
+\item{keep}{Character vector specifying the columns in the input data that you would like to retain in the
+output data frame.}
 }
 \value{
 A dataframe with 9 columns: airzone, number of years in calculation,
