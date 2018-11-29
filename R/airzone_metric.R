@@ -86,7 +86,7 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   colnames(data2)[which(names(data2) == station_id)] <- "mgmt_rep_stn_id" 
   
   # Join dataframes
-  data <- dplyr::left_join(data1, data2)
+  data <- dplyr::left_join(data1, data2, by = az)
     
   data
   
