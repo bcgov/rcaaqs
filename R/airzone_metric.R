@@ -62,6 +62,19 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   check_class(ambient_metric_val, data, "numeric")
   check_class(mgmt_metric_val, data, "numeric")
   
+  data <- dplyr::ungroup(data)
+  
+  # Rename keep columns if asked to
+  new_keep <- names(keep)
+  if (!is.null(new_keep)) {
+    for (k in keep) {
+      n <- new_keep[keep == k]
+      if (nchar(n) > 0) {
+        names(data)[names(data) == k] <- n
+      }
+    }
+  }
+  
   # Take station with max ambient_metric_value for each airzone
   data <- tidyr::nest(data, -!!rlang::sym(az))
   
@@ -75,9 +88,9 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   
   # Arrange column order
   data1 <- data1[, c(az, n_years, ambient_metric_val, ambient_caaqs, station_id,
-                   setdiff(keep, c(az, n_years, ambient_metric_val, ambient_caaqs, station_id)))]
+                   setdiff(new_keep, c(az, n_years, ambient_metric_val, ambient_caaqs, station_id)))]
   
-  colnames(data1)[which(names(data1) == station_id)] <- "ambient_rep_stn_id" 
+  colnames(data1)[names(data1) == station_id] <- "rep_stn_id_ambient"
 
   # Take station with max mgmt_metric_value for each airzone
   data2 <- dplyr::mutate(
@@ -90,23 +103,14 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   
   # Arrange column order
   data2 <- data2[, c(az, n_years, excluded, mgmt_metric_val, mgmt, station_id,
-               setdiff(keep, c(az, n_years, excluded, mgmt_metric_val, mgmt, station_id)))]
+               setdiff(new_keep, c(az, n_years, excluded, mgmt_metric_val, mgmt, station_id)))]
   
-  colnames(data2)[which(names(data2) == station_id)] <- "mgmt_rep_stn_id" 
+  colnames(data2)[names(data2) == station_id] <- "rep_stn_id_mgmt"
   
   # Join dataframes
   data <- dplyr::left_join(data1, data2, by = az, 
                            suffix = c("_ambient", "_mgmt"))
   
-  # Rename keep columns if asked to
-  if (!is.null(names(keep))) {
-    for (k in keep) {
-      n <- names(keep)[keep == k]
-      if (nchar(n) > 0) {
-        names(data)[names(data) == k] <- n
-      }
-    }
-  }
   data
 }
 
