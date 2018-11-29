@@ -63,8 +63,13 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   check_class(mgmt_metric_val, data, "numeric")
   
   # Take station with max ambient_metric_value for each airzone
-  data <- tidyr::nest(data, - !!rlang::sym(az))
-  data1 <- dplyr::mutate(data, data = purrr::map(.data$data, ~ dplyr::slice(.x, which.max(.x[[ambient_metric_val]]))))
+  data <- tidyr::nest(data, -!!rlang::sym(az))
+  
+  data1 <- dplyr::mutate(
+    data, data = purrr::map(
+      .data$data, ~ az_metric_single(.x, n_years, ambient_metric_val)
+    )
+  )
   data1 <- tidyr::unnest(data1)
   data1 <- dplyr::arrange(data1, !!rlang::sym(az))
   
@@ -75,7 +80,11 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   colnames(data1)[which(names(data1) == station_id)] <- "ambient_rep_stn_id" 
 
   # Take station with max mgmt_metric_value for each airzone
-  data2 <- dplyr::mutate(data, data = purrr::map(.data$data, ~ dplyr::slice(.x, which.max(.x[[mgmt_metric_val]]))))
+  data2 <- dplyr::mutate(
+    data, data = purrr::map(
+      .data$data, ~ az_metric_single(.x, n_years, mgmt_metric_val)
+    )
+  )
   data2 <- tidyr::unnest(data2)
   data2 <- dplyr::arrange(data2, !!rlang::sym(az))
   
@@ -86,9 +95,8 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   colnames(data2)[which(names(data2) == station_id)] <- "mgmt_rep_stn_id" 
   
   # Join dataframes
-  data <- dplyr::left_join(data1, data2, by = az)
-    
-  data
+  data <- dplyr::left_join(data1, data2, by = az, 
+                           suffix = c("_ambient", "_mgmt"))
   
   # Rename keep columns if asked to
   if (!is.null(names(keep))) {
@@ -109,6 +117,11 @@ parse_incomplete <- function(data, n_years, val) {
     data[data[[n_years]] < 3, val] <- NA
   }
   data
+}
+
+az_metric_single <- function(data, n_years, val) {
+  data <- parse_incomplete(data, n_years, val)
+  dplyr::slice(data, which.max(data[[val]]))
 }
 
 #' Assign locations to airzones
