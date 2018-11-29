@@ -45,9 +45,9 @@
 
 airzone_metric <- function(data, n_years = "n_years", az = "airzone", 
                            station_id = "ems_id",
-                           ambient_metric_val = "ambient_metric_value",
-                           ambient_caaqs = "ambient_caaqs",
-                           excluded = "excluded", mgmt_metric_val = "mgmt_metric_value",
+                           ambient_metric_val = "metric_value_ambient",
+                           ambient_caaqs = "caaqs_ambient",
+                           excluded = "excluded", mgmt_metric_val = "metric_value_mgmt",
                            mgmt = "mgmt_level", keep = NULL) {
   
   # Check inputs

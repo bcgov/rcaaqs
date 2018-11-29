@@ -258,13 +258,13 @@ caaqs_management_so2_no2_1yr <- function(x, exclude_df, exclude_df_dt,
 
 join_management_caaqs <- function(caaqs, mgmt_caaqs, by, eetf) {
   mgmt_caaqs <- dplyr::select(mgmt_caaqs, by, "caaqs_year", "metric", 
-                        "mgmt_metric_value" = "metric_value", 
+                        "metric_value_mgmt" = "metric_value", 
                         "mgmt", "excluded")
   ret <- dplyr::left_join(caaqs, mgmt_caaqs, by = c(by, "caaqs_year", "metric"))
   dplyr::select(ret, by, "caaqs_year", "metric", 
-                "ambient_metric_value" = "metric_value", 
-                "ambient_caaqs" = "caaqs", 
-                "excluded", "mgmt_metric_value", "mgmt_level" = "mgmt", 
+                "metric_value_ambient" = "metric_value", 
+                "caaqs_ambient" = "caaqs", 
+                "excluded", "metric_value_mgmt", "mgmt_level" = "mgmt", 
                 dplyr::everything())
 }
 
