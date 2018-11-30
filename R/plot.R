@@ -216,7 +216,7 @@ mid_breaks <- function(width = "1 year") {
 #' @import ggplot2
 #'   
 #' @return ggplot2 object
-#' @noRd
+#' @export
 #' 
 summary_plot <- function(data, metric_val, station, airzone, parameter, 
                          base_size = 12, pt_size = 4, ...) {
