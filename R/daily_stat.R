@@ -157,7 +157,10 @@ no2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL) {
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = Inf)
   
   # Remove invalid data (< 75% of hourly measures) 
-  data$stat[!data$valid] <- as.numeric(NA)
+  data$stat[!data$valid] <- NA_real_
+  
+  # Exceedance of daily measures not relevant
+  data$exceed <- NA
   
   dplyr::rename(data, 
                 "max_24h" = "stat", 
@@ -173,7 +176,7 @@ so2_daily_max <- function(data, dt = "date_time", val = "value", by = NULL) {
   data <- pollutant_daily_stat(data, dt, val, by, pollutant_standard = 70)
   
   # Remove invalid data (< 75% of hourly measures) BUT if exceeds standard, keep and flag
-  data$stat[!data$valid & !data$exceed] <- as.numeric(NA)
+  data$stat[!data$valid & !data$exceed] <- NA_real_
   
   dplyr::rename(data, 
                 "max_24h" = "stat", 
@@ -189,10 +192,13 @@ pm_daily_avg <- function(data, dt = "date_time", val = "value", by = NULL) {
                                stat = mean_na)
   
   # Remove invalid data (< 75% of hourly measures)
-  data$stat[!data$valid] <- as.numeric(NA)
+  data$stat[!data$valid] <- NA_real_
   
   # Remove flag (not applicable to pm)
   data$flag <- NA
+  
+  # Exceedance of daily measures not relevant
+  data$exceed <- NA
   
   dplyr::rename(data, 
                 "avg_24h" = "stat", 
