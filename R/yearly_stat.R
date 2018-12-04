@@ -49,7 +49,7 @@ yearly_stat <- function(data, dt = "date", val = "value",
   # Calculate yearly statistic
   if (!is.null(stat.opts)) {
     data <- dplyr::summarize(data, 
-                             stat = stat(!!rlang::sym(val), !!unlist(stat.opts)),
+                             stat = do.call(stat, c(list(x = !!rlang::sym(val)), stat.opts)),
                              excluded = any(.data$excluded),
                              flag_daily_incomplete = any(.data$flag_daily_incomplete))
   } else {
