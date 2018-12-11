@@ -27,6 +27,7 @@
 #'   \item{val_labels_html}{Labels for the category values in html}
 #'   \item{val_labels_unicode}{Labels for the category values in unicode}
 #'   \item{colour}{The colour of the category (in hexadecimal code)}
+#'   \item{colour_text}{The colour of the category (in English)}
 #'   
 #' }
 "management_levels"
@@ -46,6 +47,7 @@
 #'   \item{val_labels_html}{Labels for the category values in html}
 #'   \item{val_labels_unicode}{Labels for the category values in unicode}
 #'   \item{colour}{The colour of the category (in hexadecimal code)}
+#'   \item{colour_text}{The colour of the category (in English)}
 #'   
 #' }
 "achievement_levels"

@@ -22,12 +22,19 @@ units_tbl <- tibble(
   units_html = c("ppb", "&mu;g/m&sup3;")
 )
 
-label_colours <- c("Achieved" = "#377eb8", 
+label_colours_hex <- c("Achieved" = "#377eb8", 
                    "Not Achieved" = "#e41a1c", 
                    "Actions for Keeping Clean Areas Clean" = "#A6D96A", 
                    "Actions for Preventing Air Quality Deterioration" = "#FEE08B", 
                    "Actions for Preventing CAAQS Exceedance" = "#F46D43", 
                    "Actions for Achieving Air Zone CAAQS" = "#A50026")
+
+label_colours <- c("Achieved" = "blue", 
+                   "Not Achieved" = "red", 
+                   "Actions for Keeping Clean Areas Clean" = "green", 
+                   "Actions for Preventing Air Quality Deterioration" = "yellow", 
+                   "Actions for Preventing CAAQS Exceedance" = "orange", 
+                   "Actions for Achieving Air Zone CAAQS" = "red")
 
 ## A function factory that creates a function that takes one argument (an operator)
 ## and converts it to the unicode or html version 
@@ -84,7 +91,8 @@ achievement_levels <- tribble(
                              paste0("<= ", upper_breaks, units)), 
          val_labels_html = str_replace_all(val_labels, operators_regex, replace_chars("html")), 
          val_labels_unicode = str_replace_all(val_labels, operators_regex, replace_chars("unicode")), 
-         colour = label_colours[labels])
+         colour = label_colours_hex[labels], 
+         colour_text = label_colours[labels])
 
 
 ## Management levels table
@@ -136,8 +144,9 @@ management_levels <- tribble(
                     " & <= ", upper_breaks, units))), 
     val_labels_html = str_replace_all(val_labels, operators_regex, replace_chars("html")), 
     val_labels_unicode = str_replace_all(val_labels, operators_regex, replace_chars("unicode")), 
-    colour = label_colours[labels])
+    colour = label_colours_hex[labels], 
+    colour_text = label_colours[labels])
 
 ## Save data
-devtools::use_data(achievement_levels, management_levels, pkg = ".", 
+usethis::use_data(achievement_levels, management_levels, pkg = ".", 
                    internal = FALSE, overwrite = TRUE)
