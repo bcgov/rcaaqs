@@ -211,6 +211,9 @@ mid_breaks <- function(width = "1 year") {
 #' @param parameter the name of the column containing the parameter(s) of interest
 #' @param base_size base font size (default 12)
 #' @param pt_size size of points (default 4)
+#' @param az_labeller ggplot2 labeller function to customize the airzone labels.
+#'   Default `label_value` (i.e., no formatting of Airzone names). 
+#'   See [ggplot2::label_value()]
 #' @param ... options passed on to theme()
 #'   
 #' @import ggplot2
@@ -219,7 +222,8 @@ mid_breaks <- function(width = "1 year") {
 #' @export
 #' 
 summary_plot <- function(data, metric_val, station, airzone, parameter, 
-                         base_size = 12, pt_size = 4, ...) {
+                         base_size = 12, pt_size = 4, az_labeller = label_value, 
+                         ...) {
   if (!inherits(data, "data.frame")) stop("data should be a data frame")
   if (!all(c(metric_val, station, airzone) %in% names(data))) stop("not all of specified columns are in data")
   if (!is.numeric(data[[metric_val]])) stop("specified metric column is not numeric")
@@ -228,8 +232,10 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
   
   if (length(metrics) > 1) {
     facet_string <- paste0(airzone, " ~ ", parameter)
+    rcaaqs_labeller <- labeller(.rows = az_labeller, .cols = param_labeller)
   } else {
     facet_string <- paste0(airzone, " ~ .")
+    rcaaqs_labeller <- labeller(.rows = az_labeller)
   }
   
   lines_df <- data.frame(std = get_std(metrics), foo = "bar")
@@ -250,7 +256,7 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
   
   p <- ggplot(data, aes_string(x = metric_val, y = station))
   p <- p + facet_grid(facet_string, scales = "free", space = "free_y", 
-                      drop = TRUE, labeller = param_labeller)
+                      drop = TRUE, labeller = rcaaqs_labeller)
   p <- p + geom_vline(data = lines_df, aes_string(xintercept = "std"), linetype = 2, 
                       colour = "#e41a1c")
   p <- p + xlab(bquote(CAAQS ~ Metric ~ Value ~ (.(units))))

@@ -5,7 +5,7 @@
 \title{Generate a summary plot of individual station CAAQS values, grouped by Airzone}
 \usage{
 summary_plot(data, metric_val, station, airzone, parameter,
-  base_size = 12, pt_size = 4, ...)
+  base_size = 12, pt_size = 4, az_labeller = label_value, ...)
 }
 \arguments{
 \item{data}{a data frame with columns for the metric value, the station name,
@@ -23,6 +23,10 @@ for each station}
 \item{base_size}{base font size (default 12)}
 
 \item{pt_size}{size of points (default 4)}
+
+\item{az_labeller}{ggplot2 labeller function to customize the airzone labels.
+Default \code{label_value} (i.e., no formatting of Airzone names).
+See \code{\link[ggplot2:label_value]{ggplot2::label_value()}}}
 
 \item{...}{options passed on to theme()}
 }
