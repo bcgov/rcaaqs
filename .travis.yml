@@ -22,7 +22,7 @@ addons:
       
 r_packages: 
   - devtools
-  - bcmaps.rdata
+  - bcmapsdata
 
 matrix:
   include:

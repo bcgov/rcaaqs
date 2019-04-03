@@ -38,7 +38,7 @@ Imports:
     tidyr (>= 0.8)
 Suggests:
     bcmaps,
-    bcmaps.rdata,
+    bcmapsdata,
     broom,
     gridExtra,
     knitr,
