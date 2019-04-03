@@ -72,7 +72,7 @@ test_that("assign_airzone catches incorrect input", {
                   longitude = c(rep(-119, 3), rep(-123, 3)))
   
   expect_error(assign_airzone(""), "'data' is not a data frame")
-  expect_error(assign_airzone(p), "'lat' is not a column in 'data'")
+  expect_error(assign_airzone(p), "'lon' is not a column in 'data'")
   expect_error(assign_airzone(p, coords = c("longitude", "lat")), "'lat' is not a column in 'data'")
   
   expect_error(assign_airzone(p, coords = c("ems_id", "site")), "Column 'ems_id' is not numeric")
