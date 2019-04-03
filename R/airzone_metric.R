@@ -144,7 +144,7 @@ az_metric_single <- function(data, n_years, val) {
 #' @export
 assign_airzone <- function(data, airzones, az = "Airzone", 
                            station_id = "ems_id",
-                           coords = c("lat", "lon")) {
+                           coords = c("lon", "lat")) {
   if (!requireNamespace("sf", quietly = TRUE)) {
     stop("sf package is required for this function. Please install it.", 
          call. = FALSE)
