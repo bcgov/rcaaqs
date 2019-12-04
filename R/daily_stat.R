@@ -43,7 +43,7 @@ initial_check <- function(data, dt, val, by) {
   } else if (any(data$diff > 1, na.rm = TRUE)) {
     data <- tidyr::complete(data,
                             !!rlang::sym(dt) := tidyr::full_seq(!!rlang::sym(dt), 3600),
-                            tidyr::nesting(!!!rlang::syms(by)))
+                            if (is.null(by)) NULL else tidyr::nesting(!!!rlang::syms(by)))
   }
   
   dplyr::select(data, -dplyr::matches("diff"))
