@@ -62,14 +62,26 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   data <- dplyr::ungroup(data)
   
   # Take station with max ambient_metric_value for each airzone
-  data <- tidyr::nest(data, -!!rlang::sym(az))
+  
+  # Condition nesting code on version of tidyr
+  if (tidyr_new_interface()) {
+    data <- tidyr::nest(data, data = -tidyr::one_of(az))
+  } else {
+    data <- tidyr::nest(data, -!!rlang::sym(az))
+  }
   
   data1 <- dplyr::mutate(
     data, data = purrr::map(
       .data$data, ~ az_metric_single(.x, n_years, ambient_metric_val)
     )
   )
-  data1 <- tidyr::unnest(data1)
+  
+  if (tidyr_new_interface()) {
+    data1 <- tidyr::unnest(data1, tidyr::one_of("data"))
+  } else {
+    data1 <- tidyr::unnest(data1)
+  }
+  
   data1 <- dplyr::arrange(data1, !!rlang::sym(az))
   
   # Arrange column order
@@ -84,8 +96,12 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
       .data$data, ~ az_metric_single(.x, n_years, mgmt_metric_val)
     )
   )
-  data2 <- tidyr::unnest(data2)
-  data2 <- dplyr::arrange(data2, !!rlang::sym(az))
+  if (tidyr_new_interface()) {
+    data2 <- tidyr::unnest(data2, tidyr::one_of("data"))
+  } else {
+    data2 <- tidyr::unnest(data2)
+  }
+    data2 <- dplyr::arrange(data2, !!rlang::sym(az))
   
   # Arrange column order
   data2 <- data2[, c(az, n_years, excluded, mgmt_metric_val, mgmt, station_id,
