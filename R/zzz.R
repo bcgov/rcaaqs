@@ -168,4 +168,8 @@ check_exclude <- function(data, dt, by, exclude_df, exclude_df_dt) {
 #' @name rcaaqs-deprecated
 NULL
 
-
+# Function to check which version of tidyr, as syntax for nest() changed in v1.0
+# https://tidyr.tidyverse.org/articles/in-packages.html
+tidyr_new_interface <- function() {
+  packageVersion("tidyr") > "0.8.99"
+}
