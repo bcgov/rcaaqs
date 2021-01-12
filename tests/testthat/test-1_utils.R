@@ -44,7 +44,7 @@ test_that("check_class gets appropriate match", {
 
 test_that("initial_check catches hourly problems", {
   
-  d <- d[-c(100:110),]
+  d <- dplyr::slice(d, -c(100:110))
   expect_gt(nrow(initial_check(d, dt = "date_time", val = "value", by = c("ems_id", "site"))),
             nrow(d))
   
