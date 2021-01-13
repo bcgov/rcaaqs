@@ -19,6 +19,13 @@ test_that("Runs with silently", {
   saveRDS(r2, "pm_daily2.rds")
 })
 
+test_that("a different name for the date_time col can be used", {
+  res <- pm25_sample_data %>% 
+    dplyr::rename(DATE_TIME = date_time) %>% 
+    pm_annual_caaqs(dt = "DATE_TIME", by = c("ems_id", "site"))
+  expect_is(res, "caaqs")
+})
+
 ret1 <- readRDS("pm_daily1.rds")
 ret2 <- readRDS("pm_daily2.rds")
 

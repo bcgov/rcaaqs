@@ -24,7 +24,7 @@ initial_check <- function(data, dt, val, by) {
   check_class(val, data, "numeric")
   check_one(dt, val)
   
-  data <- dplyr::arrange(data, !!!rlang::syms(c(by, "date_time")))
+  data <- dplyr::arrange(data, !!!rlang::syms(c(by, dt)))
 
   # Make sure grouping vars are character (prevents warnings when merging)
   if(!is.null(by)) data <- dplyr::mutate_at(data, by, as.character)
@@ -32,9 +32,9 @@ initial_check <- function(data, dt, val, by) {
   # Confirm that data is hourly sequential with no gaps
   data <- dplyr::group_by(data, !!!rlang::syms(by))
   check_groups(data, dt)
-  data <- dplyr::mutate(data, diff = difftime(.data$date_time, 
-                                              dplyr::lag(.data$date_time), 
-                                              units = "hours"))
+  data <- dplyr::mutate(data, diff = difftime(!!!rlang::syms(dt), 
+                                      dplyr::lag(!!!rlang::syms(dt)), 
+                                      units = "hours"))
 
   # Fill out gaps with NA
   if(any(data$diff < 1, na.rm = TRUE)) {
