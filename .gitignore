@@ -5,3 +5,4 @@ doc
 .Rhistory
 .RData
 .DS_Store
+*.rds
