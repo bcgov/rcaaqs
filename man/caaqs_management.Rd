@@ -5,8 +5,7 @@
 \title{Calculate CAAQS management levels excluding days with Exceptional Events
 or Transboundary Flows}
 \usage{
-caaqs_management(x, exclude_df = NULL, exclude_df_dt = NULL,
-  quiet = FALSE)
+caaqs_management(x, exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
 }
 \arguments{
 \item{x}{an object of class \code{caaqs}}

@@ -4,7 +4,8 @@
 \name{management_levels}
 \alias{management_levels}
 \title{CAAQS Management levels for air pollutaionts}
-\format{A data frame with 8 variables:
+\format{
+A data frame with 8 variables:
 \describe{
 \item{parameter}{The name of the parameter}
 \item{labels}{Name of CAAQS Management Level}
@@ -19,7 +20,8 @@
 \item{colour}{The colour of the category (in hexadecimal code)}
 \item{colour_text}{The colour of the category (in English)}
 
-}}
+}
+}
 \usage{
 management_levels
 }

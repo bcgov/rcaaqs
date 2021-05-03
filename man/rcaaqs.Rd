@@ -3,7 +3,6 @@
 \docType{package}
 \name{rcaaqs}
 \alias{rcaaqs}
-\alias{rcaaqs-package}
 \title{rcaaqs: Tools for calculating CAAQS with air quality data}
 \description{
 The rcaaqs package provides functions for the calculation of Canadian Ambient

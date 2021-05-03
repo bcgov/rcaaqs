@@ -11,26 +11,41 @@
 \alias{no2_3yr_caaqs}
 \title{Compute specific CAAQS metrics}
 \usage{
-pm_24h_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  quiet = FALSE)
+pm_24h_caaqs(data, dt = "date_time", val = "value", by = NULL, quiet = FALSE)
 
-pm_annual_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  quiet = FALSE)
+pm_annual_caaqs(
+  data,
+  dt = "date_time",
+  val = "value",
+  by = NULL,
+  quiet = FALSE
+)
 
-o3_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  quiet = FALSE)
+o3_caaqs(data, dt = "date_time", val = "value", by = NULL, quiet = FALSE)
 
-so2_1yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  quiet = FALSE)
+so2_1yr_caaqs(data, dt = "date_time", val = "value", by = NULL, quiet = FALSE)
 
-so2_3yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
+so2_3yr_caaqs(
+  data,
+  dt = "date_time",
+  val = "value",
+  by = NULL,
+  exclude_df = NULL,
+  exclude_df_dt = NULL,
+  quiet = FALSE
+)
 
-no2_1yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  quiet = FALSE)
+no2_1yr_caaqs(data, dt = "date_time", val = "value", by = NULL, quiet = FALSE)
 
-no2_3yr_caaqs(data, dt = "date_time", val = "value", by = NULL,
-  exclude_df = NULL, exclude_df_dt = NULL, quiet = FALSE)
+no2_3yr_caaqs(
+  data,
+  dt = "date_time",
+  val = "value",
+  by = NULL,
+  exclude_df = NULL,
+  exclude_df_dt = NULL,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{data}{Data frame. Hourly raw pollution data with at least date-time and
@@ -75,7 +90,7 @@ yearly data was flagged as incomplete (see CAAQS guidelines for more
 details). If NA, indicates that this particular metric is never flagged.}
 
 To obtain any of the intermediate results data frames, use the
-\code{get_*} family of functions. See `?get_caaqs
+\verb{get_*} family of functions. See `?get_caaqs
 }
 \description{
 Compute specific CAAQS metrics for different forms of air pollution.

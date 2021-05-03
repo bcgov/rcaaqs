@@ -4,7 +4,8 @@
 \name{achievement_levels}
 \alias{achievement_levels}
 \title{CAAQS Achievement levels for air pollutaionts}
-\format{A data frame with 8 variables:
+\format{
+A data frame with 8 variables:
 \describe{
 \item{parameter}{The name of the parameter}
 \item{labels}{Achieved or Not Achieved}
@@ -19,7 +20,8 @@
 \item{colour}{The colour of the category (in hexadecimal code)}
 \item{colour_text}{The colour of the category (in English)}
 
-}}
+}
+}
 \usage{
 achievement_levels
 }

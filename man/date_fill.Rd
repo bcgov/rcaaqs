@@ -4,8 +4,7 @@
 \alias{date_fill}
 \title{Fill gaps in a date sequence}
 \usage{
-date_fill(data, date_col, interval = NULL, fill_cols = NULL,
-  add_ymd = FALSE)
+date_fill(data, date_col, interval = NULL, fill_cols = NULL, add_ymd = FALSE)
 }
 \arguments{
 \item{data}{Dataframe}

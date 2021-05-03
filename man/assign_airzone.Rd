@@ -4,8 +4,13 @@
 \alias{assign_airzone}
 \title{Assign locations to airzones}
 \usage{
-assign_airzone(data, airzones, az = "Airzone", station_id = "ems_id",
-  coords = c("lon", "lat"))
+assign_airzone(
+  data,
+  airzones,
+  az = "Airzone",
+  station_id = "ems_id",
+  coords = c("lon", "lat")
+)
 }
 \arguments{
 \item{data}{Data frame. Contains station ids and air quality data}

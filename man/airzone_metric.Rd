@@ -4,11 +4,18 @@
 \alias{airzone_metric}
 \title{Calculate the airzone metric}
 \usage{
-airzone_metric(data, n_years = "n_years", az = "airzone",
-  station_id = "ems_id", ambient_metric_val = "metric_value_ambient",
-  ambient_caaqs = "caaqs_ambient", excluded = "excluded",
-  mgmt_metric_val = "metric_value_mgmt", mgmt = "mgmt_level",
-  keep = NULL)
+airzone_metric(
+  data,
+  n_years = "n_years",
+  az = "airzone",
+  station_id = "ems_id",
+  ambient_metric_val = "metric_value_ambient",
+  ambient_caaqs = "caaqs_ambient",
+  excluded = "excluded",
+  mgmt_metric_val = "metric_value_mgmt",
+  mgmt = "mgmt_level",
+  keep = NULL
+)
 }
 \arguments{
 \item{data}{The dataframe}

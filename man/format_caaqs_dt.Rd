@@ -4,9 +4,12 @@
 \alias{format_caaqs_dt}
 \title{Format date-times in raw air quality data.}
 \usage{
-format_caaqs_dt(x, format = "\%Y-\%m-\%d \%H:\%M:\%S",
-  prev_hour = TRUE, tz = getOption("rcaaqs.timezone", default =
-  "Etc/GMT+8"))
+format_caaqs_dt(
+  x,
+  format = "\%Y-\%m-\%d \%H:\%M:\%S",
+  prev_hour = TRUE,
+  tz = getOption("rcaaqs.timezone", default = "Etc/GMT+8")
+)
 }
 \arguments{
 \item{x}{Vector of date-times as character or POSIXlt/ct.}

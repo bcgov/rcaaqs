@@ -5,8 +5,16 @@
 \title{Plot daily time series data with exceedances and optionally caaqs for a
 particular station}
 \usage{
-plot_ts(x, id = NULL, id_col = NULL, rep_yr, plot_caaqs = TRUE,
-  plot_exceedances = FALSE, base_size = 10, annot_size = NULL)
+plot_ts(
+  x,
+  id = NULL,
+  id_col = NULL,
+  rep_yr,
+  plot_caaqs = TRUE,
+  plot_exceedances = FALSE,
+  base_size = 10,
+  annot_size = NULL
+)
 }
 \arguments{
 \item{x}{an object of class \code{caaqs}}

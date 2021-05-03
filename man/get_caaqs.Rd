@@ -19,7 +19,7 @@ get_yearly(x)
 get_three_yr_rolling(x)
 }
 \arguments{
-\item{x}{An object of class \code{"caaqs"} (result of running a \code{*_caaqs()} function)}
+\item{x}{An object of class \code{"caaqs"} (result of running a \verb{*_caaqs()} function)}
 }
 \value{
 Varies according to the function and the parameter being analyzed:

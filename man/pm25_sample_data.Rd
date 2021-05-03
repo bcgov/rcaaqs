@@ -4,7 +4,8 @@
 \name{pm25_sample_data}
 \alias{pm25_sample_data}
 \title{Sample hourly PM2.5 data for 3 years from 10 stations}
-\format{A data frame with 6 variables:
+\format{
+A data frame with 6 variables:
 \describe{
 \item{ems_id}{id of the monitoring station}
 \item{date_time}{date/time (POSIXct) in ETC/GMT+8 timezone}
@@ -12,7 +13,8 @@
 \item{year}{year}
 \item{parameter}{name of the parameter ("PM2.5")}
 \item{value}{PM2.5 hourly value (in ppb)}
-}}
+}
+}
 \usage{
 pm25_sample_data
 }
