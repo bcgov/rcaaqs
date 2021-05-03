@@ -321,7 +321,7 @@ plot_station_instruments <- function(data, dt = "date_time", station = "station_
     geom_line(size = 1) + 
     labs(y = station) +
     theme(axis.text.y = element_blank(), 
-          strip.text.y = element_text(angle = 180))
+          strip.text.y.left = element_text(angle = 0))
 }
 
 plot_units <- function(parameters) {
