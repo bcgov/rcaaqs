@@ -38,6 +38,8 @@
 * Updates to documentation
 * Improved coding consistency with respect to argument names
 * Use lubridate functions rather than internal date/time functions
+* Update CAAQS for PM2.5 and Ozone
+* Update to dplyr v1.0 and tidyr v1.1
 
 # rcaaqs 0.3.1
 
