@@ -63,14 +63,14 @@ operators_regex <- paste0(c("<=", ">=", "<", ">", "&", "ug/m\\^3"), collapse = "
 # Filled in SO2 and NO2 from: http://airquality-qualitedelair.ccme.ca/en/
 achievement_levels <- tribble(
   ~parameter,     ~labels,        ~lower_breaks, ~upper_breaks, ~units,
-  "o3",           "Achieved",        0,             63,           "ppb",
-  "o3",           "Not Achieved",   63,            Inf,           "ppb",
+  "o3",           "Achieved",        0,             62,           "ppb",
+  "o3",           "Not Achieved",   62,            Inf,           "ppb",
   
-  "pm2.5_annual", "Achieved",        0,           10.0,        "ug/m^3",
-  "pm2.5_annual", "Not Achieved", 10.0,            Inf,        "ug/m^3",
+  "pm2.5_annual", "Achieved",        0,            8.8,        "ug/m^3",
+  "pm2.5_annual", "Not Achieved",  8.8,            Inf,        "ug/m^3",
 
-  "pm2.5_24h",    "Achieved",        0,             28,        "ug/m^3",
-  "pm2.5_24h",    "Not Achieved",   28,            Inf,        "ug/m^3",
+  "pm2.5_24h",    "Achieved",        0,             27,        "ug/m^3",
+  "pm2.5_24h",    "Not Achieved",   27,            Inf,        "ug/m^3",
   
   "no2_1yr",      "Achieved",        0,             17,           "ppb",
   "no2_1yr",      "Not Achieved",    17,           Inf,           "ppb",
@@ -148,5 +148,5 @@ management_levels <- tribble(
     colour_text = label_colours[labels])
 
 ## Save data
-usethis::use_data(achievement_levels, management_levels, pkg = ".", 
-                   internal = FALSE, overwrite = TRUE)
+usethis::use_data(achievement_levels, management_levels, 
+                  internal = FALSE, overwrite = TRUE)
