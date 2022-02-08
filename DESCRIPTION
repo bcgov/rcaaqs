@@ -29,13 +29,13 @@ BugReports: https://github.com/bcgov/rcaaqs/issues
 Depends:
     R (>= 3.3.0)
 Imports:
-    dplyr (>= 0.7),
+    dplyr (>= 1.0),
     ggplot2 (>= 3.0),
     lubridate (>= 1.7),
     purrr (>= 0.2),
     rlang (>= 0.3),
     scales (>= 1.0),
-    tidyr (>= 0.8)
+    tidyr (>= 1.1)
 Suggests:
     bcmaps,
     bcmapsdata,

@@ -132,7 +132,7 @@ caaqs <- function(data, year = "year", val, by, metric, n, management = FALSE) {
                  "flag_two_of_three_years")
   cols_keep <- intersect(cols_keep, names(data))
   
-  data <- dplyr::select(data, cols_keep)
+  data <- dplyr::select(data, dplyr::all_of(cols_keep))
   
   data
 }

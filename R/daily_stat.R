@@ -41,9 +41,15 @@ initial_check <- function(data, dt, val, by) {
     stop("Data resolution is less than hourly, summarize to hourly first", 
          call. = FALSE)
   } else if (any(data$diff > 1, na.rm = TRUE)) {
-    data <- tidyr::complete(data,
-                            !!rlang::sym(dt) := tidyr::full_seq(!!rlang::sym(dt), 3600),
-                            if (is.null(by)) NULL else tidyr::nesting(!!!rlang::syms(by)))
+    
+    if(packageVersion("tidyr") >= "1.2.0") {
+      data <- tidyr::complete(data,
+                              !!rlang::sym(dt) := tidyr::full_seq(!!rlang::sym(dt), 3600))
+    } else {
+      data <- tidyr::complete(data,
+                              !!rlang::sym(dt) := tidyr::full_seq(!!rlang::sym(dt), 3600),
+                              if (is.null(by)) NULL else tidyr::nesting(!!!rlang::syms(by)))
+    }
   }
   
   dplyr::select(data, -dplyr::matches("diff"))
