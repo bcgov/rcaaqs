@@ -262,7 +262,7 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
   p <- p + xlab(bquote(CAAQS ~ Metric ~ Value ~ (.(units))))
   p <- p + ylab("Monitoring Station")
   p <- p + theme_bw(base_size = base_size)
-  p <- p + guides(colour = FALSE)
+  p <- p + guides(colour = "none")
   
   if (length(metrics) > 1) {
     p <- p + geom_point(size = pt_size)
