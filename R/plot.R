@@ -12,6 +12,144 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
+#' Plot rolling 3-yr averages
+#' 
+#'  Plot rolling 3-yr averages with exclusions for a particular station
+#'   
+#' @param x an object of class `caaqs_mgmt` (i.e. output of
+#'   `caaqs_management()`)
+#' @param id the id of the station you would like to plot
+#' @param id_col the column in which to look for `id`
+#' @param base_size base font size for the plot
+#' @param annot_size size of annotations. Scaling of this size is not the same 
+#'   as the rest of the font sizes, so you will have to experiment. Defaults to 
+#'   0.32*base_size
+#' @param plot_std Should the CAAQs standard be plotted?
+#' @param plot_mgmt Should the CAAQs management standards be plotted?
+#'   
+#' @return a ggplot2 object
+#' 
+#' @export
+plot_rolling <- function(x, id = NULL, id_col = NULL, 
+                         plot_std = TRUE, plot_mgmt = TRUE,
+                         base_size = 10, annot_size = NULL) {
+  
+  if (!inherits(x, "caaqs_mgmt")) {
+    stop("x must be an object of class 'caaqs_mgmt.", call. = FALSE)
+  }
+  
+  if (is.null(id) && !is.null(get_by(x))) {
+    stop("'id' and 'id_col' required with more than one station", call. = FALSE)
+  }
+  
+  if (!is.null(id_col) && !id_col %in% get_by(x)) {
+    stop(id_col, " is not a column in the data", call. = FALSE)
+  }
+  
+  if (!is.null(id) && !id %in% unique(get_by_vals(x)[[id_col]])) {
+    stop(id, " is not a value in ", id_col, call. = FALSE)
+  }
+  
+  if (is.null(annot_size)) {
+    annot_size <- 0.32*base_size
+  } else if (!is.numeric(annot_size)) {
+    stop("annot_size must be numeric")
+  }
+  
+  parameter <- get_param(x)
+  par_units <- setNames(plot_units(parameter), NULL)
+  
+  if (parameter == "pm2.5_annual") {
+    val <- "ann_98_percentile"
+    ylab <- bquote(paste(PM[2.5], "Annual Metric (", 
+                         ..(parse(text = par_units)), ")"), splice = TRUE)
+    param_name <- "Annual~PM[2.5]"
+  } else if (parameter == "pm2.5_24h") {
+    val <- "ann_98_percentile"
+    ylab <- bquote(paste(PM[2.5], "24-Hour Metric (", 
+                         ..(parse(text = par_units)), ")"), splice = TRUE)
+    param_name <- "24*h~PM[2.5]"
+  } else if (parameter == "o3") {
+    val <-  "max8hr"
+    param_name <- "Ozone"
+    ylab <- "Daily Maximum Ozone\n(parts per billion)"
+  } else {
+    stop(parameter, " is currently not supported in plot_ts")
+  }
+  
+  val_mgmt <- paste0(val, "_mgmt")
+  
+  # Get daily data from caaqs object and subset to the station of interest
+  # Must be: 
+  #  - valid
+  #  - have all three years
+  
+  rolling_data <- get_three_yr_rolling(x) %>% 
+    dplyr::filter(.data[[id_col]] == .env$id, .data$valid, 
+                  !.data$flag_two_of_three_years) %>%
+    dplyr::mutate(year_lab = paste0(.data$min_year, "-", .data$max_year),
+                  raw = .data[[val]],
+                  value = .data[[val]] - .data[[val_mgmt]]) %>%
+    dplyr::select("site", "value_adj" = .env$val_mgmt, 
+                  "value", "pm_metric", "year_lab", "raw") %>%
+    tidyr::pivot_longer(cols = tidyr::contains("value"), 
+                        names_to = "type", values_to = "value") %>%
+    dplyr::mutate(type = factor(.data$type, 
+                                levels = c("value", "value_adj"), 
+                                labels = c("No Adjustment", "TF/EE Adjusted")))
+  
+  # Plotting detils
+  ylim <- max(rolling_data$raw, na.rm = TRUE) * 1.1
+  mgmt <- management_levels %>%
+    dplyr::filter(.data$parameter == "pm2.5_24h")
+  
+  std <- get_std(parameter)
+  
+  # Plot - setup
+  g <- ggplot2::ggplot(data = rolling_data, 
+                       ggplot2::aes(x = .data[["year_lab"]], 
+                                    y = .data[["value"]], 
+                                    fill = .data[["type"]])) +
+    ggplot2::theme_minimal(base_size = base_size) +
+    ggplot2::theme(
+      legend.title = ggplot2::element_blank(),
+      axis.line = ggplot2::element_line(colour = "black"), 
+      axis.line.y = element_blank(),
+      axis.title.y = ggplot2::element_text(vjust = 1), 
+      axis.ticks.x = ggplot2::element_blank())
+  
+  if(plot_mgmt) {
+    g <- g + 
+      ggplot2::geom_rect(
+        data = mgmt, 
+        aes(xmin = -Inf, xmax = Inf, 
+            ymin = .data[["lower_breaks"]], 
+            ymax = .data[["upper_breaks"]], 
+            fill = .data[["labels"]]),
+        inherit.aes = FALSE, alpha = 0.55) 
+      
+  } 
+  # Add bars
+  g <- g +
+    ggplot2::geom_bar(stat = "identity", alpha = 1, 
+                      colour = "black", width = 0.5) +
+    ggplot2::scale_fill_manual(
+      values = c("No Adjustment" = "#b4acb3", "TF/EE Adjusted" = "#8f94a6",
+                 rev(mgmt$colour))) +
+    ggplot2::scale_y_continuous(expand = c(0,0), limits = c(NA, ylim)) +
+    ggplot2::labs(x = "Reporting Period", y = ylab)
+  
+  if(plot_std) {
+    g <- g + 
+      ggplot2::geom_hline(yintercept = std, linetype = 2, size = 1, 
+                          colour = "#e41a1c") + 
+      ggplot2::annotate(geom = "text", y = std, x = +Inf, 
+                        label = "CAAQS", hjust = 1, vjust = -0.2)
+  }
+    
+  g
+}
+
 
 #' Plot daily time series data with exceedances and optionally caaqs for a 
 #' particular station

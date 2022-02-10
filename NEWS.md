@@ -42,6 +42,7 @@
 * Update to dplyr v1.0 and tidyr v1.1
 * Allow `plot_station_instruments()` to use any station column
 * Add overlap points to `plot_station_instruments()`
+* Add `plot_rolling()` function to plot rolling 3yr averages.
 
 # rcaaqs 0.3.1
 
