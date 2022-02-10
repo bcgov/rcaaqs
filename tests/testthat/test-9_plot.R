@@ -16,6 +16,10 @@ o3_caaqs <- readRDS("o3_caaqs1.rds")
 pm_24h_caaqs_one <- readRDS("pm_24h_caaqs1.rds")
 pm_24h_caaqs_multi <- readRDS("pm_24h_caaqs2.rds")
 pm_annual_caaqs <- readRDS("pm_annual_caaqs2.rds")
+pm_24h_caaqs_one_mgmt <- readRDS("pm_24h_caaqs1_mgmt.rds")
+pm_24h_caaqs_multi_mgmt <- readRDS("pm_24h_caaqs2_mgmt.rds")
+pm_annual_caaqs_one_mgmt <- readRDS("pm_annual_caaqs1_mgmt.rds")
+pm_annual_caaqs_multi_mgmt <- readRDS("pm_annual_caaqs2_mgmt.rds")
 
 test_that("plot_ts fails correctly", {
   
@@ -64,4 +68,21 @@ test_that("works with annual", {
                id = "0310162", id_col = "ems_id")
   expect_is(p, "ggplot")
   expect_is(ggplot2::ggplot_build(p), "ggplot_built")
+})
+
+test_that("plot_rolling() works with pm2.5", {
+  
+  expect_error(plot_rolling(pm_24h_caaqs_one), "caaqs_mgmt")
+  expect_error(plot_rolling(pm_24h_caaqs_one_mgmt), "No valid")
+  expect_error(plot_rolling(pm_24h_caaqs_multi_mgmt), "'id_col' required")
+  
+  expect_error(plot_rolling(pm_24h_caaqs_multi_mgmt, id = "0310162", 
+                            id_col = "ems_id"), "No valid")
+  
+  expect_error(plot_rolling(pm_annual_caaqs), "caaqs_mgmt")
+  expect_error(plot_rolling(pm_annual_caaqs_one_mgmt), "No valid")
+  expect_error(plot_rolling(pm_annual_caaqs_multi_mgmt), "'id_col' required")
+  
+  expect_error(plot_rolling(pm_annual_caaqs_multi_mgmt, id = "0310162", 
+                            id_col = "ems_id"), "No valid")
 })

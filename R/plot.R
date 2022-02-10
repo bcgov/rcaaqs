@@ -84,19 +84,26 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
   #  - valid
   #  - have all three years
   
-  rolling_data <- get_three_yr_rolling(x) %>% 
-    dplyr::filter(.data[[id_col]] == .env$id, .data$valid, 
-                  !.data$flag_two_of_three_years) %>%
+  rolling_data <- get_three_yr_rolling(x) %>%
+    dplyr::filter(.data$valid, !.data$flag_two_of_three_years) %>%
     dplyr::mutate(year_lab = paste0(.data$min_year, "-", .data$max_year),
                   raw = .data[[val]],
                   value = .data[[val]] - .data[[val_mgmt]]) %>%
-    dplyr::select("site", "value_adj" = .env$val_mgmt, 
-                  "value", "pm_metric", "year_lab", "raw") %>%
+    dplyr::select(dplyr::all_of(id_col), "value_adj" = .env$val_mgmt, 
+                  "value", "year_lab", "raw") %>%
     tidyr::pivot_longer(cols = tidyr::contains("value"), 
                         names_to = "type", values_to = "value") %>%
     dplyr::mutate(type = factor(.data$type, 
                                 levels = c("value", "value_adj"), 
                                 labels = c("No Adjustment", "TF/EE Adjusted")))
+  
+  if(length(unique(x[id_col])) > 1) {
+    rolling_data <- dplyr::filter(rolling_data, .data[[id_col]] == .env$id)
+  }
+  
+  if(nrow(rolling_data) == 0) {
+    stop("No valid data (with full 3 years) available", call. = FALSE)
+  }
   
   # Plotting detils
   ylim <- max(rolling_data$raw, na.rm = TRUE) * 1.1
