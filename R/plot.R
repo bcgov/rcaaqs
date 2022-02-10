@@ -60,7 +60,7 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
   par_units <- setNames(plot_units(parameter), NULL)
   
   if (parameter == "pm2.5_annual") {
-    val <- "ann_98_percentile"
+    val <- "ann_avg"
     ylab <- bquote(paste(PM[2.5], "Annual Metric (", 
                          ..(parse(text = par_units)), ")"), splice = TRUE)
     param_name <- "Annual~PM[2.5]"
