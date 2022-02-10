@@ -40,6 +40,8 @@
 * Use lubridate functions rather than internal date/time functions
 * Update CAAQS for PM2.5 and Ozone
 * Update to dplyr v1.0 and tidyr v1.1
+* Allow `plot_station_instruments()` to use any station column
+* Add overlap points to `plot_station_instruments()`
 
 # rcaaqs 0.3.1
 
