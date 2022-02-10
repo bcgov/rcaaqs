@@ -97,7 +97,7 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
                                 levels = c("value", "value_adj"), 
                                 labels = c("No Adjustment", "TF/EE Adjusted")))
   
-  if(length(unique(x[[id_col]])) > 1) {
+  if(length(unique(rolling_data[[id_col]])) > 1) {
     rolling_data <- dplyr::filter(rolling_data, .data[[id_col]] == .env$id)
   }
   
