@@ -106,12 +106,15 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
   }
   
   # Plotting detils
-  ylim <- max(rolling_data$raw, na.rm = TRUE) * 1.1
   mgmt <- management_levels %>%
-    dplyr::filter(.data$parameter == "pm2.5_24h")
+    dplyr::filter(.data$parameter == .env$parameter)
+  
+  ylim <- max(rolling_data$raw, na.rm = TRUE) * 1.1
+  if(plot_mgmt & ylim < max(mgmt$lower_breaks)) {
+    ylim <- max(mgmt$lower_breaks) * 1.1
+  }
   
   std <- get_std(parameter)
-  
   # Plot - setup
   g <- ggplot2::ggplot(data = rolling_data, 
                        ggplot2::aes(x = .data[["year_lab"]], 
