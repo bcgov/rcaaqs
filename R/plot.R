@@ -310,16 +310,19 @@ plot_station_instruments <- function(data, dt = "date_time", station = "station_
   check_vars(vars = list(dt, station, instrument), data)
   check_one(dt, station, instrument)
   
-  data$date <- as.Date(data[[dt]])
+  data$date <- lubridate::as_date(data[[dt]])
   
   ## conversation here discussing quosing strings: https://github.com/tidyverse/rlang/issues/116
   data <- dplyr::group_by(data, date, !!rlang::sym(station), !!rlang::sym(instrument))
   data <- dplyr::summarize(data)
-  
+  data <- dplyr::add_count(data, !!rlang::sym(station))
+
   ggplot(data, aes_string(x = "date", y = instrument, colour = instrument)) + 
-    facet_wrap("station_name", scales = "free_y", ncol = 1, strip.position = "left") +
+    facet_wrap(station, scales = "free_y", ncol = 1, strip.position = "left") +
+    geom_point(data = dplyr::filter(data, .data$n > 1), 
+               aes(fill = "Overlap"), colour = "grey", alpha = 0.75, size = 2) +
     geom_line(size = 1) + 
-    labs(y = station) +
+    labs(y = station, fill = "") +
     theme(axis.text.y = element_blank(), 
           strip.text.y.left = element_text(angle = 0))
 }
