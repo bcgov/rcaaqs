@@ -83,12 +83,13 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
   # Must be: 
   #  - valid
   #  - have all three years
-  
   rolling_data <- get_three_yr_rolling(x) %>%
-    dplyr::filter(.data$valid, !.data$flag_two_of_three_years) %>%
-    dplyr::mutate(year_lab = paste0(.data$min_year, "-", .data$max_year),
-                  raw = .data[[val]],
-                  value = .data[[val]] - .data[[val_mgmt]]) %>%
+    dplyr::filter(.data$valid) %>%
+    dplyr::mutate(raw = .data[[val]],
+                  year_lab = paste0(.data$min_year, "-", .data$max_year),
+                  year_lab = dplyr::if_else(.data$flag_two_of_three_years, 
+                                            paste0(year_lab, "*"), year_lab),
+                  value = .data$raw - .data[[val_mgmt]]) %>%
     dplyr::select(dplyr::all_of(id_col), "value_adj" = .env$val_mgmt, 
                   "value", "year_lab", "raw") %>%
     tidyr::pivot_longer(cols = tidyr::contains("value"), 
@@ -97,15 +98,16 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
                                 levels = c("value", "value_adj"), 
                                 labels = c("No Adjustment", "TF/EE Adjusted")))
   
+  # Filter to id
   if(length(unique(rolling_data[[id_col]])) > 1) {
     rolling_data <- dplyr::filter(rolling_data, .data[[id_col]] == .env$id)
   }
   
-  if(nrow(rolling_data) == 0) {
-    stop("No valid data (with full 3 years) available", call. = FALSE)
-  }
+  # if(nrow(rolling_data) == 0) {
+  #   stop("No valid data (with full 3 years) available", call. = FALSE)
+  # }
   
-  # Plotting detils
+  # Plotting details
   mgmt <- management_levels %>%
     dplyr::filter(.data$parameter == .env$parameter)
   
@@ -141,8 +143,8 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
   } 
   # Add bars
   g <- g +
-    ggplot2::geom_bar(stat = "identity", alpha = 1, 
-                      colour = "black", width = 0.5) +
+    ggplot2::geom_bar(stat = "identity", na.rm = TRUE, 
+                      alpha = 1, colour = "black", width = 0.5) +
     ggplot2::scale_fill_manual(
       values = c("No Adjustment" = "#b4acb3", "TF/EE Adjusted" = "#8f94a6",
                  rev(mgmt$colour))) +
@@ -155,6 +157,10 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
                           colour = "#e41a1c") + 
       ggplot2::annotate(geom = "text", y = std, x = +Inf, 
                         label = "CAAQS", hjust = 1, vjust = -0.2)
+  }
+  
+  if(any(grepl("\\*", rolling_data$year_lab))) {
+    g <- g + ggplot2::labs(caption = "* indicates only two of three years")
   }
     
   g
