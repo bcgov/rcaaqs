@@ -31,6 +31,7 @@
 #' 
 #' @export
 plot_rolling <- function(x, id = NULL, id_col = NULL, 
+                         year_min = NULL, year_max = NULL,
                          plot_std = TRUE, plot_mgmt = TRUE,
                          base_size = 10, annot_size = NULL) {
   
@@ -80,9 +81,9 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
   val_mgmt <- paste0(val, "_mgmt")
   
   # Get daily data from caaqs object and subset to the station of interest
-  # Must be: 
+  # Must be  
   #  - valid
-  #  - have all three years
+  #  - in date range 
   rolling_data <- get_three_yr_rolling(x) %>%
     dplyr::filter(.data$valid) %>%
     dplyr::mutate(raw = .data[[val]],
@@ -90,7 +91,7 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
                   year_lab = dplyr::if_else(.data$flag_two_of_three_years, 
                                             paste0(year_lab, "*"), year_lab),
                   value = .data$raw - .data[[val_mgmt]]) %>%
-    dplyr::select(dplyr::all_of(id_col), "value_adj" = .env$val_mgmt, 
+    dplyr::select(dplyr::all_of(id_col), "year", "value_adj" = .env$val_mgmt, 
                   "value", "year_lab", "raw") %>%
     tidyr::pivot_longer(cols = tidyr::contains("value"), 
                         names_to = "type", values_to = "value") %>%
@@ -103,16 +104,31 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
     rolling_data <- dplyr::filter(rolling_data, .data[[id_col]] == .env$id)
   }
   
-  # if(nrow(rolling_data) == 0) {
-  #   stop("No valid data (with full 3 years) available", call. = FALSE)
-  # }
+  if(nrow(rolling_data) == 0) {
+    stop("No valid data for that id", call. = FALSE)
+  }
+  
+  # Browser, pad years to year_min / year_max
+  if(is.null(year_min)) year_min <- min(rolling_data$year)
+  if(is.null(year_max)) year_max <- max(rolling_data$year)
+  
+  rolling_data <- rolling_data %>%
+    dplyr::filter(.data$year >= .env$year_min, .data$year <= .env$year_max) %>%
+    tidyr::complete(year = year_min:year_max, site = .env$id, 
+                    type = c("TF/EE Adjusted", "No Adjustment")) %>%
+    dplyr::mutate(
+      year_lab = dplyr::if_else(is.na(.data$year_lab) | is.na(.data$value), 
+                                paste0(.data$year - 2, "-", .data$year), 
+                                .data$year_lab))
+      
   
   # Plotting details
   mgmt <- management_levels %>%
     dplyr::filter(.data$parameter == .env$parameter)
   
+  # Add padding to upper category
   ylim <- max(rolling_data$raw, na.rm = TRUE) * 1.1
-  if(plot_mgmt & ylim < max(mgmt$lower_breaks)) {
+  if(plot_mgmt & ylim < (max(mgmt$lower_breaks) * 1.1)) {
     ylim <- max(mgmt$lower_breaks) * 1.1
   }
   
