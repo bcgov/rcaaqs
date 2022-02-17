@@ -12,28 +12,32 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-#' Plot rolling 3-yr averages
+#' Plot yearly CAAQS
 #' 
-#'  Plot rolling 3-yr averages with exclusions for a particular station
+#'  Plot yearly CAAQS with exclusions for a particular station
 #'   
 #' @param x an object of class `caaqs_mgmt` (i.e. output of
 #'   `caaqs_management()`)
-#' @param id the id of the station you would like to plot
-#' @param id_col the column in which to look for `id`
-#' @param base_size base font size for the plot
-#' @param annot_size size of annotations. Scaling of this size is not the same 
-#'   as the rest of the font sizes, so you will have to experiment. Defaults to 
-#'   0.32*base_size
-#' @param plot_std Should the CAAQs standard be plotted?
-#' @param plot_mgmt Should the CAAQs management standards be plotted?
+#' @param id Character. Id of the station you would like to plot
+#' @param id_col Character. Column in which to look for `id`
+#' @param base_size Numeric. Base font size for the plot
+#' @param annot_size Numierc. size of annotations. Scaling of this size is not
+#'   the same as the rest of the font sizes, so you will have to experiment.
+#'   Defaults to 0.32*base_size
+#' @param plot_std Logical. Should the CAAQs standard be plotted?
+#' @param plot_mgmt Logical. Should the CAAQs management standards be plotted?
+#' @param year_min Numeric. Minimum year to include. Data will be filtered or
+#'   filled to match.
+#' @param year_max Numeric. Maximum year to include. Data will be filtered or
+#'   filled to match.
 #'   
 #' @return a ggplot2 object
 #' 
 #' @export
-plot_rolling <- function(x, id = NULL, id_col = NULL, 
-                         year_min = NULL, year_max = NULL,
-                         plot_std = TRUE, plot_mgmt = TRUE,
-                         base_size = 10, annot_size = NULL) {
+plot_caaqs <- function(x, id = NULL, id_col = NULL, 
+                       year_min = NULL, year_max = NULL,
+                       plot_std = TRUE, plot_mgmt = TRUE,
+                       base_size = 10, annot_size = NULL) {
   
   if (!inherits(x, "caaqs_mgmt")) {
     stop("x must be an object of class 'caaqs_mgmt.", call. = FALSE)
@@ -61,38 +65,33 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
   par_units <- setNames(plot_units(parameter), NULL)
   
   if (parameter == "pm2.5_annual") {
-    val <- "ann_avg"
     ylab <- bquote(paste(PM[2.5], "Annual Metric (", 
                          ..(parse(text = par_units)), ")"), splice = TRUE)
     param_name <- "Annual~PM[2.5]"
   } else if (parameter == "pm2.5_24h") {
-    val <- "ann_98_percentile"
     ylab <- bquote(paste(PM[2.5], "24-Hour Metric (", 
                          ..(parse(text = par_units)), ")"), splice = TRUE)
     param_name <- "24*h~PM[2.5]"
   } else if (parameter == "o3") {
-    val <-  "max8hr"
     param_name <- "Ozone"
     ylab <- "Daily Maximum Ozone\n(parts per billion)"
   } else {
     stop(parameter, " is currently not supported in plot_ts")
   }
   
-  val_mgmt <- paste0(val, "_mgmt")
-  
   # Get daily data from caaqs object and subset to the station of interest
   # Must be  
   #  - valid
   #  - in date range 
-  rolling_data <- get_three_yr_rolling(x) %>%
-    dplyr::filter(.data$valid) %>%
-    dplyr::mutate(raw = .data[[val]],
-                  year_lab = paste0(.data$min_year, "-", .data$max_year),
+
+  caaqs_data <- get_caaqs(x) %>%
+    dplyr::mutate(raw = .data$metric_value_ambient,
+                  year_lab = paste0(.data$caaqs_year - 2, "-", .data$caaqs_year),
                   year_lab = dplyr::if_else(.data$flag_two_of_three_years, 
                                             paste0(year_lab, "*"), year_lab),
-                  value = .data$raw - .data[[val_mgmt]]) %>%
-    dplyr::select(dplyr::all_of(id_col), "year", "value_adj" = .env$val_mgmt, 
-                  "value", "year_lab", "raw") %>%
+                  value = .data$raw - .data$metric_value_mgmt) %>%
+    dplyr::select(dplyr::all_of(id_col), "caaqs_year", "year_lab", 
+                  "value_adj" = .data$metric_value_mgmt, "value", "raw") %>%
     tidyr::pivot_longer(cols = tidyr::contains("value"), 
                         names_to = "type", values_to = "value") %>%
     dplyr::mutate(type = factor(.data$type, 
@@ -100,41 +99,42 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
                                 labels = c("No Adjustment", "TF/EE Adjusted")))
   
   # Filter to id
-  if(length(unique(rolling_data[[id_col]])) > 1) {
-    rolling_data <- dplyr::filter(rolling_data, .data[[id_col]] == .env$id)
+  if(length(unique(caaqs_data[[id_col]])) > 1) {
+    caaqs_data <- dplyr::filter(caaqs_data, .data[[id_col]] == .env$id)
   }
   
-  if(nrow(rolling_data) == 0) {
+  if(nrow(caaqs_data) == 0) {
     stop("No valid data for that id", call. = FALSE)
   }
   
-  # Browser, pad years to year_min / year_max
-  if(is.null(year_min)) year_min <- min(rolling_data$year)
-  if(is.null(year_max)) year_max <- max(rolling_data$year)
+  # Pad years to year_min / year_max
+  if(is.null(year_min)) year_min <- min(caaqs_data$caaqs_year)
+  if(is.null(year_max)) year_max <- max(caaqs_data$caaqs_year)
   
-  rolling_data <- rolling_data %>%
-    dplyr::filter(.data$year >= .env$year_min, .data$year <= .env$year_max) %>%
-    tidyr::complete(year = year_min:year_max, site = .env$id, 
+  caaqs_data <- caaqs_data %>%
+    dplyr::filter(.data$caaqs_year >= .env$year_min, 
+                  .data$caaqs_year <= .env$year_max, 
+                  !is.na(.data$raw)) %>%
+    tidyr::complete(caaqs_year = year_min:year_max, site = .env$id, 
                     type = c("TF/EE Adjusted", "No Adjustment")) %>%
     dplyr::mutate(
       year_lab = dplyr::if_else(is.na(.data$year_lab) | is.na(.data$value), 
-                                paste0(.data$year - 2, "-", .data$year), 
+                                paste0(.data$caaqs_year - 2, "-", .data$caaqs_year), 
                                 .data$year_lab))
       
-  
   # Plotting details
   mgmt <- management_levels %>%
     dplyr::filter(.data$parameter == .env$parameter)
   
   # Add padding to upper category
-  ylim <- max(rolling_data$raw, na.rm = TRUE) * 1.1
+  ylim <- max(caaqs_data$raw, na.rm = TRUE) * 1.1
   if(plot_mgmt & ylim < (max(mgmt$lower_breaks) * 1.1)) {
     ylim <- max(mgmt$lower_breaks) * 1.1
   }
   
   std <- get_std(parameter)
   # Plot - setup
-  g <- ggplot2::ggplot(data = rolling_data, 
+  g <- ggplot2::ggplot(data = caaqs_data, 
                        ggplot2::aes(x = .data[["year_lab"]], 
                                     y = .data[["value"]], 
                                     fill = .data[["type"]])) +
@@ -164,7 +164,8 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
     ggplot2::scale_fill_manual(
       values = c("No Adjustment" = "#b4acb3", "TF/EE Adjusted" = "#8f94a6",
                  rev(mgmt$colour))) +
-    ggplot2::scale_y_continuous(expand = c(0,0), limits = c(NA, ylim)) +
+    ggplot2::scale_y_continuous(expand = c(0,0), limits = c(NA, ylim),
+                                breaks = scales::breaks_extended(n = 7)) +
     ggplot2::labs(x = "Reporting Period", y = ylab)
   
   if(plot_std) {
@@ -175,7 +176,7 @@ plot_rolling <- function(x, id = NULL, id_col = NULL,
                         label = "CAAQS", hjust = 1, vjust = -0.2)
   }
   
-  if(any(grepl("\\*", rolling_data$year_lab))) {
+  if(any(grepl("\\*", caaqs_data$year_lab))) {
     g <- g + ggplot2::labs(caption = "* indicates only two of three years")
   }
     
