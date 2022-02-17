@@ -44,7 +44,7 @@ replace_chars <- function(replace_with = c("html", "unicode")) {
   comparison_tbl <- tibble(
     operator =  c("<=", ">=", "<", ">", "&", "ug/m^3"),
     unicode = c("\u2264", "\u2265", "<", ">", "&", "\u03BCg/m\u00B3"), 
-    html = c("&lteq;", "&gteq;", "&lt;", "&gt;", "&amp;", "&mu;g/m&sup3;")
+    html = c("&leq;", "&geq;", "&lt;", "&gt;", "&amp;", "&mu;g/m&sup3;")
   )
   
   function(operator) {
