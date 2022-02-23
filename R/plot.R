@@ -77,6 +77,12 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
   } else if (parameter == "so2_1yr") {
     ylab <- bquote(paste(SO[2], "Annual Metric (", 
                          ..(parse(text = par_units)), ")"), splice = TRUE)
+  } else if (parameter == "no2_3yr") {
+    ylab <- bquote(paste(NO[2], "1-Hour Metric (", 
+                         ..(parse(text = par_units)), ")"), splice = TRUE)
+  } else if (parameter == "no2_1yr") {
+    ylab <- bquote(paste(NO[2], "Annual Metric (", 
+                         ..(parse(text = par_units)), ")"), splice = TRUE)
   } else {
     stop(parameter, " is currently not supported in 'plot_caaqs()'")
   }
@@ -484,6 +490,10 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
 label_metrics <- function(x) {
   x[x == "pm2.5_annual"] <- "PM[2.5]~Annual~Metric"
   x[x == "pm2.5_24h"]   <- "PM[2.5]~24*'-'*hour~Metric"
+  x[x == "so2_3yr"] <- "SO[2]~1*'-'*hour~Metric"
+  x[x == "so2_1yr"]   <- "SO[2]~Annual~Metric"
+  x[x == "no2_3yr"] <- "NO[2]~1*'-'*hour~Metric"
+  x[x == "no2_1yr"]   <- "NO[2]~Annual~Metric"
   gsub("\\s", "~", x)
 }
 
