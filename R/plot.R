@@ -60,23 +60,25 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
   } else if (!is.numeric(annot_size)) {
     stop("annot_size must be numeric")
   }
-  
   parameter <- get_param(x)
   par_units <- setNames(plot_units(parameter), NULL)
   
   if (parameter == "pm2.5_annual") {
     ylab <- bquote(paste(PM[2.5], "Annual Metric (", 
                          ..(parse(text = par_units)), ")"), splice = TRUE)
-    param_name <- "Annual~PM[2.5]"
   } else if (parameter == "pm2.5_24h") {
     ylab <- bquote(paste(PM[2.5], "24-Hour Metric (", 
                          ..(parse(text = par_units)), ")"), splice = TRUE)
-    param_name <- "24*h~PM[2.5]"
   } else if (parameter == "o3") {
-    param_name <- "Ozone"
     ylab <- "Daily Maximum Ozone\n(parts per billion)"
+  } else if (parameter == "so2_3yr") {
+    ylab <- bquote(paste(SO[2], "1-Hour Metric (", 
+                         ..(parse(text = par_units)), ")"), splice = TRUE)
+  } else if (parameter == "so2_1yr") {
+    ylab <- bquote(paste(SO[2], "Annual Metric (", 
+                         ..(parse(text = par_units)), ")"), splice = TRUE)
   } else {
-    stop(parameter, " is currently not supported in plot_ts")
+    stop(parameter, " is currently not supported in 'plot_caaqs()'")
   }
   
   # Get daily data from caaqs object and subset to the station of interest
@@ -84,12 +86,18 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
   #  - valid
   #  - in date range 
 
-  caaqs_data <- get_caaqs(x) %>%
-    dplyr::mutate(raw = .data$metric_value_ambient,
-                  year_lab = paste0(.data$caaqs_year - 2, "-", .data$caaqs_year),
-                  year_lab = dplyr::if_else(.data$flag_two_of_three_years, 
-                                            paste0(year_lab, "*"), year_lab),
-                  value = .data$raw - .data$metric_value_mgmt) %>%
+  caaqs_data <- get_caaqs(x)
+  
+  if(parameter %in% c("so2_1yr")) caaqs_data$flag_two_of_three_years <- FALSE
+  
+  caaqs_data <- caaqs_data %>%
+    dplyr::mutate(
+      raw = .data$metric_value_ambient,
+      
+      year_lab = paste0(.data$caaqs_year - 2, "-", .data$caaqs_year),
+      year_lab = dplyr::if_else(.data$flag_two_of_three_years, 
+                                paste0(year_lab, "*"), year_lab),
+      value = .data$raw - .data$metric_value_mgmt) %>%
     dplyr::select(dplyr::all_of(id_col), "caaqs_year", "year_lab", 
                   "value_adj" = .data$metric_value_mgmt, "value", "raw") %>%
     tidyr::pivot_longer(cols = tidyr::contains("value"), 
@@ -500,6 +508,10 @@ plot_station_instruments <- function(data, dt = "date_time", station = "station_
 
 plot_units <- function(parameters) {
   c("o3" = "ppb",
-  "pm2.5_annual" = "mu * g/ m^{3}",
-  "pm2.5_24h" = "mu * g/ m^{3}")[parameters]
+    "pm2.5_annual" = "mu * g/ m^{3}",
+    "pm2.5_24h" = "mu * g/ m^{3}",
+    "so2_3yr" = "ppb",
+    "so2_1yr" = "ppb",
+    "no2_3yr" = "ppb",
+    "no2_1yr" = "ppb")[parameters]
 } 
