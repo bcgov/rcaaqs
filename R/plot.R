@@ -111,7 +111,7 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
     caaqs_data <- dplyr::filter(caaqs_data, .data[[id_col]] == .env$id)
   }
   
-  if(nrow(caaqs_data) == 0 | all(is.na(caaqs_data[["value"]]))) {
+  if(nrow(caaqs_data) == 0) {
     message("No valid data for that id")
     return(invisible(NULL))
   }
@@ -132,6 +132,10 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
                                 paste0(.data$caaqs_year - 2, "-", .data$caaqs_year), 
                                 .data$year_lab))
       
+  if(nrow(caaqs_data) == 0 || all(is.na(caaqs_data$value))) {
+    message("No valid data for that id in that year range")
+    return(invisible(NULL))
+  }
   # Plotting details
   mgmt <- management_levels %>%
     dplyr::filter(.data$parameter == .env$parameter)
