@@ -94,7 +94,9 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
 
   caaqs_data <- get_caaqs(x)
   
-  if(parameter %in% c("so2_1yr")) caaqs_data$flag_two_of_three_years <- FALSE
+  if(parameter %in% c("so2_1yr", "no2_1yr")) {
+    caaqs_data$flag_two_of_three_years <- FALSE
+  }
   
   caaqs_data <- caaqs_data %>%
     dplyr::mutate(
