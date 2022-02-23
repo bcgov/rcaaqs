@@ -21,9 +21,9 @@ test_that("management breaks are correct for o3: category", {
 })
 
 test_that("management breaks are correct for o3: value labels (html)", {
-  expected <- c(rep("&lteq; 50ppb", 3), 
-                rep("&gt; 50ppb &amp; &lteq; 56ppb", 2), 
-                rep("&gt; 56ppb &amp; &lteq; 62ppb", 2), 
+  expected <- c(rep("&leq; 50ppb", 3), 
+                rep("&gt; 50ppb &amp; &leq; 56ppb", 2), 
+                rep("&gt; 56ppb &amp; &leq; 62ppb", 2), 
                 rep("&gt; 62ppb", 2))
   
   res <- cut_management(o3_vec, "o3", output = "breaks_h", drop_na = TRUE)

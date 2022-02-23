@@ -70,19 +70,19 @@ test_that("works with annual", {
   expect_is(ggplot2::ggplot_build(p), "ggplot_built")
 })
 
-test_that("plot_rolling() works with pm2.5", {
+test_that("plot_caaqs() works with pm2.5", {
   
-  expect_error(plot_rolling(pm_24h_caaqs_one), "caaqs_mgmt")
-  expect_error(plot_rolling(pm_24h_caaqs_one_mgmt), "No valid")
-  expect_error(plot_rolling(pm_24h_caaqs_multi_mgmt), "'id_col' required")
+  expect_error(plot_caaqs(pm_24h_caaqs_one), "caaqs_mgmt")
+  expect_message(plot_caaqs(pm_24h_caaqs_one_mgmt), "No valid data")
+  expect_error(plot_caaqs(pm_24h_caaqs_multi_mgmt), "'id_col' required")
   
-  expect_error(plot_rolling(pm_24h_caaqs_multi_mgmt, id = "0310162", 
-                            id_col = "ems_id"), "No valid")
+  expect_silent(plot_caaqs(pm_24h_caaqs_multi_mgmt, id = "0310162", 
+                           id_col = "ems_id"))
   
-  expect_error(plot_rolling(pm_annual_caaqs), "caaqs_mgmt")
-  expect_error(plot_rolling(pm_annual_caaqs_one_mgmt), "No valid")
-  expect_error(plot_rolling(pm_annual_caaqs_multi_mgmt), "'id_col' required")
+  expect_error(plot_caaqs(pm_annual_caaqs), "caaqs_mgmt")
+  expect_message(plot_caaqs(pm_annual_caaqs_one_mgmt), "No valid data")
+  expect_error(plot_caaqs(pm_annual_caaqs_multi_mgmt), "'id_col' required")
   
-  expect_error(plot_rolling(pm_annual_caaqs_multi_mgmt, id = "0310162", 
-                            id_col = "ems_id"), "No valid")
+  expect_silent(plot_caaqs(pm_annual_caaqs_multi_mgmt, id = "0310162", 
+                           id_col = "ems_id"))
 })
