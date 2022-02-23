@@ -427,13 +427,29 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
   ## Conver to a call object for use in bquote
   units <- parse(text = units)[[1]]
 
-  data[[airzone]] <- stats::reorder(data[[airzone]], data[[metric_val]], max, order = TRUE)
-  data[[airzone]] <- factor(data[[airzone]], levels = rev(levels(data[[airzone]])))
+  data[[airzone]] <- stats::reorder(data[[airzone]], data[[metric_val]], max, 
+                                    order = TRUE)
+  data[[airzone]] <- factor(data[[airzone]], 
+                            levels = rev(levels(data[[airzone]])))
   
-  order_metric <- data[[parameter]][which.max(data[[metric_val]])]
-  order_data <- data[data[["metric"]] == order_metric, c(metric_val, station)]
-  stn_levels <- unique(order_data[[station]][order(order_data[[metric_val]])])
-  data[[station]] <- factor(data[[station]], levels = stn_levels)
+  # Get stations order for plotting
+  data <- data %>%
+    
+    # Arrange in order of metric vals high to low
+    dplyr::arrange(dplyr::desc(.data[[metric_val]])) %>%
+    
+    # Use this metric order to get Airzone order AND which metric should come first
+    dplyr::mutate(ref_metric = factor(.data$metric, 
+                                      levels = unique(.data$metric))) %>%
+    
+    # Arrange in order of metric type, then metric vals low to high
+    dplyr::arrange(.data$ref_metric, .data[[metric_val]]) %>%
+    
+    # Use this order to get stations order
+    # (note that stations not in the first metric, will go last)
+    dplyr::mutate(!!station := factor(.data[[station]], 
+                                      levels = unique(.data[[station]])))
+  
   
   p <- ggplot(data, aes_string(x = metric_val, y = station))
   p <- p + facet_grid(facet_string, scales = "free", space = "free_y", 
