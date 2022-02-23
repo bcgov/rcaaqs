@@ -105,9 +105,9 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
     dplyr::mutate(type = factor(.data$type, 
                                 levels = c("value", "value_adj"), 
                                 labels = c("No Adjustment", "TF/EE Adjusted")))
-  
+
   # Filter to id
-  if(length(unique(caaqs_data[[id_col]])) > 1) {
+  if(!is.null(id_col) && length(unique(caaqs_data[[id_col]])) > 1) {
     caaqs_data <- dplyr::filter(caaqs_data, .data[[id_col]] == .env$id)
   }
   
@@ -124,7 +124,8 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
     dplyr::filter(.data$caaqs_year >= .env$year_min, 
                   .data$caaqs_year <= .env$year_max, 
                   !is.na(.data$raw)) %>%
-    tidyr::complete(caaqs_year = year_min:year_max, site = .env$id, 
+    tidyr::complete(caaqs_year = year_min:year_max, 
+                    !!id_col := .env$id,  #Note id_col is character from environment
                     type = c("TF/EE Adjusted", "No Adjustment")) %>%
     dplyr::mutate(
       year_lab = dplyr::if_else(is.na(.data$year_lab) | is.na(.data$value), 
