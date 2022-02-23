@@ -111,8 +111,9 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
     caaqs_data <- dplyr::filter(caaqs_data, .data[[id_col]] == .env$id)
   }
   
-  if(nrow(caaqs_data) == 0) {
-    stop("No valid data for that id", call. = FALSE)
+  if(nrow(caaqs_data) == 0 | all(is.na(caaqs_data[["value"]]))) {
+    message("No valid data for that id")
+    return(invisible(NULL))
   }
   
   # Pad years to year_min / year_max
