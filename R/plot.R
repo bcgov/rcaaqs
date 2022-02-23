@@ -123,19 +123,23 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
   caaqs_data <- caaqs_data %>%
     dplyr::filter(.data$caaqs_year >= .env$year_min, 
                   .data$caaqs_year <= .env$year_max, 
-                  !is.na(.data$raw)) %>%
-    tidyr::complete(caaqs_year = year_min:year_max, 
-                    !!id_col := .env$id,  #Note id_col is character from environment
-                    type = c("TF/EE Adjusted", "No Adjustment")) %>%
-    dplyr::mutate(
-      year_lab = dplyr::if_else(is.na(.data$year_lab) | is.na(.data$value), 
-                                paste0(.data$caaqs_year - 2, "-", .data$caaqs_year), 
-                                .data$year_lab))
-      
+                  !is.na(.data$raw))
+  
   if(nrow(caaqs_data) == 0 || all(is.na(caaqs_data$value))) {
     message("No valid data for that id in that year range")
     return(invisible(NULL))
   }
+  
+  caaqs_data <- caaqs_data %>%
+    tidyr::complete(caaqs_year = year_min:year_max, 
+                    !!id_col := .env$id,  #Note id_col is from environment
+                    type = c("TF/EE Adjusted", "No Adjustment")) %>%
+    dplyr::mutate(year_lab = dplyr::if_else(
+      is.na(.data$year_lab) | is.na(.data$value), 
+      paste0(.data$caaqs_year - 2, "-", .data$caaqs_year), 
+      .data$year_lab))
+      
+  
   # Plotting details
   mgmt <- management_levels %>%
     dplyr::filter(.data$parameter == .env$parameter)
