@@ -499,6 +499,16 @@ label_metrics <- function(x) {
   gsub("\\s", "~", x)
 }
 
+plot_units <- function(parameters) {
+  c("o3" = "ppb",
+    "pm2.5_annual" = "mu * g/ m^{3}",
+    "pm2.5_24h" = "mu * g/ m^{3}",
+    "so2_3yr" = "ppb",
+    "so2_1yr" = "ppb",
+    "no2_3yr" = "ppb",
+    "no2_1yr" = "ppb")[parameters]
+} 
+
 param_labeller <- ggplot2::as_labeller(label_metrics, default = label_parsed)
 
 management_map <- function(data, parameter = NULL) {
@@ -543,13 +553,3 @@ plot_station_instruments <- function(data, dt = "date_time", station = "station_
     theme(axis.text.y = element_blank(), 
           strip.text.y.left = element_text(angle = 0))
 }
-
-plot_units <- function(parameters) {
-  c("o3" = "ppb",
-    "pm2.5_annual" = "mu * g/ m^{3}",
-    "pm2.5_24h" = "mu * g/ m^{3}",
-    "so2_3yr" = "ppb",
-    "so2_1yr" = "ppb",
-    "no2_3yr" = "ppb",
-    "no2_1yr" = "ppb")[parameters]
-} 
