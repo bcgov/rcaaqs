@@ -93,18 +93,21 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
   #  - in date range 
 
   caaqs_data <- get_caaqs(x)
-  
+
+  # Treat 1-year metrics separate from multi (3-yr) metrics
   if(parameter %in% c("so2_1yr", "no2_1yr")) {
-    caaqs_data$flag_two_of_three_years <- FALSE
+    caaqs_data <- dplyr::mutate(caaqs_data, year_lab = as.character(.data$caaqs_year))
+  } else {
+    caaqs_data <- caaqs_data %>%
+      dplyr::mutate(
+        year_lab = paste0(.data$caaqs_year - 2, "-", .data$caaqs_year),
+        year_lab = dplyr::if_else(.data$flag_two_of_three_years, 
+                                  paste0(.data$year_lab, "*"), .data$year_lab))
   }
   
   caaqs_data <- caaqs_data %>%
     dplyr::mutate(
       raw = .data$metric_value_ambient,
-      
-      year_lab = paste0(.data$caaqs_year - 2, "-", .data$caaqs_year),
-      year_lab = dplyr::if_else(.data$flag_two_of_three_years, 
-                                paste0(year_lab, "*"), year_lab),
       value = .data$raw - .data$metric_value_mgmt) %>%
     dplyr::select(dplyr::all_of(id_col), "caaqs_year", "year_lab", 
                   "value_adj" = .data$metric_value_mgmt, "value", "raw") %>%
