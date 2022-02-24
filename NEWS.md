@@ -1,7 +1,7 @@
 # rcaaqs 0.3.1.9000
 
 * Finalized methods for SO2 and NO2
-* Output CAAQS status and managment status for each metric
+* Output CAAQS status and management status for each metric
 * Function wrappers for each CAAQS metric that return an object of 
   class `caaqs` plus an additional class based on the metric (one of `"pm2.5_annual"
   "pm2.5_24h", "o3", "so2_1yr", "so2_3yr", "no2_1yr", "no2_3yr"`). This object 
@@ -42,7 +42,8 @@
 * Update to dplyr v1.0 and tidyr v1.1
 * Allow `plot_station_instruments()` to use any station column
 * Add overlap points to `plot_station_instruments()`
-* Add `plot_rolling()` function to plot rolling 3yr averages.
+* Add `plot_caaqs()` function to plot annual caaqs values as barplots.
+* Add plotting details for SO2 and NO2
 
 # rcaaqs 0.3.1
 
