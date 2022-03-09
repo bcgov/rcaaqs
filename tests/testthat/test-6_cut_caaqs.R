@@ -56,7 +56,7 @@ test_that("management breaks are correct for o3: colour", {
   expect_equal(as.character(res), c(expected, NA))
   
   res <- cut_management(o3_vec, "o3", output = "colour", drop_na = FALSE)
-  expect_equal(as.character(res), c(expected, "grey80"))
+  expect_equal(as.character(res), c(expected, "#dbdbdb"))
 })
 
 test_that("get_std works", {
@@ -92,3 +92,4 @@ test_that("get_units works", {
   expect_equal(length(get_units("so2_1yr")), 1)
   expect_equal(length(get_units("so2_3yr")), 1)
 })
+

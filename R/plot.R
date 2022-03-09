@@ -157,8 +157,8 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
   
   # Add padding to upper category
   ylim <- max(caaqs_data$raw, na.rm = TRUE) * 1.1
-  if(plot_mgmt & ylim < (max(mgmt$lower_breaks) * 1.1)) {
-    ylim <- max(mgmt$lower_breaks) * 1.1
+  if(plot_mgmt & ylim < (max(mgmt$lower_breaks, na.rm = TRUE) * 1.1)) {
+    ylim <- max(mgmt$lower_breaks, na.rm = TRUE) * 1.1
   }
   
   std <- get_std(parameter)
