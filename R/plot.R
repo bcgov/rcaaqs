@@ -183,7 +183,10 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
             ymin = .data[["lower_breaks"]], 
             ymax = .data[["upper_breaks"]], 
             fill = .data[["labels"]]),
-        inherit.aes = FALSE, alpha = 0.55) 
+        inherit.aes = FALSE, alpha = 0.55) +
+      ggplot2::geom_hline(data = mgmt[-1,], 
+                         aes(yintercept = .data[["lower_breaks"]]),
+                         colour = "grey60")
       
   } 
   # Add bars
