@@ -153,7 +153,7 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
   
   # Plotting details
   mgmt <- management_levels %>%
-    dplyr::filter(.data$parameter == .env$parameter)
+    dplyr::filter(.data$parameter == .env$parameter, !is.na(.data$lower_breaks))
   
   # Add padding to upper category
   ylim <- max(caaqs_data$raw, na.rm = TRUE) * 1.1
