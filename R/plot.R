@@ -161,6 +161,11 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
     ylim <- max(mgmt$lower_breaks, na.rm = TRUE) * 1.1
   }
   
+  # For interesting reasons, ggplots save the environment, which, when x is 
+  # large, means that saving the ggplot2 output as an rds results in unnecessarily
+  # large files. So let's get rid of it. 
+  rm(x)
+  
   std <- get_std(parameter)
   # Plot - setup
   g <- ggplot2::ggplot(data = caaqs_data, 
