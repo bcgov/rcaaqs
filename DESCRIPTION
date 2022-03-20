@@ -40,6 +40,7 @@ Suggests:
     bcmaps,
     bcmapsdata,
     broom,
+    ggtext (>= 0.1.1),
     gridExtra,
     knitr,
     magrittr,

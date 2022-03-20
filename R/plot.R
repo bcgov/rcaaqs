@@ -39,6 +39,13 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
                        plot_std = TRUE, plot_mgmt = TRUE,
                        base_size = 10, annot_size = NULL) {
   
+  if(!requireNamespace("ggtext", quietly = TRUE)) {
+    stop("'plot_caaqs()' requires the package 'ggtext'.\n", 
+         "Please install 'ggtext' with 'install.packages(\"ggtext\")' ",
+         "and try again.", call. = FALSE)
+  }
+  
+  
   if (!inherits(x, "caaqs_mgmt")) {
     stop("x must be an object of class 'caaqs_mgmt.", call. = FALSE)
   }
@@ -61,24 +68,26 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
     stop("annot_size must be numeric")
   }
   parameter <- get_param(x)
-  par_units <- setNames(plot_units(parameter), NULL)
+  par_units <- dplyr::filter(achievement_levels, 
+                             .data$parameter == .env$parameter,
+                             !is.na(.data$lower_breaks)) %>% 
+    dplyr::pull(units_html) %>%
+    unique()
   
   if (parameter == "pm2.5_annual") {
-    ylab <- bquote(paste(PM[2.5], " Annual Metric (", 
-                         ..(parse(text = par_units)), ")"), splice = TRUE)
+    ylab <- paste0("PM<sub>2.5</sub> Annual Metric (", par_units, ")")
   } else if (parameter == "pm2.5_24h") {
-    ylab <- bquote(paste(PM[2.5], " 24-Hour Metric (", 
-                         ..(parse(text = par_units)), ")"), splice = TRUE)
+    ylab <- paste0("PM<sub>2.5</sub> 24-Hour Metric (", par_units, ")")
   } else if (parameter == "o3") {
     ylab <- paste0("Daily Maximum Ozone (", par_units, ")")
   } else if (parameter == "so2_3yr") {
-    ylab <- bquote(paste(SO[2], " 1-Hour Metric (", .(par_units), ")"))
+    ylab <- paste0("SO<sub>2</sub> 1-Hour Metric (", par_units, ")")
   } else if (parameter == "so2_1yr") {
-    ylab <- bquote(paste(SO[2], " Annual Metric (", .(par_units), ")"))
+    ylab <- paste0("SO<sub>2</sub> Annual Metric (", par_units, ")")
   } else if (parameter == "no2_3yr") {
-    ylab <- bquote(paste(NO[2], " 1-Hour Metric (", .(par_units), ")"))
+    ylab <- paste0("NO<sub>2</sub> 1-Hour Metric (", par_units, ")")
   } else if (parameter == "no2_1yr") {
-    ylab <- bquote(paste(NO[2], " Annual Metric (", .(par_units), ")"))
+    ylab <- paste0("NO<sub>2</sub> Annual Metric (", par_units, ")")
   } else {
     stop(parameter, " is currently not supported in 'plot_caaqs()'")
   }
@@ -175,7 +184,7 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
       legend.title = ggplot2::element_blank(),
       axis.line = ggplot2::element_line(colour = "black"), 
       axis.line.y = element_blank(),
-      axis.title.y = ggplot2::element_text(vjust = 1), 
+      axis.title.y = ggtext::element_markdown(vjust = 1), 
       axis.ticks.x = ggplot2::element_blank())
   
   if(plot_mgmt) {
