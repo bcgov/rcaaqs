@@ -64,24 +64,24 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
   par_units <- setNames(plot_units(parameter), NULL)
   
   if (parameter == "pm2.5_annual") {
-    ylab <- bquote(paste(PM[2.5], "Annual Metric (", 
+    ylab <- bquote(paste(PM[2.5], " Annual Metric (", 
                          ..(parse(text = par_units)), ")"), splice = TRUE)
   } else if (parameter == "pm2.5_24h") {
-    ylab <- bquote(paste(PM[2.5], "24-Hour Metric (", 
+    ylab <- bquote(paste(PM[2.5], " 24-Hour Metric (", 
                          ..(parse(text = par_units)), ")"), splice = TRUE)
   } else if (parameter == "o3") {
-    ylab <- "Daily Maximum Ozone\n(parts per billion)"
+    ylab <- "Daily Maximum Ozone (ppb)"
   } else if (parameter == "so2_3yr") {
-    ylab <- bquote(paste(SO[2], "1-Hour Metric (", 
+    ylab <- bquote(paste(SO[2], " 1-Hour Metric (", 
                          ..(parse(text = par_units)), ")"), splice = TRUE)
   } else if (parameter == "so2_1yr") {
-    ylab <- bquote(paste(SO[2], "Annual Metric (", 
+    ylab <- bquote(paste(SO[2], " Annual Metric (", 
                          ..(parse(text = par_units)), ")"), splice = TRUE)
   } else if (parameter == "no2_3yr") {
-    ylab <- bquote(paste(NO[2], "1-Hour Metric (", 
+    ylab <- bquote(paste(NO[2], " 1-Hour Metric (", 
                          ..(parse(text = par_units)), ")"), splice = TRUE)
   } else if (parameter == "no2_1yr") {
-    ylab <- bquote(paste(NO[2], "Annual Metric (", 
+    ylab <- bquote(paste(NO[2], " Annual Metric (", 
                          ..(parse(text = par_units)), ")"), splice = TRUE)
   } else {
     stop(parameter, " is currently not supported in 'plot_caaqs()'")
@@ -96,7 +96,8 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
 
   # Treat 1-year metrics separate from multi (3-yr) metrics
   if(parameter %in% c("so2_1yr", "no2_1yr")) {
-    caaqs_data <- dplyr::mutate(caaqs_data, year_lab = as.character(.data$caaqs_year))
+    caaqs_data <- dplyr::mutate(caaqs_data, 
+                                year_lab = as.character(.data$caaqs_year))
   } else {
     caaqs_data <- caaqs_data %>%
       dplyr::mutate(
@@ -207,10 +208,9 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
   
   if(plot_std) {
     g <- g + 
-      ggplot2::geom_hline(yintercept = std, linetype = 2, size = 1, 
-                          colour = "#e41a1c") + 
-      ggplot2::annotate(geom = "text", y = std, x = +Inf, 
-                        label = "CAAQS", hjust = 1, vjust = -0.2)
+      ggplot2::geom_hline(aes(yintercept = std, colour = "CAAQS Achievement"),
+                          linetype = "dashed", size = 1) +
+      scale_colour_manual(values = dplyr::last(mgmt$colour))
   }
   
   if(any(grepl("\\*", caaqs_data$year_lab))) {
