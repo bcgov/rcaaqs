@@ -70,19 +70,15 @@ plot_caaqs <- function(x, id = NULL, id_col = NULL,
     ylab <- bquote(paste(PM[2.5], " 24-Hour Metric (", 
                          ..(parse(text = par_units)), ")"), splice = TRUE)
   } else if (parameter == "o3") {
-    ylab <- "Daily Maximum Ozone (ppb)"
+    ylab <- paste0("Daily Maximum Ozone (", par_units, ")")
   } else if (parameter == "so2_3yr") {
-    ylab <- bquote(paste(SO[2], " 1-Hour Metric (", 
-                         ..(parse(text = par_units)), ")"), splice = TRUE)
+    ylab <- bquote(paste(SO[2], " 1-Hour Metric (", .(par_units), ")"))
   } else if (parameter == "so2_1yr") {
-    ylab <- bquote(paste(SO[2], " Annual Metric (", 
-                         ..(parse(text = par_units)), ")"), splice = TRUE)
+    ylab <- bquote(paste(SO[2], " Annual Metric (", .(par_units), ")"))
   } else if (parameter == "no2_3yr") {
-    ylab <- bquote(paste(NO[2], " 1-Hour Metric (", 
-                         ..(parse(text = par_units)), ")"), splice = TRUE)
+    ylab <- bquote(paste(NO[2], " 1-Hour Metric (", .(par_units), ")"))
   } else if (parameter == "no2_1yr") {
-    ylab <- bquote(paste(NO[2], " Annual Metric (", 
-                         ..(parse(text = par_units)), ")"), splice = TRUE)
+    ylab <- bquote(paste(NO[2], " Annual Metric (", .(par_units), ")"))
   } else {
     stop(parameter, " is currently not supported in 'plot_caaqs()'")
   }
