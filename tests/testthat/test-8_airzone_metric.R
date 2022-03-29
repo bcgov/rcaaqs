@@ -31,12 +31,14 @@ test_that("airzone_metric works", {
                         ambient_metric_val = "value", ambient_caaqs = "caaqs",
                         station_id = "stationid", mgmt = "mgmt",
                         mgmt_metric_val = "mgmt_value", excluded = "excluded")
+  
+  # As of CCME2019a, do not exclude stations with only two year of data
   expect_equal(dim(res), c(4, 10))
   expect_equal(as.character(res$Airzone), LETTERS[1:4])
-  expect_equal(res$nyears_ambient, c(2,3,3,3))
-  expect_equal(res$nyears_mgmt, c(2,3,3,3))
-  expect_equal(res$value, c(4,8,11,16))
-  expect_equal(as.character(res$rep_stn_id_ambient), c("D", "H", "J", "P"))
+  expect_equal(res$nyears_ambient, c(2,3,2,3))
+  expect_equal(res$nyears_mgmt, c(2,3,2,3))
+  expect_equal(res$value, c(4,8,12,16))
+  expect_equal(as.character(res$rep_stn_id_ambient), c("D", "H", "I", "P"))
 })
 
 test_that("keep arg works", {
@@ -55,12 +57,14 @@ test_that("keep arg works", {
                         ambient_caaqs = "caaqs",
                         mgmt = "mgmt", mgmt_metric_val = "mgmt_value",
                         excluded = "excluded", keep = c("city", "otherdata"))
+  
+  # As of CCME2019a, do not exclude stations with only two year of data
   expect_equal(dim(res), c(4, 14))
   expect_equal(res$Airzone, LETTERS[1:4])
-  expect_equal(res$nyears_ambient, c(2,3,3,3))
-  expect_equal(res$nyears_mgmt, c(2,3,3,3))
-  expect_equal(res$value, c(4,8,11,16))
-  expect_equal(res$city_ambient, c("d", "h", "j", "p"))
+  expect_equal(res$nyears_ambient, c(2,3,2,3))
+  expect_equal(res$nyears_mgmt, c(2,3,2,3))
+  expect_equal(res$value, c(4,8,12,16))
+  expect_equal(res$city_ambient, c("d", "h", "i", "p"))
   expect_true(all(c("city_ambient", "otherdata_ambient", "city_mgmt",
                     "otherdata_mgmt") %in% names(res)))
 })

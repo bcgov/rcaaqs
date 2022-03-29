@@ -129,7 +129,8 @@ parse_incomplete <- function(data, n_years, val) {
 }
 
 az_metric_single <- function(data, n_years, val) {
-  data <- parse_incomplete(data, n_years, val)
+  # As of CCME2019a, do not exclude stations with only two years of data
+  #data <- parse_incomplete(data, n_years, val)
   dplyr::slice(data, which.max(data[[val]]))
 }
 
