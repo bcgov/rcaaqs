@@ -50,6 +50,9 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
                            excluded = "excluded", mgmt_metric_val = "metric_value_mgmt",
                            mgmt = "mgmt_level", keep = NULL) {
   
+  # Assume 1 year (SO2, NO2 etc.) if no n_years
+  if(!"n_years" %in% names(data)) data$n_years <- 1
+  
   # Check inputs
   check_vars(c(n_years, az, station_id, ambient_metric_val, ambient_caaqs,
                mgmt_metric_val, mgmt), data)
@@ -126,7 +129,8 @@ parse_incomplete <- function(data, n_years, val) {
 }
 
 az_metric_single <- function(data, n_years, val) {
-  data <- parse_incomplete(data, n_years, val)
+  # As of CCME2019a, do not exclude stations with only two years of data
+  #data <- parse_incomplete(data, n_years, val)
   dplyr::slice(data, which.max(data[[val]]))
 }
 

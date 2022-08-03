@@ -257,11 +257,12 @@ caaqs_management_so2_no2_1yr <- function(x, exclude_df, exclude_df_dt,
 }
 
 join_management_caaqs <- function(caaqs, mgmt_caaqs, by, eetf) {
-  mgmt_caaqs <- dplyr::select(mgmt_caaqs, by, "caaqs_year", "metric", 
-                        "metric_value_mgmt" = "metric_value", 
-                        "mgmt", "excluded")
+  mgmt_caaqs <- dplyr::select(mgmt_caaqs, dplyr::all_of(by), 
+                              "caaqs_year", "metric", 
+                              "metric_value_mgmt" = "metric_value", 
+                              "mgmt", "excluded")
   ret <- dplyr::left_join(caaqs, mgmt_caaqs, by = c(by, "caaqs_year", "metric"))
-  dplyr::select(ret, by, "caaqs_year", "metric", 
+  dplyr::select(ret, dplyr::all_of(by), "caaqs_year", "metric", 
                 "metric_value_ambient" = "metric_value", 
                 "caaqs_ambient" = "caaqs", 
                 "excluded", "metric_value_mgmt", "mgmt_level" = "mgmt", 
@@ -270,12 +271,13 @@ join_management_caaqs <- function(caaqs, mgmt_caaqs, by, eetf) {
 
 join_management_yearly <- function(yearly, mgmt_yearly, parameter, by, eetf) {
   annual_stat <- get_annual_stat(parameter)
-  mgmt_yearly <- dplyr::select(mgmt_yearly, by, "year", "excluded", 
+  mgmt_yearly <- dplyr::select(mgmt_yearly, dplyr::all_of(by), "year", "excluded", 
                                annual_stat, "exceed_mgmt" = "exceed")
   names(mgmt_yearly)[names(mgmt_yearly) == annual_stat] <- paste0(annual_stat, "_mgmt")
   
   ret <- dplyr::left_join(yearly, mgmt_yearly, by = c(by, "year"))
-  dplyr::select(ret, by, "year", "valid_in_year", dplyr::starts_with("quarter"), 
+  dplyr::select(ret, dplyr::all_of(by), "year", "valid_in_year", 
+                dplyr::starts_with("quarter"), 
                 annual_stat, "exceed", "excluded", 
                 paste0(annual_stat, "_mgmt"), "exceed_mgmt", dplyr::everything())
 }

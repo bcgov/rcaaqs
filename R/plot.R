@@ -12,6 +12,220 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
+#' Plot yearly CAAQS
+#' 
+#'  Plot yearly CAAQS with exclusions for a particular station
+#'   
+#' @param x an object of class `caaqs_mgmt` (i.e. output of
+#'   `caaqs_management()`)
+#' @param id Character. Id of the station you would like to plot
+#' @param id_col Character. Column in which to look for `id`
+#' @param base_size Numeric. Base font size for the plot
+#' @param annot_size Numierc. size of annotations. Scaling of this size is not
+#'   the same as the rest of the font sizes, so you will have to experiment.
+#'   Defaults to 0.32*base_size
+#' @param plot_std Logical. Should the CAAQs standard be plotted?
+#' @param plot_mgmt Logical. Should the CAAQs management standards be plotted?
+#' @param year_min Numeric. Minimum year to include. Data will be filtered or
+#'   filled to match.
+#' @param year_max Numeric. Maximum year to include. Data will be filtered or
+#'   filled to match.
+#'   
+#' @return a ggplot2 object
+#' 
+#' @export
+plot_caaqs <- function(x, id = NULL, id_col = NULL, 
+                       year_min = NULL, year_max = NULL,
+                       plot_std = TRUE, plot_mgmt = TRUE,
+                       base_size = 10, annot_size = NULL) {
+  
+  if(!requireNamespace("ggtext", quietly = TRUE)) {
+    stop("'plot_caaqs()' requires the package 'ggtext'.\n", 
+         "Please install 'ggtext' with 'install.packages(\"ggtext\")' ",
+         "and try again.", call. = FALSE)
+  }
+  
+  
+  if (!inherits(x, "caaqs_mgmt")) {
+    stop("x must be an object of class 'caaqs_mgmt.", call. = FALSE)
+  }
+  
+  if (is.null(id) && !is.null(get_by(x))) {
+    stop("'id' and 'id_col' required with more than one station", call. = FALSE)
+  }
+  
+  if (!is.null(id_col) && !id_col %in% get_by(x)) {
+    stop(id_col, " is not a column in the data", call. = FALSE)
+  }
+  
+  if (!is.null(id) && !id %in% unique(get_by_vals(x)[[id_col]])) {
+    stop(id, " is not a value in ", id_col, call. = FALSE)
+  }
+  
+  if (is.null(annot_size)) {
+    annot_size <- 0.32*base_size
+  } else if (!is.numeric(annot_size)) {
+    stop("annot_size must be numeric")
+  }
+  parameter <- get_param(x)
+  par_units <- dplyr::filter(achievement_levels, 
+                             .data$parameter == .env$parameter,
+                             !is.na(.data$lower_breaks)) %>% 
+    dplyr::pull(units_html) %>%
+    unique()
+  
+  if (parameter == "pm2.5_annual") {
+    ylab <- paste0("PM<sub>2.5</sub> Annual Metric (", par_units, ")")
+  } else if (parameter == "pm2.5_24h") {
+    ylab <- paste0("PM<sub>2.5</sub> 24-Hour Metric (", par_units, ")")
+  } else if (parameter == "o3") {
+    ylab <- paste0("Daily Maximum Ozone (", par_units, ")")
+  } else if (parameter == "so2_3yr") {
+    ylab <- paste0("SO<sub>2</sub> 1-Hour Metric (", par_units, ")")
+  } else if (parameter == "so2_1yr") {
+    ylab <- paste0("SO<sub>2</sub> Annual Metric (", par_units, ")")
+  } else if (parameter == "no2_3yr") {
+    ylab <- paste0("NO<sub>2</sub> 1-Hour Metric (", par_units, ")")
+  } else if (parameter == "no2_1yr") {
+    ylab <- paste0("NO<sub>2</sub> Annual Metric (", par_units, ")")
+  } else {
+    stop(parameter, " is currently not supported in 'plot_caaqs()'")
+  }
+  
+  # Get daily data from caaqs object and subset to the station of interest
+  # Must be  
+  #  - valid
+  #  - in date range 
+
+  caaqs_data <- get_caaqs(x)
+  
+  if(!"flag_two_of_three_years" %in% names(caaqs_data)){
+    caaqs_data$flag_two_of_three_years <- NA
+  }
+  
+  caaqs_data <- caaqs_data %>%
+    dplyr::mutate(
+      raw = .data$metric_value_ambient,
+      value = .data$raw - .data$metric_value_mgmt) %>%
+    dplyr::select(dplyr::all_of(id_col), "caaqs_year", "flag_two_of_three_years",
+                  "value_adj" = .data$metric_value_mgmt, "value", "raw") %>%
+    tidyr::pivot_longer(cols = tidyr::contains("value"), 
+                        names_to = "type", values_to = "value") %>%
+    dplyr::mutate(type = factor(.data$type, 
+                                levels = c("value", "value_adj"), 
+                                labels = c("No Adjustment", "TF/EE Adjusted")))
+
+  # Filter to id
+  if(!is.null(id_col) && length(unique(caaqs_data[[id_col]])) > 1) {
+    caaqs_data <- dplyr::filter(caaqs_data, .data[[id_col]] == .env$id)
+  }
+  
+  if(nrow(caaqs_data) == 0) {
+    message("No valid data for that id")
+    return(invisible(NULL))
+  }
+  
+  # Pad years to year_min / year_max
+  if(is.null(year_min)) year_min <- min(caaqs_data$caaqs_year)
+  if(is.null(year_max)) year_max <- max(caaqs_data$caaqs_year)
+  
+  caaqs_data <- caaqs_data %>%
+    dplyr::filter(.data$caaqs_year >= .env$year_min, 
+                  .data$caaqs_year <= .env$year_max, 
+                  !is.na(.data$raw))
+  
+  if(nrow(caaqs_data) == 0 || all(is.na(caaqs_data$value))) {
+    message("No valid data for that id in that year range")
+    return(invisible(NULL))
+  }
+
+  caaqs_data <- caaqs_data %>%
+    tidyr::complete(caaqs_year = year_min:year_max, 
+                    !!id_col := .env$id,  #Note id_col is from environment
+                    type = c("TF/EE Adjusted", "No Adjustment"))
+
+  # Get year labels
+  # Treat 1-year metrics separate from multi (3-yr) metrics
+  if(parameter %in% c("so2_1yr", "no2_1yr")) {
+    caaqs_data <- dplyr::mutate(caaqs_data, 
+                                year_lab = as.character(.data$caaqs_year))
+  } else {
+    caaqs_data <- caaqs_data %>%
+      dplyr::mutate(
+        year_lab = paste0(.data$caaqs_year - 2, "-", .data$caaqs_year),
+        year_lab = dplyr::if_else(
+          !is.na(.data$flag_two_of_three_years) & .data$flag_two_of_three_years, 
+          paste0(.data$year_lab, "*"), .data$year_lab))
+  }
+  
+  # Plotting details
+  mgmt <- management_levels %>%
+    dplyr::filter(.data$parameter == .env$parameter, !is.na(.data$lower_breaks))
+  
+  # Add padding to upper category
+  ylim <- max(caaqs_data$raw, na.rm = TRUE) * 1.1
+  if(plot_mgmt & ylim < (max(mgmt$lower_breaks, na.rm = TRUE) * 1.1)) {
+    ylim <- max(mgmt$lower_breaks, na.rm = TRUE) * 1.1
+  }
+  
+  # For interesting reasons, ggplots save the environment, which, when x is 
+  # large, means that saving the ggplot2 output as an rds results in unnecessarily
+  # large files. So let's get rid of it. 
+  rm(x)
+  
+  std <- get_std(parameter)
+  # Plot - setup
+  g <- ggplot2::ggplot(data = caaqs_data, 
+                       ggplot2::aes(x = .data[["year_lab"]], 
+                                    y = .data[["value"]], 
+                                    fill = .data[["type"]])) +
+    ggplot2::theme_minimal(base_size = base_size) +
+    ggplot2::theme(
+      legend.title = ggplot2::element_blank(),
+      axis.line = ggplot2::element_line(colour = "black"), 
+      axis.line.y = element_blank(),
+      axis.title.y = ggtext::element_markdown(vjust = 1), 
+      axis.ticks.x = ggplot2::element_blank())
+  
+  if(plot_mgmt) {
+    g <- g + 
+      ggplot2::geom_rect(
+        data = mgmt, 
+        aes(xmin = -Inf, xmax = Inf, 
+            ymin = .data[["lower_breaks"]], 
+            ymax = .data[["upper_breaks"]], 
+            fill = .data[["labels"]]),
+        inherit.aes = FALSE, alpha = 0.55) +
+      ggplot2::geom_hline(data = mgmt[-1,], 
+                         aes(yintercept = .data[["lower_breaks"]]),
+                         colour = "grey60")
+      
+  } 
+  # Add bars
+  g <- g +
+    ggplot2::geom_bar(stat = "identity", na.rm = TRUE, 
+                      alpha = 1, colour = "black", width = 0.5) +
+    ggplot2::scale_fill_manual(
+      values = c("No Adjustment" = "#b4acb3", "TF/EE Adjusted" = "#8f94a6",
+                 rev(mgmt$colour))) +
+    ggplot2::scale_y_continuous(expand = c(0,0), limits = c(NA, ylim),
+                                breaks = scales::breaks_extended(n = 7)) +
+    ggplot2::labs(x = "Reporting Period", y = ylab)
+  
+  if(plot_std) {
+    g <- g + 
+      ggplot2::geom_hline(aes(yintercept = std, colour = "CAAQS Achievement"),
+                          linetype = "dashed", size = 1) +
+      scale_colour_manual(values = dplyr::last(mgmt$colour))
+  }
+  
+  if(any(grepl("\\*", caaqs_data$year_lab))) {
+    g <- g + ggplot2::labs(caption = "* indicates only two of three years")
+  }
+    
+  g
+}
+
 
 #' Plot daily time series data with exceedances and optionally caaqs for a 
 #' particular station
@@ -246,13 +460,29 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
   ## Conver to a call object for use in bquote
   units <- parse(text = units)[[1]]
 
-  data[[airzone]] <- stats::reorder(data[[airzone]], data[[metric_val]], max, order = TRUE)
-  data[[airzone]] <- factor(data[[airzone]], levels = rev(levels(data[[airzone]])))
+  data[[airzone]] <- stats::reorder(data[[airzone]], data[[metric_val]], max, 
+                                    order = TRUE)
+  data[[airzone]] <- factor(data[[airzone]], 
+                            levels = rev(levels(data[[airzone]])))
   
-  order_metric <- data[[parameter]][which.max(data[[metric_val]])]
-  order_data <- data[data[["metric"]] == order_metric, c(metric_val, station)]
-  stn_levels <- unique(order_data[[station]][order(order_data[[metric_val]])])
-  data[[station]] <- factor(data[[station]], levels = stn_levels)
+  # Get stations order for plotting
+  data <- data %>%
+    
+    # Arrange in order of metric vals high to low
+    dplyr::arrange(dplyr::desc(.data[[metric_val]])) %>%
+    
+    # Use this metric order to get Airzone order AND which metric should come first
+    dplyr::mutate(ref_metric = factor(.data$metric, 
+                                      levels = unique(.data$metric))) %>%
+    
+    # Arrange in order of metric type, then metric vals low to high
+    dplyr::arrange(.data$ref_metric, .data[[metric_val]]) %>%
+    
+    # Use this order to get stations order
+    # (note that stations not in the first metric, will go last)
+    dplyr::mutate(!!station := factor(.data[[station]], 
+                                      levels = unique(.data[[station]])))
+  
   
   p <- ggplot(data, aes_string(x = metric_val, y = station))
   p <- p + facet_grid(facet_string, scales = "free", space = "free_y", 
@@ -262,7 +492,7 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
   p <- p + xlab(bquote(CAAQS ~ Metric ~ Value ~ (.(units))))
   p <- p + ylab("Monitoring Station")
   p <- p + theme_bw(base_size = base_size)
-  p <- p + guides(colour = FALSE)
+  p <- p + guides(colour = "none")
   
   if (length(metrics) > 1) {
     p <- p + geom_point(size = pt_size)
@@ -279,8 +509,22 @@ summary_plot <- function(data, metric_val, station, airzone, parameter,
 label_metrics <- function(x) {
   x[x == "pm2.5_annual"] <- "PM[2.5]~Annual~Metric"
   x[x == "pm2.5_24h"]   <- "PM[2.5]~24*'-'*hour~Metric"
+  x[x == "so2_3yr"] <- "SO[2]~1*'-'*hour~Metric"
+  x[x == "so2_1yr"]   <- "SO[2]~Annual~Metric"
+  x[x == "no2_3yr"] <- "NO[2]~1*'-'*hour~Metric"
+  x[x == "no2_1yr"]   <- "NO[2]~Annual~Metric"
   gsub("\\s", "~", x)
 }
+
+plot_units <- function(parameters) {
+  c("o3" = "ppb",
+    "pm2.5_annual" = "mu * g/ m^{3}",
+    "pm2.5_24h" = "mu * g/ m^{3}",
+    "so2_3yr" = "ppb",
+    "so2_1yr" = "ppb",
+    "no2_3yr" = "ppb",
+    "no2_1yr" = "ppb")[parameters]
+} 
 
 param_labeller <- ggplot2::as_labeller(label_metrics, default = label_parsed)
 
@@ -310,22 +554,19 @@ plot_station_instruments <- function(data, dt = "date_time", station = "station_
   check_vars(vars = list(dt, station, instrument), data)
   check_one(dt, station, instrument)
   
-  data$date <- as.Date(data[[dt]])
+  data$date <- lubridate::as_date(data[[dt]])
   
   ## conversation here discussing quosing strings: https://github.com/tidyverse/rlang/issues/116
   data <- dplyr::group_by(data, date, !!rlang::sym(station), !!rlang::sym(instrument))
   data <- dplyr::summarize(data)
-  
+  data <- dplyr::add_count(data, !!rlang::sym(station))
+
   ggplot(data, aes_string(x = "date", y = instrument, colour = instrument)) + 
-    facet_wrap("station_name", scales = "free_y", ncol = 1, strip.position = "left") +
+    facet_wrap(station, scales = "free_y", ncol = 1, strip.position = "left") +
+    geom_point(data = dplyr::filter(data, .data$n > 1), 
+               aes(fill = "Overlap"), colour = "grey", alpha = 0.75, size = 2) +
     geom_line(size = 1) + 
-    labs(y = station) +
+    labs(y = station, fill = "") +
     theme(axis.text.y = element_blank(), 
           strip.text.y.left = element_text(angle = 0))
 }
-
-plot_units <- function(parameters) {
-  c("o3" = "ppb",
-  "pm2.5_annual" = "mu * g/ m^{3}",
-  "pm2.5_24h" = "mu * g/ m^{3}")[parameters]
-} 

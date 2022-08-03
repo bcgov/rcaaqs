@@ -67,6 +67,7 @@ test_that("caaqs_management for pm2.5_24h", {
   expect_length(get_daily(pm2.5_24h_caaqs_one_mgmt), 6)
   expect_length(get_yearly(pm2.5_24h_caaqs_one_mgmt), 15)
   expect_length(get_three_yr_rolling(pm2.5_24h_caaqs_one_mgmt), 22)
+  saveRDS(pm2.5_24h_caaqs_one_mgmt, "pm_24h_caaqs1_mgmt.rds")
 })
 
 test_that("caaqs_management for pm2.5_24h with groups", {
@@ -77,6 +78,7 @@ test_that("caaqs_management for pm2.5_24h with groups", {
   expect_length(get_daily(pm2.5_24h_caaqs_mult_mgmt), 8)
   expect_length(get_yearly(pm2.5_24h_caaqs_mult_mgmt), 17)
   expect_length(get_three_yr_rolling(pm2.5_24h_caaqs_mult_mgmt), 24)
+  saveRDS(pm2.5_24h_caaqs_mult_mgmt, "pm_24h_caaqs2_mgmt.rds")
 })
 
 test_that("classes and extractors for pm2.5_annual", {
@@ -139,6 +141,7 @@ test_that("caaqs_management for pm2.5_annual", {
   expect_length(get_daily(pm2.5_annual_caaqs_one_mgmt), 6)
   expect_length(get_yearly(pm2.5_annual_caaqs_one_mgmt), 15)
   expect_length(get_three_yr_rolling(pm2.5_annual_caaqs_one_mgmt), 22)
+  saveRDS(pm2.5_annual_caaqs_one_mgmt, "pm_annual_caaqs1_mgmt.rds")
 })
 
 test_that("caaqs_management for pm2.5_annual with groups", {
@@ -149,4 +152,5 @@ test_that("caaqs_management for pm2.5_annual with groups", {
   expect_length(get_daily(pm2.5_annual_caaqs_mult_mgmt), 8)
   expect_length(get_yearly(pm2.5_annual_caaqs_mult_mgmt), 17)
   expect_length(get_three_yr_rolling(pm2.5_annual_caaqs_mult_mgmt), 24)
+  saveRDS(pm2.5_annual_caaqs_mult_mgmt, "pm_annual_caaqs2_mgmt.rds")
 })

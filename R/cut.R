@@ -53,11 +53,7 @@ cut_achievement <- function(x, parameter, output = "labels", drop_na = FALSE) {
 #' @keywords internal
 cut_caaqs <- function(type, x, parameter, output, drop_na) {
   levels <- get_levels(type, parameter)
-
   breaks <- c(levels$lower_breaks, Inf)
-  
-  sub_na <- !drop_na && any(is.na(x))
-  
   labels <- get_labels(levels, output, drop_na)
   
   if (!drop_na) {
@@ -66,8 +62,8 @@ cut_caaqs <- function(type, x, parameter, output, drop_na) {
     breaks <- c(-Inf, breaks)
   }
   
-  cut(x, breaks = breaks, labels = labels, include.lowest = TRUE, right = TRUE, 
-      ordered_result = TRUE)
+  cut(x, breaks = breaks, labels = labels, ordered_result = TRUE, 
+      include.lowest = TRUE, right = TRUE)
 }
 
 #' Return CAAQS levels for any or all, parameters, for either achievement or 
@@ -132,19 +128,10 @@ get_labels <- function(x, output, drop_na) {
     labels <- x[["colour"]]
   }
   
-  labels <- as.character(labels)
+  labels <- factor(labels, levels = labels, ordered = TRUE)
+  if(drop_na) labels <- droplevels(labels[-1])
   
-  if (!drop_na) {
-    if (output %in% c("colour", "color")) {
-      #labels <- c("#E8D3D3", labels) #pale grey-pink
-      #labels <- c("#0900FF", labels) #blue
-      labels <- c("grey80", labels) #current use
-    } else {
-      labels <- c("Insufficient Data", labels)
-    }
-  }
-  
-  labels
+  if(output == "labels") labels else as.character(labels)
 }
 
 #' Get the CAAQS value for a given parameter
@@ -177,7 +164,7 @@ get_units <- function(parameter = "all") {
   units_df <- unique(levels[c("parameter", "units_unicode")])
   units <- as.character(units_df[["units_unicode"]])
   names(units) <- units_df[["parameter"]]
-  units
+  units[!is.na(units)]
 }
 
 #' Get a vector of colours for management levels or achievement levels

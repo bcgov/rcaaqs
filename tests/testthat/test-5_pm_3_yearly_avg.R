@@ -99,7 +99,7 @@ test_that("can exclude data rows", {
   expect_true(all(ret2$ann_avg >= ret3$ann_avg, na.rm = TRUE))
   expect_is(ret3$excluded, "logical")
   expect_equal(ret3$excluded, c(FALSE, TRUE, TRUE, TRUE, TRUE, TRUE))
-  expect_equivalent(ret3$ann_avg, c(NA, 2.60, NA, 4.50, NA, 5.60))
+  expect_equivalent(ret3$ann_avg, c(NA, 2.60, NA, 4.30, NA, 5.30))
 })
 
 test_that("Only accepts date objects", {

@@ -265,7 +265,7 @@ valid_by_quarter <- function(data, date, by, val, units = c("prop", "days")) {
   
   # Format to wide columns
   data <- dplyr::group_by(data, !!!rlang::syms(c("year", by)))
-  data <- dplyr::select(data, c(by, "year", "quarter", "valid_in_quarter", "valid_in_year"))
+  data <- dplyr::select(data, dplyr::all_of(c(by, "year", "quarter", "valid_in_quarter", "valid_in_year")))
   data <- tidyr::spread(data, "quarter", "valid_in_quarter", sep = "_")
   
   dplyr::ungroup(data)

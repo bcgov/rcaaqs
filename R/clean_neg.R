@@ -18,9 +18,9 @@
 #'
 #' @param x vector of air quality readings
 #' @param  type type of air quality readings; one of: "pm25", "ozone", "so2", 
-#'   "nox"
+#'   "no2"
 #'  
-#' @details For gases (type = "ozone", "so2", or "nox"), replaces values 
+#' @details For gases (type = "ozone", "so2", or "no2"), replaces values 
 #'   \eqn{\le} -5 with `NA` and values between -5 and 0 with 0. For type = 
 #'   "pm25", replaces values \eqn{\le} -3.5 with `NA` and values between 
 #'   -3.5 and 0 with 0.
@@ -30,7 +30,7 @@
 #'
 #'@export
 
-clean_neg <- function(x, type = c("pm25", "ozone", "so2", "nox")) {
+clean_neg <- function(x, type = c("pm25", "ozone", "so2", "no2")) {
   type <- tolower(type)
   type <- match.arg(type)
   cutoff <- switch(type, 

@@ -1,6 +1,6 @@
 context("cut breaks")
 
-o3_vec <- c(0, 40, 50, 50.01, 56, 56.01, 63, 63.01, 80, NA)
+o3_vec <- c(0, 40, 50, 50.01, 56, 56.01, 62, 62.01, 80, NA)
 
 test_that("cut_management returns a factor", {
   res <- cut_management(o3_vec, "o3")
@@ -21,10 +21,10 @@ test_that("management breaks are correct for o3: category", {
 })
 
 test_that("management breaks are correct for o3: value labels (html)", {
-  expected <- c(rep("&lteq; 50ppb", 3), 
-                rep("&gt; 50ppb &amp; &lteq; 56ppb", 2), 
-                rep("&gt; 56ppb &amp; &lteq; 63ppb", 2), 
-                rep("&gt; 63ppb", 2))
+  expected <- c(rep("&leq; 50ppb", 3), 
+                rep("&gt; 50ppb &amp; &leq; 56ppb", 2), 
+                rep("&gt; 56ppb &amp; &leq; 62ppb", 2), 
+                rep("&gt; 62ppb", 2))
   
   res <- cut_management(o3_vec, "o3", output = "breaks_h", drop_na = TRUE)
   expect_equal(as.character(res), c(expected, NA))
@@ -36,8 +36,8 @@ test_that("management breaks are correct for o3: value labels (html)", {
 test_that("management breaks are correct for o3: value labels (unicode)", {
   expected <- c(rep("\u2264 50ppb", 3), 
                 rep("\u003E 50ppb \u0026 \u2264 56ppb", 2), 
-                rep("\u003E 56ppb \u0026 \u2264 63ppb", 2), 
-                rep("\u003E 63ppb", 2))
+                rep("\u003E 56ppb \u0026 \u2264 62ppb", 2), 
+                rep("\u003E 62ppb", 2))
   
   res <- cut_management(o3_vec, "o3", output = "breaks_u", drop_na = TRUE)
   expect_equal(as.character(res), c(expected, NA))
@@ -56,7 +56,7 @@ test_that("management breaks are correct for o3: colour", {
   expect_equal(as.character(res), c(expected, NA))
   
   res <- cut_management(o3_vec, "o3", output = "colour", drop_na = FALSE)
-  expect_equal(as.character(res), c(expected, "grey80"))
+  expect_equal(as.character(res), c(expected, "#dbdbdb"))
 })
 
 test_that("get_std works", {
@@ -65,9 +65,9 @@ test_that("get_std works", {
   expect_is(get_std("o3"), "numeric")
   expect_is(get_std("pm2.5_annual"), "numeric")
   expect_is(get_std("pm2.5_24h"), "numeric")
-  expect_equal(get_std("o3"), c(o3 = 63))
-  expect_equal(get_std("pm2.5_annual"), c(pm2.5_annual = 10.0))
-  expect_equal(get_std("pm2.5_24h"), c(pm2.5_24h = 28))
+  expect_equal(get_std("o3"), c(o3 = 62))
+  expect_equal(get_std("pm2.5_annual"), c(pm2.5_annual = 8.8))
+  expect_equal(get_std("pm2.5_24h"), c(pm2.5_24h = 27))
   expect_equal(length(get_std()), 7)
   expect_equal(length(get_std("o3")), 1)
   expect_equal(length(get_std("pm2.5_annual")), 1)
@@ -92,3 +92,4 @@ test_that("get_units works", {
   expect_equal(length(get_units("so2_1yr")), 1)
   expect_equal(length(get_units("so2_3yr")), 1)
 })
+
