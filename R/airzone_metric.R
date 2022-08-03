@@ -120,10 +120,10 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
 }
 
 parse_incomplete <- function(data, n_years, val) {
-  if (all(data[[n_years]] < 3)) {
+  if (all(data[[n_years]] < 2)) {
     data <- data
   } else {
-    data[data[[n_years]] < 3, val] <- NA
+    data[data[[n_years]] < 2, val] <- NA
   }
   data
 }
