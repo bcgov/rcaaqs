@@ -3,7 +3,7 @@ context("airzone_metric")
 test_that("parsing valid years works with some n_years being 2", {
   test_s2 <- data.frame(n_years = c(3,3,2,2,3), val = rnorm(5), foo = letters[1:5])
   res <- parse_incomplete(test_s2, "n_years", "val")
-  expect_true(all(is.na(res$val[3:4])))
+  expect_true(all(!is.na(res$val[3:4])))
 })
 
 test_that("parsing valid years works with all n_years being 2", {

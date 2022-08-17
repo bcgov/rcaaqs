@@ -75,7 +75,7 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   
   data1 <- dplyr::mutate(
     data, data = purrr::map(
-      .data$data, ~ az_metric_single(.x, n_years, ambient_metric_val)
+      .data$data, ~ az_metric_single(.x, ambient_metric_val)
     )
   )
   
@@ -96,7 +96,7 @@ airzone_metric <- function(data, n_years = "n_years", az = "airzone",
   # Take station with max mgmt_metric_value for each airzone
   data2 <- dplyr::mutate(
     data, data = purrr::map(
-      .data$data, ~ az_metric_single(.x, n_years, mgmt_metric_val)
+      .data$data, ~ az_metric_single(.x, mgmt_metric_val)
     )
   )
   if (tidyr_new_interface()) {
@@ -128,7 +128,7 @@ parse_incomplete <- function(data, n_years, val) {
   data
 }
 
-az_metric_single <- function(data, n_years, val) {
+az_metric_single <- function(data, val) {
   # As of CCME2019a, do not exclude stations with only two years of data
   #data <- parse_incomplete(data, n_years, val)
   dplyr::slice(data, which.max(data[[val]]))
