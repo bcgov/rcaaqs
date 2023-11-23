@@ -29,6 +29,11 @@ test_that("percentiles are correct with type = 'caaqs'", {
   expect_true(all.equal(quantile2(1:366, probs = 0.98, type = "caaqs"), 359))
 })
 
+
+test_that("percentiles are correct with type = 'caaqs' and probs = 1", {
+  expect_true(all.equal(quantile2(1:25, probs = 1, type = "caaqs"), 25))
+})
+  
 test_that("has names", {
   expect_true(names(quantile2(1:10, probs = 0.98, names = TRUE, type = "caaqs")) == "98%")
 })

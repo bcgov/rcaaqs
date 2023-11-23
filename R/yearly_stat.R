@@ -350,7 +350,9 @@ quantile2 <- function(x, probs = 0.98, na.rm = FALSE, names = FALSE, type = "caa
     n <- length(x)
     i.d <- probs * n
     i <- floor(i.d)
-    ret <- x[n - i]
+    
+    ret <- ifelse(n == i, x[1], x[n - i])
+    
     if (names) names(ret) <- paste0(probs * 100, "%")
   } else {
     ret <- stats::quantile(x = x, probs = probs, na.rm = na.rm, names = names, type = type)
