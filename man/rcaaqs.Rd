@@ -2,6 +2,7 @@
 % Please edit documentation in R/rcaaqs.R
 \docType{package}
 \name{rcaaqs}
+\alias{rcaaqs-package}
 \alias{rcaaqs}
 \title{rcaaqs: Tools for calculating CAAQS with air quality data}
 \description{
@@ -22,3 +23,28 @@ achievement and management categories.
 }
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/bcgov/rcaaqs}
+  \item Report bugs at \url{https://github.com/bcgov/rcaaqs/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Andy Teucher \email{andy.teucher@gov.bc.ca}
+
+Authors:
+\itemize{
+  \item Andy Teucher \email{andy.teucher@gov.bc.ca}
+  \item Aman Verma \email{aman.verma.mtl@gmail.com} [contractor]
+  \item Steffi LaZerte \email{steffi@steffi.ca} [contractor]
+  \item Stephanie Hazlitt \email{stephanie.hazlitt@gov.bc.ca} [contractor]
+}
+
+Other contributors:
+\itemize{
+  \item Province of British Columbia [copyright holder]
+}
+
+}

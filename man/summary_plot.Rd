@@ -35,7 +35,7 @@ for each station}
 
 \item{az_labeller}{ggplot2 labeller function to customize the airzone labels.
 Default \code{label_value} (i.e., no formatting of Airzone names).
-See \code{\link[ggplot2:labellers]{ggplot2::label_value()}}}
+See \code{\link[ggplot2:label_value]{ggplot2::label_value()}}}
 
 \item{...}{options passed on to theme()}
 }
