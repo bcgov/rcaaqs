@@ -64,12 +64,12 @@ operators_regex <- paste0(c("<=", ">=", "<", ">", "&", "ug/m\\^3"), collapse = "
 
 
 ## Achievement levels table
-# Filled in SO2 and NO2 from: http://airquality-qualitedelair.ccme.ca/en/
+# Filled in SO2, NO2, O3, and pm2.5 from: https://ccme.ca/en/air-quality-report
 achievement_levels <- tribble(
   ~parameter,     ~labels,             ~lower_breaks, ~upper_breaks,  ~units,
   "o3",           "Insufficient Data",  NA,             NA,                NA,
-  "o3",           "Achieved",            0,             62,             "ppb",
-  "o3",           "Not Achieved",       62,            Inf,             "ppb",
+  "o3",           "Achieved",            0,             60,             "ppb",
+  "o3",           "Not Achieved",       60,            Inf,             "ppb",
   
   "pm2.5_annual", "Insufficient Data",  NA,             NA,                NA,
   "pm2.5_annual", "Achieved",            0,            8.8,          "ug/m^3",
@@ -80,20 +80,20 @@ achievement_levels <- tribble(
   "pm2.5_24h",    "Not Achieved",       27,            Inf,          "ug/m^3",
     
   "no2_1yr",      "Insufficient Data",  NA,            NA,                 NA,
-  "no2_1yr",      "Achieved",            0,             17,             "ppb",
-  "no2_1yr",      "Not Achieved",       17,           Inf,              "ppb",
+  "no2_1yr",      "Achieved",            0,             12,             "ppb",
+  "no2_1yr",      "Not Achieved",       12,           Inf,              "ppb",
 
   "no2_3yr",      "Insufficient Data",  NA,            NA,                 NA,
-  "no2_3yr",      "Achieved",            0,             60,             "ppb",
-  "no2_3yr",      "Not Achieved",       60,            Inf,             "ppb",
+  "no2_3yr",      "Achieved",            0,             42,             "ppb",
+  "no2_3yr",      "Not Achieved",       42,            Inf,             "ppb",
   
   "so2_1yr",      "Insufficient Data",  NA,            NA,                 NA,
-  "so2_1yr",      "Achieved",            0,            5.0,             "ppb",
-  "so2_1yr",      "Not Achieved",      5.0,            Inf,             "ppb",
+  "so2_1yr",      "Achieved",            0,            4.0,             "ppb",
+  "so2_1yr",      "Not Achieved",      4.0,            Inf,             "ppb",
   
   "so2_3yr",      "Insufficient Data",  NA,            NA,                 NA,
-  "so2_3yr",      "Achieved",            0,             70,             "ppb",
-  "so2_3yr",      "Not Achieved",       70,            Inf,             "ppb"
+  "so2_3yr",      "Achieved",            0,             65,             "ppb",
+  "so2_3yr",      "Not Achieved",       65,            Inf,             "ppb"
 ) %>% 
   left_join(units_tbl, by = "units") %>% 
   mutate(parameter = factor(parameter),
