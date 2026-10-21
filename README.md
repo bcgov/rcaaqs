@@ -628,8 +628,8 @@ management_levels
 #>  1 o3           Insuff…         NA           NA   <NA>  <NA>          <NA>      
 #>  2 o3           Action…          0           50   ppb   ppb           ppb       
 #>  3 o3           Action…         50           56   ppb   ppb           ppb       
-#>  4 o3           Action…         56           62   ppb   ppb           ppb       
-#>  5 o3           Action…         62          Inf   ppb   ppb           ppb       
+#>  4 o3           Action…         56           60   ppb   ppb           ppb       
+#>  5 o3           Action…         60          Inf   ppb   ppb           ppb       
 #>  6 pm2.5_annual Insuff…         NA           NA   <NA>  <NA>          <NA>      
 #>  7 pm2.5_annual Action…          0            4   ug/m… μg/m³         &mu;g/m&s…
 #>  8 pm2.5_annual Action…          4            6.4 ug/m… μg/m³         &mu;g/m&s…
