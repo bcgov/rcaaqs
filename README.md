@@ -608,8 +608,8 @@ achievement_levels
 #>    parameter    labels  lower_breaks upper_breaks units units_unicode units_html
 #>    <fct>        <chr>          <dbl>        <dbl> <chr> <chr>         <chr>     
 #>  1 o3           Insuff…         NA           NA   <NA>  <NA>          <NA>      
-#>  2 o3           Achiev…          0           62   ppb   ppb           ppb       
-#>  3 o3           Not Ac…         62          Inf   ppb   ppb           ppb       
+#>  2 o3           Achiev…          0           60   ppb   ppb           ppb       
+#>  3 o3           Not Ac…         60          Inf   ppb   ppb           ppb       
 #>  4 pm2.5_annual Insuff…         NA           NA   <NA>  <NA>          <NA>      
 #>  5 pm2.5_annual Achiev…          0            8.8 ug/m… μg/m³         &mu;g/m&s…
 #>  6 pm2.5_annual Not Ac…          8.8        Inf   ug/m… μg/m³         &mu;g/m&s…

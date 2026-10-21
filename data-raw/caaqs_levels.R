@@ -100,8 +100,8 @@ achievement_levels <- tribble(
          val_labels = ifelse(is.infinite(upper_breaks),
                              paste0("> ", lower_breaks, units), 
                              paste0("<= ", upper_breaks, units)), 
-         val_labels_html = str_replace_all(val_labels, operators_regex, replace_chars("html")), 
-         val_labels_unicode = str_replace_all(val_labels, operators_regex, replace_chars("unicode")), 
+         val_labels_html = str_replace_all(val_labels, c("<=" = "&le;", ">" = "&gt;")),
+         val_labels_unicode = str_replace_all(val_labels, c("<=" = "\u2264", ">" = ">")), 
          colour = label_colours_hex[labels], 
          colour_text = label_colours[labels]) %>%
   mutate(across(matches("^units|^val"), ~if_else(is.na(upper_breaks), NA_character_, .))) %>%
@@ -162,8 +162,8 @@ management_levels <- tribble(
       ifelse(lower_breaks == 0, paste0("<= ", upper_breaks, units),
              paste0("> ", lower_breaks, units, 
                     " & <= ", upper_breaks, units))), 
-    val_labels_html = str_replace_all(val_labels, operators_regex, replace_chars("html")), 
-    val_labels_unicode = str_replace_all(val_labels, operators_regex, replace_chars("unicode")), 
+    val_labels_html = str_replace_all(val_labels, c("<=" = "&le;", ">=" = "&ge;", "<" = "&lt;", ">" = "&gt;", "&" = "&amp;")),
+    val_labels_unicode = str_replace_all(val_labels, c("<=" = "\u2264", ">=" = "\u2265")), 
     colour = label_colours_hex[labels], 
     colour_text = label_colours[labels]) %>%
   mutate(across(.cols = c("val_labels_html", "val_labels_unicode"), ~tidyr::replace_na(., "Insufficient Data")))
