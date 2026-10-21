@@ -100,8 +100,8 @@ achievement_levels <- tribble(
          val_labels = ifelse(is.infinite(upper_breaks),
                              paste0("> ", lower_breaks, units), 
                              paste0("<= ", upper_breaks, units)), 
-         val_labels_html = str_replace_all(val_labels, operators_regex, replace_chars("html")), 
-         val_labels_unicode = str_replace_all(val_labels, operators_regex, replace_chars("unicode")), 
+         val_labels_html = str_replace_all(val_labels, c("<=" = "&le;", ">" = "&gt;")),
+         val_labels_unicode = str_replace_all(val_labels, c("<=" = "\u2264", ">" = ">")), 
          colour = label_colours_hex[labels], 
          colour_text = label_colours[labels]) %>%
   mutate(across(matches("^units|^val"), ~if_else(is.na(upper_breaks), NA_character_, .))) %>%
@@ -115,8 +115,8 @@ management_levels <- tribble(
   "o3",           "Insufficient Data",                                NA,            NA,               NA,
   "o3",           "Actions for Keeping Clean Areas Clean",            0,             50,            "ppb",
   "o3",           "Actions for Preventing Air Quality Deterioration", 50,            56,            "ppb",
-  "o3",           "Actions for Preventing CAAQS Exceedance",          56,            62,            "ppb",
-  "o3",           "Actions for Achieving Air Zone CAAQS",             62,            Inf,           "ppb",
+  "o3",           "Actions for Preventing CAAQS Exceedance",          56,            60,            "ppb",
+  "o3",           "Actions for Achieving Air Zone CAAQS",             60,            Inf,           "ppb",
   
   "pm2.5_annual", "Insufficient Data",                                NA,            NA,               NA,
   "pm2.5_annual", "Actions for Keeping Clean Areas Clean",            0,             4.0,           "ug/m^3",
@@ -133,26 +133,26 @@ management_levels <- tribble(
   "no2_1yr",      "Insufficient Data",                                NA,            NA,               NA,
   "no2_1yr",      "Actions for Keeping Clean Areas Clean",             0,               2,           "ppb",
   "no2_1yr",      "Actions for Preventing Air Quality Deterioration",  2,               7,           "ppb",
-  "no2_1yr",      "Actions for Preventing CAAQS Exceedance",           7,              17,           "ppb",
-  "no2_1yr",      "Actions for Achieving Air Zone CAAQS",              17,            Inf,           "ppb",
+  "no2_1yr",      "Actions for Preventing CAAQS Exceedance",           7,              12,           "ppb",
+  "no2_1yr",      "Actions for Achieving Air Zone CAAQS",              12,            Inf,           "ppb",
   
   "no2_3yr",      "Insufficient Data",                                NA,            NA,               NA,
   "no2_3yr",      "Actions for Keeping Clean Areas Clean",             0,              20,           "ppb",
   "no2_3yr",      "Actions for Preventing Air Quality Deterioration",  20,             31,           "ppb",
-  "no2_3yr",      "Actions for Preventing CAAQS Exceedance",           31,             60,           "ppb",
-  "no2_3yr",      "Actions for Achieving Air Zone CAAQS",              60,            Inf,           "ppb",
+  "no2_3yr",      "Actions for Preventing CAAQS Exceedance",           31,             42,           "ppb",
+  "no2_3yr",      "Actions for Achieving Air Zone CAAQS",              42,            Inf,           "ppb",
   
   "so2_1yr",      "Insufficient Data",                                NA,            NA,               NA,
   "so2_1yr",      "Actions for Keeping Clean Areas Clean",             0,               2,           "ppb",
   "so2_1yr",      "Actions for Preventing Air Quality Deterioration",  2,               3,           "ppb",
-  "so2_1yr",      "Actions for Preventing CAAQS Exceedance",           3,               5,           "ppb",
-  "so2_1yr",      "Actions for Achieving Air Zone CAAQS",              5,             Inf,           "ppb",
+  "so2_1yr",      "Actions for Preventing CAAQS Exceedance",           3,               4,           "ppb",
+  "so2_1yr",      "Actions for Achieving Air Zone CAAQS",              4,             Inf,           "ppb",
   
   "so2_3yr",      "Insufficient Data",                                NA,            NA,               NA,
   "so2_3yr",      "Actions for Keeping Clean Areas Clean",            0,               30,           "ppb",
   "so2_3yr",      "Actions for Preventing Air Quality Deterioration", 30,              50,           "ppb",
-  "so2_3yr",      "Actions for Preventing CAAQS Exceedance",          50,              70,           "ppb",
-  "so2_3yr",      "Actions for Achieving Air Zone CAAQS",             70,             Inf,           "ppb"
+  "so2_3yr",      "Actions for Preventing CAAQS Exceedance",          50,              65,           "ppb",
+  "so2_3yr",      "Actions for Achieving Air Zone CAAQS",             65,             Inf,           "ppb"
 ) %>% 
   left_join(units_tbl, by = "units") %>% 
   mutate(
@@ -162,8 +162,8 @@ management_levels <- tribble(
       ifelse(lower_breaks == 0, paste0("<= ", upper_breaks, units),
              paste0("> ", lower_breaks, units, 
                     " & <= ", upper_breaks, units))), 
-    val_labels_html = str_replace_all(val_labels, operators_regex, replace_chars("html")), 
-    val_labels_unicode = str_replace_all(val_labels, operators_regex, replace_chars("unicode")), 
+    val_labels_html = str_replace_all(val_labels, c("<=" = "&le;", ">=" = "&ge;", "<" = "&lt;", ">" = "&gt;", "&" = "&amp;")),
+    val_labels_unicode = str_replace_all(val_labels, c("<=" = "\u2264", ">=" = "\u2265")), 
     colour = label_colours_hex[labels], 
     colour_text = label_colours[labels]) %>%
   mutate(across(.cols = c("val_labels_html", "val_labels_unicode"), ~tidyr::replace_na(., "Insufficient Data")))

@@ -27,7 +27,7 @@ License: Apache License (== 2.0) | file LICENSE
 URL: https://github.com/bcgov/rcaaqs
 BugReports: https://github.com/bcgov/rcaaqs/issues
 Depends:
-    R (>= 3.3.0)
+    R (>= 3.5)
 Imports:
     dplyr (>= 1.0),
     ggplot2 (>= 3.0),
